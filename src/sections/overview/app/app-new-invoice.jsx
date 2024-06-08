@@ -112,11 +112,11 @@ function AppNewInvoiceRow({ row }) {
           <Label
             variant="soft"
             color={
-              (row.status === '0' && 'warning') ||
+              (row.nccf_order_status === 'placed' && 'warning') ||
               'success'
             }
           >
-            {row.status === "0" ? "Pending" : "Paid"}
+            {row.nccf_order_status}
           </Label>
         </TableCell>
 
