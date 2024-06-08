@@ -183,6 +183,7 @@
 //   );
 // }
 import React from 'react';
+import { OverviewDocumentView } from 'src/sections/upload-document/view';
 import { DocumentListView } from 'src/sections/upload/view';
 const UploadListView = () => {
   return (

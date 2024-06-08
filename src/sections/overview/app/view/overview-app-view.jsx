@@ -46,7 +46,7 @@ export default function OverviewAppView({ vendorCode }) {
         <Grid xs={12} md={3}>
           <AppWidgetSummary
             title="Total Orders"
-            total={stats?.total_orders}
+            total={stats?.total_orders || "0"}
 
           />
         </Grid>
@@ -54,7 +54,7 @@ export default function OverviewAppView({ vendorCode }) {
         <Grid xs={12} md={3}>
           <AppWidgetSummary
             title="Orders Pending"
-            total={stats?.placed_orders}
+            total={stats?.placed_orders || "0"}
 
           />
         </Grid>
@@ -62,7 +62,7 @@ export default function OverviewAppView({ vendorCode }) {
         <Grid xs={12} md={3}>
           <AppWidgetSummary
             title="Orders Accepted"
-            total={stats?.accepted_orders}
+            total={stats?.accepted_orders || "0"}
 
           />
         </Grid>
@@ -70,7 +70,7 @@ export default function OverviewAppView({ vendorCode }) {
         <Grid xs={12} md={3}>
           <AppWidgetSummary
             title="Orders Declined"
-            total={stats?.declined_orders}
+            total={stats?.declined_orders || "0"}
 
           />
         </Grid>

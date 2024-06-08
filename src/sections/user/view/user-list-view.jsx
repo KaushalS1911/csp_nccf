@@ -150,7 +150,7 @@ export default function UserListView() {
     },
     [handleFilters]
   );
-
+console.log(filters,"fffffi");
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>

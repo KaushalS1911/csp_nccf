@@ -21,7 +21,7 @@ import DocumentQuickEditForm from './document-quick-edit-form';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow ,index}) {
+export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow, onViewRow,onDeleteRow, index }) {
   const { doc_type, object_url } = row;
 
   const confirm = useBoolean();
@@ -33,14 +33,19 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="checkbox" sx={{width:"100px"}}>
+        <TableCell padding="checkbox" sx={{ width: '100px' }}>
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{index + 1}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{doc_type}</TableCell>
 
-        <TableCell >
-          <Avatar alt={object_url} src={object_url} sx={{ mr: 2 ,height:"100px",width:"100px"}} variant='rounded' />
+        <TableCell>
+          <Avatar
+            alt={object_url}
+            src={object_url}
+            sx={{ mr: 2, height: '100px', width: '100px' }}
+            variant="rounded"
+          />
         </TableCell>
 
         {/* <TableCell>
@@ -80,13 +85,12 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
       >
         <MenuItem
           onClick={() => {
-            confirm.onTrue();
+            onViewRow();
             popover.onClose();
           }}
-          sx={{ color: 'error.main' }}
         >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
+          <Iconify icon="solar:eye-bold" />
+          View
         </MenuItem>
 
         <MenuItem
@@ -97,6 +101,16 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
         >
           <Iconify icon="solar:pen-bold" />
           Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            confirm.onTrue();
+            popover.onClose();
+          }}
+          sx={{ color: 'error.main' }}
+        >
+          <Iconify icon="solar:trash-bin-trash-bold" />
+          Delete
         </MenuItem>
       </CustomPopover>
 

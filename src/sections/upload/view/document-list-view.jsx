@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -42,6 +42,8 @@ import {
 import DocumentTableRow from '../document-table-row';
 import DocumentTableToolbar from '../document-table-toolbar';
 import DocumentTableFiltersResult from '../document-table-filters-result';
+import { DOCUMENTS } from 'src/_mock/_document';
+import { useGetDocuments } from 'src/api/document';
 
 // ----------------------------------------------------------------------
 
@@ -59,7 +61,7 @@ const defaultFilters = {
   role: [],
   status: 'all',
 };
-const orderList = [
+const orderLista = [
   {
     doc_type: 'Certificates',
     // object_url:
@@ -82,18 +84,26 @@ const orderList = [
       'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/5e/15/80/caption.jpg?w=300&h=300&s=1',
   },
   {
+    doc_type: 'Aadhar',
+    // object_url:
+    //   'https://nccf-csp.s3.ap-south-1.amazonaws.com/U1P069S85_Karnataka/certificates/certificates_2024-05-24_17-46-34.jpg',
+    object_url:
+    'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/5e/15/80/caption.jpg?w=300&h=300&s=1',
+  },
+  {
     doc_type: 'Gst Number',
     // object_url:
     //   'https://nccf-csp.s3.ap-south-1.amazonaws.com/U1P069S85_Karnataka/pan_number/pan_number_2024-05-24_19-02-25.jpg',
     object_url:
       'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUoKV0B7GXf5IHL2fem9xmVrVdGo9pFBTwWA&s',
-  },
-];
-// ----------------------------------------------------------------------
-
-export default function DocumentListView() {
+    },
+  ];
+  // ----------------------------------------------------------------------
+  
+  export default function DocumentListView() {
   const { enqueueSnackbar } = useSnackbar();
-
+  
+  const {document} = useGetDocuments()
   const table = useTable();
 
   const settings = useSettingsContext();
@@ -102,12 +112,17 @@ export default function DocumentListView() {
 
   const confirm = useBoolean();
 
-  const [tableData, setTableData] = useState(_userList);
-
+  const [tableData, setTableData] = useState([]);
+    useEffect(() => {
+      if (document) {
+    setTableData(document)
+  }
+},[])
   const [filters, setFilters] = useState(defaultFilters);
+  console.log(filters,"filter1");
 
   const dataFiltered = applyFilter({
-    inputData: orderList,
+    inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
@@ -116,7 +131,6 @@ export default function DocumentListView() {
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
   );
-
   const denseHeight = table.dense ? 56 : 56 + 20;
 
   const canReset = !isEqual(defaultFilters, filters);
@@ -125,6 +139,7 @@ export default function DocumentListView() {
 
   const handleFilters = useCallback(
     (name, value) => {
+      console.log(name,"val");
       table.onResetPage();
       setFilters((prevState) => ({
         ...prevState,
@@ -170,6 +185,12 @@ export default function DocumentListView() {
     },
     [router]
   );
+  const handleViewRow = useCallback(
+    (id) => {
+      router.push(paths.dashboard.document.document_view);
+    },
+    [router]
+  );
 
   const handleFilterStatus = useCallback(
     (event, newValue) => {
@@ -177,7 +198,7 @@ export default function DocumentListView() {
     },
     [handleFilters]
   );
-
+  let finalData;
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -188,16 +209,7 @@ export default function DocumentListView() {
             { name: 'Document', href: paths.dashboard.document },
             { name: 'List' },
           ]}
-          action={
-            <Button
-              component={RouterLink}
-              href={paths.dashboard.user.new}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
-            >
-              New User
-            </Button>
-          }
+         
           sx={{
             mb: { xs: 3, md: 5 },
           }}
@@ -205,36 +217,40 @@ export default function DocumentListView() {
 
         <Card>
           <Tabs
-            value={filters.doc_type}
+            value={filters.status}
             onChange={handleFilterStatus}
             sx={{
               px: 2.5,
               boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
-            {dataFiltered.map((tab) => (
+            {DOCUMENTS.map((tab) => (
               <Tab
-                key={tab.doc_type}
+                key={tab.value}
                 iconPosition="end"
-                value={tab.doc_type}
-                label={tab.doc_type}
+                value={tab.label}
+                label={tab.label}
                 icon={
                   <Label
                     variant={
-                      ((tab.doc_type === '' || tab.doc_type === filters.doc_type) && 'filled') ||
-                      'soft'
+                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.doc_type === 'Aadhar' && 'success') ||
-                      (tab.doc_type === 'Certificates' && 'warning') ||
-                      (tab.doc_type === 'Gst Number' && 'error') ||
-                      (tab.doc_type === 'Pan Number' && 'success') ||
+                      (tab.value === 'aadhar' && 'success') ||
+                      (tab.value === 'certificates' && 'warning') ||
+                      (tab.value === 'gstNumber' && 'error') ||
+                      (tab.value === 'panNumber' && 'success') ||
                       'default'
                     }
                   >
-                    {['Aadhar', 'Certificates', 'Gst Number', 'Pan Number'].includes(tab.doc_type)
-                      ? tableData.filter((user) => user.doc_type === tab.doc_type).length
-                      : tableData.length}
+                    {
+                      (finalData = ['Aadhar', 'Certificates', 'Gst Number', 'Pan Number'].includes(
+                        tab?.label
+                      )
+                        ? tableData.filter((user) => user.doc_type === tab.label).length
+                        : tableData.length)
+                    }
+                    {console.log('FinalData : ', finalData)}
                   </Label>
                 }
               />
@@ -311,6 +327,7 @@ export default function DocumentListView() {
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
+                        onViewRow={() => handleViewRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
                       />
                     ))}

@@ -69,10 +69,10 @@ export default function JwtRegisterView() {
             </Box>
             <Box p={3} pt={0} mt={5}>
               {selectedVendor && <RegistrationForm vendor_category={selectedVendor} />}
-              <Typography color="error" variant="caption" display="block" mt={4}>
+              {/* <Typography color="error" variant="caption" display="block" mt={4}>
                 You can only verify a Mobile number you own. You must be able to receive a SMS to
                 the Mobile number you are trying to verify.
-              </Typography>
+              </Typography> */}
             </Box>
           </Box>
         </Box>

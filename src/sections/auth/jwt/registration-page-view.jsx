@@ -119,7 +119,7 @@ const RegistrationForm = ({ vendor_category }) => {
             <RHFTextField type={"password"} name={"password"} label={"Password"}/>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <RHFTextField type={"password"} name={"confirm_password"} label={"Conform Password"}/>
+            <RHFTextField type={"password"} name={"confirm_password"} label={"Confirm Password"}/>
           </Grid>
           {vendor_category !== 'Distributor' && (
             <Grid item xs={12} sm={6} md={3}>
