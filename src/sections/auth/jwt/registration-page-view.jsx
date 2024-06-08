@@ -27,6 +27,12 @@ const RegistrationForm = ({ vendor_category }) => {
   const NewBlogSchema = Yup.object().shape({
     address: Yup.string().required('Address is required'),
     contact_person: Yup.string().required('Contact is required'),
+    confirm_paasword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm password is required'),
+    password: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm password is required'),
     district: Yup.string().required('District is required'),
     gst_number: Yup.string().required('GST Number is required'),
     milling_type: Yup.string().required('Milling Type is required'),
@@ -39,7 +45,7 @@ const RegistrationForm = ({ vendor_category }) => {
   });
   const defaultValues = {
     address: '',
-    // commodity: '',
+    confirm_password: '',
     contact_person: '',
     district: '',
     gst_number: '',
@@ -49,7 +55,7 @@ const RegistrationForm = ({ vendor_category }) => {
     pan_number: '',
     phone_number: '',
     pincode: '',
-    // quantity: '',
+    password: '',
     state: '',
   }
   const methods  = useForm({
@@ -67,6 +73,8 @@ const RegistrationForm = ({ vendor_category }) => {
     vendor_category === 'Distributor'
       ? (payload = {
         address: values.address,
+        password: values.password,
+        confirm_password: values.confirm_password,
         contact_person: values.contact_person,
         district: values.district,
         email: values.email,
@@ -106,6 +114,12 @@ const RegistrationForm = ({ vendor_category }) => {
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <RHFTextField name="email" label="Email" />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <RHFTextField type={"password"} name={"password"} label={"Password"}/>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <RHFTextField type={"password"} name={"confirm_password"} label={"Conform Password"}/>
           </Grid>
           {vendor_category !== 'Distributor' && (
             <Grid item xs={12} sm={6} md={3}>

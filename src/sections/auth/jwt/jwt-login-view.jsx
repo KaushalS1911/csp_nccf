@@ -38,15 +38,11 @@ export default function JwtLoginView() {
   const LoginSchema = Yup.object().shape({
     phone_number: Yup.string().required('Phone number is required'),
     password: Yup.string().required('Password is required'),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm password is required'),
     category: Yup.string().required('Vendor category is required'),
   });
   const defaultValues = {
     phone_number: '',
     password: '',
-    confirmPassword: '',
     category: '',
   };
   const methods = useForm({
@@ -67,14 +63,14 @@ export default function JwtLoginView() {
       category: data.category
     }
     try {
-      await login?.(payload);
+      await login?.(data);
       router.push(returnTo || PATH_AFTER_LOGIN);
     } catch (error) {
       console.error(error);
       reset();
       setErrorMsg(typeof error === 'string' ? error : error.message);
     }
-    console.log("Data : ",payload);
+    console.log("Data : ",data);
   });
   return (
     <>
@@ -105,9 +101,7 @@ export default function JwtLoginView() {
                   <Grid item xs={12} sx={{ my: '10px' }}>
                     <RHFTextField name={"password"} label={"Password"}/>
                   </Grid>
-                  <Grid item xs={12} sx={{ my: '10px' }}>
-                    <RHFTextField name={"confirmPassword"} label={"Conform Password"}/>
-                  </Grid>
+
                   <Grid item xs={12}>
                     <RHFRadioGroup name={"category"} row options={[
                       {label: "Miller",value: "Miller"},
