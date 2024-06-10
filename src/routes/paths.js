@@ -358,7 +358,7 @@ export const paths = {
      document_upload : `${ROOTS.DASHBOARD}/document/document-upload`,
      document_list : `${ROOTS.DASHBOARD}/document/document-list`,
      document_view : `${ROOTS.DASHBOARD}/document/document-view`,
-    upload_evidence: `${ROOTS.DASHBOARD}/documentfile/upload-evidence`,
+    upload_evidence: `${ROOTS.DASHBOARD}/document/upload-evidence`,
 
       // demo: {
       //   details: `${ROOTS.DASHBOARD}/order/${MOCK_ID}`,
