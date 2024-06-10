@@ -33,13 +33,14 @@ import FileManagerFileDetails from './file-manager-file-details';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
 import { useAuthContext } from '../../auth/hooks';
+import MaxWidthDialog from '../overview/app/viewDocumentDialog';
 
 // ----------------------------------------------------------------------
 
-export default function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow,index }) {
-  const { doc_type,object_url,uploaded_on } = row;
+export default function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow, index }) {
+  const { doc_type, object_url, uploaded_on } = row;
 
-  const secondSlashIndex = object_url.indexOf("/", 8);
+  const secondSlashIndex = object_url.indexOf('/', 8);
 
   // const firstPart = object_url.substring(0, secondSlashIndex);
   const secondPart = object_url.substring(secondSlashIndex);
@@ -47,14 +48,15 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
   const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
   const theme = useTheme();
 
-
+  const [open, setOpen] = useState(false);
+  const [images, setImages] = useState([]);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const { copy } = useCopyToClipboard();
 
   const [inviteEmail, setInviteEmail] = useState('');
-const router = useRouter()
+  const router = useRouter();
 
   const details = useBoolean();
 
@@ -64,12 +66,11 @@ const router = useRouter()
 
   const popover = usePopover();
 
-  const handleViewRow =(id)=>{
-    console.log(id);
-        router.push(paths.dashboard.document.document_view)
-        // const ram = paths.dashboard.document.document_view(id)
-        // console.log(ram,"ram");
-  }
+  const handleViewRow = (url) => {
+    setOpen(true);
+    popover.onClose()
+    setImages([url]);
+  };
   const handleChangeInvite = useCallback((event) => {
     setInviteEmail(event.target.value);
   }, []);
@@ -85,6 +86,10 @@ const router = useRouter()
     enqueueSnackbar('Copied!');
     copy(row.url);
   }, [copy, enqueueSnackbar, row.url]);
+
+  function handleClose() {
+    setOpen(false);
+  }
 
   const defaultStyles = {
     borderTop: `solid 1px ${alpha(theme.palette.grey[500], 0.16)}`,
@@ -129,18 +134,18 @@ const router = useRouter()
         }}
       >
 
-        <TableCell  sx={{ whiteSpace: 'nowrap' }}>
-          {index+1}
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {index + 1}
         </TableCell>
-        <TableCell >
+        <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
             {/* <FileThumbnail file={object_url} sx={{ width: 36, height: 36 }} /> */}
             <Avatar
-            alt={'Document Image'}
-            src={url}
-            sx={{ mr: 2, height: '48px', width: '48px' }}
-            variant="rounded"
-          />
+              alt={'Document Image'}
+              src={url}
+              sx={{ mr: 2, height: '48px', width: '48px' }}
+              variant="rounded"
+            />
 
             <Typography
               noWrap
@@ -157,9 +162,7 @@ const router = useRouter()
         </TableCell>
 
 
-
-
-        <TableCell  sx={{ whiteSpace: 'nowrap' }}>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
           <ListItemText
             primary={fDate(uploaded_on)}
             primaryTypographyProps={{ typography: 'body2' }}
@@ -172,7 +175,6 @@ const router = useRouter()
         </TableCell>
 
 
-
         <TableCell
           align="right"
           sx={{
@@ -183,7 +185,7 @@ const router = useRouter()
 
 
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
+            <Iconify icon="eva:more-vertical-fill"/>
           </IconButton>
         </TableCell>
       </TableRow>
@@ -194,35 +196,35 @@ const router = useRouter()
         arrow="right-top"
         sx={{ width: 160 }}
       >
-         <MenuItem
-          onClick={()=>handleViewRow(object_url)}
+        <MenuItem
+          onClick={() => handleViewRow(url)}
         >
-          <Iconify icon="solar:eye-bold" />
+          <Iconify icon="solar:eye-bold"/>
           View
         </MenuItem>
 
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
-            share.onTrue();
-          }}
-        >
-          <Iconify icon="solar:share-bold" />
-          Share
-        </MenuItem>
+        {/*<MenuItem*/}
+        {/*  onClick={() => {*/}
+        {/*    popover.onClose();*/}
+        {/*    share.onTrue();*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <Iconify icon="solar:share-bold" />*/}
+        {/*  Share*/}
+        {/*</MenuItem>*/}
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        {/*<Divider sx={{ borderStyle: 'dashed' }} />*/}
 
-        <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
-        </MenuItem>
+        {/*<MenuItem*/}
+        {/*  onClick={() => {*/}
+        {/*    confirm.onTrue();*/}
+        {/*    popover.onClose();*/}
+        {/*  }}*/}
+        {/*  sx={{ color: 'error.main' }}*/}
+        {/*>*/}
+        {/*  <Iconify icon="solar:trash-bin-trash-bold" />*/}
+        {/*  Delete*/}
+        {/*</MenuItem>*/}
       </CustomPopover>
 
       {/* <FileManagerFileDetails
@@ -246,6 +248,8 @@ const router = useRouter()
           setInviteEmail('');
         }}
       /> */}
+
+      <MaxWidthDialog handleClose={handleClose} open={open} images={images}/>
 
       <ConfirmDialog
         open={confirm.value}

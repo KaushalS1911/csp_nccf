@@ -28,6 +28,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 import FileManagerShareDialog from './file-manager-share-dialog';
 import FileManagerFileDetails from './file-manager-file-details';
+import MaxWidthDialog from '../overview/app/viewDocumentDialog';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +44,8 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
   const { copy } = useCopyToClipboard();
 
   const [inviteEmail, setInviteEmail] = useState('');
+  const [open, setOpen] = useState(false)
+  const [images, setImages] = useState([])
 
   const checkbox = useBoolean();
 
@@ -64,6 +67,16 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
     enqueueSnackbar('Copied!');
     copy(file.url);
   }, [copy, enqueueSnackbar, file.url]);
+
+  function handleViewDialog(url) {
+    setImages([url])
+    popover.onClose()
+    setOpen(true)
+  }
+
+  function handleClose() {
+setOpen(false)
+  }
 
   // const renderIcon =
   //   (checkbox.value || selected) && onSelect ? (
@@ -189,37 +202,36 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
         sx={{ width: 160 }}
       >
         <MenuItem
-          onClick={() => {
-            popover.onClose();
-            handleCopy();
-          }}
+          onClick={() =>
+            handleViewDialog(url)
+          }
         >
-          <Iconify icon="eva:link-2-fill" />
-          Copy Link
+          <Iconify icon="solar:eye-bold" />
+          View
         </MenuItem>
 
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
-            share.onTrue();
-          }}
-        >
-          <Iconify icon="solar:share-bold" />
-          Share
-        </MenuItem>
+        {/*<MenuItem*/}
+        {/*  onClick={() => {*/}
+        {/*    popover.onClose();*/}
+        {/*    share.onTrue();*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <Iconify icon="solar:share-bold" />*/}
+        {/*  Share*/}
+        {/*</MenuItem>*/}
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        {/*<Divider sx={{ borderStyle: 'dashed' }} />*/}
 
-        <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
-        </MenuItem>
+        {/*<MenuItem*/}
+        {/*  onClick={() => {*/}
+        {/*    confirm.onTrue();*/}
+        {/*    popover.onClose();*/}
+        {/*  }}*/}
+        {/*  sx={{ color: 'error.main' }}*/}
+        {/*>*/}
+        {/*  <Iconify icon="solar:trash-bin-trash-bold" />*/}
+        {/*  Delete*/}
+        {/*</MenuItem>*/}
       </CustomPopover>
 
       {/* <FileManagerFileDetails
@@ -247,6 +259,7 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
         }}
       />
 
+      <MaxWidthDialog images={images} open={open} handleClose={handleClose}/>
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
