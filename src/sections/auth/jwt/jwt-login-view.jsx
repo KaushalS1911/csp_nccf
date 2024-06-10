@@ -99,7 +99,7 @@ export default function JwtLoginView() {
                     <RHFTextField name="phone_number" label="Phone Number"/>
                   </Grid>
                   <Grid item xs={12} sx={{ my: '10px' }}>
-                    <RHFTextField name={"password"} label={"Password"}/>
+                    <RHFTextField name={"password"} label={"Password"} type={"password"}/>
                   </Grid>
 
                   <Grid item xs={12}>

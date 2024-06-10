@@ -53,7 +53,7 @@ export default function DocumentTableToolbar({
         }}
         sx={{
           p: 2.5,
-          pr: { xs: 2.5, md: 1 },
+          pr: 2.5,
         }}
       >
         {/* <FormControl
@@ -100,9 +100,9 @@ export default function DocumentTableToolbar({
             }}
           />
 
-          <IconButton onClick={popover.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+          {/*<IconButton onClick={popover.onOpen}>*/}
+          {/*  <Iconify icon="eva:more-vertical-fill" />*/}
+          {/*</IconButton>*/}
         </Stack>
       </Stack>
 

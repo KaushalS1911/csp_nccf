@@ -41,7 +41,7 @@ export default function UserTableToolbar({ filters, onFilters, roleOptions }) {
         }}
         sx={{
           p: 2.5,
-          pr: { xs: 2.5, md: 1 },
+          pr: 2.5 ,
         }}
       >
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
@@ -58,9 +58,9 @@ export default function UserTableToolbar({ filters, onFilters, roleOptions }) {
               ),
             }}
           />
-          <IconButton onClick={popover.onOpen}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+          {/*<IconButton onClick={popover.onOpen}>*/}
+          {/*  <Iconify icon="eva:more-vertical-fill" />*/}
+          {/*</IconButton>*/}
         </Stack>
       </Stack>
       <CustomPopover
