@@ -19,15 +19,18 @@ import {
 } from 'src/components/table';
 
 import FileManagerTableRow from './file-manager-table-row';
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'sr_no', label: 'Sr No' },
+  { id: 'srNo', label: 'SrNo' },
   { id: 'document', label: 'Document' },
   // { id: 'size', label: 'Size', width: 120 },
   // { id: 'type', label: 'Type', width: 120 },
-  { id: 'modifiedAt', label: 'Modified', width: 140 },
+  { id: 'date', label: 'Date', width: 140 },
+  // { id: 'shared', label: 'Shared', align: 'right', width: 140 },
   { id: '', width: 88 },
 ];
 
@@ -42,7 +45,6 @@ export default function FileManagerTable({
 }) {
   const theme = useTheme();
 
-  
   const {
     dense,
     page,
@@ -59,7 +61,8 @@ export default function FileManagerTable({
     onChangePage,
     onChangeRowsPerPage,
   } = table;
-
+// const router = useRouter()
+//  
   return (
     <>
       <Box
@@ -75,7 +78,7 @@ export default function FileManagerTable({
           onSelectAllRows={(checked) =>
             onSelectAllRows(
               checked,
-              dataFiltered.map((row) => row.object_url)
+              dataFiltered.map((row) => row.id)
             )
           }
           action={
@@ -127,7 +130,7 @@ export default function FileManagerTable({
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  dataFiltered.map((row) => row.object_url)
+                  dataFiltered.map((row) => row.id)
                 )
               }
               sx={{
@@ -145,12 +148,14 @@ export default function FileManagerTable({
             />
 
             <TableBody>
-              {dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row,index) => (
+              {dataFiltered
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row,index) => (
                   <FileManagerTableRow
-                    key={index}
+                    key={row.id}
                     row={row}
                     index={index}
-                    selected={selected.includes(row.object_url)}
+                    selected={selected.includes(row.object)}
                     onSelectRow={() => onSelectRow(row.object_url)}
                     onDeleteRow={() => onDeleteRow(row.object_url)}
                   />

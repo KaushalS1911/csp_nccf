@@ -30,20 +30,22 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 import FileManagerShareDialog from './file-manager-share-dialog';
 import FileManagerFileDetails from './file-manager-file-details';
+import { useRouter } from 'src/routes/hooks';
+import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
-export default function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow ,index}) {
+export default function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow,index }) {
   const theme = useTheme();
-  const { doc_type  , object_url,uploaded_on } = row;
+
+  const { doc_type,object_url,uploaded_on } = row;
 
   const { enqueueSnackbar } = useSnackbar();
 
   const { copy } = useCopyToClipboard();
 
   const [inviteEmail, setInviteEmail] = useState('');
-
-  const favorite = useBoolean(isFavorited);
+const router = useRouter()
 
   const details = useBoolean();
 
@@ -53,6 +55,12 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
 
   const popover = usePopover();
 
+  const handleViewRow =(id)=>{
+    console.log(id);
+        // router.push(paths.dashboard.document.document_view(id))    
+        const ram = paths.dashboard.document.document_view(id)    
+        console.log(ram,"ram");
+  }
   const handleChangeInvite = useCallback((event) => {
     setInviteEmail(event.target.value);
   }, []);
@@ -111,19 +119,19 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
           }),
         }}
       >
-        <TableCell padding="checkbox">
-          <Checkbox
-            checked={selected}
-            onDoubleClick={() => console.info('ON DOUBLE CLICK')}
-            onClick={onSelectRow}
-          />
-        </TableCell>
-        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
+
+        <TableCell  sx={{ whiteSpace: 'nowrap' }}>
           {index+1}
         </TableCell>
-        <TableCell onClick={handleClick}>
+        <TableCell >
           <Stack direction="row" alignItems="center" spacing={2}>
-            {/* <FileThumbnail file={type} sx={{ width: 36, height: 36 }} /> */}
+            {/* <FileThumbnail file={object_url} sx={{ width: 36, height: 36 }} /> */}
+            <Avatar
+            alt={object_url}
+            src={object_url}
+            sx={{ mr: 2, height: '48px', width: '48px' }}
+            variant="rounded"
+          />
 
             <Typography
               noWrap
@@ -140,12 +148,11 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
         </TableCell>
 
 
-       
+      
 
-        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
+        <TableCell  sx={{ whiteSpace: 'nowrap' }}>
           <ListItemText
             primary={fDate(uploaded_on)}
-            secondary={fTime(uploaded_on)}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
               mt: 0.5,
@@ -155,6 +162,7 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
           />
         </TableCell>
 
+        
 
         <TableCell
           align="right"
@@ -163,14 +171,7 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
             whiteSpace: 'nowrap',
           }}
         >
-          {/* <Checkbox
-            color="warning"
-            icon={<Iconify icon="eva:star-outline" />}
-            checkedIcon={<Iconify icon="eva:star-fill" />}
-            checked={favorite.value}
-            onChange={favorite.onToggle}
-            sx={{ p: 0.75 }}
-          /> */}
+       
 
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
@@ -184,14 +185,11 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
         arrow="right-top"
         sx={{ width: 160 }}
       >
-        <MenuItem
-          onClick={() => {
-            popover.onClose();
-            handleCopy();
-          }}
+         <MenuItem
+          onClick={()=>handleViewRow(object_url)}
         >
-          <Iconify icon="eva:link-2-fill" />
-          Copy Link
+          <Iconify icon="solar:eye-bold" />
+          View
         </MenuItem>
 
         <MenuItem
@@ -218,7 +216,7 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
         </MenuItem>
       </CustomPopover>
 
-      <FileManagerFileDetails
+      {/* <FileManagerFileDetails
         item={row}
         favorited={favorite.value}
         onFavorite={favorite.onToggle}
@@ -226,9 +224,9 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
         open={details.value}
         onClose={details.onFalse}
         onDelete={onDeleteRow}
-      />
+      /> */}
 
-      <FileManagerShareDialog
+      {/* <FileManagerShareDialog
         open={share.value}
         shared={shared}
         inviteEmail={inviteEmail}
@@ -238,7 +236,7 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
           share.onFalse();
           setInviteEmail('');
         }}
-      />
+      /> */}
 
       <ConfirmDialog
         open={confirm.value}

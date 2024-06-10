@@ -157,36 +157,7 @@ export default function FileManagerFilters({
     </>
   );
 
-  const renderFilterDate = (
-    <>
-      {/* <Button
-        color="inherit"
-        onClick={onOpenDateRange}
-        endIcon={
-          <Iconify
-            icon={openDateRange ? 'eva:arrow-ios-upward-fill' : 'eva:arrow-ios-downward-fill'}
-            sx={{ ml: -0.5 }}
-          />
-        }
-      >
-        {!!filters.startDate && !!filters.endDate
-          ? shortDateLabel(filters.startDate, filters.endDate)
-          : 'Select Date'}
-      </Button> */}
-
-      <CustomDateRangePicker
-        variant="calendar"
-        startDate={filters.startDate}
-        endDate={filters.endDate}
-        onChangeStartDate={handleFilterStartDate}
-        onChangeEndDate={handleFilterEndDate}
-        open={openDateRange}
-        onClose={onCloseDateRange}
-        selected={!!filters.startDate && !!filters.endDate}
-        error={dateError}
-      />
-    </>
-  );
+ 
 
   return (
     <Stack
@@ -198,7 +169,6 @@ export default function FileManagerFilters({
       {renderFilterName}
 
       <Stack spacing={1} direction="row" alignItems="center" justifyContent="flex-end" flexGrow={1}>
-        {renderFilterDate}
 
         {renderFilterType}
       </Stack>

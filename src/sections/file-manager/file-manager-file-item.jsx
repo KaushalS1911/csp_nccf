@@ -97,7 +97,7 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
         onClick={details.onTrue}
         sx={{ width: 1, mt: 2, mb: 0.5 }}
       >
-        {file.name}
+        
       </TextMaxLine>
 
       <Stack

@@ -79,7 +79,7 @@ export default function OverviewAppView({ vendorCode }) {
             title="Orders"
             tableData={orderList}
             tableLabels={[
-              { id: 'srNo', label: 'Sr No' },
+              { id: 'id', label: 'Order ID' },
               { id: 'category', label: 'Commodity' },
               { id: 'price', label: 'Quantity' },
               { id: 'status', label: 'Status' },

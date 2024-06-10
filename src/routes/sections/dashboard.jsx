@@ -301,7 +301,7 @@ export const dashboardRoutes = [
           { path: 'document-overview', element: <OverviewFileView />  },
           { path: 'document-list', element: <UploadListView /> },
           { path: 'document-upload', element: <UploadDocument /> },
-          { path: 'document-view', element: <ProductDetailsPage /> },
+          { path: ':id', element: <ProductDetailsPage /> },
           { path: 'upload-evidence', element: <UploadEvidencePage /> },
         ],
       },

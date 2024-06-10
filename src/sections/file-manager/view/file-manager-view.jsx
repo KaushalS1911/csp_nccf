@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -27,6 +27,9 @@ import FileManagerGridView from '../file-manager-grid-view';
 import FileManagerFiltersResult from '../file-manager-filters-result';
 import FileManagerNewFolderDialog from '../file-manager-new-folder-dialog';
 import { useGetDocuments } from 'src/api/document';
+import axios from 'axios';
+import { useAuthContext } from 'src/auth/hooks';
+import { useRouter } from 'src/routes/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -47,26 +50,27 @@ export default function FileManagerView() {
   const settings = useSettingsContext();
 
   const openDateRange = useBoolean();
+  const { vendor } = useAuthContext();
 
   const confirm = useBoolean();
 
   const upload = useBoolean();
-  const {document} = useGetDocuments();
 
   const [view, setView] = useState('list');
-
-  const [tableData, setTableData] = useState('');
-
-  useEffect(() => {
-    if(document){
-      setTableData(document);
-    }
-  },[])
-
+  
+const router = useRouter()
+  const [tableData, setTableData] = useState([]);
+// const documents = useGetDocuments()
+// console.log(documents,"fffffffff");
   const [filters, setFilters] = useState(defaultFilters);
 
-  const dateError = isAfter(filters.startDate, filters.endDate);
+   function getAllDocument (){
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/documents`).then((res)=> setTableData(res?.data?.data)).catch((err)=>err)
+    }
+    getAllDocument()
 
+    
+    const dateError = isAfter(filters.startDate, filters.endDate);
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
@@ -83,7 +87,7 @@ export default function FileManagerView() {
     !!filters.name || !!filters.type.length || (!!filters.startDate && !!filters.endDate);
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
-
+  
   const handleChangeView = useCallback((event, newView) => {
     if (newView !== null) {
       setView(newView);
@@ -149,7 +153,7 @@ export default function FileManagerView() {
         typeOptions={FILE_TYPE_OPTIONS}
       />
 
-      <ToggleButtonGroup size="small" value={view} exclusive onChange={handleChangeView}>
+      {/* <ToggleButtonGroup size="small" value={view} exclusive onChange={handleChangeView}>
         <ToggleButton value="list">
           <Iconify icon="solar:list-bold" />
         </ToggleButton>
@@ -157,7 +161,7 @@ export default function FileManagerView() {
         <ToggleButton value="grid">
           <Iconify icon="mingcute:dot-grid-fill" />
         </ToggleButton>
-      </ToggleButtonGroup>
+      </ToggleButtonGroup> */}
     </Stack>
   );
 
@@ -208,7 +212,7 @@ export default function FileManagerView() {
           />
         ) : (
           <>
-            {view === 'list' ? (
+            {view === 'list' && (
               <FileManagerTable
                 table={table}
                 dataFiltered={dataFiltered}
@@ -216,14 +220,7 @@ export default function FileManagerView() {
                 notFound={notFound}
                 onOpenConfirm={confirm.onTrue}
               />
-            ) : (
-              <FileManagerGridView
-                table={table}
-                dataFiltered={dataFiltered}
-                onDeleteItem={handleDeleteItem}
-                onOpenConfirm={confirm.onTrue}
-              />
-            )}
+            ) }
           </>
         )}
       </Container>
@@ -259,23 +256,32 @@ export default function FileManagerView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters, dateError }) {
-  const { doc_type } = filters;
+  const { name, type, startDate, endDate } = filters;
 
-  console.log("input : ",inputData);
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
-    const docType = comparator(a[0], b[0]);
-    if (docType !== 0) return docType;
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
     return a[1] - b[1];
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (doc_type) {
+  if (name) {
     inputData = inputData.filter(
-      (file) => file.doc_type.toLowerCase().indexOf(doc_type.toLowerCase()) !== -1
+      (file) => file.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
+  }
+
+  if (type.length) {
+    inputData = inputData.filter((file) => type.includes(fileFormat(file.type)));
+  }
+
+  if (!dateError) {
+    if (startDate && endDate) {
+      inputData = inputData.filter((file) => isBetween(file.createdAt, startDate, endDate));
+    }
   }
 
   return inputData;

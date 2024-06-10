@@ -49,7 +49,7 @@ export default function FileManagerGridView({ table, dataFiltered, onDeleteItem,
   return (
     <>
       <Box ref={containerRef}>
-        <FileManagerPanel
+        {/* <FileManagerPanel
           title="Folders"
           subTitle={`${dataFiltered.filter((item) => item.type === 'folder').length} folders`}
           onOpen={newFolder.onTrue}
@@ -83,11 +83,11 @@ export default function FileManagerGridView({ table, dataFiltered, onDeleteItem,
           </Box>
         </Collapse>
 
-        <Divider sx={{ my: 5, borderStyle: 'dashed' }} />
+        <Divider sx={{ my: 5, borderStyle: 'dashed' }} /> */}
 
         <FileManagerPanel
           title="Files"
-          subTitle={`${dataFiltered.filter((item) => item.type !== 'folder').length} files`}
+          subTitle={`${dataFiltered} files`}
           onOpen={upload.onTrue}
           collapse={files.value}
           onCollapse={files.onToggle}
@@ -104,15 +104,13 @@ export default function FileManagerGridView({ table, dataFiltered, onDeleteItem,
             }}
             gap={3}
           >
-            {dataFiltered
-              .filter((i) => i.type !== 'folder')
-              .map((file) => (
+            {dataFiltered.map((file) => (
                 <FileManagerFileItem
                   key={file.id}
                   file={file}
-                  selected={selected.includes(file.id)}
-                  onSelect={() => onSelectItem(file.id)}
-                  onDelete={() => onDeleteItem(file.id)}
+                  selected={selected.includes(file.object_url)}
+                  onSelect={() => onSelectItem(file.object_url)}
+                  onDelete={() => onDeleteItem(file.object_url)}
                   sx={{ maxWidth: 'auto' }}
                 />
               ))}

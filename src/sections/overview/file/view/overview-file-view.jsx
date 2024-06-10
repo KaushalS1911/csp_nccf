@@ -151,7 +151,7 @@ export default function OverviewFileView() {
 
               <FileManagerPanel
                 title="Recent Files"
-                link={paths.dashboard.document}
+                link={paths.dashboard.fileManager}
                 onOpen={upload.onTrue}
                 sx={{ mt: 2 }}
               />
