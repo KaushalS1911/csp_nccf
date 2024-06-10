@@ -112,10 +112,10 @@ export default function BasicInfo() {
     axios
       .put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/update_info', payload)
       .then((res) => {
-        notify();
+        // notify();
       })
       .catch((err) => {
-        notifyError();
+        // notifyError();
 
       });
   });

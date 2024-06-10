@@ -357,7 +357,7 @@ export const paths = {
       document_overview: `${ROOTS.DASHBOARD}/document/document-overview`,
      document_upload : `${ROOTS.DASHBOARD}/document/document-upload`,
      document_list : `${ROOTS.DASHBOARD}/document/document-list`,
-     document_view :(id) => `${ROOTS.DASHBOARD}/document/${id}`,
+     document_view : `${ROOTS.DASHBOARD}/document/document-view`,
     upload_evidence: `${ROOTS.DASHBOARD}/document/upload-evidence`,
 
       // demo: {

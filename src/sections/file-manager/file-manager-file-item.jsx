@@ -46,7 +46,7 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
 
   const details = useBoolean();
 
-  const favorite = useBoolean(file.isFavorited);
+  // const favorite = useBoolean(file.isFavorited);
 
   const popover = usePopover();
 
@@ -59,29 +59,29 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
     copy(file.url);
   }, [copy, enqueueSnackbar, file.url]);
 
-  const renderIcon =
-    (checkbox.value || selected) && onSelect ? (
-      <Checkbox
-        size="medium"
-        checked={selected}
-        onClick={onSelect}
-        icon={<Iconify icon="eva:radio-button-off-fill" />}
-        checkedIcon={<Iconify icon="eva:checkmark-circle-2-fill" />}
-        sx={{ p: 0.75 }}
-      />
-    ) : (
-      <FileThumbnail file={file.type} sx={{ width: 36, height: 36 }} />
-    );
+  // const renderIcon =
+  //   (checkbox.value || selected) && onSelect ? (
+  //     <Checkbox
+  //       size="medium"
+  //       checked={selected}
+  //       onClick={onSelect}
+  //       icon={<Iconify icon="eva:radio-button-off-fill" />}
+  //       checkedIcon={<Iconify icon="eva:checkmark-circle-2-fill" />}
+  //       sx={{ p: 0.75 }}
+  //     />
+  //   ) : (
+  //     <FileThumbnail file={file.type} sx={{ width: 36, height: 36 }} />
+  //   );
 
   const renderAction = (
     <Stack direction="row" alignItems="center" sx={{ top: 8, right: 8, position: 'absolute' }}>
-      <Checkbox
+      {/* <Checkbox
         color="warning"
         icon={<Iconify icon="eva:star-outline" />}
         checkedIcon={<Iconify icon="eva:star-fill" />}
         checked={favorite.value}
         onChange={favorite.onToggle}
-      />
+      /> */}
 
       <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
         <Iconify icon="eva:more-vertical-fill" />
@@ -91,12 +91,19 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
 
   const renderText = (
     <>
+     <Avatar
+            alt={file.object_url}
+            src={file.object_url}
+            sx={{ mr: 2, height: '60px', width: '60px' }}
+            variant="rounded"
+          />
       <TextMaxLine
         persistent
         variant="subtitle2"
         onClick={details.onTrue}
         sx={{ width: 1, mt: 2, mb: 0.5 }}
-      >
+        >
+        {file.doc_type}
         
       </TextMaxLine>
 
@@ -110,21 +117,9 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
           color: 'text.disabled',
         }}
       >
-        {fData(file.size)}
 
-        <Box
-          component="span"
-          sx={{
-            mx: 0.75,
-            width: 2,
-            height: 2,
-            flexShrink: 0,
-            borderRadius: '50%',
-            bgcolor: 'currentColor',
-          }}
-        />
         <Typography noWrap component="span" variant="caption">
-          {fDateTime(file.modifiedAt)}
+          {fDateTime(file.uploaded_on)}
         </Typography>
       </Stack>
     </>
@@ -170,9 +165,9 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
         }}
         {...other}
       >
-        <Box onMouseEnter={checkbox.onTrue} onMouseLeave={checkbox.onFalse}>
+        {/* <Box onMouseEnter={checkbox.onTrue} onMouseLeave={checkbox.onFalse}>
           {renderIcon}
-        </Box>
+        </Box> */}
 
         {renderText}
 
@@ -221,7 +216,7 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
         </MenuItem>
       </CustomPopover>
 
-      <FileManagerFileDetails
+      {/* <FileManagerFileDetails
         item={file}
         favorited={favorite.value}
         onFavorite={favorite.onToggle}
@@ -232,7 +227,7 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
           details.onFalse();
           onDelete();
         }}
-      />
+      /> */}
 
       <FileManagerShareDialog
         open={share.value}

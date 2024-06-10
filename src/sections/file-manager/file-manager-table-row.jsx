@@ -57,9 +57,9 @@ const router = useRouter()
 
   const handleViewRow =(id)=>{
     console.log(id);
-        // router.push(paths.dashboard.document.document_view(id))    
-        const ram = paths.dashboard.document.document_view(id)    
-        console.log(ram,"ram");
+        router.push(paths.dashboard.document.document_view)    
+        // const ram = paths.dashboard.document.document_view(id)    
+        // console.log(ram,"ram");
   }
   const handleChangeInvite = useCallback((event) => {
     setInviteEmail(event.target.value);

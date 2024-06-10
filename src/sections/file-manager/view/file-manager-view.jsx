@@ -153,7 +153,7 @@ const router = useRouter()
         typeOptions={FILE_TYPE_OPTIONS}
       />
 
-      {/* <ToggleButtonGroup size="small" value={view} exclusive onChange={handleChangeView}>
+      <ToggleButtonGroup size="small" value={view} exclusive onChange={handleChangeView}>
         <ToggleButton value="list">
           <Iconify icon="solar:list-bold" />
         </ToggleButton>
@@ -161,7 +161,7 @@ const router = useRouter()
         <ToggleButton value="grid">
           <Iconify icon="mingcute:dot-grid-fill" />
         </ToggleButton>
-      </ToggleButtonGroup> */}
+      </ToggleButtonGroup>
     </Stack>
   );
 
@@ -212,7 +212,7 @@ const router = useRouter()
           />
         ) : (
           <>
-            {view === 'list' && (
+            {view === 'list' ? (
               <FileManagerTable
                 table={table}
                 dataFiltered={dataFiltered}
@@ -220,7 +220,14 @@ const router = useRouter()
                 notFound={notFound}
                 onOpenConfirm={confirm.onTrue}
               />
-            ) }
+            ): (
+              <FileManagerGridView
+                table={table}
+                dataFiltered={dataFiltered}
+                onDeleteItem={handleDeleteItem}
+                onOpenConfirm={confirm.onTrue}
+              />
+            )}
           </>
         )}
       </Container>

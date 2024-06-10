@@ -21,7 +21,6 @@ import FileManagerNewFolderDialog from './file-manager-new-folder-dialog';
 
 export default function FileManagerGridView({ table, dataFiltered, onDeleteItem, onOpenConfirm }) {
   const { selected, onSelectRow: onSelectItem, onSelectAllRows: onSelectAllItems } = table;
-
   const containerRef = useRef(null);
 
   const [folderName, setFolderName] = useState('');
@@ -87,7 +86,7 @@ export default function FileManagerGridView({ table, dataFiltered, onDeleteItem,
 
         <FileManagerPanel
           title="Files"
-          subTitle={`${dataFiltered} files`}
+          subTitle={`${dataFiltered.filter((item) => item.doc_type !== 'folder').length} files`}
           onOpen={upload.onTrue}
           collapse={files.value}
           onCollapse={files.onToggle}
@@ -104,13 +103,15 @@ export default function FileManagerGridView({ table, dataFiltered, onDeleteItem,
             }}
             gap={3}
           >
-            {dataFiltered.map((file) => (
+            {dataFiltered
+              .filter((i) => i.doc_type !== 'folder')
+              .map((file) => (
                 <FileManagerFileItem
                   key={file.id}
                   file={file}
-                  selected={selected.includes(file.object_url)}
-                  onSelect={() => onSelectItem(file.object_url)}
-                  onDelete={() => onDeleteItem(file.object_url)}
+                  selected={selected.includes(file.id)}
+                  onSelect={() => onSelectItem(file.id)}
+                  onDelete={() => onDeleteItem(file.id)}
                   sx={{ maxWidth: 'auto' }}
                 />
               ))}

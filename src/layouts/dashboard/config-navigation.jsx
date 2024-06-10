@@ -460,11 +460,11 @@ export function useNavData() {
             path: paths.dashboard.basic_info,
             icon: ICONS.user,
           },
-          {
-            title: t('Order'),
-            path: paths.dashboard.orders,
-            icon: ICONS.order,
-          },
+          // {
+          //   title: t('Order'),
+          //   path: paths.dashboard.orders,
+          //   icon: ICONS.order,
+          // },
 
           // USER
           // {
