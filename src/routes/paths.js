@@ -293,7 +293,6 @@ export const paths = {
     root: ROOTS.DASHBOARD,
     basic_info: `${ROOTS.DASHBOARD}/basic-info`,
     // upload_document: `${ROOTS.DASHBOARD}/upload-document`,
-    upload_evidence: `${ROOTS.DASHBOARD}/upload-evidence`,
     // document_list: `${ROOTS.DASHBOARD}/document-list`,
     orders: `${ROOTS.DASHBOARD}/orders`,
     mail: `${ROOTS.DASHBOARD}/mail`,
@@ -355,9 +354,12 @@ export const paths = {
     },
     document: {
       root: `${ROOTS.DASHBOARD}/document`,
+      document_overview: `${ROOTS.DASHBOARD}/document/document-overview`,
      document_upload : `${ROOTS.DASHBOARD}/document/document-upload`,
      document_list : `${ROOTS.DASHBOARD}/document/document-list`,
      document_view : `${ROOTS.DASHBOARD}/document/document-view`,
+    upload_evidence: `${ROOTS.DASHBOARD}/documentfile/upload-evidence`,
+
       // demo: {
       //   details: `${ROOTS.DASHBOARD}/order/${MOCK_ID}`,
       // },

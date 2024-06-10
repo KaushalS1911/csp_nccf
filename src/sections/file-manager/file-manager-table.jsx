@@ -23,11 +23,11 @@ import FileManagerTableRow from './file-manager-table-row';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name' },
-  { id: 'size', label: 'Size', width: 120 },
-  { id: 'type', label: 'Type', width: 120 },
+  { id: 'sr_no', label: 'Sr No' },
+  { id: 'document', label: 'Document' },
+  // { id: 'size', label: 'Size', width: 120 },
+  // { id: 'type', label: 'Type', width: 120 },
   { id: 'modifiedAt', label: 'Modified', width: 140 },
-  { id: 'shared', label: 'Shared', align: 'right', width: 140 },
   { id: '', width: 88 },
 ];
 
@@ -42,6 +42,7 @@ export default function FileManagerTable({
 }) {
   const theme = useTheme();
 
+  
   const {
     dense,
     page,
@@ -74,7 +75,7 @@ export default function FileManagerTable({
           onSelectAllRows={(checked) =>
             onSelectAllRows(
               checked,
-              dataFiltered.map((row) => row.id)
+              dataFiltered.map((row) => row.object_url)
             )
           }
           action={
@@ -126,7 +127,7 @@ export default function FileManagerTable({
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  dataFiltered.map((row) => row.id)
+                  dataFiltered.map((row) => row.object_url)
                 )
               }
               sx={{
@@ -144,15 +145,14 @@ export default function FileManagerTable({
             />
 
             <TableBody>
-              {dataFiltered
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => (
+              {dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row,index) => (
                   <FileManagerTableRow
-                    key={row.id}
+                    key={index}
                     row={row}
-                    selected={selected.includes(row.id)}
-                    onSelectRow={() => onSelectRow(row.id)}
-                    onDeleteRow={() => onDeleteRow(row.id)}
+                    index={index}
+                    selected={selected.includes(row.object_url)}
+                    onSelectRow={() => onSelectRow(row.object_url)}
+                    onDeleteRow={() => onDeleteRow(row.object_url)}
                   />
                 ))}
 

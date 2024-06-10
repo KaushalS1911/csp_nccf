@@ -182,6 +182,7 @@ import { AuthGuard } from 'src/auth/guard';
 import DashboardLayout from 'src/layouts/dashboard';
 
 import { LoadingScreen } from 'src/components/loading-screen';
+import { OverviewFileView } from 'src/sections/overview/file/view';
 
 // ----------------------------------------------------------------------
 
@@ -265,7 +266,6 @@ export const dashboardRoutes = [
       { path: 'basic-info', element: <BasicInfoPage /> },
       // { path: 'upload-document', element: <UploadDocument /> },
       // { path: 'document', element: <UploadListView /> },
-      { path: 'upload-evidence', element: <UploadEvidencePage /> },
       { path: 'orders', element: <OrdersPage /> },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },
@@ -298,10 +298,11 @@ export const dashboardRoutes = [
         path: 'document',
         children: [
           { element: <UploadListView />, index: true },
-          // { path: 'document-list', element: <ProductDetailsPage /> },
+          { path: 'document-overview', element: <OverviewFileView />  },
           { path: 'document-list', element: <UploadListView /> },
           { path: 'document-upload', element: <UploadDocument /> },
           { path: 'document-view', element: <ProductDetailsPage /> },
+          { path: 'upload-evidence', element: <UploadEvidencePage /> },
         ],
       },
       {

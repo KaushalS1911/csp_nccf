@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -26,6 +26,7 @@ import FileManagerFilters from '../file-manager-filters';
 import FileManagerGridView from '../file-manager-grid-view';
 import FileManagerFiltersResult from '../file-manager-filters-result';
 import FileManagerNewFolderDialog from '../file-manager-new-folder-dialog';
+import { useGetDocuments } from 'src/api/document';
 
 // ----------------------------------------------------------------------
 
@@ -50,10 +51,17 @@ export default function FileManagerView() {
   const confirm = useBoolean();
 
   const upload = useBoolean();
+  const {document} = useGetDocuments();
 
   const [view, setView] = useState('list');
 
-  const [tableData, setTableData] = useState(_allFiles);
+  const [tableData, setTableData] = useState('');
+
+  useEffect(() => {
+    if(document){
+      setTableData(document);
+    }
+  },[])
 
   const [filters, setFilters] = useState(defaultFilters);
 
@@ -251,32 +259,23 @@ export default function FileManagerView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters, dateError }) {
-  const { name, type, startDate, endDate } = filters;
+  const { doc_type } = filters;
 
+  console.log("input : ",inputData);
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
+    const docType = comparator(a[0], b[0]);
+    if (docType !== 0) return docType;
     return a[1] - b[1];
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
 
-  if (name) {
+  if (doc_type) {
     inputData = inputData.filter(
-      (file) => file.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+      (file) => file.doc_type.toLowerCase().indexOf(doc_type.toLowerCase()) !== -1
     );
-  }
-
-  if (type.length) {
-    inputData = inputData.filter((file) => type.includes(fileFormat(file.type)));
-  }
-
-  if (!dateError) {
-    if (startDate && endDate) {
-      inputData = inputData.filter((file) => isBetween(file.createdAt, startDate, endDate));
-    }
   }
 
   return inputData;

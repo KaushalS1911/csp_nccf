@@ -159,7 +159,7 @@ export default function FileManagerFilters({
 
   const renderFilterDate = (
     <>
-      <Button
+      {/* <Button
         color="inherit"
         onClick={onOpenDateRange}
         endIcon={
@@ -172,7 +172,7 @@ export default function FileManagerFilters({
         {!!filters.startDate && !!filters.endDate
           ? shortDateLabel(filters.startDate, filters.endDate)
           : 'Select Date'}
-      </Button>
+      </Button> */}
 
       <CustomDateRangePicker
         variant="calendar"

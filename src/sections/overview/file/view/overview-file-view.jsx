@@ -27,6 +27,7 @@ import FileManagerPanel from '../../../file-manager/file-manager-panel';
 import FileStorageOverview from '../../../file-manager/file-storage-overview';
 import FileManagerFolderItem from '../../../file-manager/file-manager-folder-item';
 import FileManagerNewFolderDialog from '../../../file-manager/file-manager-new-folder-dialog';
+import { useGetDocuments } from 'src/api/document';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +43,7 @@ const TIME_LABELS = {
 
 export default function OverviewFileView() {
   const theme = useTheme();
+  
 
   const smDown = useResponsive('down', 'sm');
 
@@ -54,6 +56,7 @@ export default function OverviewFileView() {
   const newFolder = useBoolean();
 
   const upload = useBoolean();
+
 
   const handleChangeFolderName = useCallback((event) => {
     setFolderName(event.target.value);
@@ -119,87 +122,7 @@ export default function OverviewFileView() {
         <Grid container spacing={3}>
           {smDown && <Grid xs={12}>{renderStorageOverview}</Grid>}
 
-          <Grid xs={12} sm={6} md={4}>
-            <FileWidget
-              title="Dropbox"
-              value={GB / 10}
-              total={GB}
-              icon="/assets/icons/app/ic_dropbox.svg"
-            />
-          </Grid>
-
-          <Grid xs={12} sm={6} md={4}>
-            <FileWidget
-              title="Drive"
-              value={GB / 5}
-              total={GB}
-              icon="/assets/icons/app/ic_drive.svg"
-            />
-          </Grid>
-
-          <Grid xs={12} sm={6} md={4}>
-            <FileWidget
-              title="OneDrive"
-              value={GB / 2}
-              total={GB}
-              icon="/assets/icons/app/ic_onedrive.svg"
-            />
-          </Grid>
-
           <Grid xs={12} md={6} lg={8}>
-            <FileDataActivity
-              title="Data Activity"
-              chart={{
-                labels: TIME_LABELS,
-                colors: [
-                  theme.palette.primary.main,
-                  theme.palette.error.main,
-                  theme.palette.warning.main,
-                  theme.palette.text.disabled,
-                ],
-                series: [
-                  {
-                    type: 'Week',
-                    data: [
-                      { name: 'Images', data: [20, 34, 48, 65, 37, 48, 9] },
-                      { name: 'Media', data: [10, 34, 13, 26, 27, 28, 18] },
-                      { name: 'Documents', data: [10, 14, 13, 16, 17, 18, 28] },
-                      { name: 'Other', data: [5, 12, 6, 7, 8, 9, 48] },
-                    ],
-                  },
-                  {
-                    type: 'Month',
-                    data: [
-                      {
-                        name: 'Images',
-                        data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],
-                      },
-                      {
-                        name: 'Media',
-                        data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],
-                      },
-                      {
-                        name: 'Documents',
-                        data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],
-                      },
-                      {
-                        name: 'Other',
-                        data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],
-                      },
-                    ],
-                  },
-                  {
-                    type: 'Year',
-                    data: [
-                      { name: 'Images', data: [10, 34, 13, 56, 77] },
-                      { name: 'Media', data: [10, 34, 13, 56, 77] },
-                      { name: 'Documents', data: [10, 34, 13, 56, 77] },
-                      { name: 'Other', data: [10, 34, 13, 56, 77] },
-                    ],
-                  },
-                ],
-              }}
-            />
 
             <div>
               <FileManagerPanel
@@ -228,7 +151,7 @@ export default function OverviewFileView() {
 
               <FileManagerPanel
                 title="Recent Files"
-                link={paths.dashboard.fileManager}
+                link={paths.dashboard.document}
                 onOpen={upload.onTrue}
                 sx={{ mt: 2 }}
               />

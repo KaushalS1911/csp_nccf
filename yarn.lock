@@ -1619,16 +1619,6 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@oven/bun-windows-x64-baseline@1.1.12":
-  version "1.1.12"
-  resolved "https://registry.npmjs.org/@oven/bun-windows-x64-baseline/-/bun-windows-x64-baseline-1.1.12.tgz"
-  integrity sha512-MRn+zcJO1hcVqwJmFxpUSdb6ZvrYC8Xp2N1fPOzdw3YSskz9iHkJuUKzx7s9iCC7jTpo6XI/H51EFr/M2U7Ipg==
-
-"@oven/bun-windows-x64@1.1.12":
-  version "1.1.12"
-  resolved "https://registry.npmjs.org/@oven/bun-windows-x64/-/bun-windows-x64-1.1.12.tgz"
-  integrity sha512-ufvTeXXI9tJSJUhvdPnFUmGqCNBKBazEwjvQ5c8vhtZ8hdBHV54LoURVDIBYCgzfdv5NQT3sr8qRLFqy4mlMLg==
-
 "@pkgr/utils@^2.3.1":
   version "2.4.2"
   resolved "https://registry.npmjs.org/@pkgr/utils/-/utils-2.4.2.tgz"
@@ -2921,20 +2911,6 @@ bufferutil@^4.0.1:
   integrity sha512-4T53u4PdgsXqKaIctwF8ifXlRTTmEPJ8iEPWFdGZvcf7sbwYo6FKFEX9eNNAnzFZ7EzJAQ3CJeOtCRA4rDp7Pw==
   dependencies:
     node-gyp-build "^4.3.0"
-
-bun@^1.1.12:
-  version "1.1.12"
-  resolved "https://registry.npmjs.org/bun/-/bun-1.1.12.tgz"
-  integrity sha512-NZzeZuZk7VwCs8VAXnXUHCPOlTS/IyHCscChtT1M1FLSwhBcVMsGVStYlXaaoqsinBKgp0CGJdhnJw2gR3NkDw==
-  optionalDependencies:
-    "@oven/bun-darwin-aarch64" "1.1.12"
-    "@oven/bun-darwin-x64" "1.1.12"
-    "@oven/bun-darwin-x64-baseline" "1.1.12"
-    "@oven/bun-linux-aarch64" "1.1.12"
-    "@oven/bun-linux-x64" "1.1.12"
-    "@oven/bun-linux-x64-baseline" "1.1.12"
-    "@oven/bun-windows-x64" "1.1.12"
-    "@oven/bun-windows-x64-baseline" "1.1.12"
 
 bundle-name@^3.0.0:
   version "3.0.0"
@@ -5525,6 +5501,11 @@ minimist@^1.2.0, minimist@^1.2.6, minimist@^1.2.8:
   version "1.2.8"
   resolved "https://registry.npmjs.org/minimist/-/minimist-1.2.8.tgz"
   integrity sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==
+
+moment@^2.29.4, moment@^2.30.1:
+  version "2.30.1"
+  resolved "https://registry.npmjs.org/moment/-/moment-2.30.1.tgz"
+  integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
 
 ms@^2.1.1, ms@2.1.2:
   version "2.1.2"

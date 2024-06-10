@@ -33,10 +33,9 @@ import FileManagerFileDetails from './file-manager-file-details';
 
 // ----------------------------------------------------------------------
 
-export default function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow }) {
+export default function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow ,index}) {
   const theme = useTheme();
-
-  const { name, size, type, modifiedAt, shared, isFavorited } = row;
+  const { doc_type  , object_url,uploaded_on } = row;
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -119,10 +118,12 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
             onClick={onSelectRow}
           />
         </TableCell>
-
+        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
+          {index+1}
+        </TableCell>
         <TableCell onClick={handleClick}>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <FileThumbnail file={type} sx={{ width: 36, height: 36 }} />
+            {/* <FileThumbnail file={type} sx={{ width: 36, height: 36 }} /> */}
 
             <Typography
               noWrap
@@ -133,23 +134,18 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
                 ...(details.value && { fontWeight: 'fontWeightBold' }),
               }}
             >
-              {name}
+              {doc_type}
             </Typography>
           </Stack>
         </TableCell>
 
-        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
-          {fData(size)}
-        </TableCell>
 
-        <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
-          {type}
-        </TableCell>
+       
 
         <TableCell onClick={handleClick} sx={{ whiteSpace: 'nowrap' }}>
           <ListItemText
-            primary={fDate(modifiedAt)}
-            secondary={fTime(modifiedAt)}
+            primary={fDate(uploaded_on)}
+            secondary={fTime(uploaded_on)}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
               mt: 0.5,
@@ -159,26 +155,6 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
           />
         </TableCell>
 
-        <TableCell align="right" onClick={handleClick}>
-          <AvatarGroup
-            max={4}
-            sx={{
-              display: 'inline-flex',
-              [`& .${avatarGroupClasses.avatar}`]: {
-                width: 24,
-                height: 24,
-                '&:first-of-type': {
-                  fontSize: 12,
-                },
-              },
-            }}
-          >
-            {shared &&
-              shared.map((person) => (
-                <Avatar key={person.id} alt={person.name} src={person.avatarUrl} />
-              ))}
-          </AvatarGroup>
-        </TableCell>
 
         <TableCell
           align="right"
@@ -187,14 +163,14 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
             whiteSpace: 'nowrap',
           }}
         >
-          <Checkbox
+          {/* <Checkbox
             color="warning"
             icon={<Iconify icon="eva:star-outline" />}
             checkedIcon={<Iconify icon="eva:star-fill" />}
             checked={favorite.value}
             onChange={favorite.onToggle}
             sx={{ p: 0.75 }}
-          />
+          /> */}
 
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
