@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import moment from 'moment';
 
 // import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -44,8 +45,8 @@ export default function AppNewInvoice({ title, subheader, tableData, tableLabels
                 .slice(
                   table.page * table.rowsPerPage,
                   table.page * table.rowsPerPage + table.rowsPerPage
-                ).map((row) => (
-                  <AppNewInvoiceRow key={row.id} row={row} />
+                ).map((row, index) => (
+                  <AppNewInvoiceRow key={row.id} row={{...row, index}} />
                 ))}
             </TableBody>
           </Table>
@@ -102,7 +103,7 @@ function AppNewInvoiceRow({ row }) {
   return (
     <>
       <TableRow>
-        <TableCell>{row.id}</TableCell>
+        <TableCell>{row.index + 1}</TableCell>
 
         <TableCell>{row.commodity}</TableCell>
 
@@ -119,6 +120,9 @@ function AppNewInvoiceRow({ row }) {
             {row.nccf_order_status}
           </Label>
         </TableCell>
+
+        <TableCell>{moment(row.created_at).format("DD/MM/YYYY")}</TableCell>
+
 
         {/*<TableCell align="right" sx={{ pr: 1 }}>*/}
         {/*  <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>*/}

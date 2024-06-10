@@ -83,6 +83,7 @@ export default function OverviewAppView({ vendorCode }) {
               { id: 'category', label: 'Commodity' },
               { id: 'price', label: 'Quantity' },
               { id: 'status', label: 'Status' },
+              { id: 'date', label: 'Date' },
               { id: '' },
             ]}
           />
