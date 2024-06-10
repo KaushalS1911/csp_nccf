@@ -107,15 +107,15 @@ export default function ProductDetailsView({ id }) {
 
       <Grid container spacing={{ xs: 3, md: 5, lg: 8 }}>
         <Grid xs={12} md={6} lg={7}>
-          <ProductDetailsCarousel  />
+          <ProductDetailsCarousel  images ={["https://api-dev-minimal-v510.vercel.app/assets/images/m_product/product_3.jpg"]}/>
         </Grid>
 
-        <Grid xs={12} md={6} lg={5}>
-          {/* <ProductDetailsSummary disabledActions product={product} /> */}
-          this is image data part
-        </Grid>
+        {/*<Grid xs={12} md={6} lg={5}>*/}
+        {/*  /!* <ProductDetailsSummary disabledActions product={product} /> *!/*/}
+        {/*  this is image data part*/}
+        {/*</Grid>*/}
       </Grid>
-{/* 
+{/*
       <Box
         gap={5}
         display="grid"

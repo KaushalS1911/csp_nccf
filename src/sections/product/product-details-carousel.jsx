@@ -59,10 +59,10 @@ const StyledThumbnailsContainer = styled('div')(({ length, theme }) => ({
   }),
 }));
 
-const images =["https://api-dev-minimal-v510.vercel.app/assets/images/m_product/product_1.jpg","https://api-dev-minimal-v510.vercel.app/assets/images/m_product/product_2.jpg","https://api-dev-minimal-v510.vercel.app/assets/images/m_product/product_3.jpg"]
+
 // ----------------------------------------------------------------------
 
-export default function ProductDetailsCarousel() {
+export default function ProductDetailsCarousel({images}) {
   const theme = useTheme();
 
   const slides = images.map((img) => ({

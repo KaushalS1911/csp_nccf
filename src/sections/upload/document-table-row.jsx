@@ -19,11 +19,15 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 
 import DocumentQuickEditForm from './document-quick-edit-form';
+import { useState } from 'react';
+import MaxWidthDialog from '../overview/app/viewDocumentDialog';
 
 // ----------------------------------------------------------------------
 
 export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow, onViewRow,onDeleteRow, index }) {
   const { doc_type, object_url, uploaded_on } = row;
+  const [open, setOpen] = useState(false);
+  const [images, setImages] = useState([])
 
   const secondSlashIndex = object_url.indexOf("/", 8);
 
@@ -36,6 +40,15 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
   const quickEdit = useBoolean();
 
   const popover = usePopover();
+
+  function handleClose() {
+    setOpen(false)
+  }
+
+  function handleViewDialog(url) {
+    setImages([url]);
+    setOpen(true);
+  }
 
   return (
     <>
@@ -91,35 +104,34 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
         sx={{ width: 140 }}
       >
         <MenuItem
-          onClick={() => {
-            onViewRow();
-            popover.onClose();
-          }}
+          onClick={() => handleViewDialog(url)}
         >
           <Iconify icon="solar:eye-bold" />
           View
         </MenuItem>
 
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            popover.onClose();
-          }}
-        >
-          <Iconify icon="solar:pen-bold" />
-          Edit
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            confirm.onTrue();
-            popover.onClose();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="solar:trash-bin-trash-bold" />
-          Delete
-        </MenuItem>
+        {/*<MenuItem*/}
+        {/*  onClick={() => {*/}
+        {/*    onEditRow();*/}
+        {/*    popover.onClose();*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <Iconify icon="solar:pen-bold" />*/}
+        {/*  Edit*/}
+        {/*</MenuItem>*/}
+        {/*<MenuItem*/}
+        {/*  onClick={() => {*/}
+        {/*    confirm.onTrue();*/}
+        {/*    popover.onClose();*/}
+        {/*  }}*/}
+        {/*  sx={{ color: 'error.main' }}*/}
+        {/*>*/}
+        {/*  <Iconify icon="solar:trash-bin-trash-bold" />*/}
+        {/*  Delete*/}
+        {/*</MenuItem>*/}
       </CustomPopover>
+
+      <MaxWidthDialog handleClose={handleClose} open={open} images={images}/>
 
       <ConfirmDialog
         open={confirm.value}
