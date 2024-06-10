@@ -38,7 +38,6 @@ function Container({ children }) {
   const { authenticated, method } = useAuthContext();
 
   const [checked, setChecked] = useState(false);
-
   const check = useCallback(() => {
     if (!authenticated) {
       const searchParams = new URLSearchParams({
@@ -55,7 +54,12 @@ function Container({ children }) {
     }
   }, [authenticated, method, router]);
 
+  // const code =  sessionStorage.getItem('vendor')
   useEffect(() => {
+  //  if(!code){
+  //   router.push(loginPaths[method])
+  // }
+  
     check();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

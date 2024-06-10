@@ -298,9 +298,10 @@ export const dashboardRoutes = [
         path: 'document',
         children: [
           { element: <UploadListView />, index: true },
+          // { path: 'document-list', element: <ProductDetailsPage /> },
           { path: 'document-list', element: <UploadListView /> },
           { path: 'document-upload', element: <UploadDocument /> },
-          { path: 'document-view', element: <ProductListPage /> },
+          { path: 'document-view', element: <ProductDetailsPage /> },
         ],
       },
       {

@@ -22,12 +22,13 @@ import Button from '@mui/material/Button';
 import { RouterLink } from '../../routes/components';
 import { PATH_AFTER_LOGIN } from '../../config-global';
 import { useRouter } from '../../routes/hooks';
+import { useNavigate } from 'react-router-dom';
 
 // ----------------------------------------------------------------------
 
 export default function Header({ onOpenNav }) {
   const theme = useTheme();
-
+const navigate= useNavigate()
   const router = useRouter()
 
   const settings = useSettingsContext();
@@ -44,7 +45,8 @@ export default function Header({ onOpenNav }) {
 
   function handleLogout() {
     sessionStorage.clear();
-    router.push('/');
+    router.push('/')
+    router.reload()
   }
 
   const renderContent = (
@@ -129,3 +131,4 @@ export default function Header({ onOpenNav }) {
 Header.propTypes = {
   onOpenNav: PropTypes.func,
 };
+

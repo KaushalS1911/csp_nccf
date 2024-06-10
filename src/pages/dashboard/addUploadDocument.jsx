@@ -12,10 +12,14 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import axios from 'axios';
 import { Upload } from 'src/components/upload';
 import { Helmet } from 'react-helmet-async';
+import { enqueueSnackbar } from 'notistack';
+import { useRouter } from 'src/routes/hooks';
+import { paths } from 'src/routes/paths';
 // ----------------------------------------------------------------------
 export default function UploadDocument() {
   const settings = useSettingsContext();
   const [vendorCode, setVendorCode] = useState('');
+  const router = useRouter()
   const [files, setFiles] = useState([]);
   const notify = () => toast.success('Documents Uploaded');
   const notifyError = () => toast.error('Failed to Upload');
@@ -56,10 +60,14 @@ export default function UploadDocument() {
           },
         }
       );
-      if (response.data.status == '201') {
-        notify();
+      if (response) {
+        // notify();
+        enqueueSnackbar('Documents Added successfully!')
+        router.push(paths.dashboard.document.document_list)
       } else {
-        notifyError();
+        console.log("Error");
+        enqueueSnackbar('Documents Not Added!')
+        // notifyError();
       }
       console.log('Form submitted successfully:', response.data);
     } catch (error) {
@@ -122,7 +130,7 @@ export default function UploadDocument() {
                     <InputLabel>Document Type</InputLabel>
                     <Select {...field} label="Document Type">
                       {docTypeOption.map((option) => (
-                        <MenuItem key={option} value={option.key}>
+                        <MenuItem key={option} value={option.label}>
                           {option.label}
                         </MenuItem>
                       ))}

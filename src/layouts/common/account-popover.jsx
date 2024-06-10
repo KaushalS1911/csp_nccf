@@ -50,11 +50,12 @@ export default function AccountPopover() {
 
   const popover = usePopover();
 
-  const handleLogout = async () => {
+  const handleLogout =  () => {
     try {
-      await logout();
+      sessionStorage.clear();
+    router.push('/')
+    router.reload()
       popover.onClose();
-      router.replace('/');
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Unable to logout!', { variant: 'error' });

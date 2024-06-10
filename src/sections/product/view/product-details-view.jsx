@@ -14,7 +14,7 @@ import Typography from '@mui/material/Typography';
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
-import { useGetProduct } from 'src/api/product';
+// import { useGetProduct } from 'src/api/product';
 import { PRODUCT_PUBLISH_OPTIONS } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
@@ -27,6 +27,7 @@ import ProductDetailsSummary from '../product-details-summary';
 import ProductDetailsToolbar from '../product-details-toolbar';
 import ProductDetailsCarousel from '../product-details-carousel';
 import ProductDetailsDescription from '../product-details-description';
+import { useGetProduct, useGetProducts } from 'src/api/product';
 
 // ----------------------------------------------------------------------
 
@@ -51,7 +52,7 @@ const SUMMARY = [
 // ----------------------------------------------------------------------
 
 export default function ProductDetailsView({ id }) {
-  const { product, productLoading, productError } = useGetProduct(id);
+  // const { product, productLoading, productError } = useGetProduct(id);
 
   const settings = useSettingsContext();
 
@@ -59,11 +60,11 @@ export default function ProductDetailsView({ id }) {
 
   const [publish, setPublish] = useState('');
 
-  useEffect(() => {
-    if (product) {
-      setPublish(product?.publish);
-    }
-  }, [product]);
+  // useEffect(() => {
+  //   if (product) {
+  //     setPublish(product?.publish);
+  //   }
+  // }, [product]);
 
   const handleChangePublish = useCallback((newValue) => {
     setPublish(newValue);
@@ -78,7 +79,7 @@ export default function ProductDetailsView({ id }) {
   const renderError = (
     <EmptyContent
       filled
-      title={`${productError?.message}`}
+      title={`hello`}
       action={
         <Button
           component={RouterLink}
@@ -93,27 +94,28 @@ export default function ProductDetailsView({ id }) {
     />
   );
 
-  const renderProduct = product && (
+  const renderProduct = (
     <>
-      <ProductDetailsToolbar
+      {/* <ProductDetailsToolbar
         backLink={paths.dashboard.product.root}
-        editLink={paths.dashboard.product.edit(`${product?.id}`)}
-        liveLink={paths.product.details(`${product?.id}`)}
-        publish={publish || ''}
+        editLink={paths.dashboard.product.edit(`sss`)}
+        liveLink={paths.product.details(`sss`)}
+        publish={''}
         onChangePublish={handleChangePublish}
         publishOptions={PRODUCT_PUBLISH_OPTIONS}
-      />
+      /> */}
 
       <Grid container spacing={{ xs: 3, md: 5, lg: 8 }}>
         <Grid xs={12} md={6} lg={7}>
-          <ProductDetailsCarousel product={product} />
+          <ProductDetailsCarousel  />
         </Grid>
 
         <Grid xs={12} md={6} lg={5}>
-          <ProductDetailsSummary disabledActions product={product} />
+          {/* <ProductDetailsSummary disabledActions product={product} /> */}
+          this is image data part
         </Grid>
       </Grid>
-
+{/* 
       <Box
         gap={5}
         display="grid"
@@ -136,9 +138,9 @@ export default function ProductDetailsView({ id }) {
             </Typography>
           </Box>
         ))}
-      </Box>
+      </Box> */}
 
-      <Card>
+      {/* <Card>
         <Tabs
           value={currentTab}
           onChange={handleChangeTab}
@@ -173,17 +175,17 @@ export default function ProductDetailsView({ id }) {
             totalReviews={product.totalReviews}
           />
         )}
-      </Card>
+      </Card> */}
     </>
   );
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
-      {productLoading && renderSkeleton}
+      {/* { renderSkeleton} */}
 
-      {productError && renderError}
+      {/* {renderError} */}
 
-      {product && renderProduct}
+      { renderProduct}
     </Container>
   );
 }
