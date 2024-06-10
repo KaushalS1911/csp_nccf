@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useCallback } from 'react';
+import moment from 'moment'
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -146,25 +147,27 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
               sx={{ mr: 2, height: '48px', width: '48px' }}
               variant="rounded"
             />
-
-            <Typography
-              noWrap
-              variant="inherit"
-              sx={{
-                maxWidth: 360,
-                cursor: 'pointer',
-                ...(details.value && { fontWeight: 'fontWeightBold' }),
-              }}
-            >
-              {doc_type}
-            </Typography>
           </Stack>
+        </TableCell>
+
+        <TableCell>
+          <Typography
+            noWrap
+            variant="inherit"
+            sx={{
+              maxWidth: 360,
+              cursor: 'pointer',
+              ...(details.value && { fontWeight: 'fontWeightBold' }),
+            }}
+          >
+            {doc_type}
+          </Typography>
         </TableCell>
 
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
           <ListItemText
-            primary={fDate(uploaded_on)}
+            primary={moment(uploaded_on).format("DD/MM/YYYY")}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
               mt: 0.5,

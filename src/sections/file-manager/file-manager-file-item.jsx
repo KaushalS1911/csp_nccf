@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useCallback } from 'react';
+import moment from 'moment'
 
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -138,7 +139,7 @@ setOpen(false)
       >
 
         <Typography noWrap component="span" variant="caption">
-          {fDateTime(file.uploaded_on)}
+          {moment(file.uploaded_on).format("DD/MM/YYYY")}
         </Typography>
       </Stack>
     </>

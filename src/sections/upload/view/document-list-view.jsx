@@ -685,7 +685,7 @@ const defaultFilters = {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={table.dense}
+              dense={true}
               numSelected={table.selected.length}
               rowCount={dataFiltered.length}
               onSelectAllRows={(checked) =>
@@ -756,7 +756,7 @@ const defaultFilters = {
             rowsPerPage={table.rowsPerPage}
             onPageChange={table.onChangePage}
             onRowsPerPageChange={table.onChangeRowsPerPage}
-            dense={table.dense}
+            dense={true}
             onChangeDense={table.onChangeDense}
           />
         </Card>

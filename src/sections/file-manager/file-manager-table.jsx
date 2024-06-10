@@ -25,11 +25,12 @@ import { useRouter } from 'src/routes/hooks';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'srNo', label: 'SrNo' },
-  { id: 'document', label: 'Document' },
+  { id: 'srNo', label: 'Sr No', width: 88 },
+  { id: 'document_img', label: 'Document Image', width: 88 },
+  { id: 'document', label: 'Document Type', width: 100 },
   // { id: 'size', label: 'Size', width: 120 },
   // { id: 'type', label: 'Type', width: 120 },
-  { id: 'date', label: 'Date', width: 140 },
+  { id: 'date', label: 'Date', width: 100 },
   // { id: 'shared', label: 'Shared', align: 'right', width: 140 },
   { id: '', width: 88 },
 ];
@@ -62,7 +63,7 @@ export default function FileManagerTable({
     onChangeRowsPerPage,
   } = table;
 // const router = useRouter()
-//  
+//
   return (
     <>
       <Box
