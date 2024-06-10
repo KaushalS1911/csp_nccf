@@ -208,12 +208,12 @@ export default function UserListView({tableData}) {
             ))}
           </Tabs>
 
-          {/*<UserTableToolbar*/}
-          {/*  filters={filters}*/}
-          {/*  onFilters={handleFilters}*/}
-          {/*  //*/}
-          {/*  roleOptions={_roles}*/}
-          {/*/>*/}
+          <UserTableToolbar
+            filters={filters}
+            onFilters={handleFilters}
+            //
+            roleOptions={_roles}
+          />
 
           {canReset && (
             <UserTableFiltersResult
