@@ -1,7 +1,7 @@
 export const DOCUMENTS = [
   { value: 'all', label: 'All' },
   { value: 'Aadhar', label: 'Aadhar' },
-  { value: 'Pan Number', label: 'Pan Number' },
-  { value: 'Gst Number', label: 'Gst Number' },
-  { value: 'Certificates', label: 'Certificates' },
+  { value: 'pan_number', label: 'Pan Number' },
+  { value: 'gst_number', label: 'Gst Number' },
+  { value: 'certificates', label: 'Certificates' },
 ];

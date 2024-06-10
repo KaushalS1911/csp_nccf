@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import moment from 'moment'
 
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
@@ -22,7 +23,13 @@ import DocumentQuickEditForm from './document-quick-edit-form';
 // ----------------------------------------------------------------------
 
 export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow, onViewRow,onDeleteRow, index }) {
-  const { doc_type, object_url } = row;
+  const { doc_type, object_url, uploaded_on } = row;
+
+  const secondSlashIndex = object_url.indexOf("/", 8);
+
+  // const firstPart = object_url.substring(0, secondSlashIndex);
+  const secondPart = object_url.substring(secondSlashIndex);
+  const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
 
   const confirm = useBoolean();
 
@@ -33,20 +40,20 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="checkbox" sx={{ width: '100px' }}>
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
+        {/*<TableCell padding="checkbox" sx={{ width: '100px' }}>*/}
+        {/*  <Checkbox checked={selected} onClick={onSelectRow} />*/}
+        {/*</TableCell>*/}
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{index + 1}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{doc_type}</TableCell>
 
         <TableCell>
           <Avatar
             alt={object_url}
-            src={object_url}
-            sx={{ mr: 2, height: '100px', width: '100px' }}
+            src={url}
+            sx={{ mr: 2, height: 46, width: 46 }}
             variant="rounded"
           />
         </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{doc_type}</TableCell>
 
         {/* <TableCell>
           <Label
@@ -61,13 +68,13 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
             {status}
           </Label>
         </TableCell> */}
-
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{moment(uploaded_on).format("DD/MM/YYYY")}</TableCell>
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Quick Edit" placement="top" arrow>
-            <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>
-              <Iconify icon="solar:pen-bold" />
-            </IconButton>
-          </Tooltip>
+          {/*<Tooltip title="Quick Edit" placement="top" arrow>*/}
+          {/*  <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>*/}
+          {/*    <Iconify icon="solar:pen-bold" />*/}
+          {/*  </IconButton>*/}
+          {/*</Tooltip>*/}
 
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />

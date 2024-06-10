@@ -488,15 +488,18 @@ import DocumentTableToolbar from '../document-table-toolbar';
 import DocumentTableFiltersResult from '../document-table-filters-result';
 import { DOCUMENTS } from 'src/_mock/_document';
 import { useGetDocuments } from 'src/api/document';
+import axios from 'axios';
+import { useAuthContext } from '../../../auth/hooks';
 
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 
 const TABLE_HEAD = [
-  { id: 'srNo', label: 'Sr No' },
-  { id: 'doc_type', label: 'Document Type', width: 580 },
-  { id: 'object_url', label: 'Document Image', width: 320 },
+  { id: 'srNo', label: 'Sr No', width: 88 },
+  { id: 'doc_type', label: 'Document Type', width: 88 },
+  { id: 'object_url', label: 'Document Image', width: 100 },
+  { id: 'uploaded_on', label: 'Date', width: 100 },
   { id: '', width: 88 },
 ];
 
@@ -509,15 +512,22 @@ const defaultFilters = {
   // ----------------------------------------------------------------------
 
   export default function DocumentListView() {
+
+  const {vendor} = useAuthContext()
+
   const { enqueueSnackbar } = useSnackbar();
 
   const [tableData, setTableData] = useState([]);
-  const {document} = useGetDocuments()
-  useEffect(() => {
-    if (document) {
-  setTableData(document)
-}
-},[document])
+
+    useEffect(() => {
+      getAllDocument();
+    }, []);
+
+    function getAllDocument() {
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/documents`)
+        .then((res) => setTableData(res?.data?.data)).catch((err) => err);
+    }
+
   const table = useTable();
 
   const settings = useSettingsContext();
@@ -642,14 +652,14 @@ const defaultFilters = {
                     }
                     color={
                       (tab.value === 'Aadhar' && 'success') ||
-                      (tab.value === 'Certificates' && 'warning') ||
-                      (tab.value === 'Gst Number' && 'error') ||
-                      (tab.value === 'Pan Number' && 'info') ||
+                      (tab.value === 'certificates' && 'warning') ||
+                      (tab.value === 'gst_number' && 'error') ||
+                      (tab.value === 'pan_number' && 'info') ||
                       'default'
                     }
                   >
-                    {['Aadhar', 'Certificates', 'Gst Number', 'Pan Number'].includes(tab.value)
-                      ? tableData.filter((user) => user.doc_type === tab.label).length
+                    {['Aadhar', 'certificates', 'gst_number', 'pan_number'].includes(tab.value)
+                      ? tableData.filter((user) => user.doc_type === tab.value).length
                       : tableData.length}
                   </Label>
                 }
