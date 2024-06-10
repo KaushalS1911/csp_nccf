@@ -99,10 +99,10 @@
 //     },
 //   ];
 //   // ----------------------------------------------------------------------
-  
+
 //   export default function DocumentListView() {
 //   const { enqueueSnackbar } = useSnackbar();
-  
+
 //   const [tableData, setTableData] = useState([]);
 //   const {document} = useGetDocuments()
 //   useEffect(() => {
@@ -122,7 +122,7 @@
 
 //   const dataFiltered = applyFilter({
 //     inputData: tableData,
-//     comparator: getComparator(table.order, table.orderBy),
+//     comparator: getComparator(table.user, table.orderBy),
 //     filters,
 //   });
 
@@ -206,7 +206,7 @@
 //             { name: 'Document', href: paths.dashboard.document },
 //             { name: 'List' },
 //           ]}
-         
+
 //           sx={{
 //             mb: { xs: 3, md: 5 },
 //           }}
@@ -243,7 +243,7 @@
 //                     { ['Aadhar', 'certificates', 'Gst Number', 'Pan Number'].includes(tab.label)
 //                         ? tableData.filter((user) => user.doc_type === tab.label).length
 //                         : tableData.length}
-                    
+
 //                   </Label>
 //                 }
 //               />
@@ -327,7 +327,7 @@
 //             <Scrollbar>
 //               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
 //                 <TableHeadCustom
-//                   order={table.order}
+//                   user={table.user}
 //                   orderBy={table.orderBy}
 //                   headLabel={TABLE_HEAD}
 //                   rowCount={dataFiltered.length}
@@ -418,8 +418,8 @@
 //   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
 //   stabilizedThis.sort((a, b) => {
-//     const order = comparator(a[0], b[0]);
-//     if (order !== 0) return order;
+//     const user = comparator(a[0], b[0]);
+//     if (user !== 0) return user;
 //     return a[1] - b[1];
 //   });
 
@@ -507,10 +507,10 @@ const defaultFilters = {
 };
 
   // ----------------------------------------------------------------------
-  
+
   export default function DocumentListView() {
   const { enqueueSnackbar } = useSnackbar();
-  
+
   const [tableData, setTableData] = useState([]);
   const {document} = useGetDocuments()
   useEffect(() => {
@@ -614,7 +614,7 @@ const defaultFilters = {
             { name: 'Document', href: paths.dashboard.document },
             { name: 'List' },
           ]}
-         
+
           sx={{
             mb: { xs: 3, md: 5 },
           }}

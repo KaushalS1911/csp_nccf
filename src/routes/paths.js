@@ -161,11 +161,11 @@
 //         edit: `${ROOTS.DASHBOARD}/post/${paramCase(MOCK_TITLE)}/edit`,
 //       },
 //     },
-//     order: {
-//       root: `${ROOTS.DASHBOARD}/order`,
-//       details: (id) => `${ROOTS.DASHBOARD}/order/${id}`,
+//     user: {
+//       root: `${ROOTS.DASHBOARD}/user`,
+//       details: (id) => `${ROOTS.DASHBOARD}/user/${id}`,
 //       demo: {
-//         details: `${ROOTS.DASHBOARD}/order/${MOCK_ID}`,
+//         details: `${ROOTS.DASHBOARD}/user/${MOCK_ID}`,
 //       },
 //     },
 //     job: {
@@ -361,7 +361,7 @@ export const paths = {
     upload_evidence: `${ROOTS.DASHBOARD}/document/upload-evidence`,
 
       // demo: {
-      //   details: `${ROOTS.DASHBOARD}/order/${MOCK_ID}`,
+      //   details: `${ROOTS.DASHBOARD}/user/${MOCK_ID}`,
       // },
     },
     job: {
