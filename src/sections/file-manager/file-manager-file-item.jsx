@@ -32,6 +32,12 @@ import FileManagerFileDetails from './file-manager-file-details';
 // ----------------------------------------------------------------------
 
 export default function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ...other }) {
+  const secondSlashIndex = file.object_url.indexOf("/", 8);
+
+  // const firstPart = object_url.substring(0, secondSlashIndex);
+  const secondPart = file.object_url.substring(secondSlashIndex);
+
+  const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
   const { enqueueSnackbar } = useSnackbar();
 
   const { copy } = useCopyToClipboard();
@@ -93,7 +99,7 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
     <>
      <Avatar
             alt={file.object_url}
-            src={file.object_url}
+            src={url}
             sx={{ mr: 2, height: '60px', width: '60px' }}
             variant="rounded"
           />
@@ -104,7 +110,7 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
         sx={{ width: 1, mt: 2, mb: 0.5 }}
         >
         {file.doc_type}
-        
+
       </TextMaxLine>
 
       <Stack

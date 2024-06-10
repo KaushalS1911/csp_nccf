@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -57,20 +57,26 @@ export default function FileManagerView() {
   const upload = useBoolean();
 
   const [view, setView] = useState('list');
-  
-const router = useRouter()
+
+  const router = useRouter();
   const [tableData, setTableData] = useState([]);
 // const documents = useGetDocuments()
 // console.log(documents,"fffffffff");
   const [filters, setFilters] = useState(defaultFilters);
 
-   function getAllDocument (){
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/documents`).then((res)=> setTableData(res?.data?.data)).catch((err)=>err)
-    }
-    getAllDocument()
+  useEffect(() => {
+    getAllDocument();
+  }, []);
 
-    
-    const dateError = isAfter(filters.startDate, filters.endDate);
+  function getAllDocument() {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/documents`)
+      .then((res) => setTableData(res?.data?.data)).catch((err) => err);
+  }
+
+  // getAllDocument()
+
+
+  const dateError = isAfter(filters.startDate, filters.endDate);
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
@@ -80,14 +86,14 @@ const router = useRouter()
 
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
-    table.page * table.rowsPerPage + table.rowsPerPage
+    table.page * table.rowsPerPage + table.rowsPerPage,
   );
 
   const canReset =
     !!filters.name || !!filters.type.length || (!!filters.startDate && !!filters.endDate);
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
-  
+
   const handleChangeView = useCallback((event, newView) => {
     if (newView !== null) {
       setView(newView);
@@ -102,7 +108,7 @@ const router = useRouter()
         [name]: value,
       }));
     },
-    [table]
+    [table],
   );
 
   const handleResetFilters = useCallback(() => {
@@ -119,7 +125,7 @@ const router = useRouter()
 
       table.onUpdatePageDeleteRow(dataInPage.length);
     },
-    [dataInPage.length, enqueueSnackbar, table, tableData]
+    [dataInPage.length, enqueueSnackbar, table, tableData],
   );
 
   const handleDeleteItems = useCallback(() => {
@@ -155,11 +161,11 @@ const router = useRouter()
 
       <ToggleButtonGroup size="small" value={view} exclusive onChange={handleChangeView}>
         <ToggleButton value="list">
-          <Iconify icon="solar:list-bold" />
+          <Iconify icon="solar:list-bold"/>
         </ToggleButton>
 
         <ToggleButton value="grid">
-          <Iconify icon="mingcute:dot-grid-fill" />
+          <Iconify icon="mingcute:dot-grid-fill"/>
         </ToggleButton>
       </ToggleButtonGroup>
     </Stack>
@@ -181,10 +187,10 @@ const router = useRouter()
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <Typography variant="h4">File Manager</Typography>
+          <Typography variant="h4">Documents</Typography>
           <Button
             variant="contained"
-            startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+            startIcon={<Iconify icon="eva:cloud-upload-fill"/>}
             onClick={upload.onTrue}
           >
             Upload
@@ -220,7 +226,7 @@ const router = useRouter()
                 notFound={notFound}
                 onOpenConfirm={confirm.onTrue}
               />
-            ): (
+            ) : (
               <FileManagerGridView
                 table={table}
                 dataFiltered={dataFiltered}
@@ -232,7 +238,7 @@ const router = useRouter()
         )}
       </Container>
 
-      <FileManagerNewFolderDialog open={upload.value} onClose={upload.onFalse} />
+      <FileManagerNewFolderDialog open={upload.value} onClose={upload.onFalse}/>
 
       <ConfirmDialog
         open={confirm.value}
@@ -277,7 +283,7 @@ function applyFilter({ inputData, comparator, filters, dateError }) {
 
   if (name) {
     inputData = inputData.filter(
-      (file) => file.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+      (file) => file.name.toLowerCase().indexOf(name.toLowerCase()) !== -1,
     );
   }
 

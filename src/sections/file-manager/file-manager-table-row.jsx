@@ -32,13 +32,22 @@ import FileManagerShareDialog from './file-manager-share-dialog';
 import FileManagerFileDetails from './file-manager-file-details';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
+import { useAuthContext } from '../../auth/hooks';
 
 // ----------------------------------------------------------------------
 
 export default function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow,index }) {
+  const { doc_type,object_url,uploaded_on } = row;
+
+  const secondSlashIndex = object_url.indexOf("/", 8);
+
+  // const firstPart = object_url.substring(0, secondSlashIndex);
+  const secondPart = object_url.substring(secondSlashIndex);
+
+  const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
   const theme = useTheme();
 
-  const { doc_type,object_url,uploaded_on } = row;
+
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -57,8 +66,8 @@ const router = useRouter()
 
   const handleViewRow =(id)=>{
     console.log(id);
-        router.push(paths.dashboard.document.document_view)    
-        // const ram = paths.dashboard.document.document_view(id)    
+        router.push(paths.dashboard.document.document_view)
+        // const ram = paths.dashboard.document.document_view(id)
         // console.log(ram,"ram");
   }
   const handleChangeInvite = useCallback((event) => {
@@ -127,8 +136,8 @@ const router = useRouter()
           <Stack direction="row" alignItems="center" spacing={2}>
             {/* <FileThumbnail file={object_url} sx={{ width: 36, height: 36 }} /> */}
             <Avatar
-            alt={object_url}
-            src={object_url}
+            alt={'Document Image'}
+            src={url}
             sx={{ mr: 2, height: '48px', width: '48px' }}
             variant="rounded"
           />
@@ -148,7 +157,7 @@ const router = useRouter()
         </TableCell>
 
 
-      
+
 
         <TableCell  sx={{ whiteSpace: 'nowrap' }}>
           <ListItemText
@@ -162,7 +171,7 @@ const router = useRouter()
           />
         </TableCell>
 
-        
+
 
         <TableCell
           align="right"
@@ -171,7 +180,7 @@ const router = useRouter()
             whiteSpace: 'nowrap',
           }}
         >
-       
+
 
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
