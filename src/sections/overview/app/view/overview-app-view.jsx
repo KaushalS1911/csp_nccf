@@ -10,6 +10,7 @@ import AppNewInvoice from '../app-new-invoice';
 import AppWidgetSummary from '../app-widget-summary';
 import axios from 'axios';
 import { useAuthContext } from '../../../../auth/hooks';
+import UserListView from '../../../../pages/user/view/user-list-view';
 
 // ----------------------------------------------------------------------
 
@@ -75,18 +76,7 @@ export default function OverviewAppView({ vendorCode }) {
           />
         </Grid>
         <Grid xs={12} lg={12}>
-          <AppNewInvoice
-            title="Orders"
-            tableData={orderList}
-            tableLabels={[
-              { id: 'id', label: 'Order ID' },
-              { id: 'category', label: 'Commodity' },
-              { id: 'price', label: 'Quantity' },
-              { id: 'status', label: 'Status' },
-              { id: 'date', label: 'Date' },
-              { id: '' },
-            ]}
-          />
+          <UserListView tableData={orderList}/>
         </Grid>
       </Grid>
     </Container>

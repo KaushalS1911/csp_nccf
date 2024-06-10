@@ -28,8 +28,8 @@
 // const ProductCreatePage = lazy(() => import('src/pages/dashboard/product/new'));
 // const ProductEditPage = lazy(() => import('src/pages/dashboard/product/edit'));
 // // ORDER
-// const OrderListPage = lazy(() => import('src/pages/dashboard/order/list'));
-// const OrderDetailsPage = lazy(() => import('src/pages/dashboard/order/details'));
+// const OrderListPage = lazy(() => import('src/pages/dashboard/user/list'));
+// const OrderDetailsPage = lazy(() => import('src/pages/dashboard/user/details'));
 // // INVOICE
 // const InvoiceListPage = lazy(() => import('src/pages/dashboard/invoice/list'));
 // const InvoiceDetailsPage = lazy(() => import('src/pages/dashboard/invoice/details'));
@@ -118,7 +118,7 @@
 //         ],
 //       },
 //       {
-//         path: 'order',
+//         path: 'user',
 //         children: [
 //           { element: <OrderListPage />, index: true },
 //           { path: 'list', element: <OrderListPage /> },

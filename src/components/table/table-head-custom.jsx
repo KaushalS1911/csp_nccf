@@ -36,7 +36,6 @@ export default function TableHeadCustom({
   return (
     <TableHead sx={sx}>
       <TableRow>
-       
 
         {headLabel.map((headCell) => (
           <TableCell

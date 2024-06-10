@@ -27,7 +27,7 @@
 //   file: icon('ic_file'),
 //   lock: icon('ic_lock'),
 //   tour: icon('ic_tour'),
-//   order: icon('ic_order'),
+//   user: icon('ic_order'),
 //   label: icon('ic_label'),
 //   blank: icon('ic_blank'),
 //   kanban: icon('ic_kanban'),
@@ -123,7 +123,7 @@
 //           {
 //             title: t('Order'),
 //             path: paths.dashboard.orders,
-//             icon: ICONS.order,
+//             icon: ICONS.user,
 //           },
 
 //           // USER
@@ -159,12 +159,12 @@
 
 //           // ORDER
 //           // {
-//           //   title: t('order'),
-//           //   path: paths.dashboard.order.root,
-//           //   icon: ICONS.order,
+//           //   title: t('user'),
+//           //   path: paths.dashboard.user.root,
+//           //   icon: ICONS.user,
 //           //   children: [
-//           //     { title: t('list'), path: paths.dashboard.order.root },
-//           //     { title: t('details'), path: paths.dashboard.order.demo.details },
+//           //     { title: t('list'), path: paths.dashboard.user.root },
+//           //     { title: t('details'), path: paths.dashboard.user.demo.details },
 //           //   ],
 //           // },
 //           //
@@ -465,7 +465,7 @@ export function useNavData() {
             path: paths.dashboard.orders,
             icon: ICONS.order,
           },
-          
+
           // USER
           // {
             //   title: t('user'),
@@ -496,7 +496,7 @@ export function useNavData() {
           //     { title: t('edit'), path: paths.dashboard.product.demo.edit },
           //   ],
           // },
-          
+
           // ORDER
           {
             title: t('Document'),
