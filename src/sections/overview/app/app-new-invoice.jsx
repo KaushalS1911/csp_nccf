@@ -112,7 +112,7 @@ function AppNewInvoiceRow({ row }) {
           <Label
             variant="soft"
             color={
-              (row.nccf_order_status === 'placed' && 'warning') ||
+              (row.nccf_order_status === 'placed' && 'warning') || (row.nccf.order_status === 'declined' && "error") ||
               'success'
             }
           >
