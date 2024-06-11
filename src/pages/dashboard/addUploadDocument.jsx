@@ -130,7 +130,7 @@ export default function UploadDocument() {
                     <InputLabel>Document Type</InputLabel>
                     <Select {...field} label="Document Type">
                       {docTypeOption.map((option) => (
-                        <MenuItem key={option} value={option.label}>
+                        <MenuItem key={option} value={option.key}>
                           {option.label}
                         </MenuItem>
                       ))}

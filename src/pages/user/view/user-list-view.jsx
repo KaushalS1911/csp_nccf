@@ -35,6 +35,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { _commodities, _orderStatus, _roles, USER_STATUS_OPTIONS } from 'src/_mock';
 import isEqual from 'lodash/isEqual';
 import AppDialog from 'src/sections/overview/app/app-dialog';
+import EditOrderDialog from '../../../sections/overview/app/edit-order-dialog';
 // ----------------------------------------------------------------------
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 const TABLE_HEAD = [
@@ -59,8 +60,9 @@ export default function UserListView({ tableData: initialTableData }) {
   const confirm = useBoolean();
   const table = useTable();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [filters, setFilters] = useState(defaultFilters);
-  const [edit,setEdit] = useState('')
+  const [edit,setEdit] = useState('');
   const [tableData, setTableData] = useState(initialTableData);
   useEffect(() => {
     setTableData(initialTableData);
@@ -110,7 +112,7 @@ export default function UserListView({ tableData: initialTableData }) {
   }, [dataFiltered.length, dataInPage.length, enqueueSnackbar, table, tableData]);
   const handleEditRow = useCallback(
     (id) => {
-      setDialogOpen(true)
+      setEditDialogOpen(true)
     },
     [router]
   );
@@ -255,6 +257,7 @@ export default function UserListView({ tableData: initialTableData }) {
         }
       />
       <AppDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} editId={edit}/>
+      <EditOrderDialog editDialogOpen={editDialogOpen} setEditDialogOpen={setEditDialogOpen} editId={edit}/>
     </>
   );
 }

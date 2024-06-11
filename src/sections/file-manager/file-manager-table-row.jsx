@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useCallback } from 'react';
 import moment from 'moment'
-
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
@@ -15,58 +14,41 @@ import { alpha, useTheme } from '@mui/material/styles';
 import TableRow, { tableRowClasses } from '@mui/material/TableRow';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
-
 import { useBoolean } from 'src/hooks/use-boolean';
 import { useDoubleClick } from 'src/hooks/use-double-click';
 import { useCopyToClipboard } from 'src/hooks/use-copy-to-clipboard';
-
 import { fData } from 'src/utils/format-number';
 import { fDate, fTime } from 'src/utils/format-time';
-
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import FileThumbnail from 'src/components/file-thumbnail';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
-
 import FileManagerShareDialog from './file-manager-share-dialog';
 import FileManagerFileDetails from './file-manager-file-details';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
 import { useAuthContext } from '../../auth/hooks';
 import MaxWidthDialog from '../overview/app/viewDocumentDialog';
-
+import { handleDoctypeLabel } from '../../_mock';
 // ----------------------------------------------------------------------
-
 export default function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow, index }) {
   const { doc_type, object_url, uploaded_on } = row;
-
   const secondSlashIndex = object_url.indexOf('/', 8);
-
   // const firstPart = object_url.substring(0, secondSlashIndex);
   const secondPart = object_url.substring(secondSlashIndex);
-
   const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
   const theme = useTheme();
-
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([]);
-
   const { enqueueSnackbar } = useSnackbar();
-
   const { copy } = useCopyToClipboard();
-
   const [inviteEmail, setInviteEmail] = useState('');
   const router = useRouter();
-
   const details = useBoolean();
-
   const share = useBoolean();
-
   const confirm = useBoolean();
-
   const popover = usePopover();
-
   const handleViewRow = (url) => {
     setOpen(true);
     popover.onClose()
@@ -75,23 +57,19 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
   const handleChangeInvite = useCallback((event) => {
     setInviteEmail(event.target.value);
   }, []);
-
   const handleClick = useDoubleClick({
     click: () => {
       details.onTrue();
     },
     doubleClick: () => console.info('DOUBLE CLICK'),
   });
-
   const handleCopy = useCallback(() => {
     enqueueSnackbar('Copied!');
     copy(row.url);
   }, [copy, enqueueSnackbar, row.url]);
-
   function handleClose() {
     setOpen(false);
   }
-
   const defaultStyles = {
     borderTop: `solid 1px ${alpha(theme.palette.grey[500], 0.16)}`,
     borderBottom: `solid 1px ${alpha(theme.palette.grey[500], 0.16)}`,
@@ -106,7 +84,6 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
       borderRight: `solid 1px ${alpha(theme.palette.grey[500], 0.16)}`,
     },
   };
-
   return (
     <>
       <TableRow
@@ -134,22 +111,19 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
           }),
         }}
       >
-
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {index + 1}
-        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{index + 1}</TableCell>
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
             {/* <FileThumbnail file={object_url} sx={{ width: 36, height: 36 }} /> */}
             <Avatar
               alt={'Document Image'}
               src={url}
-              sx={{ mr: 2, height: '48px', width: '48px' }}
+              sx={{ mr: 2, height: '48px', width: '48px', cursor: 'pointer' }}
               variant="rounded"
+              onClick={() => handleViewRow(url)}
             />
           </Stack>
         </TableCell>
-
         <TableCell>
           <Typography
             noWrap
@@ -160,14 +134,12 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
               ...(details.value && { fontWeight: 'fontWeightBold' }),
             }}
           >
-            {doc_type}
+            {handleDoctypeLabel(doc_type)}
           </Typography>
         </TableCell>
-
-
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
           <ListItemText
-            primary={moment(uploaded_on).format("DD/MM/YYYY")}
+            primary={moment(uploaded_on).format('DD/MM/YYYY')}
             primaryTypographyProps={{ typography: 'body2' }}
             secondaryTypographyProps={{
               mt: 0.5,
@@ -176,36 +148,41 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
             }}
           />
         </TableCell>
-
-
-        <TableCell
+        <TableCell>
+          <Typography
+            noWrap
+            variant="inherit"
+            sx={{
+              maxWidth: 360,
+              cursor: 'pointer',
+              ...(details.value && { fontWeight: 'fontWeightBold' }),
+            }}
+          >
+            completed
+          </Typography>
+        </TableCell>
+        {/* <TableCell
           align="right"
           sx={{
             px: 1,
             whiteSpace: 'nowrap',
           }}
         >
-
-
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
-            <Iconify icon="eva:more-vertical-fill"/>
+            <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
-
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
         sx={{ width: 160 }}
       >
-        <MenuItem
-          onClick={() => handleViewRow(url)}
-        >
-          <Iconify icon="solar:eye-bold"/>
+        <MenuItem onClick={() => handleViewRow(url)}>
+          <Iconify icon="solar:eye-bold" />
           View
         </MenuItem>
-
         {/*<MenuItem*/}
         {/*  onClick={() => {*/}
         {/*    popover.onClose();*/}
@@ -215,9 +192,7 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
         {/*  <Iconify icon="solar:share-bold" />*/}
         {/*  Share*/}
         {/*</MenuItem>*/}
-
         {/*<Divider sx={{ borderStyle: 'dashed' }} />*/}
-
         {/*<MenuItem*/}
         {/*  onClick={() => {*/}
         {/*    confirm.onTrue();*/}
@@ -229,7 +204,6 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
         {/*  Delete*/}
         {/*</MenuItem>*/}
       </CustomPopover>
-
       {/* <FileManagerFileDetails
         item={row}
         favorited={favorite.value}
@@ -239,7 +213,6 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
         onClose={details.onFalse}
         onDelete={onDeleteRow}
       /> */}
-
       {/* <FileManagerShareDialog
         open={share.value}
         shared={shared}
@@ -251,9 +224,7 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
           setInviteEmail('');
         }}
       /> */}
-
-      <MaxWidthDialog handleClose={handleClose} open={open} images={images}/>
-
+      <MaxWidthDialog handleClose={handleClose} open={open} images={images} />
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
@@ -268,7 +239,6 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
     </>
   );
 }
-
 FileManagerTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState, useCallback } from 'react';
 import moment from 'moment'
-
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
@@ -13,72 +12,52 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import AvatarGroup, { avatarGroupClasses } from '@mui/material/AvatarGroup';
-
 import { useBoolean } from 'src/hooks/use-boolean';
 import { useCopyToClipboard } from 'src/hooks/use-copy-to-clipboard';
-
 import { fData } from 'src/utils/format-number';
 import { fDateTime } from 'src/utils/format-time';
-
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
 import TextMaxLine from 'src/components/text-max-line';
 import FileThumbnail from 'src/components/file-thumbnail';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
-
 import FileManagerShareDialog from './file-manager-share-dialog';
 import FileManagerFileDetails from './file-manager-file-details';
 import MaxWidthDialog from '../overview/app/viewDocumentDialog';
-
+import { handleDoctypeLabel } from '../../_mock';
 // ----------------------------------------------------------------------
-
 export default function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ...other }) {
   const secondSlashIndex = file.object_url.indexOf("/", 8);
-
   // const firstPart = object_url.substring(0, secondSlashIndex);
   const secondPart = file.object_url.substring(secondSlashIndex);
-
   const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
   const { enqueueSnackbar } = useSnackbar();
-
   const { copy } = useCopyToClipboard();
-
   const [inviteEmail, setInviteEmail] = useState('');
   const [open, setOpen] = useState(false)
   const [images, setImages] = useState([])
-
   const checkbox = useBoolean();
-
   const share = useBoolean();
-
   const confirm = useBoolean();
-
   const details = useBoolean();
-
   // const favorite = useBoolean(file.isFavorited);
-
   const popover = usePopover();
-
   const handleChangeInvite = useCallback((event) => {
     setInviteEmail(event.target.value);
   }, []);
-
   const handleCopy = useCallback(() => {
     enqueueSnackbar('Copied!');
     copy(file.url);
   }, [copy, enqueueSnackbar, file.url]);
-
   function handleViewDialog(url) {
     setImages([url])
     popover.onClose()
     setOpen(true)
   }
-
   function handleClose() {
-setOpen(false)
+    setOpen(false)
   }
-
   // const renderIcon =
   //   (checkbox.value || selected) && onSelect ? (
   //     <Checkbox
@@ -92,7 +71,6 @@ setOpen(false)
   //   ) : (
   //     <FileThumbnail file={file.type} sx={{ width: 36, height: 36 }} />
   //   );
-
   const renderAction = (
     <Stack direction="row" alignItems="center" sx={{ top: 8, right: 8, position: 'absolute' }}>
       {/* <Checkbox
@@ -102,31 +80,28 @@ setOpen(false)
         checked={favorite.value}
         onChange={favorite.onToggle}
       /> */}
-
       <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
         <Iconify icon="eva:more-vertical-fill" />
       </IconButton>
     </Stack>
   );
-
   const renderText = (
     <>
-     <Avatar
-            alt={file.object_url}
-            src={url}
-            sx={{ mr: 2, height: '60px', width: '60px' }}
-            variant="rounded"
-          />
+      <Avatar
+        alt={file.object_url}
+        src={url}
+        sx={{ mr: 2, height: '60px', width: '60px' }}
+        variant="rounded"
+        onClick={() => handleViewDialog(url)}
+      />
       <TextMaxLine
         persistent
         variant="subtitle2"
         onClick={details.onTrue}
-        sx={{ width: 1, mt: 2, mb: 0.5 }}
-        >
-        {file.doc_type}
-
+        sx={{ width: 1, mt: 2 }}
+      >
+        {handleDoctypeLabel(file.doc_type)}
       </TextMaxLine>
-
       <Stack
         direction="row"
         alignItems="center"
@@ -137,14 +112,20 @@ setOpen(false)
           color: 'text.disabled',
         }}
       >
-
         <Typography noWrap component="span" variant="caption">
-          {moment(file.uploaded_on).format("DD/MM/YYYY")}
+          {moment(file.uploaded_on).format('DD/MM/YYYY')}
         </Typography>
       </Stack>
+      <TextMaxLine
+        persistent
+        variant="subtitle2"
+        onClick={details.onTrue}
+        sx={{ width: 1, mt: 1 }}
+      >
+        completed
+      </TextMaxLine>
     </>
   );
-
   const renderAvatar = (
     <AvatarGroup
       max={3}
@@ -164,7 +145,6 @@ setOpen(false)
       ))}
     </AvatarGroup>
   );
-
   return (
     <>
       <Stack
@@ -188,14 +168,10 @@ setOpen(false)
         {/* <Box onMouseEnter={checkbox.onTrue} onMouseLeave={checkbox.onFalse}>
           {renderIcon}
         </Box> */}
-
         {renderText}
-
-        {renderAvatar}
-
-        {renderAction}
+        {/* {renderAvatar} */}
+        {/* {renderAction} */}
       </Stack>
-
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
@@ -210,7 +186,6 @@ setOpen(false)
           <Iconify icon="solar:eye-bold" />
           View
         </MenuItem>
-
         {/*<MenuItem*/}
         {/*  onClick={() => {*/}
         {/*    popover.onClose();*/}
@@ -220,9 +195,7 @@ setOpen(false)
         {/*  <Iconify icon="solar:share-bold" />*/}
         {/*  Share*/}
         {/*</MenuItem>*/}
-
         {/*<Divider sx={{ borderStyle: 'dashed' }} />*/}
-
         {/*<MenuItem*/}
         {/*  onClick={() => {*/}
         {/*    confirm.onTrue();*/}
@@ -234,7 +207,6 @@ setOpen(false)
         {/*  Delete*/}
         {/*</MenuItem>*/}
       </CustomPopover>
-
       {/* <FileManagerFileDetails
         item={file}
         favorited={favorite.value}
@@ -247,7 +219,6 @@ setOpen(false)
           onDelete();
         }}
       /> */}
-
       <FileManagerShareDialog
         open={share.value}
         shared={file.shared}
@@ -259,7 +230,6 @@ setOpen(false)
           setInviteEmail('');
         }}
       />
-
       <MaxWidthDialog images={images} open={open} handleClose={handleClose}/>
       <ConfirmDialog
         open={confirm.value}
@@ -275,7 +245,6 @@ setOpen(false)
     </>
   );
 }
-
 FileManagerFileItem.propTypes = {
   file: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   onDelete: PropTypes.func,
@@ -283,3 +252,12 @@ FileManagerFileItem.propTypes = {
   selected: PropTypes.bool,
   sx: PropTypes.object,
 };
+
+
+
+
+
+
+
+
+

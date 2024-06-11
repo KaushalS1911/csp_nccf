@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import moment from 'moment'
-
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
@@ -10,41 +9,30 @@ import Checkbox from '@mui/material/Checkbox';
 import TableCell from '@mui/material/TableCell';
 import IconButton from '@mui/material/IconButton';
 import ListItemText from '@mui/material/ListItemText';
-
 import { useBoolean } from 'src/hooks/use-boolean';
-
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
-
 import DocumentQuickEditForm from './document-quick-edit-form';
 import { useState } from 'react';
 import MaxWidthDialog from '../overview/app/viewDocumentDialog';
-
+import { handleDoctypeLabel } from '../../_mock';
 // ----------------------------------------------------------------------
-
 export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow, onViewRow,onDeleteRow, index }) {
   const { doc_type, object_url, uploaded_on } = row;
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([])
-
   const secondSlashIndex = object_url.indexOf("/", 8);
-
   // const firstPart = object_url.substring(0, secondSlashIndex);
   const secondPart = object_url.substring(secondSlashIndex);
   const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
-
   const confirm = useBoolean();
-
   const quickEdit = useBoolean();
-
   const popover = usePopover();
-
   function handleClose() {
     setOpen(false)
   }
-
   function handleViewDialog(url) {
     setImages([url]);
     popover.onClose()
@@ -58,17 +46,16 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
         {/*  <Checkbox checked={selected} onClick={onSelectRow} />*/}
         {/*</TableCell>*/}
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{index + 1}</TableCell>
-
         <TableCell>
           <Avatar
             alt={object_url}
             src={url}
-            sx={{ mr: 2, height: 46, width: 46 }}
+            sx={{ mr: 2, height: 46, width: 46,cursor:"pointer" }}
             variant="rounded"
+            onClick={() => handleViewDialog(url)}
           />
         </TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{doc_type}</TableCell>
-
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{handleDoctypeLabel(doc_type)}</TableCell>
         {/* <TableCell>
           <Label
             variant="soft"
@@ -82,35 +69,32 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
             {status}
           </Label>
         </TableCell> */}
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{moment(uploaded_on).format("DD/MM/YYYY")}</TableCell>
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          {/*<Tooltip title="Quick Edit" placement="top" arrow>*/}
-          {/*  <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>*/}
-          {/*    <Iconify icon="solar:pen-bold" />*/}
-          {/*  </IconButton>*/}
-          {/*</Tooltip>*/}
-
-          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {moment(uploaded_on).format('DD/MM/YYYY')}
+        </TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>completed</TableCell>
+        {/* <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}> */}
+        {/*<Tooltip title="Quick Edit" placement="top" arrow>*/}
+        {/*  <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>*/}
+        {/*    <Iconify icon="solar:pen-bold" />*/}
+        {/*  </IconButton>*/}
+        {/*</Tooltip>*/}
+        {/* <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
-
       <DocumentQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
-
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
         sx={{ width: 140 }}
       >
-        <MenuItem
-          onClick={() => handleViewDialog(url)}
-        >
+        <MenuItem onClick={() => handleViewDialog(url)}>
           <Iconify icon="solar:eye-bold" />
           View
         </MenuItem>
-
         {/*<MenuItem*/}
         {/*  onClick={() => {*/}
         {/*    onEditRow();*/}
@@ -131,9 +115,7 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
         {/*  Delete*/}
         {/*</MenuItem>*/}
       </CustomPopover>
-
-      <MaxWidthDialog handleClose={handleClose} open={open} images={images}/>
-
+      <MaxWidthDialog handleClose={handleClose} open={open} images={images} />
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
@@ -148,7 +130,6 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
     </>
   );
 }
-
 DocumentTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,

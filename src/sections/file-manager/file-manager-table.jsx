@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import Tooltip from '@mui/material/Tooltip';
@@ -9,7 +8,6 @@ import IconButton from '@mui/material/IconButton';
 import TableContainer from '@mui/material/TableContainer';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { tablePaginationClasses } from '@mui/material/TablePagination';
-
 import Iconify from 'src/components/iconify';
 import {
   TableNoData,
@@ -17,13 +15,10 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from 'src/components/table';
-
 import FileManagerTableRow from './file-manager-table-row';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-
 // ----------------------------------------------------------------------
-
 const TABLE_HEAD = [
   { id: 'srNo', label: 'Sr No', width: 88 },
   { id: 'document_img', label: 'Document Image', width: 88 },
@@ -31,21 +26,19 @@ const TABLE_HEAD = [
   // { id: 'size', label: 'Size', width: 120 },
   // { id: 'type', label: 'Type', width: 120 },
   { id: 'date', label: 'Date', width: 100 },
+  { id: 'status', label: 'Status', width: 100 },
   // { id: 'shared', label: 'Shared', align: 'right', width: 140 },
-  { id: '', width: 88 },
+  // { id: '', width: 88 },
 ];
-
 // ----------------------------------------------------------------------
-
 export default function FileManagerTable({
-  table,
-  notFound,
-  onDeleteRow,
-  dataFiltered,
-  onOpenConfirm,
-}) {
+                                           table,
+                                           notFound,
+                                           onDeleteRow,
+                                           dataFiltered,
+                                           onOpenConfirm,
+                                         }) {
   const theme = useTheme();
-
   const {
     dense,
     page,
@@ -89,7 +82,6 @@ export default function FileManagerTable({
                   <Iconify icon="solar:share-bold" />
                 </IconButton>
               </Tooltip>
-
               <Tooltip title="Delete">
                 <IconButton color="primary" onClick={onOpenConfirm}>
                   <Iconify icon="solar:trash-bin-trash-bold" />
@@ -107,7 +99,6 @@ export default function FileManagerTable({
             borderRadius: 1.5,
           }}
         />
-
         <TableContainer
           sx={{
             p: theme.spacing(0, 3, 3, 3),
@@ -147,7 +138,6 @@ export default function FileManagerTable({
                 },
               }}
             />
-
             <TableBody>
               {dataFiltered
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -161,7 +151,6 @@ export default function FileManagerTable({
                     onDeleteRow={() => onDeleteRow(row.object_url)}
                   />
                 ))}
-
               <TableNoData
                 notFound={notFound}
                 sx={{
@@ -174,7 +163,6 @@ export default function FileManagerTable({
           </Table>
         </TableContainer>
       </Box>
-
       <TablePaginationCustom
         count={dataFiltered.length}
         page={page}
@@ -193,7 +181,6 @@ export default function FileManagerTable({
     </>
   );
 }
-
 FileManagerTable.propTypes = {
   dataFiltered: PropTypes.array,
   notFound: PropTypes.bool,
