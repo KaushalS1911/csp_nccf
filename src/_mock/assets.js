@@ -265,6 +265,19 @@ export const _roles = [
   'CTO',
 ];
 
+
+export const _commodities = [
+ 'Bharat Daal',
+ 'Bharat Rice',
+ 'Bharat Aata'
+];
+
+export const _orderStatus = [
+ 'placed',
+ 'accepted',
+ 'declined'
+];
+
 // ----------------------------------------------------------------------
 
 export const _postTitles = [

@@ -28,13 +28,22 @@ export default function UserTableFiltersResult({
     onFilters('status', 'all');
   }, [onFilters]);
 
-  const handleRemoveRole = useCallback(
+  const handleRemoveCommodity = useCallback(
     (inputValue) => {
-      const newValue = filters.role.filter((item) => item !== inputValue);
+      const newValue = filters.commodity.filter((item) => item !== inputValue);
 
-      onFilters('role', newValue);
+      onFilters('commodity', newValue);
     },
-    [filters.role, onFilters]
+    [filters.commodity, onFilters]
+  );
+
+  const handleRemoveOrderStatus = useCallback(
+    (inputValue) => {
+      const newValue = filters.order_status.filter((item) => item !== inputValue);
+
+      onFilters('order_status', newValue);
+    },
+    [filters.order_status, onFilters]
   );
 
   return (
@@ -53,10 +62,18 @@ export default function UserTableFiltersResult({
           </Block>
         )}
 
-        {!!filters.role.length && (
-          <Block label="Role:">
-            {filters.role.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveRole(item)} />
+        {!!filters.commodity.length && (
+          <Block label="Commodity:">
+            {filters.commodity.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveCommodity(item)} />
+            ))}
+          </Block>
+        )}
+
+        {!!filters.order_status.length && (
+          <Block label="Status:">
+            {filters.order_status.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveOrderStatus(item)} />
             ))}
           </Block>
         )}

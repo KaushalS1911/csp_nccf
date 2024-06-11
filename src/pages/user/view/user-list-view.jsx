@@ -20,23 +20,19 @@ import UserTableFiltersResult from '../user-table-filters-result';
 import {
   Container,
   Card,
-  Tabs,
-  Tab,
   Table,
   TableBody,
   TableContainer,
   Button,
   IconButton,
   Tooltip,
-  alpha,
 } from '@mui/material';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import Scrollbar from 'src/components/scrollbar';
-import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { useBoolean } from 'src/hooks/use-boolean';
-import { _roles, USER_STATUS_OPTIONS } from 'src/_mock';
+import { _commodities, _orderStatus, _roles, USER_STATUS_OPTIONS } from 'src/_mock';
 import isEqual from 'lodash/isEqual';
 import AppDialog from 'src/sections/overview/app/app-dialog';
 // ----------------------------------------------------------------------
@@ -44,13 +40,15 @@ const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 const TABLE_HEAD = [
   { id: 'srNo', label: 'Sr No', width: 100 },
   { id: 'commodity', label: 'Commodity', width: 200 },
+  { id: 'quantity', label: 'Quantity', width: 200 },
   { id: 'created_at', label: 'Date', width: 180 },
   { id: 'status', label: 'Status', width: 100 },
   { id: '', width: 88 },
 ];
 const defaultFilters = {
   name: '',
-  role: [],
+  commodity: [],
+  order_status: [],
   status: 'all',
 };
 // ----------------------------------------------------------------------
@@ -62,6 +60,7 @@ export default function UserListView({ tableData: initialTableData }) {
   const table = useTable();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [filters, setFilters] = useState(defaultFilters);
+  const [edit,setEdit] = useState('')
   const [tableData, setTableData] = useState(initialTableData);
   useEffect(() => {
     setTableData(initialTableData);
@@ -111,7 +110,7 @@ export default function UserListView({ tableData: initialTableData }) {
   }, [dataFiltered.length, dataInPage.length, enqueueSnackbar, table, tableData]);
   const handleEditRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.user.edit(id));
+      setDialogOpen(true)
     },
     [router]
   );
@@ -129,7 +128,7 @@ export default function UserListView({ tableData: initialTableData }) {
   );
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <Container maxWidth={settings.themeStretch ? false : 'xxl'}>
         <CustomBreadcrumbs
           heading="Orders"
           links={[{ name: '' }]}
@@ -156,7 +155,7 @@ export default function UserListView({ tableData: initialTableData }) {
           sx={{ mb: { xs: 3, md: 5 } }}
         />
         <Card>
-          <UserTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles} />
+          <UserTableToolbar filters={filters} onFilters={handleFilters} commodityOptions={_commodities} orderStatusOptions={_orderStatus}/>
           {canReset && (
             <UserTableFiltersResult
               filters={filters}
@@ -255,13 +254,13 @@ export default function UserListView({ tableData: initialTableData }) {
           </Button>
         }
       />
-      <AppDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} />
+      <AppDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} editId={edit}/>
     </>
   );
 }
 // ----------------------------------------------------------------------
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, role } = filters;
+  const { name, status, commodity, order_status } = filters;
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -277,8 +276,11 @@ function applyFilter({ inputData, comparator, filters }) {
   if (status !== 'all') {
     inputData = inputData.filter((user) => user.status === status);
   }
-  if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role));
+  if (commodity.length) {
+    inputData = inputData.filter((user) => commodity.includes(user.commodity));
+  }
+  if (order_status.length) {
+    inputData = inputData.filter((user) => order_status.includes(user.nccf_order_status));
   }
   return inputData;
 }

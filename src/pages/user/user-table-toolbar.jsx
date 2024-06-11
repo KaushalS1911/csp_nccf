@@ -13,7 +13,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 // ----------------------------------------------------------------------
-export default function UserTableToolbar({ filters, onFilters, roleOptions }) {
+export default function UserTableToolbar({ filters, onFilters, commodityOptions, orderStatusOptions}) {
   const popover = usePopover();
   const handleFilterName = useCallback(
     (event) => {
@@ -21,10 +21,18 @@ export default function UserTableToolbar({ filters, onFilters, roleOptions }) {
     },
     [onFilters]
   );
-  const handleFilterRole = useCallback(
+  const handleFilterCommodity = useCallback(
     (event) => {
       onFilters(
-        'role',
+        'commodity',
+        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
+      );
+    },
+    [onFilters]
+  ); const handleFilterOrderStatus = useCallback(
+    (event) => {
+      onFilters(
+        'order_status',
         typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
       );
     },
@@ -58,6 +66,63 @@ export default function UserTableToolbar({ filters, onFilters, roleOptions }) {
               ),
             }}
           />
+          <FormControl
+            sx={{
+              flexShrink: 0,
+              width: { xs: 1, md: 200 },
+            }}
+          >
+            <InputLabel>Commodity</InputLabel>
+
+            <Select
+              multiple
+              value={filters.commodity}
+              onChange={handleFilterCommodity}
+              input={<OutlinedInput label="Commodity" />}
+              renderValue={(selected) => selected.map((value) => value).join(', ')}
+              MenuProps={{
+                PaperProps: {
+                  sx: { maxHeight: 240 },
+                },
+              }}
+            >
+              {commodityOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                  <Checkbox disableRipple size="small" checked={filters.commodity.includes(option)} />
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl
+            sx={{
+              flexShrink: 0,
+              width: { xs: 1, md: 200 },
+            }}
+          >
+            <InputLabel>Status</InputLabel>
+
+            <Select
+              multiple
+              value={filters.order_status}
+              onChange={handleFilterOrderStatus}
+              input={<OutlinedInput label="Status" />}
+              renderValue={(selected) => selected.map((value) => value).join(', ')}
+              MenuProps={{
+                PaperProps: {
+                  sx: { maxHeight: 240 },
+                },
+              }}
+            >
+              {orderStatusOptions.map((option) => (
+                <MenuItem key={option} value={option}>
+                  <Checkbox disableRipple size="small" checked={filters.order_status.includes(option)} />
+                  {option}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
           {/*<IconButton onClick={popover.onOpen}>*/}
           {/*  <Iconify icon="eva:more-vertical-fill" />*/}
           {/*</IconButton>*/}

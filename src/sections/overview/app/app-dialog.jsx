@@ -14,11 +14,19 @@ import { RHFAutocomplete, RHFTextField } from 'src/components/hook-form';
 import FormProvider from 'src/components/hook-form/form-provider';
 import { enqueueSnackbar } from 'notistack';
 // ----------------------------------------------------------------------
-export default function AppDialog({ dialogOpen, setDialogOpen }) {
+export default function AppDialog({ dialogOpen, setDialogOpen, editId }) {
   const [commodities, setCommodities] = useState([]);
+  const [orderList,setOrderList] = useState([])
   const { vendor } = useAuthContext();
+
+  function fetchAllOrders() {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor.csp_code}/orders`).then((res) => {
+      setOrderList(res.data?.data);
+    });
+  }
   useEffect(() => {
     fetchCommodities();
+    fetchAllOrders()
   }, []);
   function fetchCommodities() {
     axios
@@ -63,13 +71,11 @@ export default function AppDialog({ dialogOpen, setDialogOpen }) {
   };
   return (
     <>
-      <Dialog open={dialogOpen} >
-        <DialogTitle>Create Order</DialogTitle>
-        <DialogContent sx={{ px: 5 ,width:"550px"}}>
+      <Dialog open={dialogOpen} fullWidth={true} maxWidth={'md'} onClose={() => setDialogOpen(false)} >
+       <Box sx={{py: 5, px: 3}}>
+       <DialogTitle>Add Order</DialogTitle>
+        <DialogContent maxWidth={'lg '}>
           <FormProvider methods={methods}>
-            <Stack>
-              <Stack>
-                <Box rowGap={3} columnGap={2}>
                   <Box mb={2}>
                     <RHFAutocomplete
                       name="commodity"
@@ -84,19 +90,17 @@ export default function AppDialog({ dialogOpen, setDialogOpen }) {
                   <Box>
                     <RHFTextField name="quantity" label="Quantity" fullWidth />
                   </Box>
-                </Box>
-              </Stack>
-            </Stack>
             <DialogActions>
               <Button onClick={() => setDialogOpen(false)} variant="outlined" color="inherit">
                 Cancel
               </Button>
               <Button variant="contained" onClick={handleSubmit(onSubmit)}>
-                Order
+                Add
               </Button>
             </DialogActions>
           </FormProvider>
         </DialogContent>
+       </Box>
       </Dialog>
     </>
   );
