@@ -50,12 +50,11 @@ export default function AccountPopover() {
 
   const popover = usePopover();
 
-  const handleLogout =  () => {
+  const handleLogout = async () => {
     try {
-      sessionStorage.clear();
-    router.push('/')
-    router.reload()
+      await logout();
       popover.onClose();
+      router.replace('/');
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Unable to logout!', { variant: 'error' });
@@ -109,7 +108,7 @@ export default function AccountPopover() {
           </Typography>
         </Box>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'dashed' }}/>
 
         <Stack sx={{ p: 1 }}>
           {OPTIONS.map((option) => (
@@ -119,7 +118,7 @@ export default function AccountPopover() {
           ))}
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'dashed' }}/>
 
         <MenuItem
           onClick={handleLogout}

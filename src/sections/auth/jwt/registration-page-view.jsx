@@ -24,6 +24,7 @@ const RegistrationForm = ({ vendor_category }) => {
   const millingTypeOptions = ["Dry", "Wet", "Both"];
   const districtOptions = ["Amreli","Bhavanagar"];
   const stateOptions = ["Surat","Ahemdabad"];
+  const branchOptions = ["Branch 1","Branch 2"];
   const NewBlogSchema = Yup.object().shape({
     address: Yup.string().required('Address is required'),
     contact_person: Yup.string().required('Contact is required'),
@@ -57,6 +58,7 @@ const RegistrationForm = ({ vendor_category }) => {
     pincode: '',
     password: '',
     state: '',
+    branch: '',
   }
   const methods  = useForm({
     resolver: yupResolver(NewBlogSchema),
@@ -84,6 +86,7 @@ const RegistrationForm = ({ vendor_category }) => {
         phone_number: values.phone_number,
         pincode: values.pincode,
         state: values.state,
+        branch: values.branch,
         vendor_category,
         mode: 'test',
       })
@@ -141,7 +144,7 @@ const RegistrationForm = ({ vendor_category }) => {
             <RHFTextField name="phone_number" label="Phone Number" />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <RHFTextField name="pan_number" label="Pan Number" />
+            <RHFTextField name="pan_number" label="PAN Number" />
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <RHFTextField name="gst_number" label="GST Number" />
@@ -154,7 +157,7 @@ const RegistrationForm = ({ vendor_category }) => {
           <Grid item xs={12}>
             <RHFTextField name="address" label="Address" />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <RHFAutocomplete
               name="district"
               label="District"
@@ -164,10 +167,9 @@ const RegistrationForm = ({ vendor_category }) => {
               getOptionLabel={(option) => option}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <RHFAutocomplete
               name="state"
-              type="state"
               label="State"
               placeholder="Choose Your State"
               fullWidth
@@ -175,7 +177,17 @@ const RegistrationForm = ({ vendor_category }) => {
               getOptionLabel={(option) => option}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
+            <RHFAutocomplete
+              name="branch"
+              label="Branch"
+              placeholder="Choose Your Branch"
+              fullWidth
+              options={branchOptions.map((option) => option)}
+              getOptionLabel={(option) => option}
+            />
+          </Grid>
+          <Grid item xs={12} sm={3}>
             <RHFTextField name="pincode" label="Pin Code" />
           </Grid>
         </Grid>
