@@ -185,7 +185,7 @@ export default function FileManagerView() {
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'xxl'}>
+      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h4">Documents</Typography>
           <Button
@@ -279,8 +279,6 @@ function applyFilter({ inputData, comparator, filters, dateError }) {
     return a[1] - b[1];
   });
 
-
-
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (name) {
@@ -290,8 +288,7 @@ function applyFilter({ inputData, comparator, filters, dateError }) {
   }
 
   if (type.length) {
-    // (inputData.filter((file) => console.log(type.includes(file.doc_type))));
-    inputData = inputData.filter((file) => type.includes(file.doc_type));
+    inputData = inputData.filter((file) => type.includes(fileFormat(file.type)));
   }
 
   if (!dateError) {
