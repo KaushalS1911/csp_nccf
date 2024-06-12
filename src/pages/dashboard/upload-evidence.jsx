@@ -14,6 +14,8 @@ import Iconify from 'src/components/iconify';
 import { Helmet } from 'react-helmet-async';
 import { enqueueSnackbar } from 'notistack';
 import imageCompression from 'browser-image-compression';
+import { paths } from 'src/routes/paths';
+import { useRouter } from 'src/routes/hooks';
 
 export default function UploadEvidence() {
   const settings = useSettingsContext();
@@ -21,6 +23,7 @@ export default function UploadEvidence() {
   const [vendorCode, setVendorCode] = useState('');
   const [files, setFiles] = useState([]);
   const role = 'miller';
+  const router = useRouter()
 
   const defaultValues = useMemo(
     () => ({
@@ -80,6 +83,7 @@ export default function UploadEvidence() {
       );
       if (responses) {
         enqueueSnackbar('Your Document Uploaded');
+        router.push(paths.dashboard.document.document_list);
       } else {
         enqueueSnackbar('Failed to Upload');
       }

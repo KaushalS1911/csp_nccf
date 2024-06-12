@@ -188,13 +188,13 @@ export default function FileManagerView() {
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h4">Documents</Typography>
-          <Button
+          {/* <Button
             variant="contained"
             startIcon={<Iconify icon="eva:cloud-upload-fill"/>}
             onClick={upload.onTrue}
           >
             Upload
-          </Button>
+          </Button> */}
         </Stack>
 
         <Stack
