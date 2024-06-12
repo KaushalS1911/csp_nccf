@@ -16,14 +16,13 @@ import { enqueueSnackbar } from 'notistack';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
 import imageCompression from 'browser-image-compression';
-// ----------------------------------------------------------------------
+
 export default function UploadDocument() {
   const settings = useSettingsContext();
   const [vendorCode, setVendorCode] = useState('');
   const router = useRouter();
   const [files, setFiles] = useState([]);
-  const notify = () => toast.success('Documents Uploaded');
-  const notifyError = () => toast.error('Failed to Upload');
+
   const defaultValues = useMemo(
     () => ({
       doc_type: '',
@@ -31,21 +30,39 @@ export default function UploadDocument() {
     }),
     []
   );
+
   const methods = useForm({
     defaultValues,
   });
+
   const { handleSubmit, control } = methods;
+
   const storedVendorCode = sessionStorage.getItem('vendor');
   useEffect(() => {
     setVendorCode(storedVendorCode || '');
   }, []);
+
   const onSubmit = handleSubmit(async (data) => {
     const formData = new FormData();
     formData.append('doc_type', data.doc_type);
     formData.append('csp_code', vendorCode);
-    files.forEach((file) => {
-      formData.append('file', file);
-    });
+
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1200,
+      useWebWorker: true,
+    };
+
+    for (let file of files) {
+      try {
+        const compressedFile = await imageCompression(file, options);
+        formData.append('file', compressedFile);
+      } catch (error) {
+        console.error('Error compressing file:', error);
+        formData.append('file', file);
+      }
+    }
+
     try {
       const response = await axios.post(
         'http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/upload_document',
@@ -68,88 +85,38 @@ export default function UploadDocument() {
       console.error('Error submitting form:', error);
     }
   });
+
   const docTypeOption = [
     { label: 'Aadhar', key: 'aadhar' },
     { label: 'Certificates', key: 'certificates' },
     { label: 'Gst Number', key: 'gst_number' },
     { label: 'Pan Number', key: 'pan_number' },
   ];
-  // const handleDropMultiFile = useCallback(
-  //   async (acceptedFiles) => {
-  //     const compressedFiles = await Promise.all(
-  //       acceptedFiles.map(async (file) => {
-  //         const options = {
-  //           maxSizeMB: 1,
-  //           maxWidthOrHeight: 1200,
-  //           useWebWorker: true,
-  //         };
-  //         try {
-  //           const compressedFile = await imageCompression(file, options);
-  //           compressedFile.preview = URL.createObjectURL(compressedFile);
-  //           return compressedFile;
-  //         } catch (error) {
-  //           console.error('Error compressing file:', error);
-  //           return file;
-  //         }
-  //       })
-  //     );
-  //     setFiles([...files, ...compressedFiles]);
-  //   },
-  //   [files]
-  // );
-// const handleDropMultiFile = useCallback(
-//   (acceptedFiles) => {
-//     setFiles([
-//       ...files,
-//       ...acceptedFiles.map((newFile) =>
-//         Object.assign(newFile, {
-//           preview: URL.createObjectURL(newFile),
-//         })
-//       ),
-//     ]);
-//     console.log("Files : ",files);
-//   },
-//   [files]
-//   );
+
   const handleDropMultiFile = useCallback(
-    async (acceptedFiles) => {
-      try {
-        const options = {
-          maxSizeMB: 0.3,
-          maxWidthOrHeight: 1200,
-          useWebWorker: true,
-        };
-        const compressedFiles = await Promise.all(
-          acceptedFiles.map(async (file) => {
-            try {
-              return await imageCompression(file, options);
-            } catch (compressionError) {
-              console.error('Error compressing file:', compressionError);
-              return file;
-            }
+    (acceptedFiles) => {
+      setFiles([
+        ...files,
+        ...acceptedFiles.map((newFile) =>
+          Object.assign(newFile, {
+            preview: URL.createObjectURL(newFile),
           })
-        );
-        const updatedFiles = [
-          ...files,
-          ...compressedFiles.map((compressedFile) => ({
-            ...compressedFile,
-            preview: URL.createObjectURL(compressedFile),
-          })),
-        ];
-        setFiles(updatedFiles);
-      } catch (error) {
-        console.error('Error processing files:', error);
-      }
+        ),
+      ]);
+      console.log('Files : ', files);
     },
-    [files, setFiles]
+    [files]
   );
+
   const handleRemoveFile = (inputFile) => {
     const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
     setFiles(filesFiltered);
   };
+
   const handleRemoveAllFiles = () => {
     setFiles([]);
   };
+
   const renderDetails = (
     <>
       <Helmet>
@@ -188,7 +155,6 @@ export default function UploadDocument() {
             <Typography variant="subtitle2" sx={{ my: '10px' }}>
               Upload Your Document
             </Typography>
-            {/* {files.length !== 0 && console.log('raam')} */}
             <Upload
               multiple
               accept={{
@@ -208,6 +174,7 @@ export default function UploadDocument() {
       </Card>
     </>
   );
+
   return (
     <>
       <ToastContainer />

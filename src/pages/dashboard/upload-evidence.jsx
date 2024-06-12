@@ -13,39 +13,57 @@ import { Upload } from 'src/components/upload';
 import Iconify from 'src/components/iconify';
 import { Helmet } from 'react-helmet-async';
 import { enqueueSnackbar } from 'notistack';
+import imageCompression from 'browser-image-compression';
+
 export default function UploadEvidence() {
   const settings = useSettingsContext();
   const [docType, setDocType] = useState('');
   const [vendorCode, setVendorCode] = useState('');
   const [files, setFiles] = useState([]);
   const role = 'miller';
+
   const defaultValues = useMemo(
     () => ({
       doc_type: '',
     }),
     []
   );
+
   const methods = useForm({
     defaultValues,
   });
+
   const { handleSubmit, control } = methods;
+
   const storedVendorCode = sessionStorage.getItem('vendor');
   useEffect(() => {
     setVendorCode(storedVendorCode || '');
   }, []);
+
   const onSubmit = handleSubmit(async (data) => {
-    const formDataList = files
-      .map((file, index) => {
-        if (file) {
-          const formData = new FormData();
-          formData.append('doc_type', data.doc_type);
-          formData.append('csp_code', vendorCode);
-          formData.append('file', file);
-          return formData;
+    const formDataList = await Promise.all(
+      files.map(async (file) => {
+        const formData = new FormData();
+        formData.append('doc_type', data.doc_type);
+        formData.append('csp_code', vendorCode);
+
+        try {
+          const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1200,
+            useWebWorker: true,
+          };
+          const compressedFile = await imageCompression(file, options);
+          formData.append('file', compressedFile);
+        } catch (error) {
+          console.error('Error compressing file:', error);
+          formData.append('file', file); // If compression fails, append original file
         }
-        return null;
+
+        return formData;
       })
-      .filter((formData) => formData !== null);
+    );
+
     try {
       const responses = await Promise.all(
         formDataList.map((formData) =>
@@ -60,8 +78,7 @@ export default function UploadEvidence() {
           )
         )
       );
-      const allSuccess = responses.every((response) => response.data.status === '201');
-      if (allSuccess) {
+      if (responses) {
         enqueueSnackbar('Your Document Uploaded');
       } else {
         enqueueSnackbar('Failed to Upload');
@@ -71,10 +88,12 @@ export default function UploadEvidence() {
       enqueueSnackbar('Failed to Upload');
     }
   });
+
   const docTypeOption = [
     { label: 'Milling Unit Photo', key: 'milling_unit_photo' },
     { label: 'Milling Unit Video', key: 'milling_unit_video' },
   ];
+
   const handleDropSingleFile = useCallback(
     (index) => (acceptedFiles) => {
       const newFile = acceptedFiles[0];
@@ -90,6 +109,7 @@ export default function UploadEvidence() {
     },
     []
   );
+
   const renderUploadBox = (index) => (
     <Card key={index}>
       <Stack spacing={3} sx={{ p: 3 }}>
@@ -115,6 +135,7 @@ export default function UploadEvidence() {
       </Stack>
     </Card>
   );
+
   const handleDropMultiFile = useCallback(
     (acceptedFiles) => {
       setFiles([
@@ -127,13 +148,16 @@ export default function UploadEvidence() {
     },
     [files]
   );
+
   const handleRemoveFile = (inputFile) => {
     const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
     setFiles(filesFiltered);
   };
+
   const handleRemoveAllFiles = () => {
     setFiles([]);
   };
+
   const renderUploadVideo = (index) => (
     <Card key={index}>
       <Stack spacing={3} sx={{ p: 3 }}>
@@ -158,6 +182,7 @@ export default function UploadEvidence() {
       </Stack>
     </Card>
   );
+
   function handleUploads() {
     switch (docType) {
       case 'milling_unit_photo': {
@@ -182,6 +207,7 @@ export default function UploadEvidence() {
         return null;
     }
   }
+
   return (
     <>
       <Helmet>
@@ -237,34 +263,26 @@ export default function UploadEvidence() {
             <Grid container spacing={5}>
               {handleUploads()}
             </Grid>
-            {docType == "milling_unit_photo" && <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
-              <Button
-                color="inherit"
-                variant="outlined"
-                size="small"
-                onClick={handleRemoveAllFiles}
-              >
-                Remove All
-              </Button>
-              <Button
-                size="small"
-                variant="contained"
-                onClick={onSubmit}
-                startIcon={<Iconify icon="eva:cloud-upload-fill" />}
-              >
-                Save
-              </Button>
-            </Stack>}
-            {/* <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton
-                type="submit"
-                className="button"
-                loading={methods.formState.isSubmitting}
-                onClick={onSubmit}
-              >
-                Save
-              </LoadingButton>
-            </Stack> */}
+            {docType === 'milling_unit_photo' && (
+              <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
+                <Button
+                  color="inherit"
+                  variant="outlined"
+                  size="small"
+                  onClick={handleRemoveAllFiles}
+                >
+                  Remove All
+                </Button>
+                <Button
+                  size="small"
+                  variant="contained"
+                  onClick={onSubmit}
+                  startIcon={<Iconify icon="eva:cloud-upload-fill" />}
+                >
+                  Save
+                </Button>
+              </Stack>
+            )}
           </FormProvider>
         </Box>
       </Container>

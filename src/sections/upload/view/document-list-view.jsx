@@ -37,10 +37,11 @@ import DocumentTableRow from '../document-table-row';
 import DocumentTableToolbar from '../document-table-toolbar';
 import DocumentTableFiltersResult from '../document-table-filters-result';
 import { DOCUMENTS } from 'src/_mock/_document';
-import { useGetDocuments } from 'src/api/document';
 import axios from 'axios';
 import { useAuthContext } from '../../../auth/hooks';
+
 // ----------------------------------------------------------------------
+
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 const TABLE_HEAD = [
   { id: 'srNo', label: 'Sr No', width: 88 },
@@ -54,35 +55,48 @@ const defaultFilters = {
   role: [],
   status: 'all',
 };
+
 // ----------------------------------------------------------------------
+
 export default function DocumentListView() {
-  const {vendor} = useAuthContext()
+  const { vendor } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState([]);
+
   useEffect(() => {
     getAllDocument();
   }, []);
+
   function getAllDocument() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/documents`)
-      .then((res) => setTableData(res?.data?.data)).catch((err) => err);
+    axios
+      .get(
+        `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/documents`
+      )
+      .then((res) => setTableData(res?.data?.data))
+      .catch((err) => console.error(err));
   }
+
   const table = useTable();
   const settings = useSettingsContext();
   const router = useRouter();
   const confirm = useBoolean();
   const [filters, setFilters] = useState(defaultFilters);
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
+
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
   );
+
   const denseHeight = table.dense ? 56 : 56 + 20;
   const canReset = !isEqual(defaultFilters, filters);
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
+
   const handleFilters = useCallback(
     (name, value) => {
       table.onResetPage();
@@ -93,9 +107,11 @@ export default function DocumentListView() {
     },
     [table]
   );
+
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
   }, []);
+
   const handleDeleteRow = useCallback(
     (id) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
@@ -105,6 +121,7 @@ export default function DocumentListView() {
     },
     [dataInPage.length, enqueueSnackbar, table, tableData]
   );
+
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
     enqueueSnackbar('Delete success!');
@@ -114,24 +131,28 @@ export default function DocumentListView() {
       totalRowsFiltered: dataFiltered.length,
     });
   }, [dataFiltered.length, dataInPage.length, enqueueSnackbar, table, tableData]);
+
   const handleEditRow = useCallback(
     (id) => {
       router.push(paths.dashboard.user.edit(id));
     },
     [router]
   );
+
   const handleViewRow = useCallback(
     (id) => {
       router.push(paths.dashboard.document.document_view);
     },
     [router]
   );
+
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
     },
     [handleFilters]
   );
+
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
@@ -171,22 +192,22 @@ export default function DocumentListView() {
                       (tab.value === 'certificates' && 'warning') ||
                       (tab.value === 'gst_number' && 'error') ||
                       (tab.value === 'pan_number' && 'info') ||
+                      (tab.value === 'milling_unit_video' && 'info') ||
+                      (tab.value === 'milling_unit_photo' && 'info') ||
                       'default'
                     }
                   >
-                    {['Aadhar', 'certificates', 'gst_number', 'pan_number'].includes(tab.value)
-                      ? tableData.filter((user) => user.doc_type === tab.value).length
-                      : tableData.length}
+                    {tab.value === 'all'
+                      ? tableData.length
+                      : tableData.filter((user) => user.doc_type === tab.value).length}
                   </Label>
                 }
               />
             ))}
           </Tabs>
-          <DocumentTableToolbar
-            filters={filters}
-            onFilters={handleFilters}
-            roleOptions={_roles}
-          />
+
+          <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles} />
+
           {canReset && (
             <DocumentTableFiltersResult
               filters={filters}
@@ -196,6 +217,7 @@ export default function DocumentListView() {
               sx={{ p: 2.5, pt: 0 }}
             />
           )}
+
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={true}
@@ -215,6 +237,7 @@ export default function DocumentListView() {
                 </Tooltip>
               }
             />
+
             <Scrollbar>
               <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
                 <TableHeadCustom
@@ -258,6 +281,7 @@ export default function DocumentListView() {
               </Table>
             </Scrollbar>
           </TableContainer>
+
           <TablePaginationCustom
             count={dataFiltered.length}
             page={table.page}
@@ -269,13 +293,14 @@ export default function DocumentListView() {
           />
         </Card>
       </Container>
+
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
         title="Delete"
         content={
           <>
-            Are you sure want to delete <strong> {table.selected.length} </strong> items?
+            Are you sure want to delete <strong>{table.selected.length}</strong> items?
           </>
         }
         action={
@@ -294,26 +319,34 @@ export default function DocumentListView() {
     </>
   );
 }
+
 // ----------------------------------------------------------------------
+
 function applyFilter({ inputData, comparator, filters }) {
   const { name, status, role } = filters;
+
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
     return a[1] - b[1];
   });
+
   inputData = stabilizedThis.map((el) => el[0]);
+
   if (name) {
     inputData = inputData.filter(
       (user) => user.doc_type.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
+
   if (status !== 'all') {
     inputData = inputData.filter((user) => user.doc_type === status);
   }
+
   if (role.length) {
     inputData = inputData.filter((user) => role.includes(user.role));
   }
+
   return inputData;
 }

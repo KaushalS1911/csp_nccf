@@ -542,19 +542,25 @@ export const _descriptions = [
 export function handleDoctypeLabel(doc) {
   switch (doc) {
     case 'certificates': {
-      return "Certificates"
+      return 'Certificates';
     }
     case 'gst_number': {
-      return "GST"
+      return 'GST';
     }
     case 'pan_number': {
-      return "PAN"
+      return 'PAN';
     }
     case 'Aadhar': {
-      return "Aadhar"
+      return 'Aadhar';
+    }
+    case 'milling_unit_video': {
+      return 'Milling Unit Video';
+    }
+    case 'milling_unit_photo': {
+      return 'Milling Unit Photo';
     }
     default: {
-      return ''
+      return '';
     }
   }
 }
