@@ -16,7 +16,7 @@ import { enqueueSnackbar } from 'notistack';
 // ----------------------------------------------------------------------
 export default function EditOrderDialog({ editDialogOpen, setEditDialogOpen, editId }) {
   const [commodities, setCommodities] = useState([]);
-  const [orderList,setOrderList] = useState([])
+  const [orderList, setOrderList] = useState([]);
   const { vendor } = useAuthContext();
 
   function fetchAllOrders() {
@@ -24,10 +24,12 @@ export default function EditOrderDialog({ editDialogOpen, setEditDialogOpen, edi
       setOrderList(res.data?.data);
     });
   }
+
   useEffect(() => {
     fetchCommodities();
-    fetchAllOrders()
+    fetchAllOrders();
   }, []);
+
   function fetchCommodities() {
     axios
       .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity`)
@@ -35,6 +37,7 @@ export default function EditOrderDialog({ editDialogOpen, setEditDialogOpen, edi
         setCommodities(res.data?.data);
       });
   }
+
   const defaultValues = {
     csp_code: vendor.csp_code,
     commodity: '',
@@ -59,7 +62,7 @@ export default function EditOrderDialog({ editDialogOpen, setEditDialogOpen, edi
     try {
       const response = await axios.post(
         'http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/create_order',
-        payload
+        payload,
       );
       if (response.data.status == '201') {
         enqueueSnackbar('Order added successfully!');
@@ -71,12 +74,12 @@ export default function EditOrderDialog({ editDialogOpen, setEditDialogOpen, edi
   };
   return (
     <>
-      <Dialog open={editDialogOpen} fullWidth={true} maxWidth={'md'} onClose={() => setEditDialogOpen(false)} >
-        <Box sx={{py: 5, px: 3}}>
+      <Dialog open={editDialogOpen} fullWidth={true} maxWidth={'md'} onClose={() => setEditDialogOpen(false)}>
+        <Box sx={{ py: 5, px: 3 }}>
           <DialogTitle>Edit Order</DialogTitle>
-          <DialogContent maxWidth={'lg '}>
-            <FormProvider methods={methods}>
-              <Box mb={2}>
+          <FormProvider methods={methods}>
+            <DialogContent maxWidth={'lg '}>
+              <Box mb={2} mt={1}>
                 <RHFAutocomplete
                   name="commodity"
                   type="commodity"
@@ -87,19 +90,19 @@ export default function EditOrderDialog({ editDialogOpen, setEditDialogOpen, edi
                   getOptionLabel={(option) => option}
                 />
               </Box>
-              <Box>
-                <RHFTextField name="quantity" label="Quantity" fullWidth />
+              <Box mt={2}>
+                <RHFTextField name="quantity" label="Quantity" fullWidth/>
               </Box>
-              <DialogActions>
-                <Button onClick={() => setDialogOpen(false)} variant="outlined" color="inherit">
-                  Cancel
-                </Button>
-                <Button variant="contained" onClick={handleSubmit(onSubmit)}>
-                  Save
-                </Button>
-              </DialogActions>
-            </FormProvider>
-          </DialogContent>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setEditDialogOpen(false)} variant="outlined" color="inherit">
+                Cancel
+              </Button>
+              <Button variant="contained" onClick={handleSubmit(onSubmit)}>
+                Save
+              </Button>
+            </DialogActions>
+          </FormProvider>
         </Box>
       </Dialog>
     </>

@@ -16,7 +16,7 @@ import { enqueueSnackbar } from 'notistack';
 // ----------------------------------------------------------------------
 export default function AppDialog({ dialogOpen, setDialogOpen, editId }) {
   const [commodities, setCommodities] = useState([]);
-  const [orderList,setOrderList] = useState([])
+  const [orderList, setOrderList] = useState([]);
   const { vendor } = useAuthContext();
 
   function fetchAllOrders() {
@@ -24,10 +24,12 @@ export default function AppDialog({ dialogOpen, setDialogOpen, editId }) {
       setOrderList(res.data?.data);
     });
   }
+
   useEffect(() => {
     fetchCommodities();
-    fetchAllOrders()
+    fetchAllOrders();
   }, []);
+
   function fetchCommodities() {
     axios
       .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity`)
@@ -35,6 +37,7 @@ export default function AppDialog({ dialogOpen, setDialogOpen, editId }) {
         setCommodities(res.data?.data);
       });
   }
+
   const defaultValues = {
     csp_code: vendor.csp_code,
     commodity: '',
@@ -59,7 +62,7 @@ export default function AppDialog({ dialogOpen, setDialogOpen, editId }) {
     try {
       const response = await axios.post(
         'http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/create_order',
-        payload
+        payload,
       );
       if (response.data.status == '201') {
         enqueueSnackbar('Order added successfully!');
@@ -71,25 +74,26 @@ export default function AppDialog({ dialogOpen, setDialogOpen, editId }) {
   };
   return (
     <>
-      <Dialog open={dialogOpen} fullWidth={true} maxWidth={'md'} onClose={() => setDialogOpen(false)} >
-       <Box sx={{py: 5, px: 3}}>
-       <DialogTitle>Add Order</DialogTitle>
-        <DialogContent maxWidth={'lg '}>
+      <Dialog open={dialogOpen} fullWidth={true} maxWidth={'md'} onClose={() => setDialogOpen(false)}>
+        <Box sx={{ py: 5, px: 3 }}>
+          <DialogTitle>Add Order</DialogTitle>
           <FormProvider methods={methods}>
-                  <Box mb={2}>
-                    <RHFAutocomplete
-                      name="commodity"
-                      type="commodity"
-                      label="Commodity"
-                      placeholder="Choose Commodity"
-                      fullWidth
-                      options={commodities.map((option) => option?.commodity_name)}
-                      getOptionLabel={(option) => option}
-                    />
-                  </Box>
-                  <Box>
-                    <RHFTextField name="quantity" label="Quantity" fullWidth />
-                  </Box>
+            <DialogContent maxWidth={'lg '}>
+              <Box mb={2} mt={1}>
+                <RHFAutocomplete
+                  name="commodity"
+                  type="commodity"
+                  label="Commodity"
+                  placeholder="Choose Commodity"
+                  fullWidth
+                  options={commodities.map((option) => option?.commodity_name)}
+                  getOptionLabel={(option) => option}
+                />
+              </Box>
+              <Box mt={2}>
+                <RHFTextField name="quantity" label="Quantity" fullWidth/>
+              </Box>
+            </DialogContent>
             <DialogActions>
               <Button onClick={() => setDialogOpen(false)} variant="outlined" color="inherit">
                 Cancel
@@ -99,8 +103,7 @@ export default function AppDialog({ dialogOpen, setDialogOpen, editId }) {
               </Button>
             </DialogActions>
           </FormProvider>
-        </DialogContent>
-       </Box>
+        </Box>
       </Dialog>
     </>
   );

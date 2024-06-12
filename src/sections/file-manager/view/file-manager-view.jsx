@@ -90,7 +90,7 @@ export default function FileManagerView() {
   );
 
   const canReset =
-    !!filters.name || !!filters.type.length || (!!filters.startDate && !!filters.endDate);
+    !!filters.name || !!filters.type.length ||  (!!filters.startDate && !!filters.endDate);
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
@@ -185,7 +185,7 @@ export default function FileManagerView() {
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <Container maxWidth={settings.themeStretch ? false : 'xxl'}>
         <Stack direction="row" alignItems="center" justifyContent="space-between">
           <Typography variant="h4">Documents</Typography>
           <Button
@@ -279,6 +279,8 @@ function applyFilter({ inputData, comparator, filters, dateError }) {
     return a[1] - b[1];
   });
 
+
+
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (name) {
@@ -288,7 +290,8 @@ function applyFilter({ inputData, comparator, filters, dateError }) {
   }
 
   if (type.length) {
-    inputData = inputData.filter((file) => type.includes(fileFormat(file.type)));
+    // (inputData.filter((file) => console.log(type.includes(file.doc_type))));
+    inputData = inputData.filter((file) => type.includes(file.doc_type));
   }
 
   if (!dateError) {

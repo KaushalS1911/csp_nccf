@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 
 import Iconify from 'src/components/iconify';
 import { shortDateLabel } from 'src/components/custom-date-range-picker';
+import { handleFilterTypes } from '../../_mock';
 
 // ----------------------------------------------------------------------
 
@@ -55,7 +56,7 @@ export default function FileManagerFiltersResult({
         {!!filters.type.length && (
           <Block label="Types:">
             {filters.type.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveTypes(item)} />
+              <Chip key={item} label={handleFilterTypes(item)} size="small" onDelete={() => handleRemoveTypes(item)} />
             ))}
           </Block>
         )}

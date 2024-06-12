@@ -558,3 +558,16 @@ export function handleDoctypeLabel(doc) {
     }
   }
 }
+
+export function handleFilterTypes(type) {
+  switch (type) {
+    case 'gst_number':
+      return 'GST';
+    case 'pan_number':
+      return 'PAN';
+    case 'certificates':
+      return 'Certificates';
+    default:
+      return type;
+  }
+}

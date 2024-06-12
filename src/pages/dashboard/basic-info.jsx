@@ -16,45 +16,41 @@ import Container from '@mui/material/Container';
 import { useSettingsContext } from 'src/components/settings/context';
 import { Helmet } from 'react-helmet-async';
 import { RHFTextField } from 'src/components/hook-form';
-
 export default function BasicInfo() {
   const settings = useSettingsContext();
   const { vendor } = useAuthContext();
   const [currentUser, setCurrentUser] = useState({});
   const [commodities, setCommodities] = useState([]);
-
   const notify = () => toast.success('User details updated successfully');
   const notifyError = () => toast.error('Something went wrong');
   const [disable, setDisable] = useState(true);
-
   useEffect(() => {
     fetchUser();
     fetchCommodities();
   }, [vendor]);
-
-
   function fetchUser() {
     if (vendor.phone_number) {
       axios
         .get(
-          `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/csp_detail/${vendor.phone_number}`,
+          `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/csp_detail/${vendor.phone_number}`
         )
         .then((res) => {
+          console.log(res, 'res');
           setCurrentUser(res?.data?.data[0]);
         })
         .catch((error) => console.log(error));
     }
   }
-
   function fetchCommodities() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity`).then((res) => {
-      setCommodities(res.data?.data);
-    });
+    axios
+      .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity`)
+      .then((res) => {
+        setCommodities(res.data?.data);
+      });
   }
-
   const defaultValues = {
     address: '',
-    commodity: '',
+    // commodity: '',
     contact_person: '',
     district: '',
     gst_number: '',
@@ -63,26 +59,23 @@ export default function BasicInfo() {
     pan_number: '',
     phone_number: vendor.phone_number,
     pincode: '',
-    quantity: '',
+    email: '',
     state: '',
     village: '',
   };
-
   const methods = useForm({
     defaultValues,
   });
-
   const {
     reset,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
   useEffect(() => {
     if (currentUser) {
       reset({
         address: currentUser.address || '',
-        commodity: currentUser.commodity || '',
+        // // commodity: currentUser.commodity || '',
         contact_person: currentUser.contact_person || '',
         district: currentUser.district || '',
         gst_number: currentUser.gst_number || '',
@@ -91,22 +84,21 @@ export default function BasicInfo() {
         pan_number: currentUser.pan_number || '',
         phone_number: vendor.phone_number,
         pincode: currentUser.pincode || '',
-        quantity: currentUser.quantity || '',
+        email: currentUser.email || '',
         state: currentUser.state || '',
         village: currentUser.village || '',
       });
     }
   }, [currentUser, reset, vendor]);
-
   const milingType = ['Dry', 'Wet', 'Both'];
   const states = ['Gujarat', 'Delhi', 'Punjab'];
   const districts = ['Amreli', 'Surendranagar', 'Dhrol'];
   const villages = ['Surat', 'Bharuch', 'Rohini'];
-
   const onSubmit = handleSubmit(async (data) => {
     const payload = {
       ...data,
       csp_code: vendor.csp_code,
+      updated_on: new Date().toISOString(),
       mode: 'test',
     };
     axios
@@ -116,10 +108,8 @@ export default function BasicInfo() {
       })
       .catch((err) => {
         // notifyError();
-
       });
   });
-
   return (
     <>
       <Helmet>
@@ -136,7 +126,7 @@ export default function BasicInfo() {
           }}
         >
           <FormProvider methods={methods} onSubmit={onSubmit}>
-            <ToastContainer/>
+            <ToastContainer />
             <Grid container>
               <Grid item md={4}>
                 <Box sx={{ ml: { md: '60px', xs: '0' }, mt: '60px' }}>
@@ -167,7 +157,7 @@ export default function BasicInfo() {
                       md: 'repeat(3, 1fr)',
                     }}
                   >
-                    <RHFTextField name="name" label="Full Name" disabled={disable}/>
+                    <RHFTextField name="name" label="Full Name" disabled={disable} />
                     <RHFAutocomplete
                       name="milling_type"
                       type="milling_type"
@@ -178,21 +168,21 @@ export default function BasicInfo() {
                       getOptionLabel={(option) => option}
                       disabled={disable}
                     />
-                    <RHFAutocomplete
+                    {/* <RHFAutocomplete
                       disabled={disable}
-                      name="commodity"
-                      type="commodity"
-                      label="Commodity"
-                      placeholder="Choose Commodity"
+                      // name="commodity"
+                      // type="commodity"
+                      // label="Commodity"
+                      // placeholder="Choose Commodity"
                       fullWidth
-                      options={commodities.map((option) => option?.commodity_name)}
+                      // options={commodities.map((option) => option?.commodity_name)}
                       getOptionLabel={(option) => option}
-                    />
-                    <RHFTextField name="quantity" label="Quantity" disabled={disable}/>
-                    <RHFTextField name="contact_person" label="Contact Person" disabled={disable}/>
-                    <RHFTextField name="phone_number" label="Phone Number" disabled={disable}/>
-                    <RHFTextField name="pan_number" label="Pan Number" disabled={disable}/>
-                    <RHFTextField name="gst_number" label="GST Number" disabled={disable}/>
+                    /> */}
+                    <RHFTextField name="email" label="email" disabled={disable} />
+                    <RHFTextField name="contact_person" label="Contact Person" disabled={disable} />
+                    <RHFTextField name="phone_number" label="Phone Number" disabled={disable} />
+                    <RHFTextField name="pan_number" label="Pan Number" disabled={disable} />
+                    <RHFTextField name="gst_number" label="GST Number" disabled={disable} />
                   </Box>
                 </Card>
               </Grid>
@@ -228,7 +218,7 @@ export default function BasicInfo() {
                     }}
                   >
                     <Box gridColumn={{ xs: 'span 1', sm: 'span 2', md: 'span 4' }}>
-                      <RHFTextField name="address" label="Address" fullWidth disabled={disable}/>
+                      <RHFTextField name="address" label="Address" fullWidth disabled={disable} />
                     </Box>
                     <Box gridColumn={{ xs: 'span 1', sm: 'span 1', md: 'span 2' }}>
                       <RHFAutocomplete
@@ -255,7 +245,7 @@ export default function BasicInfo() {
                       />
                     </Box>
                     <Box gridColumn={{ xs: 'span 1', sm: 'span 1', md: 'span 2' }}>
-                      <RHFTextField name="pincode" label="Pin Code" fullWidth disabled={disable}/>
+                      <RHFTextField name="pincode" label="Pin Code" fullWidth disabled={disable} />
                     </Box>
                     <Box gridColumn={{ xs: 'span 1', sm: 'span 1', md: 'span 2' }}>
                       <RHFAutocomplete
@@ -275,13 +265,19 @@ export default function BasicInfo() {
             </Grid>
             <Stack display={'flex'} alignItems={'flex-end'} sx={{ mt: 3 }}>
               <Box>
-                <Button color="inherit" variant="outlined" sx={{ mr: '20px' }} onClick={() => setDisable(false)}>
-                  Edit
+                <Button
+                  color="inherit"
+                  variant="outlined"
+                  sx={{ mr: '20px' }}
+                  onClick={() => setDisable((prevDisable) => !prevDisable)}
+                >
+                  {disable ? 'Edit' : 'Cancel'}
                 </Button>
                 <LoadingButton
-                  type='submit'
+                  type="submit"
                   loading={isSubmitting}
                   variant="contained"
+                  disabled={disable}
                 >
                   Save
                 </LoadingButton>
@@ -293,4 +289,3 @@ export default function BasicInfo() {
     </>
   );
 }
-

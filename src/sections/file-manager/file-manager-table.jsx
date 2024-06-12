@@ -170,7 +170,7 @@ export default function FileManagerTable({
         onPageChange={onChangePage}
         onRowsPerPageChange={onChangeRowsPerPage}
         //
-        dense={dense}
+        dense={true}
         onChangeDense={onChangeDense}
         sx={{
           [`& .${tablePaginationClasses.toolbar}`]: {

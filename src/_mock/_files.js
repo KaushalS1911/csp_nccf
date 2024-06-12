@@ -70,11 +70,10 @@ const SHARED_PERSONS = [...Array(20)].map((_, index) => ({
 }));
 
 export const FILE_TYPE_OPTIONS = [
-  'Aadhar',
-  'Pan Number',
-  'Certificates',
-  'GST Number',
-  
+  {value: "Aadhar", label: "Aadhar"},
+  {value: "pan_number", label: "PAN"},
+  {value: "gst_number", label: "GST"},
+  {value: "certificates", label: "Certificates"},
 ];
 
 // ----------------------------------------------------------------------

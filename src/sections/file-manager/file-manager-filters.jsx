@@ -15,43 +15,48 @@ import Iconify from 'src/components/iconify';
 import FileThumbnail from 'src/components/file-thumbnail';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import CustomDateRangePicker, { shortDateLabel } from 'src/components/custom-date-range-picker';
+import { handleFilterTypes } from '../../_mock';
 
 // ----------------------------------------------------------------------
 
 export default function FileManagerFilters({
-  openDateRange,
-  onCloseDateRange,
-  onOpenDateRange,
-  //
-  filters,
-  onFilters,
-  //
-  dateError,
-  typeOptions,
-}) {
+                                             openDateRange,
+                                             onCloseDateRange,
+                                             onOpenDateRange,
+                                             //
+                                             filters,
+                                             onFilters,
+                                             //
+                                             dateError,
+                                             typeOptions,
+                                           }) {
+
+
   const popover = usePopover();
 
-  const renderLabel = filters.type.length ? filters.type.slice(0, 2).join(',') : 'All type';
+  const renderLabel = filters.type.length
+    ? filters.type.map(handleFilterTypes).slice(0, 2).join(', ')
+    : 'All type';
 
   const handleFilterName = useCallback(
     (event) => {
       onFilters('name', event.target.value);
     },
-    [onFilters]
+    [onFilters],
   );
 
   const handleFilterStartDate = useCallback(
     (newValue) => {
       onFilters('startDate', newValue);
     },
-    [onFilters]
+    [onFilters],
   );
 
   const handleFilterEndDate = useCallback(
     (newValue) => {
       onFilters('endDate', newValue);
     },
-    [onFilters]
+    [onFilters],
   );
 
   const handleFilterType = useCallback(
@@ -61,7 +66,7 @@ export default function FileManagerFilters({
         : [...filters.type, newValue];
       onFilters('type', checked);
     },
-    [filters.type, onFilters]
+    [filters.type, onFilters],
   );
 
   const handleResetType = useCallback(() => {
@@ -77,7 +82,7 @@ export default function FileManagerFilters({
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
-            <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+            <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }}/>
           </InputAdornment>
         ),
       }}
@@ -118,12 +123,12 @@ export default function FileManagerFilters({
             }}
           >
             {typeOptions.map((type) => {
-              const selected = filters.type.includes(type);
+              const selected = filters.type.includes(type.value);
 
               return (
                 <CardActionArea
-                  key={type}
-                  onClick={() => handleFilterType(type)}
+                  key={type.value}
+                  onClick={() => handleFilterType(type.value)}
                   sx={{
                     p: 1,
                     borderRadius: 1,
@@ -135,8 +140,8 @@ export default function FileManagerFilters({
                   }}
                 >
                   <Stack spacing={1} direction="row" alignItems="center">
-                    <FileThumbnail file={type} />
-                    <Typography variant={selected ? 'subtitle2' : 'body2'}>{type}</Typography>
+                    <FileThumbnail file={type.label}/>
+                    <Typography variant={selected ? 'subtitle2' : 'body2'}>{type.label}</Typography>
                   </Stack>
                 </CardActionArea>
               );
@@ -157,7 +162,6 @@ export default function FileManagerFilters({
     </>
   );
 
- 
 
   return (
     <Stack
