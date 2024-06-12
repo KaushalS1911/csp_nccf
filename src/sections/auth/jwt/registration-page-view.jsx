@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useForm, Controller } from 'react-hook-form';
 import {
@@ -21,14 +21,35 @@ import * as Yup from 'yup'
 import { RHFTextField , RHFAutocomplete} from 'src/components/hook-form';
 const RegistrationForm = ({ vendor_category }) => {
   const router = useRouter();
+  const [stateOptions, setStateOptions] = useState([]);
+  const [branchOptions, setBranchOptions] = useState([]);
+  // const [selectedState, setSelectedState]  = useState('')
+
+  useEffect(() => {
+    fetchStates()
+    fetchBranches()
+  },[])
+
+  function fetchStates() {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state`).then((res) => {
+      setStateOptions(res?.data?.data)
+    })
+  }
+
+  function fetchBranches() {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/26/branch`).then((res) => {
+      setBranchOptions(res?.data?.data)
+    })
+  }
+
   const millingTypeOptions = ["Dry", "Wet", "Both"];
   const districtOptions = ["Amreli","Bhavanagar"];
-  const stateOptions = ["Surat","Ahemdabad"];
-  const branchOptions = ["Branch 1","Branch 2"];
+
+
   const NewBlogSchema = Yup.object().shape({
     address: Yup.string().required('Address is required'),
     contact_person: Yup.string().required('Contact is required'),
-    confirm_paasword: Yup.string()
+    confirm_password: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
       .required('Confirm password is required'),
     password: Yup.string()
@@ -40,10 +61,12 @@ const RegistrationForm = ({ vendor_category }) => {
     name: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required'),
     state: Yup.string().required('State is required'),
+    branch: Yup.string().required('Branch is required'),
     pan_number: Yup.string().required('Pan Number is required'),
     pincode: Yup.string().required('Pincode is required'),
     phone_number: Yup.string().max(10).required('Phone Number is required'),
   });
+
   const defaultValues = {
     address: '',
     confirm_password: '',
@@ -61,15 +84,18 @@ const RegistrationForm = ({ vendor_category }) => {
     branch: '',
   }
   const methods  = useForm({
-    resolver: yupResolver(NewBlogSchema),
+    // resolver: yupResolver(NewBlogSchema),
     defaultValues
   });
+
   const {
     reset,
-    handleSubmit,
     control,
+    register,
+    handleSubmit,
     formState: { isSubmitting },
   } = methods;
+
   const onSubmit = handleSubmit(async (values) => {
     let payload;
     vendor_category === 'Distributor'
@@ -105,6 +131,7 @@ const RegistrationForm = ({ vendor_category }) => {
       })
       .catch((err) => console.log(err));
   });
+
   return (
     <Box p={5} className="registerForm" sx={{ backgroundColor: 'white', borderRadius: "10px" }}>
       <Typography variant="h5" gutterBottom className="heading">
@@ -173,7 +200,7 @@ const RegistrationForm = ({ vendor_category }) => {
               label="State"
               placeholder="Choose Your State"
               fullWidth
-              options={stateOptions.map((option) => option)}
+              options={stateOptions.map((option) => option.state_name)}
               getOptionLabel={(option) => option}
             />
           </Grid>
@@ -183,7 +210,7 @@ const RegistrationForm = ({ vendor_category }) => {
               label="Branch"
               placeholder="Choose Your Branch"
               fullWidth
-              options={branchOptions.map((option) => option)}
+              options={branchOptions.map((option) => option.branch_name)}
               getOptionLabel={(option) => option}
             />
           </Grid>
