@@ -288,7 +288,7 @@ function applyFilter({ inputData, comparator, filters, dateError }) {
   }
 
   if (type.length) {
-    inputData = inputData.filter((file) => type.includes(fileFormat(file.type)));
+    inputData = inputData.filter((file) => type.includes(fileFormat(file.doc_type)));
   }
 
   if (!dateError) {

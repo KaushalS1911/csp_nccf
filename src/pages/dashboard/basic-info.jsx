@@ -16,6 +16,7 @@ import Container from '@mui/material/Container';
 import { useSettingsContext } from 'src/components/settings/context';
 import { Helmet } from 'react-helmet-async';
 import { RHFTextField } from 'src/components/hook-form';
+import { enqueueSnackbar } from 'notistack';
 export default function BasicInfo() {
   const settings = useSettingsContext();
   const { vendor } = useAuthContext();
@@ -104,9 +105,11 @@ export default function BasicInfo() {
     axios
       .put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/update_info', payload)
       .then((res) => {
+        enqueueSnackbar("Update successfully")
         // notify();
       })
       .catch((err) => {
+        enqueueSnackbar("Something went wrong")
         // notifyError();
       });
   });
@@ -178,7 +181,7 @@ export default function BasicInfo() {
                       // options={commodities.map((option) => option?.commodity_name)}
                       getOptionLabel={(option) => option}
                     /> */}
-                    <RHFTextField name="email" label="email" disabled={disable} />
+                    <RHFTextField name="email" label="Email" disabled={disable} />
                     <RHFTextField name="contact_person" label="Contact Person" disabled={disable} />
                     <RHFTextField name="phone_number" label="Phone Number" disabled={disable} />
                     <RHFTextField name="pan_number" label="Pan Number" disabled={disable} />

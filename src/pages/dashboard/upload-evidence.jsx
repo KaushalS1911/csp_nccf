@@ -12,34 +12,27 @@ import axios from 'axios';
 import { Upload } from 'src/components/upload';
 import Iconify from 'src/components/iconify';
 import { Helmet } from 'react-helmet-async';
-
+import { enqueueSnackbar } from 'notistack';
 export default function UploadEvidence() {
   const settings = useSettingsContext();
   const [docType, setDocType] = useState('');
   const [vendorCode, setVendorCode] = useState('');
   const [files, setFiles] = useState([]);
-  const notify = () => toast.success('Your Document Uploaded');
-  const notifyError = () => toast.error('Failed to Upload');
   const role = 'miller';
-
   const defaultValues = useMemo(
     () => ({
       doc_type: '',
     }),
     []
   );
-
   const methods = useForm({
     defaultValues,
   });
-
   const { handleSubmit, control } = methods;
-
   const storedVendorCode = sessionStorage.getItem('vendor');
   useEffect(() => {
     setVendorCode(storedVendorCode || '');
   }, []);
-
   const onSubmit = handleSubmit(async (data) => {
     const formDataList = files
       .map((file, index) => {
@@ -53,7 +46,6 @@ export default function UploadEvidence() {
         return null;
       })
       .filter((formData) => formData !== null);
-
     try {
       const responses = await Promise.all(
         formDataList.map((formData) =>
@@ -68,24 +60,21 @@ export default function UploadEvidence() {
           )
         )
       );
-
       const allSuccess = responses.every((response) => response.data.status === '201');
       if (allSuccess) {
-        notify();
+        enqueueSnackbar('Your Document Uploaded');
       } else {
-        notifyError();
+        enqueueSnackbar('Failed to Upload');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      notifyError();
+      enqueueSnackbar('Failed to Upload');
     }
   });
-
   const docTypeOption = [
     { label: 'Milling Unit Photo', key: 'milling_unit_photo' },
     { label: 'Milling Unit Video', key: 'milling_unit_video' },
   ];
-
   const handleDropSingleFile = useCallback(
     (index) => (acceptedFiles) => {
       const newFile = acceptedFiles[0];
@@ -101,7 +90,6 @@ export default function UploadEvidence() {
     },
     []
   );
-
   const renderUploadBox = (index) => (
     <Card key={index}>
       <Stack spacing={3} sx={{ p: 3 }}>
@@ -127,7 +115,6 @@ export default function UploadEvidence() {
       </Stack>
     </Card>
   );
-
   const handleDropMultiFile = useCallback(
     (acceptedFiles) => {
       setFiles([
@@ -140,16 +127,13 @@ export default function UploadEvidence() {
     },
     [files]
   );
-
   const handleRemoveFile = (inputFile) => {
     const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
     setFiles(filesFiltered);
   };
-
   const handleRemoveAllFiles = () => {
     setFiles([]);
   };
-
   const renderUploadVideo = (index) => (
     <Card key={index}>
       <Stack spacing={3} sx={{ p: 3 }}>
@@ -174,7 +158,6 @@ export default function UploadEvidence() {
       </Stack>
     </Card>
   );
-
   function handleUploads() {
     switch (docType) {
       case 'milling_unit_photo': {
@@ -199,7 +182,6 @@ export default function UploadEvidence() {
         return null;
     }
   }
-
   return (
     <>
       <Helmet>

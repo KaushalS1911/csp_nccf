@@ -1,21 +1,15 @@
 import PropTypes from 'prop-types';
-
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
-
 import DownloadButton from './download-button';
 import { fileData, fileThumb, fileFormat } from './utils';
-
 // ----------------------------------------------------------------------
-
 export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx, imgSx }) {
   const { name = '', path = '', preview = '' } = fileData(file);
-
   const format = fileFormat(path || preview);
-
   const renderContent =
-    format === 'image' && imageView ? (
+    format !== 'image' && imageView ? (
       <Box
         component="img"
         src={preview}
@@ -39,7 +33,6 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
         }}
       />
     );
-
   if (tooltip) {
     return (
       <Tooltip title={name}>
@@ -59,7 +52,6 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
       </Tooltip>
     );
   }
-
   return (
     <>
       {renderContent}
@@ -67,7 +59,6 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
     </>
   );
 }
-
 FileThumbnail.propTypes = {
   file: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   imageView: PropTypes.bool,

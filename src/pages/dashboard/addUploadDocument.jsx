@@ -15,15 +15,15 @@ import { Helmet } from 'react-helmet-async';
 import { enqueueSnackbar } from 'notistack';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
+import imageCompression from 'browser-image-compression';
 // ----------------------------------------------------------------------
 export default function UploadDocument() {
   const settings = useSettingsContext();
   const [vendorCode, setVendorCode] = useState('');
-  const router = useRouter()
+  const router = useRouter();
   const [files, setFiles] = useState([]);
   const notify = () => toast.success('Documents Uploaded');
   const notifyError = () => toast.error('Failed to Upload');
-
   const defaultValues = useMemo(
     () => ({
       doc_type: '',
@@ -31,18 +31,14 @@ export default function UploadDocument() {
     }),
     []
   );
-
   const methods = useForm({
     defaultValues,
   });
-
   const { handleSubmit, control } = methods;
-
   const storedVendorCode = sessionStorage.getItem('vendor');
   useEffect(() => {
     setVendorCode(storedVendorCode || '');
   }, []);
-
   const onSubmit = handleSubmit(async (data) => {
     const formData = new FormData();
     formData.append('doc_type', data.doc_type);
@@ -61,13 +57,11 @@ export default function UploadDocument() {
         }
       );
       if (response) {
-        // notify();
-        enqueueSnackbar('Documents Added successfully!')
-        router.push(paths.dashboard.document.document_list)
+        enqueueSnackbar('Documents Added successfully!');
+        router.push(paths.dashboard.document.document_list);
       } else {
-        console.log("Error");
-        enqueueSnackbar('Documents Not Added!')
-        // notifyError();
+        console.log('Error');
+        enqueueSnackbar('Documents Not Added!');
       }
       console.log('Form submitted successfully:', response.data);
     } catch (error) {
@@ -80,34 +74,86 @@ export default function UploadDocument() {
     { label: 'Gst Number', key: 'gst_number' },
     { label: 'Pan Number', key: 'pan_number' },
   ];
-
+  // const handleDropMultiFile = useCallback(
+  //   async (acceptedFiles) => {
+  //     const compressedFiles = await Promise.all(
+  //       acceptedFiles.map(async (file) => {
+  //         const options = {
+  //           maxSizeMB: 1,
+  //           maxWidthOrHeight: 1200,
+  //           useWebWorker: true,
+  //         };
+  //         try {
+  //           const compressedFile = await imageCompression(file, options);
+  //           compressedFile.preview = URL.createObjectURL(compressedFile);
+  //           return compressedFile;
+  //         } catch (error) {
+  //           console.error('Error compressing file:', error);
+  //           return file;
+  //         }
+  //       })
+  //     );
+  //     setFiles([...files, ...compressedFiles]);
+  //   },
+  //   [files]
+  // );
+// const handleDropMultiFile = useCallback(
+//   (acceptedFiles) => {
+//     setFiles([
+//       ...files,
+//       ...acceptedFiles.map((newFile) =>
+//         Object.assign(newFile, {
+//           preview: URL.createObjectURL(newFile),
+//         })
+//       ),
+//     ]);
+//     console.log("Files : ",files);
+//   },
+//   [files]
+//   );
   const handleDropMultiFile = useCallback(
-    (acceptedFiles) => {
-      setFiles([
-        ...files,
-        ...acceptedFiles.map((newFile) =>
-          Object.assign(newFile, {
-            preview: URL.createObjectURL(newFile),
+    async (acceptedFiles) => {
+      try {
+        const options = {
+          maxSizeMB: 0.3,
+          maxWidthOrHeight: 1200,
+          useWebWorker: true,
+        };
+        const compressedFiles = await Promise.all(
+          acceptedFiles.map(async (file) => {
+            try {
+              return await imageCompression(file, options);
+            } catch (compressionError) {
+              console.error('Error compressing file:', compressionError);
+              return file;
+            }
           })
-        ),
-      ]);
+        );
+        const updatedFiles = [
+          ...files,
+          ...compressedFiles.map((compressedFile) => ({
+            ...compressedFile,
+            preview: URL.createObjectURL(compressedFile),
+          })),
+        ];
+        setFiles(updatedFiles);
+      } catch (error) {
+        console.error('Error processing files:', error);
+      }
     },
-    [files]
+    [files, setFiles]
   );
-
   const handleRemoveFile = (inputFile) => {
     const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
     setFiles(filesFiltered);
   };
-
   const handleRemoveAllFiles = () => {
     setFiles([]);
   };
-
   const renderDetails = (
     <>
       <Helmet>
-        <title> Dashboard | Upload Documents</title>
+        <title>Dashboard | Upload Documents</title>
       </Helmet>
       <Card>
         <Stack spacing={3} sx={{ p: 3 }}>
@@ -130,7 +176,7 @@ export default function UploadDocument() {
                     <InputLabel>Document Type</InputLabel>
                     <Select {...field} label="Document Type">
                       {docTypeOption.map((option) => (
-                        <MenuItem key={option} value={option.key}>
+                        <MenuItem key={option.key} value={option.key}>
                           {option.label}
                         </MenuItem>
                       ))}
@@ -139,8 +185,10 @@ export default function UploadDocument() {
                 )}
               />
             </Box>
-            <Typography variant="subtitle2" sx={{my:"10px"}}>Upload Your Document</Typography>
-
+            <Typography variant="subtitle2" sx={{ my: '10px' }}>
+              Upload Your Document
+            </Typography>
+            {/* {files.length !== 0 && console.log('raam')} */}
             <Upload
               multiple
               accept={{
@@ -160,7 +208,6 @@ export default function UploadDocument() {
       </Card>
     </>
   );
-
   return (
     <>
       <ToastContainer />
