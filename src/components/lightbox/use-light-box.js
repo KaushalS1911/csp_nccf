@@ -11,7 +11,7 @@ export default function useLightBox(slides) {
         slide.type === 'video' ? slide.poster === slideUrl : slide.src === slideUrl
       );
 
-      setSelected(slideIndex);
+      setSelected(0);
     },
     [slides]
   );

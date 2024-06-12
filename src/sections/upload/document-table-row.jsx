@@ -18,6 +18,8 @@ import DocumentQuickEditForm from './document-quick-edit-form';
 import { useState } from 'react';
 import MaxWidthDialog from '../overview/app/viewDocumentDialog';
 import { handleDoctypeLabel } from '../../_mock';
+import Lightbox from '../../components/lightbox';
+import useLightBox from '../../components/lightbox/use-light-box';
 // ----------------------------------------------------------------------
 export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow, onViewRow,onDeleteRow, index }) {
   const { doc_type, object_url, uploaded_on } = row;
@@ -36,8 +38,13 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
   function handleViewDialog(url) {
     setImages([url]);
     popover.onClose()
-    setOpen(true);
+    lightbox.onOpen(url)
   }
+
+  const slides = images.map((img) => ({
+    src: img,
+  }));
+  const lightbox = useLightBox(slides);
 
   return (
     <>
@@ -115,7 +122,13 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
         {/*  Delete*/}
         {/*</MenuItem>*/}
       </CustomPopover>
-      <MaxWidthDialog handleClose={handleClose} open={open} images={images} />
+      <Lightbox
+        index={lightbox.selected}
+        slides={slides}
+        open={lightbox.open}
+        close={lightbox.onClose}
+        onGetCurrentIndex={(index) => lightbox.setSelected(index)}
+      />
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}

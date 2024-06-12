@@ -26,6 +26,8 @@ import FileManagerShareDialog from './file-manager-share-dialog';
 import FileManagerFileDetails from './file-manager-file-details';
 import MaxWidthDialog from '../overview/app/viewDocumentDialog';
 import { handleDoctypeLabel } from '../../_mock';
+import useLightBox from '../../components/lightbox/use-light-box';
+import Lightbox from '../../components/lightbox';
 // ----------------------------------------------------------------------
 export default function FileManagerFileItem({ file, selected, onSelect, onDelete, sx, ...other }) {
   const secondSlashIndex = file.object_url.indexOf("/", 8);
@@ -50,11 +52,20 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
     enqueueSnackbar('Copied!');
     copy(file.url);
   }, [copy, enqueueSnackbar, file.url]);
+
+
   function handleViewDialog(url) {
-    setImages([url])
-    popover.onClose()
-    setOpen(true)
+    popover.onClose();
+    setImages([url]);
+    lightbox.onOpen(url)
   }
+
+  const slides = images.map((img) => ({
+    src: img,
+  }));
+  const lightbox = useLightBox(slides);
+
+
   function handleClose() {
     setOpen(false)
   }
@@ -230,7 +241,13 @@ export default function FileManagerFileItem({ file, selected, onSelect, onDelete
           setInviteEmail('');
         }}
       />
-      <MaxWidthDialog images={images} open={open} handleClose={handleClose}/>
+      <Lightbox
+        index={lightbox.selected}
+        slides={slides}
+        open={lightbox.open}
+        close={lightbox.onClose}
+        onGetCurrentIndex={(index) => lightbox.setSelected(index)}
+      />
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}

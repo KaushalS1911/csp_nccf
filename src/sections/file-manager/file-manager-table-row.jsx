@@ -31,6 +31,8 @@ import { paths } from 'src/routes/paths';
 import { useAuthContext } from '../../auth/hooks';
 import MaxWidthDialog from '../overview/app/viewDocumentDialog';
 import { handleDoctypeLabel } from '../../_mock';
+import useLightBox from '../../components/lightbox/use-light-box';
+import Lightbox from '../../components/lightbox';
 // ----------------------------------------------------------------------
 export default function FileManagerTableRow({ row, selected, onSelectRow, onDeleteRow, index }) {
   const { doc_type, object_url, uploaded_on } = row;
@@ -49,11 +51,17 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
   const share = useBoolean();
   const confirm = useBoolean();
   const popover = usePopover();
-  const handleViewRow = (url) => {
-    setOpen(true);
-    popover.onClose()
+  function handleViewDialog(url) {
     setImages([url]);
-  };
+    popover.onClose()
+    lightbox.onOpen(url)
+  }
+
+  const slides = images.map((img) => ({
+    src: img,
+  }));
+  const lightbox = useLightBox(slides);
+
   const handleChangeInvite = useCallback((event) => {
     setInviteEmail(event.target.value);
   }, []);
@@ -120,7 +128,7 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
               src={url}
               sx={{ mr: 2, height: '48px', width: '48px', cursor: 'pointer' }}
               variant="rounded"
-              onClick={() => handleViewRow(url)}
+              onClick={() => handleViewDialog(url)}
             />
           </Stack>
         </TableCell>
@@ -179,7 +187,7 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
         arrow="right-top"
         sx={{ width: 160 }}
       >
-        <MenuItem onClick={() => handleViewRow(url)}>
+        <MenuItem onClick={() => handleViewDialog(url)}>
           <Iconify icon="solar:eye-bold" />
           View
         </MenuItem>
@@ -224,7 +232,13 @@ export default function FileManagerTableRow({ row, selected, onSelectRow, onDele
           setInviteEmail('');
         }}
       /> */}
-      <MaxWidthDialog handleClose={handleClose} open={open} images={images} />
+      <Lightbox
+        index={lightbox.selected}
+        slides={slides}
+        open={lightbox.open}
+        close={lightbox.onClose}
+        onGetCurrentIndex={(index) => lightbox.setSelected(index)}
+      />
       <ConfirmDialog
         open={confirm.value}
         onClose={confirm.onFalse}
