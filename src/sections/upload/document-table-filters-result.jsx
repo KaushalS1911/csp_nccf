@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
 import Iconify from 'src/components/iconify';
+import { handleFilterTypes } from '../../_mock';
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +50,7 @@ export default function DocumentTableFiltersResult({
       <Stack flexGrow={1} spacing={1} direction="row" flexWrap="wrap" alignItems="center">
         {filters.status !== 'all' && (
           <Block label="Status:">
-            <Chip size="small" label={filters.status} onDelete={handleRemoveStatus} />
+            <Chip size="small" label={handleFilterTypes(filters.status)} onDelete={handleRemoveStatus} />
           </Block>
         )}
 
