@@ -162,13 +162,13 @@ const modes = ["Retail outlet","Mobile van"]
               label={
                 vendor_category == 'Distributor'
                   ? 'Distributor Name'
-                  : 'Name' || vendor_category == 'miller'
+                  : vendor_category == 'miller'
                     ? 'Milling Unit Name'
-                    : 'Name'
+                    : 'Society Name'
               }
             />
           </Grid>
-          {vendor_category !== 'Distributor' && (
+          {vendor_category === 'miller' && (
             <Grid item xs={12} sm={6} md={3}>
               <RHFAutocomplete
                 name="milling_type"
