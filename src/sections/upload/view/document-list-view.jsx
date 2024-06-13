@@ -188,12 +188,11 @@ export default function DocumentListView() {
                       ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'Aadhar' && 'success') ||
+                      (tab.value === 'Aadhar' && 'secondary') ||
                       (tab.value === 'certificates' && 'warning') ||
-                      (tab.value === 'gst_number' && 'error') ||
+                      (tab.value === 'gst_number' && 'success') ||
                       (tab.value === 'pan_number' && 'info') ||
-                      (tab.value === 'milling_unit_video' && 'info') ||
-                      (tab.value === 'milling_unit_photo' && 'info') ||
+                      (tab.value === 'milling_unit_video' && 'error') ||
                       'default'
                     }
                   >

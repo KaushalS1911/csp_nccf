@@ -1,21 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useForm, Controller } from 'react-hook-form';
-import {
-  TextField,
-  MenuItem,
-  Button,
-  Typography,
-  Box,
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-} from '@mui/material';
-import { AUTH_API, PATH_AFTER_LOGIN } from '../../../config-global';
+import { useForm } from 'react-hook-form';
+import { Button, Typography, Box, Grid, RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { useRouter } from '../../../routes/hooks';
 import { paths } from '../../../routes/paths';
 import FormProvider from 'src/components/hook-form/form-provider';
@@ -30,12 +16,15 @@ const RegistrationForm = ({ vendor_category }) => {
   const [districtOptions, setDistrictOptions] = useState([]);
   const [selectedState, setSelectedState] = useState('');
 
+
+
   const data1 = stateOptions.find((data) => data?.state_name === selectedState);
   const handleStateChange = (event, newValue) => {
     setSelectedState(newValue);
     methods.setValue('state', newValue);
   };
-
+const firmOptions =["Partnership","Property","LLP","Public Limited","Other"]
+const modes = ["Retail outlet","Mobile van"]
   useEffect(() => {
     fetchStates();
   }, []);
@@ -62,9 +51,9 @@ const RegistrationForm = ({ vendor_category }) => {
   }
   function fetchDistrict(stateId) {
     axios
-      .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/${stateId}/destrict`)
+      .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/${stateId}/district`)
       .then((res) => {
-        setBranchOptions(res?.data?.data);
+        setDistrictOptions(res?.data?.data);
       });
   }
 
@@ -72,7 +61,7 @@ const RegistrationForm = ({ vendor_category }) => {
   // const districtOptions = ['Amreli', 'Bhavanagar'];
 
   const NewBlogSchema = Yup.object().shape({
-    address: Yup.string().required('Address is required'),
+    address: Yup.string().required('Society is required'),
     contact_person: Yup.string().required('Contact is required'),
     confirm_password: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
@@ -192,7 +181,44 @@ const RegistrationForm = ({ vendor_category }) => {
               />
             </Grid>
           )}
+          {vendor_category != 'Society' && (
+            <Grid item xs={12} sm={6} md={3}>
+              <RHFTextField name="procurement_area" label="Procurement area" />
+            </Grid>
+          )}
+          {vendor_category != 'Society' && (
+            <Grid item xs={12} sm={3}>
+              <RHFAutocomplete
+                name="type_of_firm"
+                label="Type of Firm"
+                placeholder="Choose Your firm"
+                fullWidth
+                options={firmOptions.map((option) => option)}
+                getOptionLabel={(option) => option}
+              />
+            </Grid>
+          )}
+          {vendor_category == 'Distributor' && (
+            <>
+              <Grid item xs={12} sm={6} md={3}>
+                <RHFTextField name="area_of_Opration" label="Area of Opration" />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <RHFTextField name="capacity" label="Capacity /day (MT)" />
+              </Grid>
 
+              <Grid item xs={12} sm={3}>
+                <RHFAutocomplete
+                  name="mode_of_sale"
+                  label="Mode of Sale"
+                  placeholder="Choose mode of sale"
+                  fullWidth
+                  options={modes.map((option) => option)}
+                  getOptionLabel={(option) => option}
+                />
+              </Grid>
+            </>
+          )}
           <Grid item xs={12} sm={6} md={3}>
             <RHFTextField name="contact_person" label="Contact Person" />
           </Grid>
@@ -208,7 +234,7 @@ const RegistrationForm = ({ vendor_category }) => {
           <Grid item xs={12} sm={6} md={3}>
             <RHFTextField name="gst_number" label="GST Number" />
           </Grid>
-          {vendor_category == 'Miller & Distributor' && (
+          {vendor_category == 'Society' && (
             <Grid item xs={12}>
               <RadioGroup row aria-label="vendor" name="vendor">
                 <FormControlLabel
@@ -249,7 +275,7 @@ const RegistrationForm = ({ vendor_category }) => {
               label="State"
               placeholder="Choose Your State"
               fullWidth
-              options={stateOptions.map((option) => option.state_name)}
+              options={stateOptions.map((option) => option?.state_name)}
               getOptionLabel={(option) => option}
               onChange={handleStateChange}
             />
@@ -260,7 +286,7 @@ const RegistrationForm = ({ vendor_category }) => {
               label="Branch"
               placeholder="Choose Your Branch"
               fullWidth
-              options={branchOptions.map((option) => option.branch_name)}
+              options={branchOptions.map((option) => option?.branch_name)}
               getOptionLabel={(option) => option}
               disabled={!data1}
             />
@@ -271,7 +297,7 @@ const RegistrationForm = ({ vendor_category }) => {
               label="District"
               placeholder="Choose Your District"
               fullWidth
-              options={districtOptions.map((option) => option)}
+              options={districtOptions.map((option) => option?.district)}
               getOptionLabel={(option) => option}
               disabled={!data1}
             />
@@ -281,7 +307,7 @@ const RegistrationForm = ({ vendor_category }) => {
           </Grid>
         </Grid>
         <Typography variant="h5" gutterBottom className="heading" mt={2}>
-          Password 
+          Password
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={4}>

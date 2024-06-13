@@ -45,11 +45,7 @@ export default function JwtRegisterView() {
                 >
                   <FormControlLabel value="miller" control={<Radio />} label="Miller" />
                   <FormControlLabel value="Distributor" control={<Radio />} label="Distributor" />
-                  <FormControlLabel
-                    value="Miller & Distributor"
-                    control={<Radio />}
-                    label="Miller & Distributor"
-                  />
+                  <FormControlLabel value="Society" control={<Radio />} label="Society" />
                 </RadioGroup>
               </FormControl>
               <br />

@@ -45,7 +45,7 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
     src: img,
   }));
   const lightbox = useLightBox(slides);
-
+const status = "completed"
   return (
     <>
       <TableRow hover selected={selected}>
@@ -63,23 +63,23 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
           />
         </TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{handleDoctypeLabel(doc_type)}</TableCell>
-        {/* <TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>
+          {moment(uploaded_on).format('DD/MM/YYYY')}
+        </TableCell>
+        <TableCell>
           <Label
             variant="soft"
             color={
-              (status === 'active' && 'success') ||
+              (status === 'completed' && 'success') ||
               (status === 'pending' && 'warning') ||
-              (status === 'banned' && 'error') ||
+              (status === 'declined' && 'error') ||
               'default'
             }
           >
             {status}
           </Label>
-        </TableCell> */}
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>
-          {moment(uploaded_on).format('DD/MM/YYYY')}
         </TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>completed</TableCell>
+        {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>completed</TableCell> */}
         {/* <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}> */}
         {/*<Tooltip title="Quick Edit" placement="top" arrow>*/}
         {/*  <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>*/}
