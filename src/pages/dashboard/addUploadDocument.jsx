@@ -240,7 +240,10 @@ const [loading,setLoading] = useState(false)
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
         {loading ? (
+          <Box sx={{display:"flex",justifyContent:"center",alignItems:"center",height:"80vh"}}>
           <LoadingScreen sx={{margin:"auto"}}/>
+
+          </Box>
         ) : (
           <>
             <Typography variant="h4">Upload Documents</Typography>
