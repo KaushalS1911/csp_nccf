@@ -70,7 +70,6 @@ export default function JwtLoginView() {
       reset();
       setErrorMsg(typeof error === 'string' ? error : error.message);
     }
-    console.log("Data : ",data);
   });
   return (
     <>

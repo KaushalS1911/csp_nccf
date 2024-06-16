@@ -2,13 +2,13 @@ import { useState, useCallback } from 'react';
 
 // ----------------------------------------------------------------------
 
-export default function useLightBox(slides) {
+export default function useLightBox(slides,video) {
   const [selected, setSelected] = useState(-1);
 
   const handleOpen = useCallback(
     (slideUrl) => {
       const slideIndex = slides.findIndex((slide) =>
-        slide.type === 'video' ? slide.poster === slideUrl : slide.src === slideUrl
+        video  === 'video' ? slide.poster === slideUrl : slide.src === slideUrl
       );
 
       setSelected(0);

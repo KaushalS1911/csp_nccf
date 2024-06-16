@@ -41,6 +41,7 @@ import axios from 'axios';
 import { useAuthContext } from '../../../auth/hooks';
 import UploadDocumentTableFiltersResult from '../upload-document-table-filters-result';
 import UploadDocumentTableRow from '../upload-document-table-row';
+import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -60,7 +61,7 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function UploadDocumentListView({ data }) {
+export default function UploadDocumentListView({ data, handleDeleteRow, handleAllSubmit }) {
   const { vendor } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState(data);
@@ -113,19 +114,8 @@ export default function UploadDocumentListView({ data }) {
     setFilters(defaultFilters);
   }, []);
 
-  const handleDeleteRow = useCallback(
-    (id) => {
-console.log(id,"heer");
-      const deleteRow = tableData.filter((row) => row.id !== id);
-      enqueueSnackbar('Delete success!');
-      setTableData(deleteRow);
-      table.onUpdatePageDeleteRow(dataInPage.length);
-    },
-    [dataInPage.length, enqueueSnackbar, table, tableData]
-  );
-
   const handleDeleteRows = useCallback(() => {
-    const deleteRows = tableData.filter((row) => !table.selected.includes(row.image));
+    const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
     enqueueSnackbar('Delete success!');
     setTableData(deleteRows);
     table.onUpdatePageDeleteRows({
@@ -136,7 +126,7 @@ console.log(id,"heer");
 
   const handleEditRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.user.edit(image));
+      router.push(paths.dashboard.user.edit(id));
     },
     [router]
   );
@@ -183,7 +173,7 @@ console.log(id,"heer");
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  dataFiltered.map((row) => row.image)
+                  dataFiltered.map((row) => row.id)
                 )
               }
               action={
@@ -207,7 +197,7 @@ console.log(id,"heer");
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      dataFiltered.map((row) => row.image)
+                      dataFiltered.map((row) => row.id)
                     )
                   }
                 />
@@ -219,14 +209,14 @@ console.log(id,"heer");
                     )
                     .map((row, index) => (
                       <UploadDocumentTableRow
-                        key={row.image}
+                        key={row.id}
                         index={index}
                         row={row}
-                        selected={table.selected.includes(row.image)}
-                        onSelectRow={() => table.onSelectRow(row.image)}
+                        selected={table.selected.includes(row.id)}
+                        onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                        onViewRow={() => handleViewRow(row.image)}
-                        onEditRow={() => handleEditRow(row.image)}
+                        onViewRow={() => handleViewRow(row.id)}
+                        onEditRow={() => handleEditRow(row.id)}
                       />
                     ))}
                   <TableEmptyRows
@@ -249,7 +239,19 @@ console.log(id,"heer");
             onChangeDense={table.onChangeDense}
           /> */}
         </Card>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: '20px' }}>
+          <Button
+            style={{ cursor: 'pointer', maxWidth: '200px' }}
+            variant="contained"
+            onClick={() => handleAllSubmit(data)}
+          >
+            Upload
+          </Button>
+        </Box>
       </Container>
+      {/* <Box sx={{display:"flex",jusctifyContent:"flex-end"}}>
+        <Button variant='contained'>Upload</Button>
+      </Box> */}
 
       <ConfirmDialog
         open={confirm.value}

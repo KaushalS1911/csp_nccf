@@ -57,17 +57,19 @@ export const tokenExpired = (exp) => {
 
 // ----------------------------------------------------------------------
 
-export const setSession = (csp_code, phone_number) => {
+export const setSession = (csp_code, phone_number,login_object) => {
   if (csp_code && phone_number) {
     sessionStorage.setItem('vendor', csp_code);
     sessionStorage.setItem('phone', phone_number);
-
+    sessionStorage.setItem('login', JSON.stringify(login_object));
+    
     // const { exp } = jwtDecode(accessToken); // ~3 days by minimals server
     // tokenExpired(exp);
   } else {
     sessionStorage.removeItem('vendor');
     sessionStorage.removeItem('phone');
-
+    sessionStorage.removeItem('login');
+    
     // delete axios.defaults.headers.common.Authorization;
   }
 };

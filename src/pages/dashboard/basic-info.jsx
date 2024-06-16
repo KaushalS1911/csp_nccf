@@ -19,11 +19,10 @@ import { RHFTextField } from 'src/components/hook-form';
 import { enqueueSnackbar } from 'notistack';
 export default function BasicInfo() {
   const settings = useSettingsContext();
+
   const { vendor } = useAuthContext();
   const [currentUser, setCurrentUser] = useState({});
   const [commodities, setCommodities] = useState([]);
-  const notify = () => toast.success('User details updated successfully');
-  const notifyError = () => toast.error('Something went wrong');
   const [disable, setDisable] = useState(true);
   useEffect(() => {
     fetchUser();
@@ -36,7 +35,6 @@ export default function BasicInfo() {
           `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/csp_detail/${vendor.phone_number}`
         )
         .then((res) => {
-          console.log(res, 'res');
           setCurrentUser(res?.data?.data[0]);
         })
         .catch((error) => console.log(error));
@@ -105,12 +103,10 @@ export default function BasicInfo() {
     axios
       .put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/update_info', payload)
       .then((res) => {
-        enqueueSnackbar("Update successfully")
-        // notify();
+        enqueueSnackbar('Update successfully');
       })
       .catch((err) => {
-        enqueueSnackbar("Something went wrong")
-        // notifyError();
+        enqueueSnackbar('Something went wrong',{variant:"error"});
       });
   });
   return (

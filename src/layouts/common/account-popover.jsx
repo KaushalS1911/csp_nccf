@@ -44,17 +44,17 @@ export default function AccountPopover() {
 
   const { user } = useMockedUser();
 
-  const { logout } = useAuthContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const popover = usePopover();
 
-  const handleLogout = async () => {
+  const handleLogout =  () => {
     try {
-      await logout();
       popover.onClose();
-      router.replace('/');
+      sessionStorage.clear()
+      router.push('/')
+      router.reload();
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Unable to logout!', { variant: 'error' });

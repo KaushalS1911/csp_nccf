@@ -25,12 +25,14 @@ const reducer = (state, action) => {
     return {
       loading: false,
       vendor: action.payload.vendor,
+      login_res: action.payload.login_res,
     };
   }
   if (action.type === 'LOGIN') {
     return {
       ...state,
       vendor: action.payload.vendor,
+      login_res: action.payload.login_res,
     };
   }
   if (action.type === 'REGISTER') {
@@ -51,7 +53,8 @@ const reducer = (state, action) => {
 // ----------------------------------------------------------------------
 
 const VENDOR_KEY = 'vendor';
-const PHONE_KEY = 'phone'
+const PHONE_KEY = 'phone';
+const LOGIN_KEY = 'login';
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -60,9 +63,9 @@ export function AuthProvider({ children }) {
     try {
       const vendor = sessionStorage.getItem(VENDOR_KEY);
       const phone = sessionStorage.getItem(PHONE_KEY);
-
-      if (vendor && phone) {
-        setSession(vendor, phone);
+      const login = JSON.parse(sessionStorage.getItem(LOGIN_KEY));
+      if (vendor && phone && login) {
+        setSession(vendor, phone, login);
 
         // const response = await axios.get(endpoints.auth.me);
 
@@ -73,8 +76,15 @@ export function AuthProvider({ children }) {
           payload: {
             vendor: {
               csp_code: vendor,
-              phone_number: phone
-              ,
+              login: login,
+              phone_number: phone,
+            },
+            login_res: {
+              category: login.category,
+              csp_code: login.csp_code,
+              mil_dis_sub_roles: login.mil_dis_sub_roles,
+              name: login.name,
+              phone_number: login.phone_number,
             },
           },
         });
@@ -103,19 +113,24 @@ export function AuthProvider({ children }) {
 
   // LOGIN
   const login = useCallback(async (data) => {
-    const response = await axios.post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp_login`, data);
+    const response = await axios.post(
+      `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp_login`,
+      data
+    );
+    const res = response?.data?.data[0];
+    const { csp_code, phone_number } = res;
 
-    const { csp_code, phone_number } = response.data.data[0];
-
-    setSession(csp_code, phone_number);
+    setSession(csp_code, phone_number, res);
 
     dispatch({
       type: 'LOGIN',
       payload: {
         vendor: {
           csp_code,
-          phone_number
-          ,
+          phone_number,
+        },
+        login_res: {
+         res,
         },
       },
     });
@@ -123,7 +138,6 @@ export function AuthProvider({ children }) {
 
   // REGISTER
   const register = useCallback(async (data) => {
-
     const response = await axios.post(`${AUTH_API}${endpoints.auth.login}`, data);
 
     const { accessToken, user } = response.data;
@@ -158,6 +172,7 @@ export function AuthProvider({ children }) {
   const memoizedValue = useMemo(
     () => ({
       vendor: state.vendor,
+      login_res: state.login_res,
       method: 'jwt',
       loading: status === 'loading',
       authenticated: status === 'authenticated',

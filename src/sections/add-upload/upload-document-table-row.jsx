@@ -31,8 +31,10 @@ export default function UploadDocumentTableRow({
   index,
 }) {
   const { type, image } = row;
+  console.log(image?.preview, 'type');
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([]);
+
   // const secondSlashIndex = object_url.indexOf("/", 8);
   // const firstPart = object_url.substring(0, secondSlashIndex);
   // const secondPart = object_url.substring(secondSlashIndex);
@@ -53,19 +55,29 @@ export default function UploadDocumentTableRow({
     src: img,
   }));
   const lightbox = useLightBox(slides);
-  const status = 'completed';
   return (
     <>
       <TableRow hover selected={selected}>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{index + 1}</TableCell>
         <TableCell>
-          <Avatar
-            alt={image}
-            src={image}
-            sx={{ mr: 2, height: 46, width: 46, cursor: 'pointer' }}
-            variant="rounded"
-            onClick={() => handleViewDialog(image)}
-          />
+          {type === 'milling_unit_video' ? (
+            <video
+              // controls
+              autoPlay
+              src={image?.preview}
+              style={{ mr: 2, height: 46, width: 46, cursor: 'pointer', borderRadius: '10px' }}
+              variant="rounded"
+              onClick={() => handleViewDialog(image?.preview)}
+            />
+          ) : (
+            <Avatar
+              alt={image?.preview}
+              src={image?.preview}
+              sx={{ mr: 2, height: 46, width: 46, cursor: 'pointer' }}
+              variant="rounded"
+              onClick={() => handleViewDialog(image?.preview)}
+            />
+          )}
         </TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{handleDoctypeLabel(type)}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>
@@ -73,12 +85,6 @@ export default function UploadDocumentTableRow({
         </TableCell>
 
         <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          {/*<Tooltip title="Quick Edit" placement="top" arrow>*/}
-          {/*  <IconButton color={quickEdit.value ? 'inherit' : 'default'} onClick={quickEdit.onTrue}>*/}
-          {/*    <Iconify icon="solar:pen-bold" />*/}
-          {/*  </IconButton>*/}
-          {/*</Tooltip>*/}
-
           <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>

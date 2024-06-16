@@ -503,7 +503,7 @@ export function useNavData() {
             path: paths.dashboard.document.root,
             icon: ICONS.order,
             children: [
-              { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
+              // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
               { title: t('Document List'), path: paths.dashboard.document.document_list },
               { title: t('Upload Document'), path: paths.dashboard.document.document_upload },
               {
