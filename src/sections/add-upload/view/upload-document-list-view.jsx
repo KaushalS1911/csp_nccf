@@ -61,7 +61,7 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function UploadDocumentListView({ data, handleDeleteRow, handleAllSubmit }) {
+export default function UploadDocumentListView({ data, handleDeleteRow, handleAllSubmit, container }) {
   const { vendor } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState(data);
@@ -146,135 +146,248 @@ export default function UploadDocumentListView({ data, handleDeleteRow, handleAl
   );
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-        <CustomBreadcrumbs
-          heading="Selected Documents"
-          links={[{ name: '', href: paths.dashboard.root }]}
-          sx={{
-            mt: { xs: 3, md: 5 },
-          }}
-        />
-        <Card>
-          {canReset && (
-            <UploadDocumentTableFiltersResult
-              filters={filters}
-              onFilters={handleFilters}
-              onResetFilters={handleResetFilters}
-              results={dataFiltered.length}
-              sx={{ p: 2.5, pt: 0 }}
+      {container ? (
+        <>
+            <CustomBreadcrumbs
+              heading="Selected Documents"
+              links={[{ name: '', href: paths.dashboard.root }]}
+              sx={{
+                mt: { xs: 3, md: 5 },
+              }}
             />
-          )}
+            <Card>
+              {canReset && (
+                <UploadDocumentTableFiltersResult
+                  filters={filters}
+                  onFilters={handleFilters}
+                  onResetFilters={handleResetFilters}
+                  results={dataFiltered.length}
+                  sx={{ p: 2.5, pt: 0 }}
+                />
+              )}
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={true}
-              numSelected={table.selected.length}
-              rowCount={dataFiltered.length}
-              onSelectAllRows={(checked) =>
-                table.onSelectAllRows(
-                  checked,
-                  dataFiltered.map((row) => row.id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={confirm.onTrue}>
-                    <Iconify icon="solar:trash-bin-trash-bold" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-
-            <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-                <TableHeadCustom
-                  order={table.order}
-                  orderBy={table.orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={dataFiltered.length}
+              <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+                <TableSelectedAction
+                  dense={true}
                   numSelected={table.selected.length}
-                  onSort={table.onSort}
+                  rowCount={dataFiltered.length}
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
                       dataFiltered.map((row) => row.id)
                     )
                   }
+                  action={
+                    <Tooltip title="Delete">
+                      <IconButton color="primary" onClick={confirm.onTrue}>
+                        <Iconify icon="solar:trash-bin-trash-bold" />
+                      </IconButton>
+                    </Tooltip>
+                  }
                 />
-                <TableBody>
-                  {dataFiltered
-                    .slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
-                    )
-                    .map((row, index) => (
-                      <UploadDocumentTableRow
-                        key={row.id}
-                        index={index}
-                        row={row}
-                        selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onViewRow={() => handleViewRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
+
+                <Scrollbar>
+                  <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                    <TableHeadCustom
+                      order={table.order}
+                      orderBy={table.orderBy}
+                      headLabel={TABLE_HEAD}
+                      rowCount={dataFiltered.length}
+                      numSelected={table.selected.length}
+                      onSort={table.onSort}
+                      onSelectAllRows={(checked) =>
+                        table.onSelectAllRows(
+                          checked,
+                          dataFiltered.map((row) => row.id)
+                        )
+                      }
+                    />
+                    <TableBody>
+                      {dataFiltered
+                        .slice(
+                          table.page * table.rowsPerPage,
+                          table.page * table.rowsPerPage + table.rowsPerPage
+                        )
+                        .map((row, index) => (
+                          <UploadDocumentTableRow
+                            key={row.id}
+                            index={index}
+                            row={row}
+                            selected={table.selected.includes(row.id)}
+                            onSelectRow={() => table.onSelectRow(row.id)}
+                            onDeleteRow={() => handleDeleteRow(row.id)}
+                            onViewRow={() => handleViewRow(row.id)}
+                            onEditRow={() => handleEditRow(row.id)}
+                          />
+                        ))}
+                      <TableEmptyRows
+                        height={denseHeight}
+                        emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
                       />
-                    ))}
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
-                  />
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
+                      <TableNoData notFound={notFound} />
+                    </TableBody>
+                  </Table>
+                </Scrollbar>
+              </TableContainer>
 
-          {/* <TablePaginationCustom
-            count={dataFiltered.length}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
-            onPageChange={table.onChangePage}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-            dense={true}
-            onChangeDense={table.onChangeDense}
-          /> */}
-        </Card>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: '20px' }}>
-          <Button
-            style={{ cursor: 'pointer', maxWidth: '200px' }}
-            variant="contained"
-            onClick={() => handleAllSubmit(data)}
-          >
-            Upload
-          </Button>
-        </Box>
-      </Container>
-      {/* <Box sx={{display:"flex",jusctifyContent:"flex-end"}}>
-        <Button variant='contained'>Upload</Button>
-      </Box> */}
+          
+            </Card>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: '20px' }}>
+              <Button
+                style={{ cursor: 'pointer', maxWidth: '200px' }}
+                variant="contained"
+                onClick={() => handleAllSubmit(data)}
+              >
+                Upload
+              </Button>
+            </Box>
+          
 
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong>{table.selected.length}</strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirm.onFalse();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
+          <ConfirmDialog
+            open={confirm.value}
+            onClose={confirm.onFalse}
+            title="Delete"
+            content={
+              <>
+                Are you sure want to delete <strong>{table.selected.length}</strong> items?
+              </>
+            }
+            action={
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  handleDeleteRows();
+                  confirm.onFalse();
+                }}
+              >
+                Delete
+              </Button>
+            }
+          />
+        </>
+      ) : (
+        <>
+          <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+            <CustomBreadcrumbs
+              heading="Selected Documents"
+              links={[{ name: '', href: paths.dashboard.root }]}
+              sx={{
+                mt: { xs: 3, md: 5 },
+              }}
+            />
+            <Card>
+              {canReset && (
+                <UploadDocumentTableFiltersResult
+                  filters={filters}
+                  onFilters={handleFilters}
+                  onResetFilters={handleResetFilters}
+                  results={dataFiltered.length}
+                  sx={{ p: 2.5, pt: 0 }}
+                />
+              )}
+
+              <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+                <TableSelectedAction
+                  dense={true}
+                  numSelected={table.selected.length}
+                  rowCount={dataFiltered.length}
+                  onSelectAllRows={(checked) =>
+                    table.onSelectAllRows(
+                      checked,
+                      dataFiltered.map((row) => row.id)
+                    )
+                  }
+                  action={
+                    <Tooltip title="Delete">
+                      <IconButton color="primary" onClick={confirm.onTrue}>
+                        <Iconify icon="solar:trash-bin-trash-bold" />
+                      </IconButton>
+                    </Tooltip>
+                  }
+                />
+
+                <Scrollbar>
+                  <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                    <TableHeadCustom
+                      order={table.order}
+                      orderBy={table.orderBy}
+                      headLabel={TABLE_HEAD}
+                      rowCount={dataFiltered.length}
+                      numSelected={table.selected.length}
+                      onSort={table.onSort}
+                      onSelectAllRows={(checked) =>
+                        table.onSelectAllRows(
+                          checked,
+                          dataFiltered.map((row) => row.id)
+                        )
+                      }
+                    />
+                    <TableBody>
+                      {dataFiltered
+                        .slice(
+                          table.page * table.rowsPerPage,
+                          table.page * table.rowsPerPage + table.rowsPerPage
+                        )
+                        .map((row, index) => (
+                          <UploadDocumentTableRow
+                            key={row.id}
+                            index={index}
+                            row={row}
+                            selected={table.selected.includes(row.id)}
+                            onSelectRow={() => table.onSelectRow(row.id)}
+                            onDeleteRow={() => handleDeleteRow(row.id)}
+                            onViewRow={() => handleViewRow(row.id)}
+                            onEditRow={() => handleEditRow(row.id)}
+                          />
+                        ))}
+                      <TableEmptyRows
+                        height={denseHeight}
+                        emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
+                      />
+                      <TableNoData notFound={notFound} />
+                    </TableBody>
+                  </Table>
+                </Scrollbar>
+              </TableContainer>
+
+            </Card>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: '20px' }}>
+              <Button
+                style={{ cursor: 'pointer', maxWidth: '200px' }}
+                variant="contained"
+                onClick={() => handleAllSubmit(data)}
+              >
+                Upload
+              </Button>
+            </Box>
+          </Container>
+        
+
+          <ConfirmDialog
+            open={confirm.value}
+            onClose={confirm.onFalse}
+            title="Delete"
+            content={
+              <>
+                Are you sure want to delete <strong>{table.selected.length}</strong> items?
+              </>
+            }
+            action={
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  handleDeleteRows();
+                  confirm.onFalse();
+                }}
+              >
+                Delete
+              </Button>
+            }
+          />
+        </>
+      )}
     </>
   );
 }

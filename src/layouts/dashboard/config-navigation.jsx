@@ -455,10 +455,16 @@ export function useNavData() {
             path: paths.dashboard.root,
             icon: ICONS.dashboard,
           },
+
           {
             title: t('Basic Info'),
             path: paths.dashboard.basic_info,
             icon: ICONS.user,
+          },
+          {
+            title: t('Add Miller'),
+            path: paths.dashboard.addMiller,
+            icon: ICONS.file,
           },
           // {
           //   title: t('Order'),
@@ -468,28 +474,28 @@ export function useNavData() {
 
           // USER
           // {
-            //   title: t('user'),
-            //   path: paths.dashboard.user.root,
-            //   icon: ICONS.user,
-            //   children: [
-              //     { title: t('profile'), path: paths.dashboard.user.root },
-              //     { title: t('cards'), path: paths.dashboard.user.cards },
-              //     { title: t('list'), path: paths.dashboard.user.list },
-              //     { title: t('create'), path: paths.dashboard.user.new },
-              //     { title: t('edit'), path: paths.dashboard.user.demo.edit },
-              //     { title: t('account'), path: paths.dashboard.user.account },
-              //   ],
-              // },
-              //
-              // // PRODUCT
-              // {
-                //   title: t('product'),
-                //   path: paths.dashboard.product.root,
-                //   icon: ICONS.product,
-                //   children: [
-                  //     { title: t('list'), path: paths.dashboard.product.root },
-                  //     {
-                    //       title: t('details'),
+          //   title: t('user'),
+          //   path: paths.dashboard.user.root,
+          //   icon: ICONS.user,
+          //   children: [
+          //     { title: t('profile'), path: paths.dashboard.user.root },
+          //     { title: t('cards'), path: paths.dashboard.user.cards },
+          //     { title: t('list'), path: paths.dashboard.user.list },
+          //     { title: t('create'), path: paths.dashboard.user.new },
+          //     { title: t('edit'), path: paths.dashboard.user.demo.edit },
+          //     { title: t('account'), path: paths.dashboard.user.account },
+          //   ],
+          // },
+          //
+          // // PRODUCT
+          // {
+          //   title: t('product'),
+          //   path: paths.dashboard.product.root,
+          //   icon: ICONS.product,
+          //   children: [
+          //     { title: t('list'), path: paths.dashboard.product.root },
+          //     {
+          //       title: t('details'),
           //       path: paths.dashboard.product.demo.details,
           //     },
           //     { title: t('create'), path: paths.dashboard.product.new },
@@ -512,6 +518,7 @@ export function useNavData() {
               },
             ],
           },
+
           //
           // // INVOICE
           // {

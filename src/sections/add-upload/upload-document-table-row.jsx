@@ -31,7 +31,6 @@ export default function UploadDocumentTableRow({
   index,
 }) {
   const { type, image } = row;
-  console.log(image?.preview, 'type');
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([]);
 

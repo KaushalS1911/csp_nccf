@@ -27,7 +27,7 @@ export default function Lightbox({
   ...other
 }) {
   const totalItems = slides ? slides.length : 0;
-
+console.log(slides,"slides");
   return (
     <>
       <StyledLightbox />
@@ -150,3 +150,4 @@ DisplayTotal.propTypes = {
   disabledTotal: PropTypes.bool,
   totalItems: PropTypes.number,
 };
+

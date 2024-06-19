@@ -183,6 +183,7 @@ import DashboardLayout from 'src/layouts/dashboard';
 
 import { LoadingScreen } from 'src/components/loading-screen';
 import { OverviewFileView } from 'src/sections/overview/file/view';
+import MillerCreatePage from 'src/pages/dashboard/add-miller/new';
 
 // ----------------------------------------------------------------------
 
@@ -267,6 +268,7 @@ export const dashboardRoutes = [
       // { path: 'upload-document', element: <UploadDocument /> },
       // { path: 'document', element: <UploadListView /> },
       { path: 'orders', element: <OrdersPage /> },
+      { path: 'add-miller', element: <MillerCreatePage /> },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },
       { path: 'banking', element: <OverviewBankingPage /> },
@@ -298,7 +300,7 @@ export const dashboardRoutes = [
         path: 'document',
         children: [
           { element: <UploadListView />, index: true },
-          { path: 'document-overview', element: <OverviewFileView />  },
+          { path: 'document-overview', element: <OverviewFileView /> },
           { path: 'document-list', element: <UploadListView /> },
           { path: 'document-upload', element: <UploadDocument /> },
           { path: 'document-view', element: <ProductDetailsPage /> },

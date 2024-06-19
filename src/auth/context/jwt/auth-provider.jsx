@@ -25,14 +25,12 @@ const reducer = (state, action) => {
     return {
       loading: false,
       vendor: action.payload.vendor,
-      login_res: action.payload.login_res,
     };
   }
   if (action.type === 'LOGIN') {
     return {
       ...state,
       vendor: action.payload.vendor,
-      login_res: action.payload.login_res,
     };
   }
   if (action.type === 'REGISTER') {
@@ -53,19 +51,16 @@ const reducer = (state, action) => {
 // ----------------------------------------------------------------------
 
 const VENDOR_KEY = 'vendor';
-const PHONE_KEY = 'phone';
-const LOGIN_KEY = 'login';
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const initialize = useCallback(async () => {
     try {
-      const vendor = sessionStorage.getItem(VENDOR_KEY);
-      const phone = sessionStorage.getItem(PHONE_KEY);
-      const login = JSON.parse(sessionStorage.getItem(LOGIN_KEY));
-      if (vendor && phone && login) {
-        setSession(vendor, phone, login);
+      const vendor = JSON.parse(sessionStorage.getItem(VENDOR_KEY));
+      // const login = JSON.parse(sessionStorage.getItem(LOGIN_KEY));
+      if (vendor ) {
+        setSession(vendor);
 
         // const response = await axios.get(endpoints.auth.me);
 
@@ -75,16 +70,11 @@ export function AuthProvider({ children }) {
           type: 'INITIAL',
           payload: {
             vendor: {
-              csp_code: vendor,
-              login: login,
-              phone_number: phone,
-            },
-            login_res: {
-              category: login.category,
-              csp_code: login.csp_code,
-              mil_dis_sub_roles: login.mil_dis_sub_roles,
-              name: login.name,
-              phone_number: login.phone_number,
+              category: vendor?.category,
+              csp_code: vendor?.csp_code,
+              mil_dis_sub_roles: vendor?.mil_dis_sub_roles,
+              name: vendor?.name,
+              phone_number: vendor?.phone_number,
             },
           },
         });
@@ -118,19 +108,18 @@ export function AuthProvider({ children }) {
       data
     );
     const res = response?.data?.data[0];
-    const { csp_code, phone_number } = res;
 
-    setSession(csp_code, phone_number, res);
+    setSession(res);
 
     dispatch({
       type: 'LOGIN',
       payload: {
         vendor: {
-          csp_code,
-          phone_number,
-        },
-        login_res: {
-         res,
+          category: res?.category,
+          csp_code: res?.csp_code,
+          mil_dis_sub_roles: res?.mil_dis_sub_roles,
+          name: res?.name,
+          phone_number: res?.phone_number,
         },
       },
     });
@@ -172,7 +161,6 @@ export function AuthProvider({ children }) {
   const memoizedValue = useMemo(
     () => ({
       vendor: state.vendor,
-      login_res: state.login_res,
       method: 'jwt',
       loading: status === 'loading',
       authenticated: status === 'authenticated',

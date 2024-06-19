@@ -14,7 +14,6 @@ import { Helmet } from 'react-helmet-async';
 import { enqueueSnackbar } from 'notistack';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
-import imageCompression from 'browser-image-compression';
 import { UploadDocumentListView } from 'src/sections/add-upload/view';
 import FileThumbnail from 'src/components/file-thumbnail';
 import * as yup from 'yup';
@@ -22,6 +21,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { error } from 'src/theme/palette';
 import { useAuthContext } from 'src/auth/hooks';
 import { LoadingScreen } from 'src/components/loading-screen';
+import imageCompression from 'browser-image-compression';
 
 const validationSchema = yup.object().shape({
   doc_type: yup.string().required('Document type is required'),
@@ -68,16 +68,10 @@ export default function UploadDocument() {
     formData.append('doc_type', data.doc_type);
     formData.append('csp_code', vendor);
 
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1200,
-      useWebWorker: true,
-    };
-
+   
     for (let file of files) {
       try {
-        const compressedFile = await imageCompression(file, options);
-        formData.append('file', compressedFile);
+        formData.append('file', file);
       } catch (error) {
         console.error('Error compressing file:', error);
         formData.append('file', file);
@@ -114,15 +108,33 @@ export default function UploadDocument() {
   };
   const handleAllSubmit = useCallback(async (data) => {
     setLoading(true);
-    const formDataList = await Promise.all(
-      data.map((value) => {
-        const formData = new FormData();
-        formData.append('file', value?.image);
-        formData.append('doc_type', value?.type);
-        formData.append('csp_code', vendor?.csp_code);
-        return formData;
-      })
-    );
+    const options = {
+maxSizeMB: 0.5,
+maxWidthOrHeight: 1200,
+useWebWorker: true,
+};
+    // const formDataList = await Promise.all(
+    //   data.map((value) => {
+    //     const formData = new FormData();
+
+    //     formData.append('file', value?.image);
+    //     formData.append('doc_type', value?.type);
+    //     formData.append('csp_code', vendor?.csp_code);
+    //     return formData;
+    //   })
+    // );
+      const formDataList = await Promise.all(
+        data.map(async (value) => {
+          const formData = new FormData();
+          const compressedFile = await imageCompression(value?.image, options);
+          console.log(compressedFile, 'fileCompress');
+          formData.append('file', compressedFile);
+          // formData.append('file', value?.image);
+          formData.append('doc_type', value?.type);
+          formData.append('csp_code', vendor?.csp_code);
+          return formData;
+        })
+      );
     try {
       const responses = await Promise.all(
         formDataList.map((formData) =>

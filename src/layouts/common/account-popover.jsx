@@ -43,6 +43,7 @@ export default function AccountPopover() {
   const router = useRouter();
 
   const { user } = useMockedUser();
+  const {vendor} = useAuthContext()
 
 
   const { enqueueSnackbar } = useSnackbar();
@@ -85,30 +86,30 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={user?.photoURL}
-          alt={user?.displayName}
+          src={vendor?.name}
+          alt={vendor?.name}
           sx={{
             width: 36,
             height: 36,
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {user?.displayName?.charAt(0).toUpperCase()}
+          {vendor?.name?.charAt(0).toUpperCase()}
         </Avatar>
       </IconButton>
 
       <CustomPopover open={popover.open} onClose={popover.onClose} sx={{ width: 200, p: 0 }}>
         <Box sx={{ p: 2, pb: 1.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {vendor?.name}
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user?.email}
+            {vendor?.category}
           </Typography>
         </Box>
 
-        <Divider sx={{ borderStyle: 'dashed' }}/>
+        <Divider sx={{ borderStyle: 'dashed' }} />
 
         <Stack sx={{ p: 1 }}>
           {OPTIONS.map((option) => (
@@ -118,7 +119,7 @@ export default function AccountPopover() {
           ))}
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed' }}/>
+        <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem
           onClick={handleLogout}

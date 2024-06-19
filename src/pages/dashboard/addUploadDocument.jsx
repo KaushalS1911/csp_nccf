@@ -27,13 +27,14 @@ const validationSchema = yup.object().shape({
   doc_type: yup.string().required('Document type is required'),
 });
 
-export default function UploadDocument() {
+export default function UploadDocument({ container }) {
   const settings = useSettingsContext();
   const router = useRouter();
   const { vendor } = useAuthContext();
+  console.log(vendor, 'vendor up');
   const [files, setFiles] = useState([]);
   const [selected, setSelected] = useState([]);
-const [loading,setLoading] = useState(false)  
+  const [loading, setLoading] = useState(false);
 
   const defaultValues = useMemo(
     () => ({
@@ -68,16 +69,9 @@ const [loading,setLoading] = useState(false)
     formData.append('doc_type', data.doc_type);
     formData.append('csp_code', vendor);
 
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1200,
-      useWebWorker: true,
-    };
-
     for (let file of files) {
       try {
-        const compressedFile = await imageCompression(file, options);
-        formData.append('file', compressedFile);
+        formData.append('file', file);
       } catch (error) {
         console.error('Error compressing file:', error);
         formData.append('file', file);
@@ -115,20 +109,37 @@ const [loading,setLoading] = useState(false)
     setFiles([]);
   };
   const handleAllSubmit = useCallback(async (data) => {
-    setLoading(true)
-    
+    setLoading(true);
+    const options = {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 1200,
+      useWebWorker: true,
+    };
+
+    // const formDataList = await Promise.all(
+    //   data.map((value) => {
+    //     const formData = new FormData();
+    //     formData.append('file', value?.image);
+    //     formData.append('doc_type', value?.type);
+    //     formData.append('csp_code', vendor?.csp_code);
+    //     return formData;
+    //   })
+    //   );
     const formDataList = await Promise.all(
-      data.map((value) => {
+      data.map(async (value) => {
         const formData = new FormData();
-        formData.append('file', value?.image);
+        const compressedFile = await imageCompression(value?.image, options);
+        console.log(compressedFile, 'fileCompress');
+        formData.append('file', compressedFile);
+        // formData.append('file', value?.image);
         formData.append('doc_type', value?.type);
         formData.append('csp_code', vendor?.csp_code);
         return formData;
       })
-      );
-      try {
-        const responses = await Promise.all(
-          formDataList.map((formData) =>
+    );
+    try {
+      const responses = await Promise.all(
+        formDataList.map((formData) =>
           axios.post(
             'http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/upload_document',
             formData,
@@ -138,12 +149,12 @@ const [loading,setLoading] = useState(false)
               },
             }
           )
-          )
+        )
       );
       if (responses) {
         enqueueSnackbar('Your Document Uploaded');
         router.push(paths.dashboard.document.document_list);
-        setLoading(false)
+        setLoading(false);
       } else {
         enqueueSnackbar('Failed to Upload');
       }
@@ -184,7 +195,7 @@ const [loading,setLoading] = useState(false)
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(2, 1fr)',
-                md: 'repeat(2, 1fr)',
+                md: container ? 'repeat(1, 1fr)' : 'repeat(2, 1fr)',
               }}
             >
               <Controller
@@ -238,37 +249,86 @@ const [loading,setLoading] = useState(false)
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-        {loading ? (
-          <Box sx={{display:"flex",justifyContent:"center",alignItems:"center",height:"80vh"}}>
-          <LoadingScreen sx={{margin:"auto"}}/>
-
-          </Box>
-        ) : (
-          <>
-            <Typography variant="h4">Upload Documents</Typography>
+      {container ? (
+        <>
+          {loading ? (
             <Box
               sx={{
-                mt: 5,
-                width: 1,
-                height: 320,
-                borderRadius: 2,
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '80vh',
               }}
             >
-              <FormProvider methods={methods} onSubmit={onSubmit}>
-                {renderDetails}
-              </FormProvider>
-              {selected[0]?.type && (
-                <UploadDocumentListView
-                  data={selected}
-                  handleDeleteRow={handleDeleteRow}
-                  handleAllSubmit={handleAllSubmit}
-                />
-              )}
+              <LoadingScreen sx={{ margin: 'auto' }} />
             </Box>
-          </>
-        )}
-      </Container>
+          ) : (
+            <>
+              {!container && <Typography variant="h4">Upload Documents</Typography>}
+              <Box
+                sx={{
+                  mt: 0,
+                  width: 1,
+                  height: 320,
+                  borderRadius: 2,
+                }}
+              >
+                <FormProvider methods={methods} onSubmit={onSubmit}>
+                  {renderDetails}
+                </FormProvider>
+                {selected[0]?.type && (
+                  <UploadDocumentListView
+                    data={selected}
+                    container={container}
+                    handleDeleteRow={handleDeleteRow}
+                    handleAllSubmit={handleAllSubmit}
+                  />
+                )}
+              </Box>
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+            {loading ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '80vh',
+                }}
+              >
+                <LoadingScreen sx={{ margin: 'auto' }} />
+              </Box>
+            ) : (
+              <>
+                <Typography variant="h4">Upload Documents</Typography>
+                <Box
+                  sx={{
+                    mt: 5,
+                    width: 1,
+                    height: 320,
+                    borderRadius: 2,
+                  }}
+                >
+                  <FormProvider methods={methods} onSubmit={onSubmit}>
+                    {renderDetails}
+                  </FormProvider>
+                  {selected[0]?.type && (
+                    <UploadDocumentListView
+                      data={selected}
+                      handleDeleteRow={handleDeleteRow}
+                      handleAllSubmit={handleAllSubmit}
+                    />
+                  )}
+                </Box>
+              </>
+            )}
+          </Container>
+        </>
+      )}
     </>
   );
 }
