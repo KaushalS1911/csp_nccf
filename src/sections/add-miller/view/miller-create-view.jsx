@@ -5,6 +5,7 @@ import { paths } from 'src/routes/paths';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 import MillerNewEditForm from '../miller-new-edit-form';
+import { useAuthContext } from 'src/auth/hooks';
 
 // import ProductNewEditForm from '../product-new-edit-form';
 
@@ -12,7 +13,9 @@ import MillerNewEditForm from '../miller-new-edit-form';
 
 export default function MillerCreateView() {
   const settings = useSettingsContext();
-const mil_dis_sub_roles = 'Own Distribution and Rent Mill';
+  const { vendor } = useAuthContext();
+  const { mil_dis_sub_roles } = vendor;
+
   return (
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs

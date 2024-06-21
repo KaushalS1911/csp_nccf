@@ -43,6 +43,7 @@ import FormProvider, {
 } from 'src/components/hook-form';
 import axios from 'axios';
 import UploadDocument from 'src/pages/dashboard/addUploadDocument';
+import { useAuthContext } from 'src/auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -53,6 +54,9 @@ export default function MillerNewEditForm({ currentProduct }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const { vendor } = useAuthContext()
+  const { mil_dis_sub_roles } = vendor;
+
   const [includeTaxes, setIncludeTaxes] = useState(false);
   const millingTypeOptions = ['Dry', 'Wet', 'Both'];
   const firmOptions = ['Partnership', 'Property', 'LLP', 'Public Limited', 'Other'];
@@ -62,7 +66,7 @@ export default function MillerNewEditForm({ currentProduct }) {
   const [branchOptions, setBranchOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const [selectedState, setSelectedState] = useState('');
-  const mil_dis_sub_roles = 'Own Distribution and Rent Mill';
+  
   const data1 = stateOptions.find((data) => data?.state_name === selectedState);
   const handleStateChange = (event, newValue) => {
     setSelectedState(newValue);
