@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useForm } from 'react-hook-form';
-import { Button, Typography, Box, Grid, RadioGroup, FormControlLabel, Radio } from '@mui/material';
-import { useRouter } from '../../../routes/hooks';
-import { paths } from '../../../routes/paths';
-import FormProvider from 'src/components/hook-form/form-provider';
-import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import { useForm } from 'react-hook-form';
+import React, { useState, useEffect } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+import { Box, Grid, Radio, Button, Typography, RadioGroup, FormControlLabel } from '@mui/material';
+
+import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
+
+import { paths } from '../../../routes/paths';
+import { useRouter } from '../../../routes/hooks';
 
 const RegistrationForm = ({ vendor_category }) => {
   const router = useRouter();
@@ -160,15 +163,15 @@ const modes = ["Retail outlet","Mobile van"]
             <RHFTextField
               name="name"
               label={
-                vendor_category == 'Distributor'
+                vendor_category === 'Distributor'
                   ? 'Distributor Name'
-                  : vendor_category == 'miller'
+                  : vendor_category === 'Miller'
                     ? 'Milling Unit Name'
                     : 'Society Name'
               }
             />
           </Grid>
-          {vendor_category === 'miller' && (
+          {vendor_category === 'Miller' && (
             <Grid item xs={12} sm={6} md={3}>
               <RHFAutocomplete
                 name="milling_type"
@@ -181,12 +184,12 @@ const modes = ["Retail outlet","Mobile van"]
               />
             </Grid>
           )}
-          {vendor_category != 'Society' && (
+          {vendor_category !== 'Society' && (
             <Grid item xs={12} sm={6} md={3}>
               <RHFTextField name="procurement_area" label="Procurement area" />
             </Grid>
           )}
-          {vendor_category != 'Society' && (
+          {vendor_category !== 'Society' && (
             <Grid item xs={12} sm={3}>
               <RHFAutocomplete
                 name="type_of_firm"
@@ -198,7 +201,7 @@ const modes = ["Retail outlet","Mobile van"]
               />
             </Grid>
           )}
-          {vendor_category == 'Distributor' && (
+          {vendor_category === 'Distributor' && (
             <>
               <Grid item xs={12} sm={6} md={3}>
                 <RHFTextField name="area_of_Opration" label="Area of Opration" />
@@ -234,21 +237,21 @@ const modes = ["Retail outlet","Mobile van"]
           <Grid item xs={12} sm={6} md={3}>
             <RHFTextField name="gst_number" label="GST Number" />
           </Grid>
-          {vendor_category == 'Society' && (
+          {vendor_category === 'Society' && (
             <Grid item xs={12}>
               <RadioGroup row aria-label="vendor" name="vendor">
                 <FormControlLabel
-                  value="miller"
+                  value="own_distribution_own_mill"
                   control={<Radio />}
                   label="Own Mill and Distribution"
                 />
                 <FormControlLabel
-                  value="Distributor"
+                  value="own_distribution_rent_mill"
                   control={<Radio />}
                   label="Own Distribution and Rent Mill"
                 />
                 <FormControlLabel
-                  value="Miller&Distributor"
+                  value="cooperative_rent_mill"
                   control={<Radio />}
                   label="Co-operative (Rent Mill)"
                 />
@@ -258,9 +261,9 @@ const modes = ["Retail outlet","Mobile van"]
         </Grid>
         <Typography variant="h5" gutterBottom className="heading" mt={2}>
           {` ${
-            vendor_category == 'Distributor'
+            vendor_category === 'Distributor'
               ? 'Address of Proposed Distributor Premises'
-              : vendor_category == 'miller'
+              : vendor_category === 'Miller'
                 ? 'Address of Proposed Milling Unit Premises'
                 : 'Address Information'
           }`}
@@ -311,10 +314,10 @@ const modes = ["Retail outlet","Mobile van"]
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={4}>
-            <RHFTextField type={'password'} name={'password'} label={'Password'} />
+            <RHFTextField type="password" name="password" label="Password" />
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <RHFTextField type={'password'} name={'confirm_password'} label={'Confirm Password'} />
+            <RHFTextField type="password" name="confirm_password" label="Confirm Password" />
           </Grid>
         </Grid>
         <Box display="flex" justifyContent="flex-end" mt={3}>
