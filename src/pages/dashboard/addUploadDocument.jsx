@@ -230,6 +230,11 @@ export default function UploadDocument({ container }) {
                   zIndex: '200',
                   opacity: '0',
                 }}
+                accept={{
+                  'image/jpeg': [],
+                  'image/jpg': [],
+                  'image/png': [],
+                }}
                 disabled={selected.length >= 5}
                 multiple
                 onDrop={handleDropMultiFile}
