@@ -50,6 +50,8 @@ export default function UploadDocument() {
 
   const { handleSubmit, control, setValue, watch } = methods;
 
+  const docType = watch('doc_type');
+
   const onSubmit = handleSubmit(async (data) => {
     if (!files[0]?.preview) {
       enqueueSnackbar('Please Select Image', { variant: 'error' });
@@ -68,7 +70,7 @@ export default function UploadDocument() {
     formData.append('doc_type', data.doc_type);
     formData.append('csp_code', vendor);
 
-   
+
     for (let file of files) {
       try {
         formData.append('file', file);
@@ -127,9 +129,7 @@ useWebWorker: true,
         data.map(async (value) => {
           const formData = new FormData();
           const compressedFile = await imageCompression(value?.image, options);
-          console.log(compressedFile, 'fileCompress');
           formData.append('file', compressedFile);
-          // formData.append('file', value?.image);
           formData.append('doc_type', value?.type);
           formData.append('csp_code', vendor?.csp_code);
           return formData;
@@ -174,13 +174,12 @@ useWebWorker: true,
   };
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    console.log('Selected file:', file);
   };
 
   const renderDetails = (
     <>
       <Helmet>
-        <title>Dashboard | Upload Documents</title>
+        <title>Dashboard | Upload Evidence</title>
       </Helmet>
       <Card>
         <Stack spacing={3} sx={{ p: 3 }}>
@@ -228,6 +227,16 @@ useWebWorker: true,
                   zIndex: '200',
                   opacity: '0',
                 }}
+                accept={docType === "milling_unit_photo" ? {
+                  'image/jpeg': [],
+                  'image/jpg': [],
+                  'image/png': [],
+                }: {
+                  'video/mp4': [],
+                  'video/avi': [],
+                  'video/mkv': [],
+                  'video/mov': [],
+                }}
                 disabled={selected.length >= 5}
                 multiple
                 onDrop={handleDropMultiFile}
@@ -255,7 +264,7 @@ useWebWorker: true,
           </Box>
         ) : (
           <>
-            <Typography variant="h4">Upload Documents</Typography>
+            <Typography variant="h4">Upload Evidence</Typography>
             <Box
               sx={{
                 mt: 5,

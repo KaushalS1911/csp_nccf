@@ -8,7 +8,7 @@ export default function InvoiceListPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard: Invoice List</title>
+        <title> Dashboard: Payment</title>
       </Helmet>
 
       <InvoiceListView />

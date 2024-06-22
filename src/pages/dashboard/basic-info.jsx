@@ -17,36 +17,15 @@ import { useSettingsContext } from 'src/components/settings/context';
 import { Helmet } from 'react-helmet-async';
 import { RHFTextField } from 'src/components/hook-form';
 import { enqueueSnackbar } from 'notistack';
+import { useGetProfile } from '../../api/vendor.js';
 export default function BasicInfo() {
   const settings = useSettingsContext();
 
   const { vendor } = useAuthContext();
-  const [currentUser, setCurrentUser] = useState({});
-  const [commodities, setCommodities] = useState([]);
   const [disable, setDisable] = useState(true);
-  useEffect(() => {
-    fetchUser();
-    fetchCommodities();
-  }, [vendor]);
-  function fetchUser() {
-    if (vendor.phone_number) {
-      axios
-        .get(
-          `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/csp_detail/${vendor.phone_number}`
-        )
-        .then((res) => {
-          setCurrentUser(res?.data?.data[0]);
-        })
-        .catch((error) => console.log(error));
-    }
-  }
-  function fetchCommodities() {
-    axios
-      .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity`)
-      .then((res) => {
-        setCommodities(res.data?.data);
-      });
-  }
+
+  const {profile} = useGetProfile()
+
   const defaultValues = {
     address: '',
     // commodity: '',
@@ -71,24 +50,24 @@ export default function BasicInfo() {
     formState: { isSubmitting },
   } = methods;
   useEffect(() => {
-    if (currentUser) {
+    if (profile) {
       reset({
-        address: currentUser.address || '',
-        // // commodity: currentUser.commodity || '',
-        contact_person: currentUser.contact_person || '',
-        district: currentUser.district || '',
-        gst_number: currentUser.gst_number || '',
-        milling_type: currentUser.milling_type || '',
-        name: currentUser.name || '',
-        pan_number: currentUser.pan_number || '',
+        address: profile.address || '',
+        // // commodity: profile.commodity || '',
+        contact_person: profile.contact_person || '',
+        district: profile.district || '',
+        gst_number: profile.gst_number || '',
+        milling_type: profile.milling_type || '',
+        name: profile.name || '',
+        pan_number: profile.pan_number || '',
         phone_number: vendor.phone_number,
-        pincode: currentUser.pincode || '',
-        email: currentUser.email || '',
-        state: currentUser.state || '',
-        village: currentUser.village || '',
+        pincode: profile.pincode || '',
+        email: profile.email || '',
+        state: profile.state || '',
+        village: profile.village || '',
       });
     }
-  }, [currentUser, reset, vendor]);
+  }, [profile, reset, vendor]);
   const milingType = ['Dry', 'Wet', 'Both'];
   const states = ['Gujarat', 'Delhi', 'Punjab'];
   const districts = ['Amreli', 'Surendranagar', 'Dhrol'];
