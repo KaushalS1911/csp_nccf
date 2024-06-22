@@ -66,7 +66,7 @@ export default function MillerNewEditForm({ currentProduct }) {
   const [branchOptions, setBranchOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const [selectedState, setSelectedState] = useState('');
-  
+
   const data1 = stateOptions.find((data) => data?.state_name === selectedState);
   const handleStateChange = (event, newValue) => {
     setSelectedState(newValue);
@@ -270,9 +270,9 @@ export default function MillerNewEditForm({ currentProduct }) {
       {mdUp && (
         <Grid md={4}>
           <Typography variant="h6" sx={{ mb: 0.5 }}>
-            {mil_dis_sub_roles == 'Own Mill and Distriubution'
+            {mil_dis_sub_roles === 'Own Mill and Distribution'
               ? 'Miller '
-              : mil_dis_sub_roles == 'Own Distribution and Rent Mill'
+              : mil_dis_sub_roles === 'Own Distribution and Rent Mill'
                 ? `Distributor's `
                 : 'Society '}
             Personal Info
@@ -300,14 +300,14 @@ export default function MillerNewEditForm({ currentProduct }) {
               <RHFTextField
                 name="name"
                 label={
-                  mil_dis_sub_roles == 'Own Distribution and Rent Mill'
+                  mil_dis_sub_roles === 'Own Distribution and Rent Mill'
                     ? 'Distributor Name'
-                    : mil_dis_sub_roles == 'Own Mill and Distriubution'
+                    : mil_dis_sub_roles === 'Own Mill and Distribution'
                       ? 'Milling Unit Name'
                       : 'Society Name'
                 }
               />
-              {mil_dis_sub_roles === 'Own Mill and Distriubution' && (
+              {mil_dis_sub_roles === 'Own Mill and Distribution' && (
                 <RHFAutocomplete
                   name="milling_type"
                   type="milling_type"
@@ -319,7 +319,7 @@ export default function MillerNewEditForm({ currentProduct }) {
                 />
               )}
 
-              {mil_dis_sub_roles != 'Co-operative (Rent Mill)' && (
+              {mil_dis_sub_roles !== 'Co-operative (Rent Mill)' && (
                 <>
                   <RHFTextField name="code" label="Procurement area" />
                   <RHFAutocomplete
@@ -362,9 +362,9 @@ export default function MillerNewEditForm({ currentProduct }) {
       {mdUp && (
         <Grid md={4}>
           <Typography variant="h6" sx={{ mb: 0.5 }}>
-            {mil_dis_sub_roles == 'Own Mill and Distriubution'
+            {mil_dis_sub_roles === 'Own Mill and Distribution'
               ? 'Miller '
-              : mil_dis_sub_roles == 'Own Distribution and Rent Mill'
+              : mil_dis_sub_roles === 'Own Distribution and Rent Mill'
                 ? 'Distribution '
                 : 'Society '}
             Address

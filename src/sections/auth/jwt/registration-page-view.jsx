@@ -240,7 +240,7 @@ const modes = ["Retail outlet","Mobile van"]
                 <FormControlLabel
                   value="miller"
                   control={<Radio />}
-                  label="Own Mill and Distriubution"
+                  label="Own Mill and Distribution"
                 />
                 <FormControlLabel
                   value="Distributor"
