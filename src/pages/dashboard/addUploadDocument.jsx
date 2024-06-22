@@ -31,7 +31,6 @@ export default function UploadDocument({ container }) {
   const settings = useSettingsContext();
   const router = useRouter();
   const { vendor } = useAuthContext();
-  console.log(vendor, 'vendor up');
   const [files, setFiles] = useState([]);
   const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(false);

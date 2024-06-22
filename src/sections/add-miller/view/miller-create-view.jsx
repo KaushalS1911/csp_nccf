@@ -20,11 +20,9 @@ export default function MillerCreateView() {
     <Container maxWidth={settings.themeStretch ? false : 'lg'}>
       <CustomBreadcrumbs
         heading={`Create a new ${
-          mil_dis_sub_roles === 'Own Mill and Distribution'
-            ? 'Miller'
-            : mil_dis_sub_roles === 'Own Distribution and Rent Mill'
-              ? 'Distribution '
-              : 'Society '
+          mil_dis_sub_roles === 'own_distribution_rent_mill'
+            ? 'Distributor '
+            : 'Miller '
         }`}
         links={[
           {
@@ -34,11 +32,9 @@ export default function MillerCreateView() {
 
           {
             name: `New ${
-              mil_dis_sub_roles === 'Own Mill and Distribution'
-                ? 'Miller'
-                : mil_dis_sub_roles === 'Own Distribution and Rent Mill'
-                  ? 'Distribution '
-                  : 'Society '
+              mil_dis_sub_roles === 'own_distribution_rent_mill'
+                ? 'Distributor '
+                : 'Miller '
             }`,
           },
         ]}

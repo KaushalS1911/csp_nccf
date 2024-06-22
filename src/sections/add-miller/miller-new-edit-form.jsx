@@ -97,6 +97,7 @@ export default function MillerNewEditForm({ currentProduct }) {
         setBranchOptions(res?.data?.data);
       });
   }
+
   function fetchDistrict(stateId) {
     axios
       .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/${stateId}/district`)
@@ -104,6 +105,7 @@ export default function MillerNewEditForm({ currentProduct }) {
         setDistrictOptions(res?.data?.data);
       });
   }
+
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     images: Yup.array().min(1, 'Images is required'),
@@ -144,7 +146,7 @@ export default function MillerNewEditForm({ currentProduct }) {
       newLabel: currentProduct?.newLabel || { enabled: false, content: '' },
       saleLabel: currentProduct?.saleLabel || { enabled: false, content: '' },
     }),
-    [currentProduct]
+    [currentProduct],
   );
 
   const methods = useForm({
@@ -195,12 +197,12 @@ export default function MillerNewEditForm({ currentProduct }) {
       const newFiles = acceptedFiles.map((file) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
-        })
+        }),
       );
 
       setValue('images', [...files, ...newFiles], { shouldValidate: true });
     },
-    [setValue, values.images]
+    [setValue, values.images],
   );
 
   const handleRemoveFile = useCallback(
@@ -208,7 +210,7 @@ export default function MillerNewEditForm({ currentProduct }) {
       const filtered = values.images && values.images?.filter((file) => file !== inputFile);
       setValue('images', filtered);
     },
-    [setValue, values.images]
+    [setValue, values.images],
   );
 
   const handleRemoveAllFiles = useCallback(() => {
@@ -234,16 +236,16 @@ export default function MillerNewEditForm({ currentProduct }) {
 
       <Grid xs={12} md={8}>
         <Card>
-          {!mdUp && <CardHeader title="Details" />}
+          {!mdUp && <CardHeader title="Details"/>}
 
           <Stack spacing={3} sx={{ p: 3 }}>
-            <RHFTextField name="name" label="Product Name" />
+            <RHFTextField name="name" label="Product Name"/>
 
-            <RHFTextField name="subDescription" label="Sub Description" multiline rows={4} />
+            <RHFTextField name="subDescription" label="Sub Description" multiline rows={4}/>
 
             <Stack spacing={1.5}>
               <Typography variant="subtitle2">Content</Typography>
-              <RHFEditor simple name="description" />
+              <RHFEditor simple name="description"/>
             </Stack>
 
             <Stack spacing={1.5}>
@@ -270,11 +272,9 @@ export default function MillerNewEditForm({ currentProduct }) {
       {mdUp && (
         <Grid md={4}>
           <Typography variant="h6" sx={{ mb: 0.5 }}>
-            {mil_dis_sub_roles === 'Own Mill and Distribution'
-              ? 'Miller '
-              : mil_dis_sub_roles === 'Own Distribution and Rent Mill'
-                ? `Distributor's `
-                : 'Society '}
+            {mil_dis_sub_roles === 'own_distribution_rent_mill'
+              ? 'Distributor\'s '
+              : 'Miller\'s '}
             Personal Info
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -285,7 +285,7 @@ export default function MillerNewEditForm({ currentProduct }) {
 
       <Grid xs={12} md={8}>
         <Card>
-          {!mdUp && <CardHeader title="Properties" />}
+          {!mdUp && <CardHeader title="Properties"/>}
 
           <Stack spacing={3} sx={{ p: 3 }}>
             <Box
@@ -300,14 +300,12 @@ export default function MillerNewEditForm({ currentProduct }) {
               <RHFTextField
                 name="name"
                 label={
-                  mil_dis_sub_roles === 'Own Distribution and Rent Mill'
-                    ? 'Distributor Name'
-                    : mil_dis_sub_roles === 'Own Mill and Distribution'
-                      ? 'Milling Unit Name'
-                      : 'Society Name'
+                  mil_dis_sub_roles === 'own_distribution_rent_mill'
+                    ? 'Distributor Name '
+                    : 'Milling Unit Name '
                 }
               />
-              {mil_dis_sub_roles === 'Own Mill and Distribution' && (
+              {mil_dis_sub_roles !== 'own_distribution_rent_mill' && (
                 <RHFAutocomplete
                   name="milling_type"
                   type="milling_type"
@@ -319,23 +317,21 @@ export default function MillerNewEditForm({ currentProduct }) {
                 />
               )}
 
-              {mil_dis_sub_roles !== 'Co-operative (Rent Mill)' && (
+
+              <RHFTextField name="code" label="Procurement area"/>
+              <RHFAutocomplete
+                name="type_of_firm"
+                label="Type of Firm"
+                placeholder="Choose Your firm"
+                fullWidth
+                options={firmOptions.map((option) => option)}
+                getOptionLabel={(option) => option}
+              />
+
+              {mil_dis_sub_roles === 'own_distribution_rent_mill' && (
                 <>
-                  <RHFTextField name="code" label="Procurement area" />
-                  <RHFAutocomplete
-                    name="type_of_firm"
-                    label="Type of Firm"
-                    placeholder="Choose Your firm"
-                    fullWidth
-                    options={firmOptions.map((option) => option)}
-                    getOptionLabel={(option) => option}
-                  />
-                </>
-              )}
-              {mil_dis_sub_roles === 'Own Distribution and Rent Mill' && (
-                <>
-                  <RHFTextField name="contact_person" label="Area of opration " />
-                  <RHFTextField name="contact_person" label="Capacity /day (MT)" />
+                  <RHFTextField name="contact_person" label="Area of opration "/>
+                  <RHFTextField name="contact_person" label="Capacity /day (MT)"/>
                   <RHFAutocomplete
                     name="mode_of_sale"
                     label="Mode of Sale"
@@ -346,11 +342,11 @@ export default function MillerNewEditForm({ currentProduct }) {
                   />
                 </>
               )}
-              <RHFTextField name="contact_person" label="Contact Person" />
-              <RHFTextField name="phone_number" label="Phone Number" />
-              <RHFTextField name="email" label="Email" />
-              <RHFTextField name="pan_number" label="PAN Number" />
-              <RHFTextField name="gst_number" label="GST Number" />
+              <RHFTextField name="contact_person" label="Contact Person"/>
+              <RHFTextField name="phone_number" label="Phone Number"/>
+              <RHFTextField name="email" label="Email"/>
+              <RHFTextField name="pan_number" label="PAN Number"/>
+              <RHFTextField name="gst_number" label="GST Number"/>
             </Box>
           </Stack>
         </Card>
@@ -362,11 +358,9 @@ export default function MillerNewEditForm({ currentProduct }) {
       {mdUp && (
         <Grid md={4}>
           <Typography variant="h6" sx={{ mb: 0.5 }}>
-            {mil_dis_sub_roles === 'Own Mill and Distribution'
-              ? 'Miller '
-              : mil_dis_sub_roles === 'Own Distribution and Rent Mill'
-                ? 'Distribution '
-                : 'Society '}
+            { mil_dis_sub_roles === 'own_distribution_rent_mill'
+              ? 'Distribution '
+              : 'Miller '}
             Address
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -377,7 +371,7 @@ export default function MillerNewEditForm({ currentProduct }) {
 
       <Grid xs={12} md={8}>
         <Card>
-          {!mdUp && <CardHeader title="Properties" />}
+          {!mdUp && <CardHeader title="Properties"/>}
 
           <Stack spacing={3} sx={{ p: 3 }}>
             <Box
@@ -389,7 +383,7 @@ export default function MillerNewEditForm({ currentProduct }) {
                 md: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="address" label="Address" />
+              <RHFTextField name="address" label="Address"/>
 
               <RHFAutocomplete
                 name="state"
@@ -418,7 +412,7 @@ export default function MillerNewEditForm({ currentProduct }) {
                 getOptionLabel={(option) => option}
                 disabled={!data1}
               />
-              <RHFTextField name="pincode" label="Pin Code" />
+              <RHFTextField name="pincode" label="Pin Code"/>
             </Box>
           </Stack>
         </Card>
@@ -439,7 +433,7 @@ export default function MillerNewEditForm({ currentProduct }) {
       )}
 
       <Grid xs={12} md={8}>
-        <UploadDocument container={true} />
+        <UploadDocument container={true}/>
       </Grid>
     </>
   );
