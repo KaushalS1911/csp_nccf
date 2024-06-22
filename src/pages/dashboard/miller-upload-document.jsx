@@ -22,15 +22,17 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { error } from 'src/theme/palette';
 import { useAuthContext } from 'src/auth/hooks';
 import { LoadingScreen } from 'src/components/loading-screen';
+import { UploadMillerListView } from 'src/sections/upload-miller/view';
 
 const validationSchema = yup.object().shape({
   doc_type: yup.string().required('Document type is required'),
 });
 
-export default function UploadDocument({ container }) {
+const MillerUploadDocument = () => {
   const settings = useSettingsContext();
   const router = useRouter();
   const { vendor } = useAuthContext();
+  // console.log(vendor?.mil_dis_sub_roles, 'gggggggg');
   const [files, setFiles] = useState([]);
   const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -77,58 +79,36 @@ export default function UploadDocument({ container }) {
       }
     }
   });
-  const otherOption = [
-    { label: 'Aadhar', key: 'Aadhar' },
-    { label: 'Certificates', key: 'certificates' },
-    { label: 'Gst Number', key: 'gst_number' },
-    { label: 'Pan Number', key: 'pan_number' },
-  ];
-  const Cooperatives = [
+
+  const docTypeOption = [
+    { label: 'Registration Certificate', key: 'Registration_Certificate' },
     {
-      label: 'Company profile with ownership details (list of Directors/ partners etc.)',
-      key: 'Company_profile_with_ownership_details',
-    },
-    {
-      label: 'Proposal letter from the firm/Expression of interest ( On letter Head)',
-      key: 'Proposal_letter_from_the_firm/Expression_of_interest',
-    },
-    { label: 'Registration Certificate', key: 'registration_certificate' },
-    {
-      label: 'Affidavit in the prescribed format ( 100 Rs Stamp)',
-      key: 'Affidavit_in_the_prescribed_format',
+      label: 'Undertaking from Miller to work with NCCF under the umbrella of Cooperatives',
+      key: 'Undertaking_from_Miller_to_work_with_NCCF_under_the_umbrella_of_Cooperatives',
     },
     {
       label: 'Audited Accounts for the last 3 years',
-      key: 'Audited_accounts_for_the_last_3_years',
+      key: 'Audited_Accounts_for_the_last_3_years',
     },
     {
       label: 'Income Tax Return for last financial year',
-      key: 'Income_tax_return_for_last_financial_year',
+      key: 'Income_Tax_Return_for_last_financial_year',
     },
     { label: 'Copy of PAN', key: 'Copy_of_PAN' },
     {
       label: 'Copy of G.S.T./VAT/ Sales Tax Registration Certificate',
       key: 'Copy_of_G.S.T./VAT/_Sales_Tax_Registration_Certificate',
     },
-    { label: 'Copy of Latest Trade License', key: 'Copy_of_Latest_Trade_License' },
-    {
-      label: 'Municipal/Property Tax Receipt ( If Any)',
-      key: 'Municipal/Property_Tax_Receipt_( If Any)',
-    },
+    { label: 'Industrial License', key: 'Industrial_License' },
+    { label: 'Latest Power Bills', key: 'Latest_Power_Bills' },
+    { label: 'Pollution certificate', key: 'Pollution_certificate' },
+    { label: 'Municipal/Property Tax Receipt ( If Any)', key: 'Municipal_Property_Tax_Receipt' },
     { label: 'FSSAI license', key: 'FSSAI_license' },
     {
-      label: 'Undertaking in prescribed format ( On letter Head )',
-      key: 'Undertaking_in_prescribed_format_( On letter Head )',
+      label: 'Photograph of Mill with Time stamp & Location',
+      key: 'Photograph_of_Mill_with_Time_stamp_&_Location',
     },
-    {
-      label: 'CSP agreement in prescribed format(1000 Rs Stamp)',
-      key: 'CSP_agreement_in_prescribed_format(1000 Rs Stamp)',
-    },
-    { label: 'Distributors/Retail outlets details ( Hard copy / Excel Format)', key: 'Distributors/Retail_outlets_details_( Hard copy / Excel Format)' },
-    { label: 'Cancelled Cheque', key: 'Cancelled_Cheque' },
   ];
-  const docTypeOption =
-    vendor?.mil_dis_sub_roles === 'own_distribution_own_mill' ? otherOption : Cooperatives;
 
   files[0]?.preview ? onSubmit() : null;
   const handleDropMultiFile = useCallback(
@@ -224,7 +204,6 @@ export default function UploadDocument({ container }) {
     const file = event.target.files[0];
     console.log('Selected file:', file);
   };
-
   const renderDetails = (
     <>
       <Helmet>
@@ -240,7 +219,7 @@ export default function UploadDocument({ container }) {
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(2, 1fr)',
-                md: container ? 'repeat(1, 1fr)' : 'repeat(2, 1fr)',
+                md: 'repeat(1, 1fr)',
               }}
             >
               <Controller
@@ -291,89 +270,44 @@ export default function UploadDocument({ container }) {
       </Card>
     </>
   );
-
   return (
     <>
-      {container ? (
-        <>
-          {loading ? (
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: '80vh',
-              }}
-            >
-              <LoadingScreen sx={{ margin: 'auto' }} />
-            </Box>
-          ) : (
-            <>
-              {!container && <Typography variant="h4">Upload Documents</Typography>}
-              <Box
-                sx={{
-                  mt: 0,
-                  width: 1,
-                  height: 320,
-                  borderRadius: 2,
-                }}
-              >
-                <FormProvider methods={methods} onSubmit={onSubmit}>
-                  {renderDetails}
-                </FormProvider>
-                {selected[0]?.type && (
-                  <UploadDocumentListView
-                    data={selected}
-                    container={container}
-                    handleDeleteRow={handleDeleteRow}
-                    handleAllSubmit={handleAllSubmit}
-                  />
-                )}
-              </Box>
-            </>
-          )}
-        </>
+      {loading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '80vh',
+          }}
+        >
+          <LoadingScreen sx={{ margin: 'auto' }} />
+        </Box>
       ) : (
         <>
-          <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-            {loading ? (
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '80vh',
-                }}
-              >
-                <LoadingScreen sx={{ margin: 'auto' }} />
-              </Box>
-            ) : (
-              <>
-                <Typography variant="h4">Upload Documents</Typography>
-                <Box
-                  sx={{
-                    mt: 5,
-                    width: 1,
-                    height: 320,
-                    borderRadius: 2,
-                  }}
-                >
-                  <FormProvider methods={methods} onSubmit={onSubmit}>
-                    {renderDetails}
-                  </FormProvider>
-                  {selected[0]?.type && (
-                    <UploadDocumentListView
-                      data={selected}
-                      handleDeleteRow={handleDeleteRow}
-                      handleAllSubmit={handleAllSubmit}
-                    />
-                  )}
-                </Box>
-              </>
+          <Box
+            sx={{
+              mt: 0,
+              width: 1,
+              height: 320,
+              borderRadius: 2,
+            }}
+          >
+            <FormProvider methods={methods} onSubmit={onSubmit}>
+              {renderDetails}
+            </FormProvider>
+            {selected[0]?.type && (
+              <UploadMillerListView
+                data={selected}
+                handleDeleteRow={handleDeleteRow}
+                handleAllSubmit={handleAllSubmit}
+              />
             )}
-          </Container>
+          </Box>
         </>
       )}
     </>
   );
-}
+};
+
+export default MillerUploadDocument;

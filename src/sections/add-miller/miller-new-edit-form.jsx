@@ -44,6 +44,7 @@ import FormProvider, {
 import axios from 'axios';
 import UploadDocument from 'src/pages/dashboard/addUploadDocument';
 import { useAuthContext } from 'src/auth/hooks';
+import MillerUploadDocument from 'src/pages/dashboard/miller-upload-document';
 
 // ----------------------------------------------------------------------
 
@@ -433,7 +434,7 @@ export default function MillerNewEditForm({ currentProduct }) {
       )}
 
       <Grid xs={12} md={8}>
-        <UploadDocument container={true}/>
+        <MillerUploadDocument />
       </Grid>
     </>
   );
