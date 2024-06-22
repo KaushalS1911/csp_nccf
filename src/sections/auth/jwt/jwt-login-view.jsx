@@ -105,6 +105,7 @@ export default function JwtLoginView() {
                     <RHFRadioGroup name={"category"} row options={[
                       {label: "Miller",value: "Miller"},
                       {label: "Distributor",value: "Distributor"},
+                      {label: "Miller + Distributor",value: "Miller_Distributor"},
                       {label: "Society",value: "Society"},
                     ]}/>
                   </Grid>
