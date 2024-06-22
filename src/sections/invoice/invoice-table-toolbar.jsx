@@ -79,13 +79,13 @@ export default function InvoiceTableToolbar({
             width: { xs: 1, md: 180 },
           }}
         >
-          <InputLabel>Service</InputLabel>
+          <InputLabel>Commodity</InputLabel>
 
           <Select
             multiple
             value={filters.service}
             onChange={handleFilterService}
-            input={<OutlinedInput label="Service" />}
+            input={<OutlinedInput label="Commodity" />}
             renderValue={(selected) => selected.map((value) => value).join(', ')}
             sx={{ textTransform: 'capitalize' }}
           >

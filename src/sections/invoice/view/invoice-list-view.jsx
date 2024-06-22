@@ -47,6 +47,7 @@ import InvoiceAnalytic from '../invoice-analytic';
 import InvoiceTableRow from '../invoice-table-row';
 import InvoiceTableToolbar from '../invoice-table-toolbar';
 import InvoiceTableFiltersResult from '../invoice-table-filters-result';
+import { useGetCommodities } from '../../../api/common.js';
 
 // ----------------------------------------------------------------------
 
@@ -72,6 +73,8 @@ const defaultFilters = {
 
 export default function InvoiceListView() {
   const { enqueueSnackbar } = useSnackbar();
+
+  const {commodities} = useGetCommodities()
 
   const theme = useTheme();
 
@@ -215,14 +218,14 @@ export default function InvoiceListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="List"
+          heading="Payment"
           links={[
             {
               name: 'Dashboard',
               href: paths.dashboard.root,
             },
             {
-              name: 'Invoice',
+              name: 'Payment',
               href: paths.dashboard.invoice.root,
             },
             {
@@ -337,7 +340,7 @@ export default function InvoiceListView() {
             onFilters={handleFilters}
             //
             dateError={dateError}
-            serviceOptions={INVOICE_SERVICE_OPTIONS.map((option) => option.name)}
+            serviceOptions={commodities.map((option) => option.commodity_name)}
           />
 
           {canReset && (

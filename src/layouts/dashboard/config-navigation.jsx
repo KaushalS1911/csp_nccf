@@ -1,4 +1,3 @@
-
 import { useMemo } from 'react';
 
 import { paths } from 'src/routes/paths';
@@ -11,7 +10,7 @@ import { useAuthContext } from 'src/auth/hooks';
 // ----------------------------------------------------------------------
 
 const icon = (name) => (
-  <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
+  <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }}/>
   // OR
   // <Iconify icon="fluent:mail-24-filled" />
   // https://icon-sets.iconify.design/solar/
@@ -82,6 +81,21 @@ export function useNavData() {
         },
       ],
     },
+    // INVOICE
+    {
+      title: t('payment'),
+      path: paths.dashboard.invoice.root,
+      icon: ICONS.invoice,
+      children: [
+        { title: t('list'), path: paths.dashboard.invoice.root },
+        // {
+        //   title: t('details'),
+        //   path: paths.dashboard.invoice.demo.details,
+        // },
+        { title: t('create'), path: paths.dashboard.invoice.new },
+        // { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
+      ],
+    },
   ];
 
   const otherItems = [
@@ -110,6 +124,21 @@ export function useNavData() {
         },
       ],
     },
+    // INVOICE
+    {
+      title: t('payment'),
+      path: paths.dashboard.invoice.root,
+      icon: ICONS.invoice,
+      children: [
+        { title: t('list'), path: paths.dashboard.invoice.root },
+        // {
+        //   title: t('details'),
+        //   path: paths.dashboard.invoice.demo.details,
+        // },
+        { title: t('create'), path: paths.dashboard.invoice.new },
+        // { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
+      ],
+    },
   ];
   const data = useMemo(
     () => [
@@ -119,7 +148,7 @@ export function useNavData() {
         items: vendor?.category === 'Society' ? societyItems : otherItems,
       },
     ],
-    [t]
+    [t],
   );
 
   return data;
