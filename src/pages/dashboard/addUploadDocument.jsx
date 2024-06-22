@@ -124,11 +124,14 @@ export default function UploadDocument({ container }) {
       label: 'CSP agreement in prescribed format(1000 Rs Stamp)',
       key: 'CSP_agreement_in_prescribed_format(1000 Rs Stamp)',
     },
-    { label: 'Distributors/Retail outlets details ( Hard copy / Excel Format)', key: 'Distributors/Retail_outlets_details_( Hard copy / Excel Format)' },
+    {
+      label: 'Distributors/Retail outlets details ( Hard copy / Excel Format)',
+      key: 'Distributors/Retail_outlets_details_( Hard copy / Excel Format)',
+    },
     { label: 'Cancelled Cheque', key: 'Cancelled_Cheque' },
   ];
   const docTypeOption =
-    vendor?.mil_dis_sub_roles === 'own_distribution_own_mill' ? otherOption : Cooperatives;
+    vendor?.mil_dis_sub_roles === 'cooperative_rent_mill' ? Cooperatives : otherOption;
 
   files[0]?.preview ? onSubmit() : null;
   const handleDropMultiFile = useCallback(
