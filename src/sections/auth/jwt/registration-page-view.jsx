@@ -163,7 +163,7 @@ const RegistrationForm = ({ vendor_category }) => {
             <RHFTextField
               name="name"
               label={
-                vendor_category === 'Distributor'
+                (vendor_category === 'Distributor' || vendor_category === "Miller_Distributor")
                   ? 'Distributor Name'
                   : vendor_category === 'Miller'
                     ? 'Milling Unit Name'
@@ -258,7 +258,7 @@ const RegistrationForm = ({ vendor_category }) => {
         </Grid>
         <Typography variant="h5" gutterBottom className="heading" mt={2}>
           {` ${
-            vendor_category === 'Distributor'
+            (vendor_category === 'Distributor' || vendor_category === "Miller_Distributor")
               ? 'Address of Proposed Distributor Premises'
               : vendor_category === 'Miller'
                 ? 'Address of Proposed Milling Unit Premises'
