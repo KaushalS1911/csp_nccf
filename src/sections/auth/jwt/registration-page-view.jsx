@@ -3,22 +3,18 @@ import * as Yup from 'yup';
 import { useForm } from 'react-hook-form';
 import React, { useState, useEffect } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 import { Box, Grid, Radio, Button, Typography, RadioGroup, FormControlLabel } from '@mui/material';
-
 import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
-
 import { paths } from '../../../routes/paths';
 import { useRouter } from '../../../routes/hooks';
-
+import { enqueueSnackbar } from 'notistack';
 const RegistrationForm = ({ vendor_category }) => {
   const router = useRouter();
   const [stateOptions, setStateOptions] = useState([]);
   const [branchOptions, setBranchOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const [selectedState, setSelectedState] = useState('');
-
   const data1 = stateOptions.find((data) => data?.state_name === selectedState);
   const handleStateChange = (event, newValue) => {
     setSelectedState(newValue);
@@ -29,20 +25,17 @@ const RegistrationForm = ({ vendor_category }) => {
   useEffect(() => {
     fetchStates();
   }, []);
-
   useEffect(() => {
     if (data1 && data1.state_id) {
       fetchBranches(data1.state_id);
       fetchDistrict(data1.state_id);
     }
   }, [data1]);
-
   function fetchStates() {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state`).then((res) => {
       setStateOptions(res?.data?.data);
     });
   }
-
   function fetchBranches(stateId) {
     axios
       .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/${stateId}/branch`)
@@ -50,7 +43,6 @@ const RegistrationForm = ({ vendor_category }) => {
         setBranchOptions(res?.data?.data);
       });
   }
-
   function fetchDistrict(stateId) {
     axios
       .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/${stateId}/district`)
@@ -58,31 +50,28 @@ const RegistrationForm = ({ vendor_category }) => {
         setDistrictOptions(res?.data?.data);
       });
   }
-
   const millingTypeOptions = ['Dry', 'Wet', 'Both'];
   // const districtOptions = ['Amreli', 'Bhavanagar'];
-
-  // const NewBlogSchema = Yup.object().shape({
-  //   address: Yup.string().required('Society is required'),
-  //   contact_person: Yup.string().required('Contact is required'),
-  //   confirm_password: Yup.string()
-  //     .oneOf([Yup.ref('password'), null], 'Passwords must match')
-  //     .required('Confirm password is required'),
-  //   password: Yup.string()
-  //     .oneOf([Yup.ref('password'), null], 'Passwords must match')
-  //     .required('Confirm password is required'),
-  //   // district: Yup.string().required('District is required'),
-  //   gst_number: Yup.string().required('GST Number is required'),
-  //   milling_type: Yup.string().required('Milling Type is required'),
-  //   name: Yup.string().required('Name is required'),
-  //   email: Yup.string().required('Email is required'),
-  //   state: Yup.string().required('State is required'),
-  //   branch: Yup.string().required('Branch is required'),
-  //   pan_number: Yup.string().required('Pan Number is required'),
-  //   pincode: Yup.string().required('Pincode is required'),
-  //   phone_number: Yup.string().max(10).required('Phone Number is required'),
-  // });
-
+  const NewBlogSchema = Yup.object().shape({
+    address: Yup.string().required('Society is required'),
+    contact_person: Yup.string().required('Contact is required'),
+    confirm_password: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm password is required'),
+    password: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm password is required'),
+    district: Yup.string().required('District is required'),
+    gst_number: Yup.string().required('GST Number is required'),
+    // milling_type: Yup.string().required('Milling Type is required'),
+    name: Yup.string().required('Name is required'),
+    email: Yup.string().required('Email is required'),
+    state: Yup.string().required('State is required'),
+    branch: Yup.string().required('Branch is required'),
+    pan_number: Yup.string().required('Pan Number is required'),
+    pincode: Yup.string().required('Pincode is required'),
+    phone_number: Yup.string().max(10).required('Phone Number is required'),
+  });
   const defaultValues = {
     name: '',
     category: '',
@@ -104,12 +93,10 @@ const RegistrationForm = ({ vendor_category }) => {
     gst_number: '',
     mode: '',
   };
-
   const methods = useForm({
-    // resolver: yupResolver(NewBlogSchema),
+    resolver: yupResolver(NewBlogSchema),
     defaultValues,
   });
-
   const {
     reset,
     control,
@@ -117,9 +104,7 @@ const RegistrationForm = ({ vendor_category }) => {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
   const onSubmit = handleSubmit(async (values) => {
-    alert("hiiii")
     const payload = {
       name: values.name || '',
       category: vendor_category || '',
@@ -141,16 +126,19 @@ const RegistrationForm = ({ vendor_category }) => {
       gst_number: values.gst_number || '',
       mode: '',
     };
-    
-    console.log(payload, 'payload');
     axios
       .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp`, payload)
       .then((res) => {
-        router.push(paths.auth.jwt.login);
+        if (res?.data?.status == '201') {
+          router.push(paths.auth.jwt.login);
+          enqueueSnackbar('Register Successfully');
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        enqueueSnackbar('Invalid credentials', { variant: 'error' });
+      });
   });
-
   return (
     <Box p={5} className="registerForm" sx={{ backgroundColor: 'white', borderRadius: '10px' }}>
       <Typography variant="h5" gutterBottom className="heading">
@@ -183,7 +171,6 @@ const RegistrationForm = ({ vendor_category }) => {
               />
             </Grid>
           )}
-
           {vendor_category !== 'society_cooperative' && (
             <Grid item xs={12} sm={3}>
               <RHFAutocomplete
@@ -213,7 +200,6 @@ const RegistrationForm = ({ vendor_category }) => {
               <Grid item xs={12} sm={6} md={3}>
                 <RHFTextField name="capacity" label="Capacity /day (MT)" />
               </Grid>
-
               <Grid item xs={12} sm={3}>
                 <RHFAutocomplete
                   name="mode"
@@ -226,7 +212,6 @@ const RegistrationForm = ({ vendor_category }) => {
               </Grid>
             </>
           )}
-
           <Grid item xs={12} sm={6} md={3}>
             <RHFTextField name="pan_number" label="PAN Number" />
           </Grid>
@@ -328,5 +313,4 @@ const RegistrationForm = ({ vendor_category }) => {
     </Box>
   );
 };
-
 export default RegistrationForm;
