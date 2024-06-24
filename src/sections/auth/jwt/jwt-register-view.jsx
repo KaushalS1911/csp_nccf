@@ -34,7 +34,7 @@ export default function JwtRegisterView() {
             <Box p={5} pb={0}>
               <FormControl component="fieldset">
                 <FormLabel component="legend" sx={{ color: 'black' }}>
-                  Select Vendor Category
+                  Select Category
                 </FormLabel>
                 <RadioGroup
                   row
@@ -43,7 +43,7 @@ export default function JwtRegisterView() {
                   value={selectedVendor}
                   onChange={handleChange}
                 >
-                  <FormControlLabel value="miller" control={<Radio />} label="Miller" />
+                  <FormControlLabel value="Miller" control={<Radio />} label="Miller" />
                   <FormControlLabel value="Distributor" control={<Radio />} label="Distributor" />
                   <FormControlLabel value="Miller_Distributor" control={<Radio />} label="Miller + Distributor" />
                   <FormControlLabel value="Society" control={<Radio />} label="Society" />

@@ -20,14 +20,13 @@ const RegistrationForm = ({ vendor_category }) => {
   const [selectedState, setSelectedState] = useState('');
 
 
-
   const data1 = stateOptions.find((data) => data?.state_name === selectedState);
   const handleStateChange = (event, newValue) => {
     setSelectedState(newValue);
     methods.setValue('state', newValue);
   };
-const firmOptions =["Partnership","Property","LLP","Public Limited","Other"]
-const modes = ["Retail outlet","Mobile van"]
+  const firmOptions = ['Partnership', 'Proprietary ', 'LLP', 'Public Limited', 'Other'];
+  const modes = ['Retail outlet', 'Mobile van'];
   useEffect(() => {
     fetchStates();
   }, []);
@@ -52,6 +51,7 @@ const modes = ["Retail outlet","Mobile van"]
         setBranchOptions(res?.data?.data);
       });
   }
+
   function fetchDistrict(stateId) {
     axios
       .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/${stateId}/district`)
@@ -144,7 +144,7 @@ const modes = ["Retail outlet","Mobile van"]
     axios
       .post(
         `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/channel_sales_partner`,
-        payload
+        payload,
       )
       .then((res) => {
         router.push(paths.auth.jwt.login);
@@ -184,11 +184,7 @@ const modes = ["Retail outlet","Mobile van"]
               />
             </Grid>
           )}
-          {vendor_category !== 'Society' && (
-            <Grid item xs={12} sm={6} md={3}>
-              <RHFTextField name="procurement_area" label="Procurement area" />
-            </Grid>
-          )}
+
           {vendor_category !== 'Society' && (
             <Grid item xs={12} sm={3}>
               <RHFAutocomplete
@@ -201,13 +197,22 @@ const modes = ["Retail outlet","Mobile van"]
               />
             </Grid>
           )}
-          {vendor_category === 'Distributor' && (
+          <Grid item xs={12} sm={6} md={3}>
+            <RHFTextField name="contact_person" label="Contact Person"/>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <RHFTextField name="phone_number" label="Phone Number" type="number"/>
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+            <RHFTextField name="email" label="Email" type="email"/>
+          </Grid>
+          {(vendor_category === 'Distributor' || vendor_category === 'Miller_Distributor') && (
             <>
               <Grid item xs={12} sm={6} md={3}>
-                <RHFTextField name="area_of_Opration" label="Area of Opration" />
+                <RHFTextField name="area_of_Opration" label="Area of Opration"/>
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
-                <RHFTextField name="capacity" label="Capacity /day (MT)" />
+                <RHFTextField name="capacity" label="Capacity /day (MT)"/>
               </Grid>
 
               <Grid item xs={12} sm={3}>
@@ -222,37 +227,29 @@ const modes = ["Retail outlet","Mobile van"]
               </Grid>
             </>
           )}
+
           <Grid item xs={12} sm={6} md={3}>
-            <RHFTextField name="contact_person" label="Contact Person" />
+            <RHFTextField name="pan_number" label="PAN Number"/>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
-            <RHFTextField name="phone_number" label="Phone Number" />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <RHFTextField name="email" label="Email" />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <RHFTextField name="pan_number" label="PAN Number" />
-          </Grid>
-          <Grid item xs={12} sm={6} md={3}>
-            <RHFTextField name="gst_number" label="GST Number" />
+            <RHFTextField name="gst_number" label="GST Number"/>
           </Grid>
           {vendor_category === 'Society' && (
             <Grid item xs={12}>
               <RadioGroup row aria-label="vendor" name="vendor">
                 <FormControlLabel
                   value="own_distribution_own_mill"
-                  control={<Radio />}
+                  control={<Radio/>}
                   label="Own Mill and Distribution"
                 />
                 <FormControlLabel
                   value="own_distribution_rent_mill"
-                  control={<Radio />}
+                  control={<Radio/>}
                   label="Own Distribution and Rent Mill"
                 />
                 <FormControlLabel
                   value="cooperative_rent_mill"
-                  control={<Radio />}
+                  control={<Radio/>}
                   label="Co-operative (Rent Mill)"
                 />
               </RadioGroup>
@@ -270,9 +267,9 @@ const modes = ["Retail outlet","Mobile van"]
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <RHFTextField name="address" label="Address" />
+            <RHFTextField name="address" label="Address"/>
           </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} sm={4}>
             <RHFAutocomplete
               name="state"
               label="State"
@@ -283,18 +280,7 @@ const modes = ["Retail outlet","Mobile van"]
               onChange={handleStateChange}
             />
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <RHFAutocomplete
-              name="branch"
-              label="Branch"
-              placeholder="Choose Your Branch"
-              fullWidth
-              options={branchOptions.map((option) => option?.branch_name)}
-              getOptionLabel={(option) => option}
-              disabled={!data1}
-            />
-          </Grid>
-          <Grid item xs={12} sm={3}>
+          <Grid item xs={12} sm={4}>
             <RHFAutocomplete
               name="district"
               label="District"
@@ -305,8 +291,22 @@ const modes = ["Retail outlet","Mobile van"]
               disabled={!data1}
             />
           </Grid>
-          <Grid item xs={12} sm={3}>
-            <RHFTextField name="pincode" label="Pin Code" />
+          <Grid item xs={12} sm={4}>
+            <RHFTextField name="pincode" label="Pin Code"/>
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <RHFAutocomplete
+              name="branch"
+              label="Branch"
+              placeholder="Choose Your Branch"
+              fullWidth
+              options={branchOptions.map((option) => option?.branch_name)}
+              getOptionLabel={(option) => option}
+              disabled={!data1}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <RHFTextField name="procurement_area" label="Procurement area"/>
           </Grid>
         </Grid>
         <Typography variant="h5" gutterBottom className="heading" mt={2}>
@@ -314,10 +314,10 @@ const modes = ["Retail outlet","Mobile van"]
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={4}>
-            <RHFTextField type="password" name="password" label="Password" />
+            <RHFTextField type="password" name="password" label="Password"/>
           </Grid>
           <Grid item xs={12} sm={6} md={4}>
-            <RHFTextField type="password" name="confirm_password" label="Confirm Password" />
+            <RHFTextField type="password" name="confirm_password" label="Confirm Password"/>
           </Grid>
         </Grid>
         <Box display="flex" justifyContent="flex-end" mt={3}>
