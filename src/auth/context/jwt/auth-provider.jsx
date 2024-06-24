@@ -6,6 +6,8 @@ import axios, { endpoints } from 'src/utils/axios';
 import { AuthContext } from './auth-context';
 import { setSession } from './utils';
 import { AUTH_API } from '../../../config-global';
+import { useSnackbar } from '../../../components/snackbar/index.js';
+import { enqueueSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 /**
@@ -59,7 +61,7 @@ export function AuthProvider({ children }) {
     try {
       const vendor = JSON.parse(sessionStorage.getItem(VENDOR_KEY));
       // const login = JSON.parse(sessionStorage.getItem(LOGIN_KEY));
-      if (vendor ) {
+      if (vendor) {
         setSession(vendor);
 
         // const response = await axios.get(endpoints.auth.me);
@@ -103,26 +105,33 @@ export function AuthProvider({ children }) {
 
   // LOGIN
   const login = useCallback(async (data) => {
-    const response = await axios.post(
-      `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp_login`,
-      data
-    );
-    const res = response?.data?.data[0];
-
-    setSession(res);
-
-    dispatch({
-      type: 'LOGIN',
-      payload: {
-        vendor: {
-          category: res?.category,
-          csp_code: res?.csp_code,
-          mil_dis_sub_roles: res?.mil_dis_sub_roles,
-          name: res?.name,
-          phone_number: res?.phone_number,
-        },
-      },
-    });
+    axios
+      .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp_login`, data)
+      .then((response) => {
+        if (response?.data?.status === '200') {
+          const res = response?.data?.data[0];
+          setSession(res);
+          enqueueSnackbar('Login success');
+          dispatch({
+            type: 'LOGIN',
+            payload: {
+              vendor: {
+                category: res?.category,
+                csp_code: res?.csp_code,
+                mil_dis_sub_roles: res?.mil_dis_sub_roles,
+                name: res?.name,
+                phone_number: res?.phone_number,
+              },
+            },
+          });
+        } else {
+          enqueueSnackbar('Invalid credentials', { variant: 'error' });
+          console.log('err');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   // REGISTER

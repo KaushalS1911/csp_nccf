@@ -145,10 +145,10 @@ export function useNavData() {
       // ----------------------------------------------------------------------
       {
         // subheader: t('management'),
-        items: vendor?.category === 'Society' ? societyItems : otherItems,
+        items: vendor?.category === 'society_cooperative' ? societyItems : otherItems,
       },
     ],
-    [t],
+    [t]
   );
 
   return data;

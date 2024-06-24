@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import * as Yup from 'yup'
+import React, { useState } from 'react';
+import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import {
   TextField,
@@ -57,14 +57,10 @@ export default function JwtLoginView() {
     formState: { isSubmitting },
   } = methods;
   const onSubmit = handleSubmit(async (data) => {
-    const payload = {
-      phone_number: data.phone_number,
-      password: data.password,
-      category: data.category
-    }
+  
     try {
       await login?.(data);
-      router.push(returnTo || PATH_AFTER_LOGIN);
+      
     } catch (error) {
       console.error(error);
       reset();
@@ -95,22 +91,26 @@ export default function JwtLoginView() {
               <FormProvider onSubmit={onSubmit} methods={methods}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <RHFTextField name="phone_number" label="Phone Number"/>
+                    <RHFTextField name="phone_number" label="Phone Number" />
                   </Grid>
                   <Grid item xs={12} sx={{ my: '10px' }}>
-                    <RHFTextField name={"password"} label={"Password"} type={"password"}/>
+                    <RHFTextField name={'password'} label={'Password'} type={'password'} />
                   </Grid>
 
                   <Grid item xs={12}>
-                    <RHFRadioGroup name={"category"} row options={[
-                      {label: "Miller",value: "Miller"},
-                      {label: "Distributor",value: "Distributor"},
-                      {label: "Miller + Distributor",value: "Miller_Distributor"},
-                      {label: "Society",value: "Society"},
-                    ]}/>
+                    <RHFRadioGroup
+                      name={'category'}
+                      row
+                      options={[
+                        { label: 'Miller', value: 'miller' },
+                        { label: 'Distributor', value: 'distributor' },
+                        { label: 'Miller + Distributor', value: 'miller_distributor' },
+                        { label: 'Society/Co-operative', value: 'society_cooperative' },
+                      ]}
+                    />
                   </Grid>
                   <Grid item xs={12}>
-                    <RHFCheckbox name={"remember_me"} label={"Keep me logged in"}/>
+                    <RHFCheckbox name={'remember_me'} label={'Keep me logged in'} />
                   </Grid>
                   <Grid item xs={12}>
                     <Button

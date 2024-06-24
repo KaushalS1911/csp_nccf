@@ -43,18 +43,17 @@ export default function AccountPopover() {
   const router = useRouter();
 
   const { user } = useMockedUser();
-  const {vendor} = useAuthContext()
-
+  const { vendor } = useAuthContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const popover = usePopover();
 
-  const handleLogout =  () => {
+  const handleLogout = () => {
     try {
       popover.onClose();
-      sessionStorage.clear()
-      router.push('/')
+      sessionStorage.clear();
+      router.push('/');
       router.reload();
     } catch (error) {
       console.error(error);
@@ -66,7 +65,49 @@ export default function AccountPopover() {
     popover.onClose();
     router.push(path);
   };
+  function labelName(data) {
+    switch (data) {
+      case 'society_cooperative': {
+        return 'Society/Co-operative';
+        break;
+      }
+      case 'miller_distributor': {
+        return 'Miller + Distributor';
+        break;
+      }
+      case 'distributor': {
+        return 'Distributor';
+        break;
+      }
+      case 'miller': {
+        return 'Miller';
+        break;
+      }
+      default: {
+        return '';
+      }
+    }
+  }
+  function labelNameSociety(data) {
+    switch (data) {
+      case 'own_distribution_rent_mill': {
+        return 'Own Distribution & Rent Mill';
+        break;
+      }
+      case 'own_distribution_own_mill': {
+        return 'Own Mill and Distribution';
+        break;
+      }
+      case 'cooperative_rent_mill': {
+        return 'Co-operative (Rent Mill)';
+        break;
+      }
 
+      default: {
+        return '';
+      }
+    }
+  }
   return (
     <>
       <IconButton
@@ -105,20 +146,24 @@ export default function AccountPopover() {
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {vendor?.category}
+            {labelName(vendor?.category)}
+          </Typography>
+
+          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+            {labelNameSociety(vendor?.mil_dis_sub_roles)}
           </Typography>
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Stack sx={{ p: 1 }}>
+        {/* <Stack sx={{ p: 1 }}>
           {OPTIONS.map((option) => (
             <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
               {option.label}
             </MenuItem>
           ))}
-        </Stack>
-
+        </Stack> */}
+        {/* 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem
@@ -126,7 +171,7 @@ export default function AccountPopover() {
           sx={{ m: 1, fontWeight: 'fontWeightBold', color: 'error.main' }}
         >
           Logout
-        </MenuItem>
+        </MenuItem> */}
       </CustomPopover>
     </>
   );

@@ -43,10 +43,18 @@ export default function JwtRegisterView() {
                   value={selectedVendor}
                   onChange={handleChange}
                 >
-                  <FormControlLabel value="Miller" control={<Radio />} label="Miller" />
-                  <FormControlLabel value="Distributor" control={<Radio />} label="Distributor" />
-                  <FormControlLabel value="Miller_Distributor" control={<Radio />} label="Miller + Distributor" />
-                  <FormControlLabel value="Society" control={<Radio />} label="Society" />
+                  <FormControlLabel value="miller" control={<Radio />} label="Miller" />
+                  <FormControlLabel value="distributor" control={<Radio />} label="Distributor" />
+                  <FormControlLabel
+                    value="miller_distributor"
+                    control={<Radio />}
+                    label="Miller + Distributor"
+                  />
+                  <FormControlLabel
+                    value="society_cooperative"
+                    control={<Radio />}
+                    label="Society/Co-operative"
+                  />
                 </RadioGroup>
               </FormControl>
               <br />

@@ -11,7 +11,7 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import FormProvider from 'src/components/hook-form/form-provider';
 import RHFAutocomplete from 'src/components/hook-form/rhf-autocomplete';
-import { Button } from '@mui/material';
+import { Button, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import Container from '@mui/material/Container';
 import { useSettingsContext } from 'src/components/settings/context';
 import { Helmet } from 'react-helmet-async';
@@ -22,24 +22,69 @@ export default function BasicInfo() {
   const settings = useSettingsContext();
 
   const { vendor } = useAuthContext();
-  const [disable, setDisable] = useState(true);
+  const [disable, setDisable] = useState(false);
+  const vendor_category = vendor?.category;
+  // subcategory
+  const [stateOptions, setStateOptions] = useState([]);
+  const [branchOptions, setBranchOptions] = useState([]);
+  const [districtOptions, setDistrictOptions] = useState([]);
+  const [selectedState, setSelectedState] = useState('');
 
-  const {profile} = useGetProfile()
+  const data1 = stateOptions.find((data) => data?.state_name === selectedState);
+  const handleStateChange = (event, newValue) => {
+    setSelectedState(newValue);
+    methods.setValue('state', newValue);
+  };
+  const { profile } = useGetProfile();
+  useEffect(() => {
+    fetchStates();
+  }, []);
+  useEffect(() => {
+    if (data1 && data1.state_id) {
+      fetchBranches(data1.state_id);
+      fetchDistrict(data1.state_id);
+    }
+  }, [data1]);
+
+  function fetchStates() {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state`).then((res) => {
+      setStateOptions(res?.data?.data);
+    });
+  }
+
+  function fetchBranches(stateId) {
+    axios
+      .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/${stateId}/branch`)
+      .then((res) => {
+        setBranchOptions(res?.data?.data);
+      });
+  }
+
+  function fetchDistrict(stateId) {
+    axios
+      .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/${stateId}/district`)
+      .then((res) => {
+        setDistrictOptions(res?.data?.data);
+      });
+  }
 
   const defaultValues = {
-    address: '',
-    // commodity: '',
-    contact_person: '',
-    district: '',
-    gst_number: '',
-    milling_type: '',
     name: '',
-    pan_number: '',
-    phone_number: vendor.phone_number,
-    pincode: '',
+    milling_type: '',
+    mil_dis_sub_roles: '',
+    type_of_firm: '',
+    contact_person: '',
+    phone_number: '',
     email: '',
+
+    address: '',
     state: '',
-    village: '',
+    district: '',
+    procurement_area: '',
+    branch: '',
+    pincode: '',
+    pan_number: '',
+    gst_number: '',
   };
   const methods = useForm({
     defaultValues,
@@ -52,26 +97,26 @@ export default function BasicInfo() {
   useEffect(() => {
     if (profile) {
       reset({
-        address: profile.address || '',
-        // // commodity: profile.commodity || '',
-        contact_person: profile.contact_person || '',
-        district: profile.district || '',
-        gst_number: profile.gst_number || '',
-        milling_type: profile.milling_type || '',
         name: profile.name || '',
-        pan_number: profile.pan_number || '',
-        phone_number: vendor.phone_number,
-        pincode: profile.pincode || '',
+        milling_type: profile.milling_type || '',
+        mil_dis_sub_roles: profile.mil_dis_sub_roles || '',
+        type_of_firm: profile.type_of_firm || '',
+        contact_person: profile.contact_person || '',
+        phone_number: profile.phone_number || '',
         email: profile.email || '',
+        password: profile.password || '',
+        confirm_password: profile.confirm_password || '',
+        address: profile.address || '',
         state: profile.state || '',
-        village: profile.village || '',
+        district: profile.district || '',
+        procurement_area: profile.procurement_area || '',
+        branch: profile.branch || '',
+        pincode: profile.pincode || '',
+        pan_number: profile.pan_number || '',
+        gst_number: profile.gst_number || '',
       });
     }
   }, [profile, reset, vendor]);
-  const milingType = ['Dry', 'Wet', 'Both'];
-  const states = ['Gujarat', 'Delhi', 'Punjab'];
-  const districts = ['Amreli', 'Surendranagar', 'Dhrol'];
-  const villages = ['Surat', 'Bharuch', 'Rohini'];
   const onSubmit = handleSubmit(async (data) => {
     const payload = {
       ...data,
@@ -85,9 +130,17 @@ export default function BasicInfo() {
         enqueueSnackbar('Update successfully');
       })
       .catch((err) => {
-        enqueueSnackbar('Something went wrong',{variant:"error"});
+        enqueueSnackbar('Something went wrong', { variant: 'error' });
       });
   });
+  const radio = [
+    { label: 'Co-operative (Rent Mill)', value: 'cooperative_rent_mill' },
+    { label: 'Own Distribution and Rent Mill', value: 'own_distribution_rent_mill' },
+    { label: 'Own Mill and Distribution', value: 'own_distribution_own_mill' },
+  ];
+  const firmOptions = ['Partnership', 'Proprietary ', 'LLP', 'Public Limited', 'Other'];
+  const modes = ['Retail outlet', 'Mobile van'];
+  const millingTypeOptions = ['Dry', 'Wet', 'Both'];
   return (
     <>
       <Helmet>
@@ -135,32 +188,75 @@ export default function BasicInfo() {
                       md: 'repeat(3, 1fr)',
                     }}
                   >
-                    <RHFTextField name="name" label="Full Name" disabled={disable} />
-                    <RHFAutocomplete
-                      name="milling_type"
-                      type="milling_type"
-                      label="Milling Type"
-                      placeholder="Choose Milling Type"
-                      fullWidth
-                      options={milingType.map((option) => option)}
-                      getOptionLabel={(option) => option}
-                      disabled={disable}
+                    <RHFTextField
+                      name="name"
+                      label={
+                        vendor_category === 'distributor' ||
+                        vendor_category === 'miller_distributor'
+                          ? 'Distributor Name'
+                          : vendor_category === 'miller'
+                            ? 'Milling Unit Name'
+                            : 'Society Name'
+                      }
                     />
-                    {/* <RHFAutocomplete
-                      disabled={disable}
-                      // name="commodity"
-                      // type="commodity"
-                      // label="Commodity"
-                      // placeholder="Choose Commodity"
-                      fullWidth
-                      // options={commodities.map((option) => option?.commodity_name)}
-                      getOptionLabel={(option) => option}
-                    /> */}
+                    {vendor_category === 'miller' && (
+                      <RHFAutocomplete
+                        name="milling_type"
+                        type="milling_type"
+                        label="Milling Type"
+                        placeholder="Choose Milling Type"
+                        fullWidth
+                        options={millingTypeOptions.map((option) => option)}
+                        getOptionLabel={(option) => option}
+                      />
+                    )}
+
+                    {vendor_category !== 'society_cooperative' && (
+                      <RHFAutocomplete
+                        name="type_of_firm"
+                        label="Type of Firm"
+                        placeholder="Choose Your firm"
+                        fullWidth
+                        options={firmOptions.map((option) => option)}
+                        getOptionLabel={(option) => option}
+                      />
+                    )}
+
                     <RHFTextField name="email" label="Email" disabled={disable} />
                     <RHFTextField name="contact_person" label="Contact Person" disabled={disable} />
                     <RHFTextField name="phone_number" label="Phone Number" disabled={disable} />
+                    {(vendor_category === 'distributor' ||
+                      vendor_category === 'miller_distributor') && (
+                      <>
+                        <RHFTextField name="area_of_Opration" label="Area of Opration" />
+
+                        <RHFTextField name="capacity" label="Capacity /day (MT)" />
+
+                        <RHFAutocomplete
+                          name="mode"
+                          label="Mode of Sale"
+                          placeholder="Choose mode of sale"
+                          fullWidth
+                          options={modes.map((option) => option)}
+                          getOptionLabel={(option) => option}
+                        />
+                      </>
+                    )}
                     <RHFTextField name="pan_number" label="Pan Number" disabled={disable} />
                     <RHFTextField name="gst_number" label="GST Number" disabled={disable} />
+                    {vendor_category === 'society_cooperative' && (
+                      <RadioGroup row aria-label="vendor" name="mil_dis_sub_roles">
+                        <Box sx={{ fontWeight: '500' }}>Society Cooperative Category :</Box>
+                        {radio.map((data) => (
+                          <FormControlLabel
+                            checked={(data?.value).includes(profile?.mil_dis_sub_roles)}
+                            value={data?.value}
+                            control={<Radio />}
+                            label={data?.label}
+                          />
+                        ))}
+                      </RadioGroup>
+                    )}
                   </Box>
                 </Card>
               </Grid>
@@ -176,9 +272,15 @@ export default function BasicInfo() {
                       fontSize: '18px',
                     }}
                   >
-                    Address of Proposed Rice Mill Premises
-                    <Typography sx={{ fontSize: '13px', color: '#637381' }}>
-                      Basic Information Input fields
+                    <Typography variant="h5" gutterBottom className="heading" mt={2}>
+                      {` ${
+                        vendor_category === 'distributor' ||
+                        vendor_category === 'miller_distributor'
+                          ? 'Address of Proposed Distributor Premises'
+                          : vendor_category === 'miller'
+                            ? 'Address of Proposed Milling Unit Premises'
+                            : 'Address Information'
+                      }`}
                     </Typography>
                   </Box>
                 </Box>
@@ -200,48 +302,45 @@ export default function BasicInfo() {
                     </Box>
                     <Box gridColumn={{ xs: 'span 1', sm: 'span 1', md: 'span 2' }}>
                       <RHFAutocomplete
-                        name="district"
-                        type="district"
-                        label="District"
-                        placeholder="Choose District"
+                        name="state"
+                        label="State"
+                        placeholder="Choose Your State"
                         fullWidth
-                        options={districts.map((option) => option)}
+                        options={stateOptions.map((option) => option?.state_name)}
                         getOptionLabel={(option) => option}
-                        disabled={disable}
+                        onChange={handleStateChange}
                       />
                     </Box>
                     <Box gridColumn={{ xs: 'span 1', sm: 'span 1', md: 'span 2' }}>
                       <RHFAutocomplete
-                        name="state"
-                        type="state"
-                        label="State"
-                        placeholder="Choose Your State"
+                        name="district"
+                        label="District"
+                        placeholder="Choose Your District"
                         fullWidth
-                        options={states.map((option) => option)}
+                        options={districtOptions.map((option) => option?.district)}
                         getOptionLabel={(option) => option}
-                        disabled={disable}
+                        disabled={!data1}
+                      />
+                    </Box>
+                    <Box gridColumn={{ xs: 'span 1', sm: 'span 1', md: 'span 2' }}>
+                      <RHFAutocomplete
+                        name="branch"
+                        label="Branch"
+                        placeholder="Choose Your Branch"
+                        fullWidth
+                        options={branchOptions.map((option) => option?.branch_name)}
+                        getOptionLabel={(option) => option}
+                        disabled={!data1}
                       />
                     </Box>
                     <Box gridColumn={{ xs: 'span 1', sm: 'span 1', md: 'span 2' }}>
                       <RHFTextField name="pincode" label="Pin Code" fullWidth disabled={disable} />
                     </Box>
-                    <Box gridColumn={{ xs: 'span 1', sm: 'span 1', md: 'span 2' }}>
-                      <RHFAutocomplete
-                        disabled={disable}
-                        name="village"
-                        type="village"
-                        label="Village"
-                        placeholder="Choose Your Village"
-                        fullWidth
-                        options={villages.map((option) => option)}
-                        getOptionLabel={(option) => option}
-                      />
-                    </Box>
                   </Box>
                 </Card>
               </Grid>
             </Grid>
-            <Stack display={'flex'} alignItems={'flex-end'} sx={{ mt: 3 }}>
+            {/* <Stack display={'flex'} alignItems={'flex-end'} sx={{ mt: 3 }}>
               <Box>
                 <Button
                   color="inherit"
@@ -260,7 +359,7 @@ export default function BasicInfo() {
                   Save
                 </LoadingButton>
               </Box>
-            </Stack>
+            </Stack> */}
           </FormProvider>
         </Box>
       </Container>
