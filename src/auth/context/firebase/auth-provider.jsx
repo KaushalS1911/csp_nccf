@@ -102,14 +102,14 @@ export function AuthProvider({ children }) {
 
   /*
    * (1) If skip emailVerified
-   * Remove the condition (if/else) : user.emailVerified
+   * Remove the condition (if/else) : head-office.emailVerified
    */
   /*
   const initialize = useCallback(() => {
     try {
-      onAuthStateChanged(AUTH, async (user) => {
-        if (user) {
-          const userProfile = doc(DB, 'users', user.uid);
+      onAuthStateChanged(AUTH, async (head-office) => {
+        if (head-office) {
+          const userProfile = doc(DB, 'users', head-office.uid);
 
           const docSnap = await getDoc(userProfile);
 
@@ -118,10 +118,10 @@ export function AuthProvider({ children }) {
           dispatch({
             type: Types.INITIAL,
             payload: {
-              user: {
-                ...user,
+              head-office: {
+                ...head-office,
                 ...profile,
-                id: user.uid,
+                id: head-office.uid,
                 role: 'admin',
               },
             },
@@ -130,7 +130,7 @@ export function AuthProvider({ children }) {
           dispatch({
             type: Types.INITIAL,
             payload: {
-              user: null,
+              head-office: null,
             },
           });
         }
@@ -140,7 +140,7 @@ export function AuthProvider({ children }) {
       dispatch({
         type: Types.INITIAL,
         payload: {
-          user: null,
+          head-office: null,
         },
       });
     }
@@ -180,7 +180,7 @@ export function AuthProvider({ children }) {
 
     /*
      * (1) If skip emailVerified
-     * Remove : await sendEmailVerification(newUser.user);
+     * Remove : await sendEmailVerification(newUser.head-office);
      */
     await sendEmailVerification(newUser.user);
 
@@ -207,7 +207,7 @@ export function AuthProvider({ children }) {
 
   /*
    * (1) If skip emailVerified
-   * const checkAuthenticated = state.user?.emailVerified ? 'authenticated' : 'unauthenticated';
+   * const checkAuthenticated = state.head-office?.emailVerified ? 'authenticated' : 'unauthenticated';
    */
   const checkAuthenticated = state.user?.emailVerified ? 'authenticated' : 'unauthenticated';
 

@@ -49,7 +49,7 @@ const PAYMENT_OPTIONS = [
   {
     value: 'cash',
     label: 'Cash',
-    description: 'Pay with cash when your user is delivered.',
+    description: 'Pay with cash when your head-office is delivered.',
   },
 ];
 

@@ -39,9 +39,9 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import UserTableRow from '../user-table-row';
-import UserTableToolbar from '../user-table-toolbar';
-import UserTableFiltersResult from '../user-table-filters-result';
+import OrderTableToolbar from '../order-table-toolbar';
+import OrderFiltersResult from '../order-table-filter-result';
+import OrderTableRow from '../order-table-row';
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ const TABLE_HEAD = [
   { id: 'company', label: 'Company', width: 220 },
   { id: 'role', label: 'Role', width: 180 },
   { id: 'status', label: 'Status', width: 100 },
-  { id: '', width: 88 },
+  // { id: '', width: 88 },
 ];
 
 const defaultFilters = {
@@ -64,7 +64,7 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function UserListView() {
+export default function OrderListView() {
   const { enqueueSnackbar } = useSnackbar();
 
   const table = useTable();
@@ -150,7 +150,7 @@ export default function UserListView() {
     },
     [handleFilters]
   );
-console.log(filters,"fffffi");
+  console.log(filters,"fffffi");
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
@@ -158,7 +158,8 @@ console.log(filters,"fffffi");
           heading="List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'User', href: paths.dashboard.user.root },
+            { name: 'Head Office', href: paths.dashboard.headOffice.root },
+            { name: 'Order View', href: paths.dashboard.headOffice.root },
             { name: 'List' },
           ]}
           action={
@@ -212,7 +213,7 @@ console.log(filters,"fffffi");
             ))}
           </Tabs>
 
-          <UserTableToolbar
+          <OrderTableToolbar
             filters={filters}
             onFilters={handleFilters}
             //
@@ -220,7 +221,7 @@ console.log(filters,"fffffi");
           />
 
           {canReset && (
-            <UserTableFiltersResult
+            <OrderFiltersResult
               filters={filters}
               onFilters={handleFilters}
               //
@@ -275,7 +276,7 @@ console.log(filters,"fffffi");
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     .map((row) => (
-                      <UserTableRow
+                      <OrderTableRow
                         key={row.id}
                         row={row}
                         selected={table.selected.includes(row.id)}

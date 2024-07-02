@@ -19,6 +19,7 @@ const AmplifyForgotPasswordPage = lazy(() => import('src/pages/auth/amplify/forg
 // JWT
 const JwtLoginPage = lazy(() => import('src/pages/auth/jwt/login'));
 const JwtRegisterPage = lazy(() => import('src/pages/auth/jwt/register'));
+const HeadOfficeLoginPage = lazy(() =>import( '../../pages/auth/jwt/HeadOfficeLogin')) ;
 
 // FIREBASE
 const FirebaseLoginPage = lazy(() => import('src/pages/auth/firebase/login'));
@@ -96,6 +97,15 @@ const authJwt = {
         <GuestGuard>
           <AuthClassicLayout>
             <JwtLoginPage />
+          </AuthClassicLayout>
+        </GuestGuard>
+      ),
+    }, {
+      path: 'ho-login',
+      element: (
+        <GuestGuard>
+          <AuthClassicLayout>
+            <HeadOfficeLoginPage />
           </AuthClassicLayout>
         </GuestGuard>
       ),

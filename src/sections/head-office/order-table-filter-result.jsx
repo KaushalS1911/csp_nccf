@@ -11,15 +11,15 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function UserTableFiltersResult({
-  filters,
-  onFilters,
-  //
-  onResetFilters,
-  //
-  results,
-  ...other
-}) {
+export default function OrderFiltersResult({
+                                                       filters,
+                                                       onFilters,
+                                                       //
+                                                       onResetFilters,
+                                                       //
+                                                       results,
+                                                       ...other
+                                                     }) {
   const handleRemoveKeyword = useCallback(() => {
     onFilters('name', '');
   }, [onFilters]);
@@ -79,7 +79,7 @@ export default function UserTableFiltersResult({
   );
 }
 
-UserTableFiltersResult.propTypes = {
+OrderFiltersResult.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
   onResetFilters: PropTypes.func,

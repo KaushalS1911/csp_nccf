@@ -51,7 +51,7 @@ export default function DocumentNewEditForm({ currentUser }) {
   //   role: Yup.string().required('Role is required'),
   //   zipCode: Yup.string().required('Zip code is required'),
   //   avatarUrl: Yup.mixed().nullable().required('Avatar is required'),
-   
+
   //   status: Yup.string(),
   //   isVerified: Yup.boolean(),
   // });
@@ -127,7 +127,7 @@ export default function DocumentNewEditForm({ currentUser }) {
     //   await new Promise((resolve) => setTimeout(resolve, 500));
     //   reset();
     //   enqueueSnackbar(currentUser ? 'Update success!' : 'Create success!');
-    //   router.push(paths.dashboard.user.list);
+    //   router.push(paths.dashboard.head-office.list);
     //   console.info('DATA', data);
     // } catch (error) {
     //   console.error(error);

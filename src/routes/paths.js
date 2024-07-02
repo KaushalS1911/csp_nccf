@@ -119,16 +119,16 @@
 //       booking: `${ROOTS.DASHBOARD}/booking`,
 //       file: `${ROOTS.DASHBOARD}/file`,
 //     },
-//     user: {
-//       root: `${ROOTS.DASHBOARD}/user`,
-//       new: `${ROOTS.DASHBOARD}/user/new`,
-//       list: `${ROOTS.DASHBOARD}/user/list`,
-//       cards: `${ROOTS.DASHBOARD}/user/cards`,
-//       profile: `${ROOTS.DASHBOARD}/user/profile`,
-//       account: `${ROOTS.DASHBOARD}/user/account`,
-//       edit: (id) => `${ROOTS.DASHBOARD}/user/${id}/edit`,
+//     head-office: {
+//       root: `${ROOTS.DASHBOARD}/head-office`,
+//       new: `${ROOTS.DASHBOARD}/head-office/new`,
+//       list: `${ROOTS.DASHBOARD}/head-office/list`,
+//       cards: `${ROOTS.DASHBOARD}/head-office/cards`,
+//       profile: `${ROOTS.DASHBOARD}/head-office/profile`,
+//       account: `${ROOTS.DASHBOARD}/head-office/account`,
+//       edit: (id) => `${ROOTS.DASHBOARD}/head-office/${id}/edit`,
 //       demo: {
-//         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
+//         edit: `${ROOTS.DASHBOARD}/head-office/${MOCK_ID}/edit`,
 //       },
 //     },
 //     product: {
@@ -161,11 +161,11 @@
 //         edit: `${ROOTS.DASHBOARD}/post/${paramCase(MOCK_TITLE)}/edit`,
 //       },
 //     },
-//     user: {
-//       root: `${ROOTS.DASHBOARD}/user`,
-//       details: (id) => `${ROOTS.DASHBOARD}/user/${id}`,
+//     head-office: {
+//       root: `${ROOTS.DASHBOARD}/head-office`,
+//       details: (id) => `${ROOTS.DASHBOARD}/head-office/${id}`,
 //       demo: {
-//         details: `${ROOTS.DASHBOARD}/user/${MOCK_ID}`,
+//         details: `${ROOTS.DASHBOARD}/head-office/${MOCK_ID}`,
 //       },
 //     },
 //     job: {
@@ -253,6 +253,7 @@ export const paths = {
     },
     jwt: {
       login: `${ROOTS.AUTH}/jwt/login`,
+      headlogin: `${ROOTS.AUTH}/jwt/ho-login`,
       register: `${ROOTS.AUTH}/jwt/register`,
     },
     firebase: {
@@ -323,6 +324,18 @@ export const paths = {
         edit: `${ROOTS.DASHBOARD}/user/${MOCK_ID}/edit`,
       },
     },
+    headOffice: {
+      root: `${ROOTS.DASHBOARD}/head-office`,
+      // new: `${ROOTS.DASHBOARD}/head-office/new`,
+      list: `${ROOTS.DASHBOARD}/head-office/list`,
+      // cards: `${ROOTS.DASHBOARD}/head-office/cards`,
+      // profile: `${ROOTS.DASHBOARD}/head-office/profile`,
+      // account: `${ROOTS.DASHBOARD}/head-office/account`,
+      view: (id) => `${ROOTS.DASHBOARD}/head-office/${id}/view`,
+      // demo: {
+      //   edit: `${ROOTS.DASHBOARD}/head-office/${MOCK_ID}/edit`,
+      // },
+    },
     product: {
       root: `${ROOTS.DASHBOARD}/product`,
       new: `${ROOTS.DASHBOARD}/product/new`,
@@ -362,7 +375,7 @@ export const paths = {
     upload_evidence: `${ROOTS.DASHBOARD}/document/upload-evidence`,
 
       // demo: {
-      //   details: `${ROOTS.DASHBOARD}/user/${MOCK_ID}`,
+      //   details: `${ROOTS.DASHBOARD}/head-office/${MOCK_ID}`,
       // },
     },
     job: {

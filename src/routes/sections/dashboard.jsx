@@ -28,20 +28,20 @@
 // const ProductCreatePage = lazy(() => import('src/pages/dashboard/product/new'));
 // const ProductEditPage = lazy(() => import('src/pages/dashboard/product/edit'));
 // // ORDER
-// const OrderListPage = lazy(() => import('src/pages/dashboard/user/list'));
-// const OrderDetailsPage = lazy(() => import('src/pages/dashboard/user/details'));
+// const OrderListPage = lazy(() => import('src/pages/dashboard/head-office/list'));
+// const OrderDetailsPage = lazy(() => import('src/pages/dashboard/head-office/details'));
 // // INVOICE
 // const InvoiceListPage = lazy(() => import('src/pages/dashboard/invoice/list'));
 // const InvoiceDetailsPage = lazy(() => import('src/pages/dashboard/invoice/details'));
 // const InvoiceCreatePage = lazy(() => import('src/pages/dashboard/invoice/new'));
 // const InvoiceEditPage = lazy(() => import('src/pages/dashboard/invoice/edit'));
 // // USER
-// const UserProfilePage = lazy(() => import('src/pages/dashboard/user/profile'));
-// const UserCardsPage = lazy(() => import('src/pages/dashboard/user/cards'));
-// const UserListPage = lazy(() => import('src/pages/dashboard/user/list'));
-// const UserAccountPage = lazy(() => import('src/pages/dashboard/user/account'));
-// const UserCreatePage = lazy(() => import('src/pages/dashboard/user/new'));
-// const UserEditPage = lazy(() => import('src/pages/dashboard/user/edit'));
+// const UserProfilePage = lazy(() => import('src/pages/dashboard/head-office/profile'));
+// const UserCardsPage = lazy(() => import('src/pages/dashboard/head-office/cards'));
+// const UserListPage = lazy(() => import('src/pages/dashboard/head-office/list'));
+// const UserAccountPage = lazy(() => import('src/pages/dashboard/head-office/account'));
+// const UserCreatePage = lazy(() => import('src/pages/dashboard/head-office/new'));
+// const UserEditPage = lazy(() => import('src/pages/dashboard/head-office/edit'));
 // // BLOG
 // const BlogPostsPage = lazy(() => import('src/pages/dashboard/post/list'));
 // const BlogPostPage = lazy(() => import('src/pages/dashboard/post/details'));
@@ -96,7 +96,7 @@
 //       { path: 'booking', element: <OverviewBookingPage /> },
 //       { path: 'file', element: <OverviewFilePage /> },
 //       {
-//         path: 'user',
+//         path: 'head-office',
 //         children: [
 //           { element: <UserProfilePage />, index: true },
 //           { path: 'profile', element: <UserProfilePage /> },
@@ -118,7 +118,7 @@
 //         ],
 //       },
 //       {
-//         path: 'user',
+//         path: 'head-office',
 //         children: [
 //           { element: <OrderListPage />, index: true },
 //           { path: 'list', element: <OrderListPage /> },
@@ -184,6 +184,8 @@ import DashboardLayout from 'src/layouts/dashboard';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { OverviewFileView } from 'src/sections/overview/file/view';
 import MillerCreatePage from 'src/pages/dashboard/add-miller/new';
+import HeadOfficeListPage from '../../pages/dashboard/head-office/list';
+import HeadOfficeOrderView from '../../pages/dashboard/head-office/OredrView';
 
 // ----------------------------------------------------------------------
 
@@ -215,12 +217,12 @@ const InvoiceDetailsPage = lazy(() => import('src/pages/dashboard/invoice/detail
 const InvoiceCreatePage = lazy(() => import('src/pages/dashboard/invoice/new'));
 const InvoiceEditPage = lazy(() => import('src/pages/dashboard/invoice/edit'));
 // USER
-const UserProfilePage = lazy(() => import('src/pages/dashboard/user/profile'));
-const UserCardsPage = lazy(() => import('src/pages/dashboard/user/cards'));
-const UserListPage = lazy(() => import('src/pages/dashboard/user/list'));
-const UserAccountPage = lazy(() => import('src/pages/dashboard/user/account'));
-const UserCreatePage = lazy(() => import('src/pages/dashboard/user/new'));
-const UserEditPage = lazy(() => import('src/pages/dashboard/user/edit'));
+// const UserProfilePage = lazy(() => import('src/pages/dashboard/head-office/profile'));
+// const UserCardsPage = lazy(() => import('src/pages/dashboard/head-office/cards'));
+// const UserListPage = lazy(() => import('src/pages/dashboard/head-office/list'));
+// const UserAccountPage = lazy(() => import('src/pages/dashboard/head-office/account'));
+// const UserCreatePage = lazy(() => import('src/pages/dashboard/head-office/new'));
+// const UserEditPage = lazy(() => import('src/pages/dashboard/head-office/edit'));
 // BLOG
 const BlogPostsPage = lazy(() => import('src/pages/dashboard/post/list'));
 const BlogPostPage = lazy(() => import('src/pages/dashboard/post/details'));
@@ -249,7 +251,10 @@ const PermissionDeniedPage = lazy(() => import('src/pages/dashboard/permission')
 const BlankPage = lazy(() => import('src/pages/dashboard/blank'));
 
 // ----------------------------------------------------------------------
-
+// 9811592957 : Society/own_distribution_rent_mill
+// 9811592958 : Society/cooperative_rent_mill
+// 9811592959 : Society/own_distribution_own_mill
+// password : kgfdingo
 export const dashboardRoutes = [
   {
     path: 'dashboard',
@@ -274,16 +279,28 @@ export const dashboardRoutes = [
       { path: 'banking', element: <OverviewBankingPage /> },
       { path: 'booking', element: <OverviewBookingPage /> },
       { path: 'file', element: <OverviewFilePage /> },
+      // {
+      //   path: 'head-office',
+      //   children: [
+      //     { element: <UserProfilePage />, index: true },
+      //     { path: 'profile', element: <UserProfilePage /> },
+      //     { path: 'cards', element: <UserCardsPage /> },
+      //     { path: 'list', element: <UserListPage /> },
+      //     { path: 'new', element: <UserCreatePage /> },
+      //     { path: ':id/edit', element: <UserEditPage /> },
+      //     { path: 'account', element: <UserAccountPage /> },
+      //   ],
+      // },
       {
-        path: 'user',
+        path: 'head-office',
         children: [
-          { element: <UserProfilePage />, index: true },
-          { path: 'profile', element: <UserProfilePage /> },
-          { path: 'cards', element: <UserCardsPage /> },
-          { path: 'list', element: <UserListPage /> },
-          { path: 'new', element: <UserCreatePage /> },
-          { path: ':id/edit', element: <UserEditPage /> },
-          { path: 'account', element: <UserAccountPage /> },
+          { element: <HeadOfficeListPage />, index: true },
+          // { path: 'profile', element: <UserProfilePage /> },
+          // { path: 'cards', element: <UserCardsPage /> },
+          { path: 'list', element: <HeadOfficeListPage /> },
+          // { path: 'new', element: <UserCreatePage /> },
+          { path: ':id/view', element: <HeadOfficeOrderView /> },
+          // { path: 'account', element: <UserAccountPage /> },
         ],
       },
       {

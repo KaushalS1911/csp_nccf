@@ -139,6 +139,11 @@ export function useNavData() {
         // { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
       ],
     },
+    {
+      title: t('Head Office'),
+      path: paths.dashboard.headOffice.root,
+      icon: ICONS.user,
+    },
   ];
   const data = useMemo(
     () => [
