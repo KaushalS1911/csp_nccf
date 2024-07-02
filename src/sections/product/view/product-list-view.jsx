@@ -233,14 +233,14 @@ export default function ProductListView() {
         }}
       >
         <CustomBreadcrumbs
-          heading="List"
+          heading="Orders"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
             {
-              name: 'Product',
+              name: 'Branch',
               href: paths.dashboard.product.root,
             },
-            { name: 'List' },
+            { name: 'Orders' },
           ]}
           action={
             <Button

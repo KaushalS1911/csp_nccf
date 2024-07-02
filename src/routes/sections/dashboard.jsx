@@ -323,6 +323,16 @@ export const dashboardRoutes = [
           { path: 'document-view', element: <ProductDetailsPage /> },
           { path: 'upload-evidence', element: <UploadEvidencePage /> },
         ],
+      },{
+        path: 'states-overview',
+        children: [
+          { element: <ProductListPage />, index: true },
+          { path: 'branch', element: <ProductListPage /> },
+          { path: 'vendor-type', element: <ProductListPage /> },
+          // { path: 'document-upload', element: <UploadDocument /> },
+          // { path: 'document-view', element: <ProductDetailsPage /> },
+          // { path: 'upload-evidence', element: <UploadEvidencePage /> },
+        ],
       },
       {
         path: 'invoice',

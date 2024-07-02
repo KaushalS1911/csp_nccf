@@ -378,6 +378,19 @@ export const paths = {
       //   details: `${ROOTS.DASHBOARD}/head-office/${MOCK_ID}`,
       // },
     },
+    statsOverview: {
+      root : `${ROOTS.DASHBOARD}/states-overview`,
+      branch: `${ROOTS.DASHBOARD}/states-overview/branch`,
+      vendor_type: `${ROOTS.DASHBOARD}/states-overview/vendor-type`,
+    //  document_upload : `${ROOTS.DASHBOARD}/document/document-upload`,
+    //  document_list : `${ROOTS.DASHBOARD}/document/document-list`,
+    //  document_view : `${ROOTS.DASHBOARD}/document/document-view`,
+    // upload_evidence: `${ROOTS.DASHBOARD}/document/upload-evidence`,
+
+      // demo: {
+      //   details: `${ROOTS.DASHBOARD}/head-office/${MOCK_ID}`,
+      // },
+    },
     job: {
       root: `${ROOTS.DASHBOARD}/job`,
       new: `${ROOTS.DASHBOARD}/job/new`,

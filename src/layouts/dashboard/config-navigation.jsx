@@ -58,6 +58,17 @@ export function useNavData() {
     },
 
     {
+      title: t('Stats Overview'),
+      path: paths.dashboard.statsOverview.root,
+      icon: ICONS.mail,
+      children: [
+        // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
+        { title: t('Branch'), path: paths.dashboard.statsOverview.branch },
+        { title: t('Vendor Type'), path: paths.dashboard.statsOverview.vendor_type },
+
+      ],
+    },
+    {
       title: t('Basic Info'),
       path: paths.dashboard.basic_info,
       icon: ICONS.user,
@@ -104,7 +115,17 @@ export function useNavData() {
       path: paths.dashboard.root,
       icon: ICONS.dashboard,
     },
+    {
+      title: t('Stats Overview'),
+      path: paths.dashboard.statsOverview.root,
+      icon: ICONS.mail,
+      children: [
+        // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
+        { title: t('Branch'), path: paths.dashboard.statsOverview.branch },
+        { title: t('Vendor Type'), path: paths.dashboard.statsOverview.vendor_type },
 
+      ],
+    },
     {
       title: t('Basic Info'),
       path: paths.dashboard.basic_info,
@@ -139,11 +160,11 @@ export function useNavData() {
         // { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
       ],
     },
-    {
-      title: t('Head Office'),
-      path: paths.dashboard.headOffice.root,
-      icon: ICONS.user,
-    },
+    // {
+    //   title: t('Head Office'),
+    //   path: paths.dashboard.headOffice.root,
+    //   icon: ICONS.user,
+    // },
   ];
   const data = useMemo(
     () => [

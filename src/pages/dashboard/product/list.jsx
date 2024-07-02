@@ -11,8 +11,7 @@ export default function ProductListPage() {
         <title> Dashboard: Product List</title>
       </Helmet>
 
-this is single page
-      {/* <ProductListView /> */}
+       <ProductListView />
     </>
   );
 }
