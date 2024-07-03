@@ -43,7 +43,7 @@ export default function JwtHeadOfficeLoginView() {
   const defaultValues = {
     phone_number: '',
     password: '',
-    category: '',
+    category: 'miller',
   };
   const methods = useForm({
     resolver: yupResolver(LoginSchema),
@@ -97,18 +97,18 @@ export default function JwtHeadOfficeLoginView() {
                     <RHFTextField name={'password'} label={'Password'} type={'password'} />
                   </Grid>
 
-                  <Grid item xs={12}>
-                    <RHFRadioGroup
-                      name={'category'}
-                      row
-                      options={[
-                        { label: 'Miller', value: 'miller' },
-                        { label: 'Distributor', value: 'distributor' },
-                        { label: 'Miller + Distributor', value: 'miller_distributor' },
-                        { label: 'Society/Co-operative', value: 'society_cooperative' },
-                      ]}
-                    />
-                  </Grid>
+                  {/*<Grid item xs={12}>*/}
+                  {/*  <RHFRadioGroup*/}
+                  {/*    name={'category'}*/}
+                  {/*    row*/}
+                  {/*    options={[*/}
+                  {/*      { label: 'Miller', value: 'miller' },*/}
+                  {/*      { label: 'Distributor', value: 'distributor' },*/}
+                  {/*      { label: 'Miller + Distributor', value: 'miller_distributor' },*/}
+                  {/*      { label: 'Society/Co-operative', value: 'society_cooperative' },*/}
+                  {/*    ]}*/}
+                  {/*  />*/}
+                  {/*</Grid>*/}
                   <Grid item xs={12}>
                     <RHFCheckbox name={'remember_me'} label={'Keep me logged in'} />
                   </Grid>
