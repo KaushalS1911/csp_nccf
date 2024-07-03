@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 
 import { OverviewAppView } from 'src/sections/overview/app/view';
 import { HeadviewAppView } from '../../sections/overview/head-office-dashboard/view';
+import BranchDashboardView from '../../sections/overview/branch-dashboard/view/branch-office-app-view';
 
 // ----------------------------------------------------------------------
 
@@ -15,7 +16,7 @@ const [isHo,setIsHo] = useState(true)
         <title> NCCF CSP Portal </title>
       </Helmet>
 
-      {login_type === 'other-login' ? <OverviewAppView/> :<HeadviewAppView/>}
+      {login_type === 'other-login' ? <OverviewAppView/> :login_type ==="branch"? <BranchDashboardView /> : <HeadviewAppView/>}
     </>
   );
 }

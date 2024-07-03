@@ -8,19 +8,15 @@ import { useSettingsContext } from 'src/components/settings';
 
 import axios from 'axios';
 import { useAuthContext } from '../../../../auth/hooks';
-import UserListView from '../../../../pages/user/view/user-list-view';
-import HeadWidgetSummary from '../head-widget-summary';
-import HeadCurrentDownload from '../head-current-download';
-import HeadDataActivity from '../head-data-activity';
-import HeadManagerPanel from '../head-manager-panel';
-import { paths } from '../../../../routes/paths';
-import scrollbar from '../../../../components/scrollbar';
-import { Stack } from '@mui/system';
-import { _folders } from '../../../../_mock';
+import BranchWidgetSummary from '../branch-widget-summary';
+import BranchCurrentDownload from '../branch-current-download';
+import BranchDataActivity from '../branch-data-activity';
+import BranchNewInvoice from '../branch-new-invoice';
+
 
 // ----------------------------------------------------------------------
 
-export default function HeadviewAppView({ vendorCode }) {
+export default function BranchDashboardView({ vendorCode }) {
   const {vendor} = useAuthContext()
   const settings = useSettingsContext();
   const theme = useTheme();
@@ -58,7 +54,7 @@ export default function HeadviewAppView({ vendorCode }) {
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
         <Grid xs={12} md={3}>
-          <HeadWidgetSummary
+          <BranchWidgetSummary
             title="Miller"
             // percent={0.2}
             total={4876}
@@ -69,7 +65,7 @@ export default function HeadviewAppView({ vendorCode }) {
           />
         </Grid>
         <Grid xs={12} md={3}>
-          <HeadWidgetSummary
+          <BranchWidgetSummary
             title="Distributor"
             // percent={-0.1}
             total={678}
@@ -82,7 +78,7 @@ export default function HeadviewAppView({ vendorCode }) {
         </Grid>
 
         <Grid xs={12} md={3}>
-          <HeadWidgetSummary
+          <BranchWidgetSummary
             title="Miller & Distributor"
             // percent={0.2}
             total={4876}
@@ -95,7 +91,7 @@ export default function HeadviewAppView({ vendorCode }) {
         </Grid>
 
         <Grid xs={12} md={3}>
-          <HeadWidgetSummary
+          <BranchWidgetSummary
             title="Society/Co-operative"
             // percent={-0.1}
             total={678}
@@ -108,12 +104,12 @@ export default function HeadviewAppView({ vendorCode }) {
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <HeadCurrentDownload
+          <BranchCurrentDownload
             title="Current Orders"
             chart={{
               colors: [
                 "#5DD095",
-               "#0D7566",
+                "#0D7566",
                 "#004B50",
                 "#C8FAD6",
               ],
@@ -127,7 +123,7 @@ export default function HeadviewAppView({ vendorCode }) {
           />
         </Grid>
         <Grid xs={12} md={6} lg={8}>
-          <HeadDataActivity
+          <BranchDataActivity
             title="Orders"
             chart={{
               labels: TIME_LABELS,
@@ -218,7 +214,21 @@ export default function HeadviewAppView({ vendorCode }) {
           {/*  </Stack>*/}
           {/*</div>*/}
         </Grid>
-
+        <Grid xs={12} >
+          <BranchNewInvoice
+            title="New Invoice"
+            head={true}
+            tableData={orderList}
+            tableLabels={[
+              { id: 'sr no', label: '#' },
+              { id: 'commodity', label: 'Commodity' },
+              { id: 'quantity', label: 'Quantity' },
+              { id: 'date', label: 'Date' },
+              { id: 'status', label: 'Status' },
+              { id: '' },
+            ]}
+          />
+        </Grid>
         {/*<Grid xs={12} lg={12}>*/}
         {/*  <UserListView tableData={orderList}/>*/}
         {/*</Grid>*/}

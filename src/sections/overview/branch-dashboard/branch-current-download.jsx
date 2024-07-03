@@ -18,7 +18,6 @@ const StyledChart = styled(Chart)(({ theme }) => ({
   height: CHART_HEIGHT,
   '& .apexcharts-canvas, .apexcharts-inner, svg, foreignObject': {
     height: `100% !important`,
-
   },
   '& .apexcharts-legend': {
     height: LEGEND_HEIGHT,
@@ -29,7 +28,7 @@ const StyledChart = styled(Chart)(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function HeadCurrentDownload({ title, subheader, chart, ...other }) {
+export default function BranchCurrentDownload({ title, subheader, chart, ...other }) {
   const theme = useTheme();
 
   const { colors, series, options } = chart;
@@ -44,7 +43,7 @@ export default function HeadCurrentDownload({ title, subheader, chart, ...other 
     },
     colors,
     labels: series.map((i) => i.label),
-    stroke: { colors: [theme.palette.background.paper]},
+    stroke: { colors: [theme.palette.background.paper] },
     legend: {
       offsetY: 0,
       floating: true,
@@ -97,7 +96,7 @@ export default function HeadCurrentDownload({ title, subheader, chart, ...other 
   );
 }
 
-HeadCurrentDownload.propTypes = {
+BranchCurrentDownload.propTypes = {
   chart: PropTypes.object,
   subheader: PropTypes.string,
   title: PropTypes.string,

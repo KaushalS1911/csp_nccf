@@ -31,17 +31,20 @@ import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
 
-import ProductTableToolbar from '../product-table-toolbar';
-import ProductTableFiltersResult from '../product-table-filters-result';
+import ProductTableToolbar from '../branch-table-toolbar';
+import ProductTableFiltersResult from '../branch-table-filters-result';
 import {
+  // RenderCellStock,
   RenderCellStock,
   RenderCellPrice,
   RenderCellPublish,
   RenderCellProduct,
   RenderCellCreatedAt,
-} from '../product-table-row';
+} from '../branch-table-row';
 import { useAuthContext } from '../../../auth/hooks';
 import axios from 'axios';
+import BranchTableFiltersResult from '../branch-table-filters-result';
+import BranchTableToolbar from '../branch-table-toolbar';
 
 // ----------------------------------------------------------------------
 
@@ -105,7 +108,7 @@ const data1 = [
 ];
 // ----------------------------------------------------------------------
 
-export default function ProductListView() {
+export default function BranchListView() {
   const { enqueueSnackbar } = useSnackbar();
   const {vendor} = useAuthContext()
   const [orderList, setOrderList] = useState([]);
@@ -142,7 +145,7 @@ export default function ProductListView() {
   }, [data1]);
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: orderList,
     filters,
   });
 
@@ -202,34 +205,28 @@ export default function ProductListView() {
       field: 'name',
       headerName: 'Product',
       flex: 1,
-      minWidth: 360,
+      minWidth: 260,
       hideable: false,
       renderCell: (params) => <RenderCellProduct params={params}/>,
     },
     {
       field: 'createdAt',
       headerName: 'Create at',
-      width: 160,
+      width: 260,
       renderCell: (params) => <RenderCellCreatedAt params={params}/>,
     },
     {
       field: 'inventoryType',
-      headerName: 'Stock',
-      width: 160,
+      headerName: 'Quantity',
+      width: 260,
       type: 'singleSelect',
       valueOptions: PRODUCT_STOCK_OPTIONS,
       renderCell: (params) => <RenderCellStock params={params}/>,
     },
+
     {
-      field: 'price',
-      headerName: 'Price',
-      width: 140,
-      editable: true,
-      renderCell: (params) => <RenderCellPrice params={params}/>,
-    },
-    {
-      field: 'publish',
-      headerName: 'Publish',
+      field: 'status',
+      headerName: 'Status',
       width: 110,
       type: 'singleSelect',
       editable: true,
@@ -345,7 +342,7 @@ export default function ProductListView() {
               toolbar: () => (
                 <>
                   <GridToolbarContainer>
-                    <ProductTableToolbar
+                    <BranchTableToolbar
                       filters={filters}
                       onFilters={handleFilters}
                       stockOptions={PRODUCT_STOCK_OPTIONS}
@@ -379,7 +376,7 @@ export default function ProductListView() {
                   </GridToolbarContainer>
 
                   {canReset && (
-                    <ProductTableFiltersResult
+                    <BranchTableFiltersResult
                       filters={filters}
                       onFilters={handleFilters}
                       onResetFilters={handleResetFilters}

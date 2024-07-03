@@ -81,7 +81,7 @@ export function useNavData() {
     {
       title: t('Document'),
       path: paths.dashboard.document.root,
-      icon: ICONS.order,
+      icon: ICONS.chat,
       children: [
         // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
         { title: t('Document List'), path: paths.dashboard.document.document_list },
@@ -139,7 +139,7 @@ export function useNavData() {
     {
       title: t('Document'),
       path: paths.dashboard.document.root,
-      icon: ICONS.order,
+      icon: ICONS.chat,
       children: [
         // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
         { title: t('Document List'), path: paths.dashboard.document.document_list },
@@ -180,7 +180,7 @@ export function useNavData() {
     {
       title: t('Orders'),
       path: paths.dashboard.orders,
-      icon: ICONS.product,
+      icon: ICONS.order,
     },
     {
       title: t('Basic Info'),
@@ -195,7 +195,7 @@ export function useNavData() {
     {
       title: t('Document'),
       path: paths.dashboard.document.root,
-      icon: ICONS.order,
+      icon: ICONS.chat,
       children: [
         // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
         { title: t('Document List'), path: paths.dashboard.document.document_list },
@@ -253,7 +253,7 @@ export function useNavData() {
     {
       title: t('Document'),
       path: paths.dashboard.document.root,
-      icon: ICONS.order,
+      icon: ICONS.chat,
       children: [
         // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
         { title: t('Document List'), path: paths.dashboard.document.document_list },

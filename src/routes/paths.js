@@ -383,6 +383,7 @@ export const paths = {
       root : `${ROOTS.DASHBOARD}/states-overview`,
       branch: `${ROOTS.DASHBOARD}/states-overview/branch`,
       vendor_type: `${ROOTS.DASHBOARD}/states-overview/vendor-type`,
+      order: `${ROOTS.DASHBOARD}/states-overview/order`,
     //  document_upload : `${ROOTS.DASHBOARD}/document/document-upload`,
     //  document_list : `${ROOTS.DASHBOARD}/document/document-list`,
     //  document_view : `${ROOTS.DASHBOARD}/document/document-view`,

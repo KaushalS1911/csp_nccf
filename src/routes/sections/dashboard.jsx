@@ -186,6 +186,9 @@ import { OverviewFileView } from 'src/sections/overview/file/view';
 import MillerCreatePage from 'src/pages/dashboard/add-miller/new';
 import HeadOfficeListPage from '../../pages/dashboard/head-office/list';
 import HeadOfficeOrderView from '../../pages/dashboard/head-office/OredrView';
+import BranchDashboardView from '../../sections/overview/branch-dashboard/view/branch-office-app-view';
+import BranchList from '../../sections/branch/branch-list';
+import BranchListPage from '../../pages/dashboard/branch/list';
 
 // ----------------------------------------------------------------------
 
@@ -272,7 +275,7 @@ export const dashboardRoutes = [
       { path: 'basic-info', element: <BasicInfoPage /> },
       // { path: 'upload-document', element: <UploadDocument /> },
       // { path: 'document', element: <UploadListView /> },
-      { path: 'orders', element: <ProductListPage /> },
+      { path: 'orders', element: <BranchListPage /> },
       { path: 'add-miller', element: <MillerCreatePage /> },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },
@@ -327,8 +330,9 @@ export const dashboardRoutes = [
         path: 'states-overview',
         children: [
           { element: <ProductListPage />, index: true },
-          { path: 'branch', element: <ProductListPage /> },
+          { path: 'branch', element: <BranchDashboardView /> },
           { path: 'vendor-type', element: <ProductListPage /> },
+          { path: 'order', element: <BranchListPage /> },
           // { path: 'document-upload', element: <UploadDocument /> },
           // { path: 'document-view', element: <ProductDetailsPage /> },
           // { path: 'upload-evidence', element: <UploadEvidencePage /> },
