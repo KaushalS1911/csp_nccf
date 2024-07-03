@@ -1,1 +1,0 @@
-import{j as s,H as r,bN as a}from"./index-WJmyFSb8.js";import{u as i}from"./use-params-0F_5p6-T.js";function c(){const t=i(),{id:e}=t;return s.jsxs(s.Fragment,{children:[s.jsx(r,{children:s.jsx("title",{children:" Product: Details"})}),s.jsx(a,{id:`${e}`})]})}export{c as default};

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Pagination, { paginationClasses } from '@mui/material/Pagination';
 import { BranchItemSkeleton } from './branch-skeleton';
-import BranchItem from './btanch-item';
+import BranchItem from './branch-item.jsx';
 
 // import ProductItem from './product-item';
 // import { ProductItemSkeleton } from './product-skeleton';

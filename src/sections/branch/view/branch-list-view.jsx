@@ -45,6 +45,7 @@ import { useAuthContext } from '../../../auth/hooks';
 import axios from 'axios';
 import BranchTableFiltersResult from '../branch-table-filters-result';
 import BranchTableToolbar from '../branch-table-toolbar';
+import ListItemText from '@mui/material/ListItemText';
 
 // ----------------------------------------------------------------------
 
@@ -196,13 +197,13 @@ export default function BranchListView() {
   );
 
   const columns = [
+    // {
+    //   field: 'category',
+    //   headerName: 'Category',
+    //   filterable: false,
+    // },
     {
-      field: 'category',
-      headerName: 'Category',
-      filterable: false,
-    },
-    {
-      field: 'name',
+      field: 'commodity',
       headerName: 'Product',
       flex: 1,
       minWidth: 260,
@@ -210,25 +211,28 @@ export default function BranchListView() {
       renderCell: (params) => <RenderCellProduct params={params}/>,
     },
     {
-      field: 'createdAt',
+      field: 'created_at',
       headerName: 'Create at',
       width: 260,
       renderCell: (params) => <RenderCellCreatedAt params={params}/>,
     },
     {
-      field: 'inventoryType',
+      field: 'quantity',
       headerName: 'Quantity',
       width: 260,
-      type: 'singleSelect',
+      // type: 'singleSelect',
       valueOptions: PRODUCT_STOCK_OPTIONS,
-      renderCell: (params) => <RenderCellStock params={params}/>,
+      renderCell: (params) => <ListItemText
+        disableTypography
+        primary={params.row.quantity}
+      />
     },
 
     {
-      field: 'status',
+      field: 'nccf_order_status',
       headerName: 'Status',
       width: 110,
-      type: 'singleSelect',
+      // type: 'singleSelect',
       editable: true,
       valueOptions: PUBLISH_OPTIONS,
       renderCell: (params) => <RenderCellPublish params={params}/>,

@@ -27,7 +27,10 @@ RenderCellPrice.propTypes = {
 
 export function RenderCellPublish({ params }) {
   return (
-    <Label variant="soft" color={(params.row.nccf_order_status === 'placed' && 'info') || 'default'}>
+    <Label variant="soft" color={ (params.row.nccf_order_status === 'accepted' && 'success') ||
+      (params.row.nccf_order_status === 'placed' && 'warning') ||
+      (params.row.nccf_order_status === 'declined' && 'error') ||
+      'default'}>
       {params.row.nccf_order_status}
     </Label>
   );
@@ -63,17 +66,7 @@ export function RenderCellStock({ params }) {
   return (
     <ListItemText
       disableTypography
-      primary={
-
-        params.row.quantity
-
-      }
-      // secondary={
-      //   <Box component="div" sx={{ typography: 'body2', color: 'text.disabled' }}>
-      //     {params.row.category}
-      //   </Box>
-      // }
-      // sx={{ display: 'flex', flexDirection: 'column' }}
+      primary={params.row.quantity}
     />
   );
 }
@@ -95,12 +88,11 @@ export function RenderCellProduct({ params }) {
       {/*/>*/}
 
 
-
       <ListItemText
         disableTypography
         primary={
 
-            params.row.commodity
+          params.row.commodity
 
         }
         // secondary={
