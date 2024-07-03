@@ -29,7 +29,7 @@ import { paths } from '../../../routes/paths';
 import { RHFTextField, RHFRadioGroup, RHFCheckbox } from '../../../components/hook-form';
 import FormProvider from 'src/components/hook-form/form-provider';
 // ----------------------------------------------------------------------
-export default function JwtLoginView() {
+export default function JwtBranchLoginView() {
   const { login } = useAuthContext();
   const router = useRouter();
   const [errorMsg, setErrorMsg] = useState('');
@@ -60,8 +60,7 @@ export default function JwtLoginView() {
 
     try {
       await login?.(data);
-      localStorage.setItem("login_type","other-login")
-
+localStorage.setItem("login_type","branch")
     } catch (error) {
       console.error(error);
       reset();

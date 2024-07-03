@@ -45,6 +45,7 @@ const navigate= useNavigate()
 
   function handleLogout() {
     sessionStorage.clear();
+    localStorage.clear()
     router.push('/')
     router.reload()
   }

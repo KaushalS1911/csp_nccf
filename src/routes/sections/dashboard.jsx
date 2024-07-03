@@ -272,7 +272,7 @@ export const dashboardRoutes = [
       { path: 'basic-info', element: <BasicInfoPage /> },
       // { path: 'upload-document', element: <UploadDocument /> },
       // { path: 'document', element: <UploadListView /> },
-      { path: 'orders', element: <OrdersPage /> },
+      { path: 'orders', element: <ProductListPage /> },
       { path: 'add-miller', element: <MillerCreatePage /> },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },

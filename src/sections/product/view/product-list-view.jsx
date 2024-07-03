@@ -59,6 +59,48 @@ const HIDE_COLUMNS = {
 
 const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
+const data1 = [
+  {
+    name: 'Nike Air Force 1 NDESTRUKT',
+    category: 'Accessories',
+    coverUrl: 'https://api-dev-minimal-v510.vercel.app/assets/images/m_product/product_1.jpg',
+    createdAt: '2024-07-03T01:37:31.204Z',
+    inventoryType: 'out of stock',
+    price: 83.74,
+    publish: 'draft',
+    id: 'e99f09a7-dd88-49d5-b1c8-1daf80c2d7b1',
+  },
+  {
+    name: 'Foundations Matte Flip Flop',
+    category: "Shose",
+    coverUrl:"https://api-dev-minimal-v510.vercel.app/assets/images/m_product/product_2.jpg",
+    createdAt: "2024-07-02T00:37:31.204Z",
+    inventoryType: "in stock",
+    price: 97.14,
+    publish: "published",
+    id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b2",
+  },
+  {
+    name: "Nike Air Zoom Pegasus 37 A.I.R. Chaz Bear",
+    category:"Apparel",
+    coverUrl:"https://api-dev-minimal-v510.vercel.app/assets/images/m_product/product_3.jpg",
+    createdAt: "2024-06-30T23:37:31.204Z",
+    inventoryType:"low stock",
+    price:68.71 ,
+    publish: "published",
+    id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b3",
+  },
+  {
+    name: "Boston Soft Footbed Sandal",
+    category: "Apparel",
+    coverUrl:"https://api-dev-minimal-v510.vercel.app/assets/images/m_product/product_5.jpg",
+    createdAt: "2024-06-28T21:37:31.204Z",
+    inventoryType:"low stock",
+    price: 52.17,
+    publish: "published",
+    id: "e99f09a7-dd88-49d5-b1c8-1daf80c2d7b5",
+  },
+];
 // ----------------------------------------------------------------------
 
 export default function ProductListView() {
@@ -81,10 +123,10 @@ export default function ProductListView() {
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
 
   useEffect(() => {
-    if (products.length) {
-      setTableData(products);
+    if (data1) {
+      setTableData(data1);
     }
-  }, [products]);
+  }, [data1]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -112,7 +154,7 @@ export default function ProductListView() {
 
       setTableData(deleteRow);
     },
-    [enqueueSnackbar, tableData]
+    [enqueueSnackbar, tableData],
   );
 
   const handleDeleteRows = useCallback(() => {
@@ -125,16 +167,16 @@ export default function ProductListView() {
 
   const handleEditRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.product.edit(id));
+      // router.push(paths.dashboard.product.edit(id));
     },
-    [router]
+    [router],
   );
 
   const handleViewRow = useCallback(
     (id) => {
-      router.push(paths.dashboard.product.details(id));
+      // router.push(paths.dashboard.product.details(id));
     },
-    [router]
+    [router],
   );
 
   const columns = [
@@ -149,13 +191,13 @@ export default function ProductListView() {
       flex: 1,
       minWidth: 360,
       hideable: false,
-      renderCell: (params) => <RenderCellProduct params={params} />,
+      renderCell: (params) => <RenderCellProduct params={params}/>,
     },
     {
       field: 'createdAt',
       headerName: 'Create at',
       width: 160,
-      renderCell: (params) => <RenderCellCreatedAt params={params} />,
+      renderCell: (params) => <RenderCellCreatedAt params={params}/>,
     },
     {
       field: 'inventoryType',
@@ -163,14 +205,14 @@ export default function ProductListView() {
       width: 160,
       type: 'singleSelect',
       valueOptions: PRODUCT_STOCK_OPTIONS,
-      renderCell: (params) => <RenderCellStock params={params} />,
+      renderCell: (params) => <RenderCellStock params={params}/>,
     },
     {
       field: 'price',
       headerName: 'Price',
       width: 140,
       editable: true,
-      renderCell: (params) => <RenderCellPrice params={params} />,
+      renderCell: (params) => <RenderCellPrice params={params}/>,
     },
     {
       field: 'publish',
@@ -179,7 +221,7 @@ export default function ProductListView() {
       type: 'singleSelect',
       editable: true,
       valueOptions: PUBLISH_OPTIONS,
-      renderCell: (params) => <RenderCellPublish params={params} />,
+      renderCell: (params) => <RenderCellPublish params={params}/>,
     },
     {
       type: 'actions',
@@ -194,19 +236,19 @@ export default function ProductListView() {
       getActions: (params) => [
         <GridActionsCellItem
           showInMenu
-          icon={<Iconify icon="solar:eye-bold" />}
+          icon={<Iconify icon="solar:eye-bold"/>}
           label="View"
           onClick={() => handleViewRow(params.row.id)}
         />,
         <GridActionsCellItem
           showInMenu
-          icon={<Iconify icon="solar:pen-bold" />}
+          icon={<Iconify icon="solar:pen-bold"/>}
           label="Edit"
           onClick={() => handleEditRow(params.row.id)}
         />,
         <GridActionsCellItem
           showInMenu
-          icon={<Iconify icon="solar:trash-bin-trash-bold" />}
+          icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
           label="Delete"
           onClick={() => {
             handleDeleteRow(params.row.id);
@@ -247,7 +289,7 @@ export default function ProductListView() {
               component={RouterLink}
               href={paths.dashboard.product.new}
               variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line" />}
+              startIcon={<Iconify icon="mingcute:add-line"/>}
             >
               New Product
             </Button>
@@ -297,7 +339,7 @@ export default function ProductListView() {
                       publishOptions={PUBLISH_OPTIONS}
                     />
 
-                    <GridToolbarQuickFilter />
+                    <GridToolbarQuickFilter/>
 
                     <Stack
                       spacing={1}
@@ -310,16 +352,16 @@ export default function ProductListView() {
                         <Button
                           size="small"
                           color="error"
-                          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+                          startIcon={<Iconify icon="solar:trash-bin-trash-bold"/>}
                           onClick={confirmRows.onTrue}
                         >
                           Delete ({selectedRowIds.length})
                         </Button>
                       )}
 
-                      <GridToolbarColumnsButton />
-                      <GridToolbarFilterButton />
-                      <GridToolbarExport />
+                      <GridToolbarColumnsButton/>
+                      <GridToolbarFilterButton/>
+                      <GridToolbarExport/>
                     </Stack>
                   </GridToolbarContainer>
 
@@ -334,8 +376,8 @@ export default function ProductListView() {
                   )}
                 </>
               ),
-              noRowsOverlay: () => <EmptyContent title="No Data" />,
-              noResultsOverlay: () => <EmptyContent title="No results found" />,
+              noRowsOverlay: () => <EmptyContent title="No Data"/>,
+              noResultsOverlay: () => <EmptyContent title="No results found"/>,
             }}
             slotProps={{
               columnsPanel: {

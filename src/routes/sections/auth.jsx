@@ -6,6 +6,7 @@ import CompactLayout from 'src/layouts/compact';
 import AuthClassicLayout from 'src/layouts/auth/classic';
 
 import { SplashScreen } from 'src/components/loading-screen';
+import BranchLoginPage from '../../pages/auth/jwt/BranchLogin';
 
 // ----------------------------------------------------------------------
 
@@ -100,12 +101,23 @@ const authJwt = {
           </AuthClassicLayout>
         </GuestGuard>
       ),
-    }, {
+    },
+    {
       path: 'ho-login',
       element: (
         <GuestGuard>
           <AuthClassicLayout>
             <HeadOfficeLoginPage />
+          </AuthClassicLayout>
+        </GuestGuard>
+      ),
+    },
+    {
+      path: 'branch',
+      element: (
+        <GuestGuard>
+          <AuthClassicLayout>
+            <BranchLoginPage />
           </AuthClassicLayout>
         </GuestGuard>
       ),

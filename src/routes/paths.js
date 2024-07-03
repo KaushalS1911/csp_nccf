@@ -253,6 +253,7 @@ export const paths = {
     },
     jwt: {
       login: `${ROOTS.AUTH}/jwt/login`,
+      branch:`${ROOTS.AUTH}/jwt/branch`,
       headlogin: `${ROOTS.AUTH}/jwt/ho-login`,
       register: `${ROOTS.AUTH}/jwt/register`,
     },

@@ -60,7 +60,7 @@ export default function JwtHeadOfficeLoginView() {
 
     try {
       await login?.(data);
-
+      localStorage.setItem("login_type","head-office")
     } catch (error) {
       console.error(error);
       reset();

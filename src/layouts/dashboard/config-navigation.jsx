@@ -49,8 +49,180 @@ const ICONS = {
 export function useNavData() {
   const { t } = useTranslate();
   const { vendor } = useAuthContext();
-
+  const login_type = localStorage.getItem('login_type');
   const societyItems = [
+    {
+      title: t('Dashboard'),
+      path: paths.dashboard.root,
+      icon: ICONS.dashboard,
+    },
+
+    // {
+    //   title: t('Stats Overview'),
+    //   path: paths.dashboard.statsOverview.root,
+    //   icon: ICONS.mail,
+    //   children: [
+    //     // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
+    //     { title: t('Branch'), path: paths.dashboard.statsOverview.branch },
+    //     { title: t('Vendor Type'), path: paths.dashboard.statsOverview.vendor_type },
+    //
+    //   ],
+    // },
+    // {
+    //   title: t('Basic Info'),
+    //   path: paths.dashboard.basic_info,
+    //   icon: ICONS.user,
+    // },
+    {
+      title: t('Add Miller'),
+      path: paths.dashboard.addMiller,
+      icon: ICONS.file,
+    },
+    {
+      title: t('Document'),
+      path: paths.dashboard.document.root,
+      icon: ICONS.order,
+      children: [
+        // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
+        { title: t('Document List'), path: paths.dashboard.document.document_list },
+        { title: t('Upload Document'), path: paths.dashboard.document.document_upload },
+        {
+          title: t('Upload Evidence'),
+          path: paths.dashboard.document.upload_evidence,
+        },
+      ],
+    },
+    // INVOICE
+    {
+      title: t('payment'),
+      path: paths.dashboard.invoice.root,
+      icon: ICONS.invoice,
+      children: [
+        { title: t('list'), path: paths.dashboard.invoice.root },
+        // {
+        //   title: t('details'),
+        //   path: paths.dashboard.invoice.demo.details,
+        // },
+        { title: t('create'), path: paths.dashboard.invoice.new },
+        // { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
+      ],
+    },
+  ];
+
+  const otherItems = [
+    {
+      title: t('Dashboard'),
+      path: paths.dashboard.root,
+      icon: ICONS.dashboard,
+    },
+    // {
+    //   title: t('Orders'),
+    //   path: paths.dashboard.orders,
+    //   icon: ICONS.product,
+    // },
+    // {
+    //   title: t('Stats Overview'),
+    //   path: paths.dashboard.statsOverview.root,
+    //   icon: ICONS.mail,
+    //   children: [
+    //     // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
+    //     { title: t('Branch'), path: paths.dashboard.statsOverview.branch },
+    //     { title: t('Vendor Type'), path: paths.dashboard.statsOverview.vendor_type },
+    //
+    //   ],
+    // },
+    {
+      title: t('Basic Info'),
+      path: paths.dashboard.basic_info,
+      icon: ICONS.user,
+    },
+    {
+      title: t('Document'),
+      path: paths.dashboard.document.root,
+      icon: ICONS.order,
+      children: [
+        // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
+        { title: t('Document List'), path: paths.dashboard.document.document_list },
+        { title: t('Upload Document'), path: paths.dashboard.document.document_upload },
+        {
+          title: t('Upload Evidence'),
+          path: paths.dashboard.document.upload_evidence,
+        },
+      ],
+    },
+    // INVOICE
+    {
+      title: t('payment'),
+      path: paths.dashboard.invoice.root,
+      icon: ICONS.invoice,
+      children: [
+        { title: t('list'), path: paths.dashboard.invoice.root },
+        // {
+        //   title: t('details'),
+        //   path: paths.dashboard.invoice.demo.details,
+        // },
+        { title: t('create'), path: paths.dashboard.invoice.new },
+        // { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
+      ],
+    },
+    // {
+    //   title: t('Head Office'),
+    //   path: paths.dashboard.headOffice.root,
+    //   icon: ICONS.user,
+    // },
+  ];
+  const branchItem = [
+    {
+      title: t('Dashboard'),
+      path: paths.dashboard.root,
+      icon: ICONS.dashboard,
+    },
+    {
+      title: t('Orders'),
+      path: paths.dashboard.orders,
+      icon: ICONS.product,
+    },
+    {
+      title: t('Basic Info'),
+      path: paths.dashboard.basic_info,
+      icon: ICONS.user,
+    },
+    {
+      title: t('Add Miller'),
+      path: paths.dashboard.addMiller,
+      icon: ICONS.file,
+    },
+    {
+      title: t('Document'),
+      path: paths.dashboard.document.root,
+      icon: ICONS.order,
+      children: [
+        // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
+        { title: t('Document List'), path: paths.dashboard.document.document_list },
+        { title: t('Upload Document'), path: paths.dashboard.document.document_upload },
+        {
+          title: t('Upload Evidence'),
+          path: paths.dashboard.document.upload_evidence,
+        },
+      ],
+    },
+    // INVOICE
+    {
+      title: t('payment'),
+      path: paths.dashboard.invoice.root,
+      icon: ICONS.invoice,
+      children: [
+        { title: t('list'), path: paths.dashboard.invoice.root },
+        // {
+        //   title: t('details'),
+        //   path: paths.dashboard.invoice.demo.details,
+        // },
+        { title: t('create'), path: paths.dashboard.invoice.new },
+        // { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
+      ],
+    },
+  ];
+  const headItems = [
     {
       title: t('Dashboard'),
       path: paths.dashboard.root,
@@ -108,73 +280,16 @@ export function useNavData() {
       ],
     },
   ];
-
-  const otherItems = [
-    {
-      title: t('Dashboard'),
-      path: paths.dashboard.root,
-      icon: ICONS.dashboard,
-    },
-    {
-      title: t('Stats Overview'),
-      path: paths.dashboard.statsOverview.root,
-      icon: ICONS.mail,
-      children: [
-        // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
-        { title: t('Branch'), path: paths.dashboard.statsOverview.branch },
-        { title: t('Vendor Type'), path: paths.dashboard.statsOverview.vendor_type },
-
-      ],
-    },
-    {
-      title: t('Basic Info'),
-      path: paths.dashboard.basic_info,
-      icon: ICONS.user,
-    },
-    {
-      title: t('Document'),
-      path: paths.dashboard.document.root,
-      icon: ICONS.order,
-      children: [
-        // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
-        { title: t('Document List'), path: paths.dashboard.document.document_list },
-        { title: t('Upload Document'), path: paths.dashboard.document.document_upload },
-        {
-          title: t('Upload Evidence'),
-          path: paths.dashboard.document.upload_evidence,
-        },
-      ],
-    },
-    // INVOICE
-    {
-      title: t('payment'),
-      path: paths.dashboard.invoice.root,
-      icon: ICONS.invoice,
-      children: [
-        { title: t('list'), path: paths.dashboard.invoice.root },
-        // {
-        //   title: t('details'),
-        //   path: paths.dashboard.invoice.demo.details,
-        // },
-        { title: t('create'), path: paths.dashboard.invoice.new },
-        // { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
-      ],
-    },
-    // {
-    //   title: t('Head Office'),
-    //   path: paths.dashboard.headOffice.root,
-    //   icon: ICONS.user,
-    // },
-  ];
   const data = useMemo(
     () => [
       // ----------------------------------------------------------------------
       {
         // subheader: t('management'),
-        items: vendor?.category === 'society_cooperative' ? societyItems : otherItems,
+        // items: vendor?.category === 'society_cooperative' ? societyItems : otherItems,
+        items: vendor?.category === 'society_cooperative' ? societyItems : login_type === 'branch' ? branchItem : login_type === 'head-office' ? headItems : otherItems,
       },
     ],
-    [t]
+    [t],
   );
 
   return data;
