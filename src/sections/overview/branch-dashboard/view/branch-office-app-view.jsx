@@ -216,7 +216,7 @@ export default function BranchDashboardView({ vendorCode }) {
         </Grid>
         <Grid xs={12} >
           <BranchNewInvoice
-            title="New Invoice"
+            title="Orders"
             head={true}
             tableData={orderList}
             tableLabels={[
