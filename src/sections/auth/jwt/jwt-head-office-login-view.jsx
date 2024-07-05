@@ -30,8 +30,7 @@ import { RHFTextField, RHFRadioGroup, RHFCheckbox } from '../../../components/ho
 import FormProvider from 'src/components/hook-form/form-provider';
 // ----------------------------------------------------------------------
 export default function JwtHeadOfficeLoginView() {
-  const { login } = useAuthContext();
-  const router = useRouter();
+  const { ho_login } = useAuthContext();
   const [errorMsg, setErrorMsg] = useState('');
   const searchParams = useSearchParams();
   const returnTo = searchParams.get('returnTo');
@@ -43,7 +42,7 @@ export default function JwtHeadOfficeLoginView() {
   const defaultValues = {
     phone_number: '',
     password: '',
-    category: 'miller',
+    category: 'head_office',
   };
   const methods = useForm({
     resolver: yupResolver(LoginSchema),
@@ -59,7 +58,7 @@ export default function JwtHeadOfficeLoginView() {
   const onSubmit = handleSubmit(async (data) => {
 
     try {
-      await login?.(data);
+      await ho_login?.(data);
       localStorage.setItem("login_type","head-office")
     } catch (error) {
       console.error(error);

@@ -134,6 +134,38 @@ export function AuthProvider({ children }) {
       });
   }, []);
 
+
+  //HEAD_OFFICE_LOGIN
+  const ho_login = useCallback(async (data) => {
+    axios
+      .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/login`, data)
+      .then((response) => {
+        if (response?.data?.status === '200') {
+          const res = response?.data?.data[0];
+          setSession(res);
+          enqueueSnackbar('Login success');
+          dispatch({
+            type: 'LOGIN',
+            payload: {
+              vendor: {
+                category: res?.category,
+                csp_code: res?.csp_code,
+                mil_dis_sub_roles: res?.mil_dis_sub_roles,
+                name: res?.name,
+                phone_number: res?.phone_number,
+              },
+            },
+          });
+        } else {
+          enqueueSnackbar('Invalid credentials', { variant: 'error' });
+          console.log('err');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   // REGISTER
   const register = useCallback(async (data) => {
     const response = await axios.post(`${AUTH_API}${endpoints.auth.login}`, data);
@@ -175,11 +207,12 @@ export function AuthProvider({ children }) {
       authenticated: status === 'authenticated',
       unauthenticated: status === 'unauthenticated',
       //
+      ho_login,
       login,
       register,
       logout,
     }),
-    [login, logout, register, state.vendor, status]
+    [ho_login, login, logout, register, state.vendor, status]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;
