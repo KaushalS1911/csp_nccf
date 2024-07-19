@@ -163,26 +163,27 @@ const MillerUploadDocument = () => {
       })
     );
     try {
-      const responses = await Promise.all(
-        formDataList.map((formData) =>
-          axios.post(
-            'http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/upload_document',
-            formData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            }
-          )
-        )
-      );
-      if (responses) {
-        enqueueSnackbar('Your Document Uploaded');
-        router.push(paths.dashboard.document.document_list);
+      console.log(formDataList);
+      // const responses = await Promise.all(
+      //   formDataList.map((formData) =>
+      //     axios.post(
+      //       'http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/upload_document',
+      //       formData,
+      //       {
+      //         headers: {
+      //           'Content-Type': 'multipart/form-data',
+      //         },
+      //       }
+      //     )
+      //   )
+      // );
+      // if (responses) {
+      //   enqueueSnackbar('Your Document Uploaded');
         setLoading(false);
-      } else {
-        enqueueSnackbar('Failed to Upload');
-      }
+      //   router.push(paths.dashboard.document.document_list);
+      // } else {
+      //   enqueueSnackbar('Failed to Upload');
+      // }
     } catch (error) {
       console.error('Error submitting form:', error);
       enqueueSnackbar('Failed to Upload');

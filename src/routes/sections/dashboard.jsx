@@ -189,6 +189,8 @@ import HeadOfficeOrderView from '../../pages/dashboard/head-office/OredrView';
 import BranchDashboardView from '../../sections/overview/branch-dashboard/view/branch-office-app-view';
 import BranchList from '../../sections/branch/branch-list';
 import BranchListPage from '../../pages/dashboard/branch/list';
+import DistributorCreatePage from '../../pages/dashboard/add-distributor/new';
+import DistributorList from '../../pages/dashboard/add-distributor/list';
 
 // ----------------------------------------------------------------------
 
@@ -326,7 +328,18 @@ export const dashboardRoutes = [
           { path: 'document-view', element: <ProductDetailsPage /> },
           { path: 'upload-evidence', element: <UploadEvidencePage /> },
         ],
-      },{
+      },
+      {
+        path: 'distributor',
+        children: [
+          { element: <UploadListView />, index: true },
+          { path: 'distributor-list', element: <DistributorList /> },
+          { path: 'add-distributor', element: <DistributorCreatePage /> },
+          { path: 'document-upload', element: <UploadDocument /> },
+        ],
+      },
+
+      {
         path: 'states-overview',
         children: [
           { element: <ProductListPage />, index: true },

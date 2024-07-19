@@ -374,11 +374,24 @@ export const paths = {
      document_list : `${ROOTS.DASHBOARD}/document/document-list`,
      document_view : `${ROOTS.DASHBOARD}/document/document-view`,
     upload_evidence: `${ROOTS.DASHBOARD}/document/upload-evidence`,
+        },
+    distributor:{
+      root: `${ROOTS.DASHBOARD}/distributor`,
+      distributor_list: `${ROOTS.DASHBOARD}/distributor/distributor-list`,
+      add_distributor: `${ROOTS.DASHBOARD}/distributor/add-distributor`,
+     document_upload : `${ROOTS.DASHBOARD}/distributor/document-upload`,
 
-      // demo: {
-      //   details: `${ROOTS.DASHBOARD}/head-office/${MOCK_ID}`,
-      // },
+
     },
+    miller:{
+      root: `${ROOTS.DASHBOARD}/miller`,
+      distributor_list: `${ROOTS.DASHBOARD}/miller/miller-list`,
+      add_distributor: `${ROOTS.DASHBOARD}/miller/add-miller`,
+     document_upload : `${ROOTS.DASHBOARD}/miller/document-upload`,
+
+
+    },
+
     statsOverview: {
       root : `${ROOTS.DASHBOARD}/states-overview`,
       branch: `${ROOTS.DASHBOARD}/states-overview/branch`,

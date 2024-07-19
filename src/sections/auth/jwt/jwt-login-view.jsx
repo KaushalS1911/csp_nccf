@@ -106,7 +106,7 @@ export default function JwtLoginView() {
                         { label: 'Miller', value: 'miller' },
                         { label: 'Distributor', value: 'distributor' },
                         { label: 'Miller + Distributor', value: 'miller_distributor' },
-                        { label: 'Society/Co-operative', value: 'society_cooperative' },
+                        { label: 'Society/Co-operative', value: 'society' },
                       ]}
                     />
                   </Grid>
