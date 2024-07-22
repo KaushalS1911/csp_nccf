@@ -14,14 +14,14 @@ import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
-import DocumentQuickEditForm from './document-quick-edit-form';
+// import DocumentQuickEditForm from './document-quick-edit-form';
 import { useState } from 'react';
 import MaxWidthDialog from '../overview/app/viewDocumentDialog';
 import { handleDoctypeLabel } from '../../_mock';
 import Lightbox from '../../components/lightbox';
 import useLightBox from '../../components/lightbox/use-light-box';
 // ----------------------------------------------------------------------
-export default function DistributorTableRow({ row, selected, onEditRow, onSelectRow, onViewRow,onDeleteRow, index,onView }) {
+export default function MillerTableRow({ row, selected, onEditRow, onSelectRow, onViewRow,onDeleteRow, index }) {
   const { name,category, type_of_firm, contact_person, phone_number, email, address} = row;
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([])
@@ -50,7 +50,7 @@ const status = "completed"
         {/*  <Checkbox checked={selected} onClick={onSelectRow} />*/}
         {/*</TableCell>*/}
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{index + 1}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap',cursor:"pointer",fontWeight:"700" }} onClick={onView}>{name}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{name}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{category}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{type_of_firm}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{contact_person}</TableCell>
@@ -95,7 +95,7 @@ const status = "completed"
           </IconButton>
         </TableCell> */}
       </TableRow>
-      <DocumentQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
+      {/*<DocumentQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />*/}
       <CustomPopover
         open={popover.open}
         onClose={popover.onClose}
@@ -147,7 +147,7 @@ const status = "completed"
     </>
   );
 }
-DistributorTableRow.propTypes = {
+MillerTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,

@@ -27,8 +27,7 @@ export default function Lightbox({
   ...other
 }) {
   const totalItems = slides ? slides.length : 0;
-console.log(slides,"slides");
-  return (
+    return (
     <>
       <StyledLightbox />
 

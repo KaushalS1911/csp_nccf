@@ -12,7 +12,7 @@ import { handleFilterTypes } from '../../_mock';
 
 // ----------------------------------------------------------------------
 
-export default function DistributorTableFiltersResult({
+export default function MillerTableFiltersResult({
   filters,
   onFilters,
   //
@@ -29,36 +29,13 @@ export default function DistributorTableFiltersResult({
     onFilters('status', 'all');
   }, [onFilters]);
 
-  const handleRemoveTypeoffirm = useCallback(
+  const handleRemoveRole = useCallback(
     (inputValue) => {
-      const newValue = filters.type_of_firm.filter((item) => item !== inputValue);
+      const newValue = filters.role.filter((item) => item !== inputValue);
 
-      onFilters('type_of_firm', newValue);
+      onFilters('role', newValue);
     },
-    [filters.type_of_firm, onFilters]
-  );
-
-  const handleRemoveState = useCallback(
-    (inputValue) => {
-      const newValue = filters.state.filter((item) => item !== inputValue);
-
-      onFilters('state', newValue);
-    },
-    [filters.state, onFilters]
-  );const handleRemoveBranch = useCallback(
-    (inputValue) => {
-      const newValue = filters.branch.filter((item) => item !== inputValue);
-
-      onFilters('branch', newValue);
-    },
-    [filters.branch, onFilters]
-  );const handleRemoveDistrict = useCallback(
-    (inputValue) => {
-      const newValue = filters.district.filter((item) => item !== inputValue);
-
-      onFilters('district', newValue);
-    },
-    [filters.district, onFilters]
+    [filters.role, onFilters]
   );
 
   return (
@@ -77,31 +54,10 @@ export default function DistributorTableFiltersResult({
           </Block>
         )}
 
-        {!!filters.type_of_firm.length && (
-          <Block label="Type of firm:">
-            {filters.type_of_firm.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveTypeoffirm(item)} />
-            ))}
-          </Block>
-        )}
-        {!!filters.state.length && (
-          <Block label="State:">
-            {filters.state.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveState(item)} />
-            ))}
-          </Block>
-        )}
-        {!!filters.branch.length && (
-          <Block label="Branch:">
-            {filters.branch.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveBranch(item)} />
-            ))}
-          </Block>
-        )}
-        {!!filters.district.length && (
-          <Block label="District:">
-            {filters.district.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveDistrict(item)} />
+        {!!filters.role.length && (
+          <Block label="Role:">
+            {filters.role.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveRole(item)} />
             ))}
           </Block>
         )}
@@ -124,7 +80,7 @@ export default function DistributorTableFiltersResult({
   );
 }
 
-DistributorTableFiltersResult.propTypes = {
+MillerTableFiltersResult.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
   onResetFilters: PropTypes.func,

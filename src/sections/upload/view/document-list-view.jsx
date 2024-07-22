@@ -58,22 +58,31 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function DocumentListView() {
+export default function DocumentListView({ csp }) {
   const { vendor } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState([]);
-
+  const tab = [
+    { value: 'all', label: 'All' },
+    { value: 'Aadhar', label: 'Aadhar' },
+    { value: 'pan_number', label: 'PAN' },
+    { value: 'gst_number', label: 'GST' },
+    { value: 'certificates', label: 'Certificates' },
+  ];
   useEffect(() => {
     getAllDocument();
-  }, []);
+  }, [csp]); // Add csp as a dependency
 
   function getAllDocument() {
-    axios
-      .get(
-        `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/documents`
-      )
-      .then((res) => setTableData(res?.data?.data))
-      .catch((err) => console.error(err));
+    const cspCode = csp || vendor?.csp_code;
+
+    console.log(csp);
+    if (cspCode) {
+      axios
+        .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${cspCode}/documents`)
+        .then((res) => setTableData(res?.data?.data))
+        .catch((err) => console.error(err));
+    }
   }
 
   const table = useTable();
@@ -90,7 +99,7 @@ export default function DocumentListView() {
 
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
-    table.page * table.rowsPerPage + table.rowsPerPage
+    table.page * table.rowsPerPage + table.rowsPerPage,
   );
 
   const denseHeight = table.dense ? 56 : 56 + 20;
@@ -105,7 +114,7 @@ export default function DocumentListView() {
         [name]: value,
       }));
     },
-    [table]
+    [table],
   );
 
   const handleResetFilters = useCallback(() => {
@@ -119,7 +128,7 @@ export default function DocumentListView() {
       setTableData(deleteRow);
       table.onUpdatePageDeleteRow(dataInPage.length);
     },
-    [dataInPage.length, enqueueSnackbar, table, tableData]
+    [dataInPage.length, enqueueSnackbar, table, tableData],
   );
 
   const handleDeleteRows = useCallback(() => {
@@ -136,37 +145,41 @@ export default function DocumentListView() {
     (id) => {
       router.push(paths.dashboard.user.edit(id));
     },
-    [router]
+    [router],
   );
 
   const handleViewRow = useCallback(
     (id) => {
       router.push(paths.dashboard.document.document_view);
     },
-    [router]
+    [router],
   );
 
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
     },
-    [handleFilters]
+    [handleFilters],
   );
+
 
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-        <CustomBreadcrumbs
-          heading="List"
+        {!csp &&  <CustomBreadcrumbs
+          heading={ 'List'}
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Document', href: paths.dashboard.document },
+            {
+              name: 'Document',
+              href: paths.dashboard.document,
+            },
             { name: 'List' },
           ]}
           sx={{
             mb: { xs: 3, md: 5 },
           }}
-        />
+        />}
         <Card>
           <Tabs
             value={filters.status}
@@ -176,7 +189,7 @@ export default function DocumentListView() {
               boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
             }}
           >
-            {DOCUMENTS.map((tab) => (
+            {(csp ? tab : DOCUMENTS).map((tab) => (
               <Tab
                 key={tab.value}
                 iconPosition="end"
@@ -205,7 +218,7 @@ export default function DocumentListView() {
             ))}
           </Tabs>
 
-          <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles} />
+          <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}/>
 
           {canReset && (
             <DocumentTableFiltersResult
@@ -225,13 +238,13 @@ export default function DocumentListView() {
               onSelectAllRows={(checked) =>
                 table.onSelectAllRows(
                   checked,
-                  dataFiltered.map((row) => row.id)
+                  dataFiltered.map((row) => row.id),
                 )
               }
               action={
                 <Tooltip title="Delete">
                   <IconButton color="primary" onClick={confirm.onTrue}>
-                    <Iconify icon="solar:trash-bin-trash-bold" />
+                    <Iconify icon="solar:trash-bin-trash-bold"/>
                   </IconButton>
                 </Tooltip>
               }
@@ -249,7 +262,7 @@ export default function DocumentListView() {
                   onSelectAllRows={(checked) =>
                     table.onSelectAllRows(
                       checked,
-                      dataFiltered.map((row) => row.id)
+                      dataFiltered.map((row) => row.id),
                     )
                   }
                 />
@@ -257,7 +270,7 @@ export default function DocumentListView() {
                   {dataFiltered
                     .slice(
                       table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
+                      table.page * table.rowsPerPage + table.rowsPerPage,
                     )
                     .map((row, index) => (
                       <DocumentTableRow
@@ -275,7 +288,7 @@ export default function DocumentListView() {
                     height={denseHeight}
                     emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
                   />
-                  <TableNoData notFound={notFound} />
+                  <TableNoData notFound={notFound}/>
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -335,7 +348,7 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (name) {
     inputData = inputData.filter(
-      (user) => user.doc_type.toLowerCase().indexOf(name.toLowerCase()) !== -1
+      (user) => user.doc_type.toLowerCase().indexOf(name.toLowerCase()) !== -1,
     );
   }
 

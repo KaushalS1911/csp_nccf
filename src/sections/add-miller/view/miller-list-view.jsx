@@ -36,9 +36,9 @@ import {
 import { DOCUMENTS } from 'src/_mock/_document';
 import axios from 'axios';
 import { useAuthContext } from '../../../auth/hooks';
-import DistributorTableRow from '../distributor-table-row';
-import DistributorTableToolbar from '../distributor-table-toolbar';
-import DistributorTableFiltersResult from '../distributor-table-filters-result';
+import MillerTableToolbar from '../miller-table-toolbar';
+import MillerTableFiltersResult from '../miller-table-filters-result';
+import MillerTableRow from '../miller-table-row';
 
 // ----------------------------------------------------------------------
 
@@ -55,28 +55,21 @@ const TABLE_HEAD = [
 ];
 const defaultFilters = {
   name: '',
-  type_of_firm: [],
-  state:[],
-  branch:[],
-  district:[],
+  role: [],
   status: 'all',
 };
 
 // ----------------------------------------------------------------------
 
-export default function DistributorListView() {
+export default function MillerListView() {
   const { vendor } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState([]);
-  const [stateOptions, setStateOptions] = useState([]);
-  const [branchOptions, setBranchOptions] = useState([]);
-  const [districtOptions, setDistrictOptions] = useState([]);
-  useEffect(() => {
-    fetchStates();
-  }, [tableData]);
+
   useEffect(() => {
     getAllDocument();
   }, []);
+
   function getAllDocument() {
     axios
       .get(
@@ -92,43 +85,12 @@ export default function DistributorListView() {
   const router = useRouter();
   const confirm = useBoolean();
   const [filters, setFilters] = useState(defaultFilters);
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
-
-
-
-  function fetchStates() {
-    dataFiltered?.map((data) => {
-      setStateOptions((item) => {
-        if (!item.includes(data.state)) {
-          return [...item, data.state];
-        } else {
-          return item;
-        }
-      });
-      setBranchOptions((item) =>
-      {
-        if (!item.includes(data.branch)) {
-          return [...item, data.branch];
-        } else {
-          return item;
-        }
-      });
-      setDistrictOptions((item) => {
-        if (!item.includes(data.district)) {
-          return [...item, data.district];
-        } else {
-          return item;
-        }
-      });
-    });
-  }
-
-
-
 
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
@@ -194,10 +156,6 @@ export default function DistributorListView() {
     },
     [handleFilters]
   );
-  const handleDistributor = (code) =>{
-    router.push(paths.dashboard.distributor.distributor_view(code));
-
-  }
 
   return (
     <>
@@ -251,10 +209,10 @@ export default function DistributorListView() {
           {/*  ))}*/}
           {/*</Tabs>*/}
 
-          <DistributorTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles} stateOptions={stateOptions} branchOptions={branchOptions} districtOptions={districtOptions} />
+          <MillerTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles} />
 
           {canReset && (
-            <DistributorTableFiltersResult
+            <MillerTableFiltersResult
               filters={filters}
               onFilters={handleFilters}
               onResetFilters={handleResetFilters}
@@ -306,7 +264,7 @@ export default function DistributorListView() {
                       table.page * table.rowsPerPage + table.rowsPerPage
                     )
                     ?.map((row, index) => (
-                      <DistributorTableRow
+                      <MillerTableRow
                         key={row.id}
                         index={index}
                         row={row}
@@ -315,7 +273,6 @@ export default function DistributorListView() {
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onViewRow={() => handleViewRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
-                        onView={() => handleDistributor(row.csp_code)}
                       />
                     ))}
                   <TableEmptyRows
@@ -369,7 +326,7 @@ export default function DistributorListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, type_of_firm ,state,branch,district} = filters;
+  const { name, status, role } = filters;
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -382,7 +339,7 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (name) {
     inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+      (user) => user.doc_type.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 
@@ -390,14 +347,8 @@ function applyFilter({ inputData, comparator, filters }) {
     inputData = inputData.filter((user) => user.doc_type === status);
   }
 
-  if (type_of_firm.length) {
-    inputData = inputData.filter((user) => type_of_firm.includes(user.type_of_firm));
-  } if (state.length) {
-    inputData = inputData.filter((user) => state.includes(user.state));
-  } if (branch.length) {
-    inputData = inputData.filter((user) => branch.includes(user.branch));
-  } if (district.length) {
-    inputData = inputData.filter((user) => district.includes(user.district));
+  if (role.length) {
+    inputData = inputData.filter((user) => role.includes(user.role));
   }
 
   return inputData;

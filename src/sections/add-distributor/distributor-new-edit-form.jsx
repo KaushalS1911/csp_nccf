@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useMemo, useEffect, useCallback, useState } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -17,16 +17,17 @@ import FormProvider, { RHFTextField, RHFAutocomplete } from 'src/components/hook
 import axios from 'axios';
 import { paths } from '../../routes/paths';
 import { useRouter } from '../../routes/hooks';
-import log from 'eslint-plugin-react/lib/util/log';
 import { useAuthContext } from '../../auth/hooks';
 import { useResponsive } from '../../hooks/use-responsive';
+import { DocumentListView } from '../upload/view';
 
 // ----------------------------------------------------------------------
 
-export default function DistributorNewEditForm({ currentProduct }) {
+export default function DistributorNewEditForm({ currentProduct, distributor }) {
+
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
-  const {vendor} = useAuthContext()
+  const { vendor } = useAuthContext();
 
   const [stateOptions, setStateOptions] = useState([]);
   const [branchOptions, setBranchOptions] = useState([]);
@@ -92,21 +93,21 @@ export default function DistributorNewEditForm({ currentProduct }) {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentProduct?.name || '',
-      contact_person: currentProduct?.contact_person || '',
-      phone_number: currentProduct?.phone_number || '',
-      email: currentProduct?.email || '',
-      pan_number: currentProduct?.pan_number || '',
-      gst_number: currentProduct?.gst_number || '',
-      type_of_firm: currentProduct?.type_of_firm || '',
-      address: currentProduct?.address || '',
-      state: currentProduct?.state || '',
-      branch: currentProduct?.branch || '',
-      district: currentProduct?.district || '',
-      procurement_area: currentProduct?.procurement_area || '',
-      pincode: currentProduct?.pincode || '',
+      name: distributor?.name || '',
+      contact_person: distributor?.contact_person || '',
+      phone_number: distributor?.phone_number || '',
+      email: distributor?.email || '',
+      pan_number: distributor?.pan_number || '',
+      gst_number: distributor?.gst_number || '',
+      type_of_firm: distributor?.type_of_firm || '',
+      address: distributor?.address || '',
+      state: distributor?.state || '',
+      branch: distributor?.branch || '',
+      district: distributor?.district || '',
+      procurement_area: distributor?.procurement_area || '',
+      pincode: distributor?.pincode || '',
     }),
-    [currentProduct],
+    [distributor]
   );
 
   const methods = useForm({
@@ -116,30 +117,34 @@ export default function DistributorNewEditForm({ currentProduct }) {
 
   const { reset, watch, setValue, handleSubmit, formState: { isSubmitting } } = methods;
 
+  useEffect(() => {
+    if (distributor) {
+      reset(defaultValues);
+    }
+  }, [distributor, reset, defaultValues]);
+
   const onSubmit = handleSubmit(async (data) => {
     try {
       axios
-          .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/partner_onboarding`, { ...data,onboarder_csp_code:vendor?.csp_code ,category:vendor?.category,mode:"test"})
-          .then((res) => {
-            if (res?.data?.status == '201') {
-              router.push(paths.dashboard.distributor.distributor_list);
-              enqueueSnackbar('Distributor added successfully');
-            }
-          })
-    }catch (err){
+        .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/partner_onboarding`, { ...data, onboarder_csp_code: vendor?.csp_code, category: vendor?.category, mode: "test" })
+        .then((res) => {
+          if (res?.data?.status == '201') {
+            router.push(paths.dashboard.distributor.distributor_list);
+            enqueueSnackbar('Distributor added successfully');
+          }
+        });
+    } catch (err) {
       console.log(err);
-        enqueueSnackbar('Something went wrong', { variant: 'error' });
-
+      enqueueSnackbar('Something went wrong', { variant: 'error' });
     }
-
-  })
+  });
 
   const renderProperties = (
     <>
       {mdUp && (
         <Grid md={4}>
           <Typography variant="h6" sx={{ mb: 0.5 }}>
-            Personal
+            Distributor's Personal
             Details
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
@@ -185,10 +190,10 @@ export default function DistributorNewEditForm({ currentProduct }) {
       {mdUp && (
         <Grid md={4}>
           <Typography variant="h6" sx={{ mb: 0.5 }}>
-          Address Information
+            Address Information
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            Address,state,district...
+            Address, state, district...
           </Typography>
         </Grid>
       )}
@@ -240,17 +245,32 @@ export default function DistributorNewEditForm({ currentProduct }) {
       </Grid>
     </>
   );
+const table = (
+    <>
+      {mdUp && (
+        <Grid md={4}>
+          <Typography variant="h6" sx={{ mb: 0.5 }}>
+            Document list
+          </Typography>
+        </Grid>
+      )}
+      <Grid xs={12} md={12}>
+          <DocumentListView  csp={distributor?.csp_code}/>
+      </Grid>
+    </>
+  );
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
       <Grid container spacing={3}>
         {renderProperties}
         {addressInfo}
-        <Grid xs={12}>
+        {!distributor &&  <Grid xs={12}>
           <Box sx={{ display: "flex", justifyContent: "end" }}>
             <Button variant="contained" type="submit">Submit</Button>
           </Box>
-        </Grid>
+        </Grid>}
+        {table}
       </Grid>
     </FormProvider>
   );
@@ -258,4 +278,5 @@ export default function DistributorNewEditForm({ currentProduct }) {
 
 DistributorNewEditForm.propTypes = {
   currentProduct: PropTypes.object,
+  distributor: PropTypes.object,
 };

@@ -191,6 +191,9 @@ import BranchList from '../../sections/branch/branch-list';
 import BranchListPage from '../../pages/dashboard/branch/list';
 import DistributorCreatePage from '../../pages/dashboard/add-distributor/new';
 import DistributorList from '../../pages/dashboard/add-distributor/list';
+import MillerList from '../../pages/dashboard/add-miller/list';
+import SingleDistributorView from '../../sections/add-distributor/view/single-distributor-view';
+import UploadDistributorDocument from '../../sections/add-distributor/view/upload-distributor-document';
 
 // ----------------------------------------------------------------------
 
@@ -335,6 +338,16 @@ export const dashboardRoutes = [
           { element: <UploadListView />, index: true },
           { path: 'distributor-list', element: <DistributorList /> },
           { path: 'add-distributor', element: <DistributorCreatePage /> },
+          { path: 'document-upload', element: <UploadDistributorDocument /> },
+          { path: 'distributor-view/:id', element: <SingleDistributorView /> },
+        ],
+      },
+      {
+        path: 'miller',
+        children: [
+          { element: <UploadListView />, index: true },
+          { path: 'miller-list', element: <MillerList /> },
+          { path: 'add-miller', element: <MillerCreatePage /> },
           { path: 'document-upload', element: <UploadDocument /> },
         ],
       },

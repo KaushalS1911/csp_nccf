@@ -379,18 +379,15 @@ export const paths = {
       root: `${ROOTS.DASHBOARD}/distributor`,
       distributor_list: `${ROOTS.DASHBOARD}/distributor/distributor-list`,
       add_distributor: `${ROOTS.DASHBOARD}/distributor/add-distributor`,
+     distributor_view :(title) =>  `${ROOTS.DASHBOARD}/distributor/distributor-view/${title}`,
      document_upload : `${ROOTS.DASHBOARD}/distributor/document-upload`,
-
-
     },
     miller:{
       root: `${ROOTS.DASHBOARD}/miller`,
-      distributor_list: `${ROOTS.DASHBOARD}/miller/miller-list`,
-      add_distributor: `${ROOTS.DASHBOARD}/miller/add-miller`,
+      miller_list: `${ROOTS.DASHBOARD}/miller/miller-list`,
+      add_miller: `${ROOTS.DASHBOARD}/miller/add-miller`,
      document_upload : `${ROOTS.DASHBOARD}/miller/document-upload`,
-
-
-    },
+          },
 
     statsOverview: {
       root : `${ROOTS.DASHBOARD}/states-overview`,
