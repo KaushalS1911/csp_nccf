@@ -270,7 +270,7 @@ const table = (
             <Button variant="contained" type="submit">Submit</Button>
           </Box>
         </Grid>}
-        {table}
+        {distributor && table}
       </Grid>
     </FormProvider>
   );
