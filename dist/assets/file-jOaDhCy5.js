@@ -1,1 +1,0 @@
-import{j as e,H as i,dA as r}from"./index-OKHCej4L.js";function t(){return e.jsxs(e.Fragment,{children:[e.jsx(i,{children:e.jsx("title",{children:" Dashboard: File"})}),e.jsx(r,{})]})}export{t as default};
