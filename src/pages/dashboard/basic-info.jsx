@@ -22,7 +22,7 @@ export default function BasicInfo() {
   const settings = useSettingsContext();
 
   const { vendor } = useAuthContext();
-  const [disable, setDisable] = useState(false);
+  const [disable, setDisable] = useState(true);
   const vendor_category = vendor?.category;
   // subcategory
   const [stateOptions, setStateOptions] = useState([]);
@@ -190,6 +190,7 @@ export default function BasicInfo() {
                   >
                     <RHFTextField
                       name="name"
+                      disabled={disable}
                       label={
                         vendor_category === 'distributor' ||
                         vendor_category === 'miller_distributor'
@@ -204,6 +205,7 @@ export default function BasicInfo() {
                         name="milling_type"
                         type="milling_type"
                         label="Milling Type"
+                        disabled={disable}
                         placeholder="Choose Milling Type"
                         fullWidth
                         options={millingTypeOptions.map((option) => option)}
@@ -213,6 +215,7 @@ export default function BasicInfo() {
 
                     {vendor_category !== 'society_cooperative' && (
                       <RHFAutocomplete
+                        disabled={disable}
                         name="type_of_firm"
                         label="Type of Firm"
                         placeholder="Choose Your firm"
@@ -304,6 +307,7 @@ export default function BasicInfo() {
                       <RHFAutocomplete
                         name="state"
                         label="State"
+                        disabled={disable}
                         placeholder="Choose Your State"
                         fullWidth
                         options={stateOptions.map((option) => option?.state_name)}
@@ -340,7 +344,7 @@ export default function BasicInfo() {
                 </Card>
               </Grid>
             </Grid>
-            {/* <Stack display={'flex'} alignItems={'flex-end'} sx={{ mt: 3 }}>
+         <Stack display={'flex'} alignItems={'flex-end'} sx={{ mt: 3 }}>
               <Box>
                 <Button
                   color="inherit"
@@ -359,7 +363,7 @@ export default function BasicInfo() {
                   Save
                 </LoadingButton>
               </Box>
-            </Stack> */}
+            </Stack>
           </FormProvider>
         </Box>
       </Container>

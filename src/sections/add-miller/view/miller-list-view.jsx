@@ -55,7 +55,10 @@ const TABLE_HEAD = [
 ];
 const defaultFilters = {
   name: '',
-  role: [],
+  type_of_firm: [],
+  state:[],
+  branch:[],
+  district:[],
   status: 'all',
 };
 
@@ -65,11 +68,15 @@ export default function MillerListView() {
   const { vendor } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState([]);
-
+  const [stateOptions, setStateOptions] = useState([]);
+  const [branchOptions, setBranchOptions] = useState([]);
+  const [districtOptions, setDistrictOptions] = useState([]);
+  useEffect(() => {
+    fetchStates();
+  }, [tableData]);
   useEffect(() => {
     getAllDocument();
   }, []);
-
   function getAllDocument() {
     axios
       .get(
@@ -78,7 +85,6 @@ export default function MillerListView() {
       .then((res) => setTableData(res?.data?.data))
       .catch((err) => console.error(err));
   }
-
 
   const table = useTable();
   const settings = useSettingsContext();
@@ -91,7 +97,36 @@ export default function MillerListView() {
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
+  function fetchStates() {
+    dataFiltered?.map((data) => {
+      setStateOptions((item) => {
+        if (!item.includes(data.state)) {
+          return [...item, data.state];
+        } else {
+          return item;
+        }
+      });
+      setBranchOptions((item) =>
+      {
+        if (!item.includes(data.branch)) {
+          return [...item, data.branch];
+        } else {
+          return item;
+        }
+      });
+      setDistrictOptions((item) => {
+        if (!item.includes(data.district)) {
+          return [...item, data.district];
+        } else {
+          return item;
+        }
+      });
+    });
+  }
+  const handleMiller = (code) =>{
+    router.push(paths.dashboard.miller.miller_view(code));
 
+  }
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
@@ -161,10 +196,10 @@ export default function MillerListView() {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
         <CustomBreadcrumbs
-          heading="Distributor list"
+          heading="Miller list"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'Distributor', href: paths.dashboard.distributor },
+            { name: 'miller', href: paths.dashboard.miller },
             { name: 'List' },
           ]}
           sx={{
@@ -172,44 +207,9 @@ export default function MillerListView() {
           }}
         />
         <Card>
-          {/*<Tabs*/}
-          {/*  value={filters.status}*/}
-          {/*  onChange={handleFilterStatus}*/}
-          {/*  sx={{*/}
-          {/*    px: 2.5,*/}
-          {/*    boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,*/}
-          {/*  }}*/}
-          {/*>*/}
-          {/*  {DOCUMENTS.map((tab) => (*/}
-          {/*    <Tab*/}
-          {/*      key={tab.value}*/}
-          {/*      iconPosition="end"*/}
-          {/*      value={tab.value}*/}
-          {/*      label={tab.label}*/}
-          {/*      icon={*/}
-          {/*        <Label*/}
-          {/*          variant={*/}
-          {/*            ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'*/}
-          {/*          }*/}
-          {/*          color={*/}
-          {/*            (tab.value === 'Aadhar' && 'secondary') ||*/}
-          {/*            (tab.value === 'certificates' && 'warning') ||*/}
-          {/*            (tab.value === 'gst_number' && 'success') ||*/}
-          {/*            (tab.value === 'pan_number' && 'info') ||*/}
-          {/*            (tab.value === 'milling_unit_video' && 'error') ||*/}
-          {/*            'default'*/}
-          {/*          }*/}
-          {/*        >*/}
-          {/*          {tab.value === 'all'*/}
-          {/*            ? tableData.length*/}
-          {/*            : tableData.filter((user) => user.doc_type === tab.value).length}*/}
-          {/*        </Label>*/}
-          {/*      }*/}
-          {/*    />*/}
-          {/*  ))}*/}
-          {/*</Tabs>*/}
 
-          <MillerTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles} />
+
+          <MillerTableToolbar  filters={filters} onFilters={handleFilters} roleOptions={_roles} stateOptions={stateOptions} branchOptions={branchOptions} districtOptions={districtOptions} />
 
           {canReset && (
             <MillerTableFiltersResult
@@ -273,6 +273,7 @@ export default function MillerListView() {
                         onDeleteRow={() => handleDeleteRow(row.id)}
                         onViewRow={() => handleViewRow(row.id)}
                         onEditRow={() => handleEditRow(row.id)}
+                        onView={() => handleMiller(row.csp_code)}
                       />
                     ))}
                   <TableEmptyRows
@@ -326,7 +327,7 @@ export default function MillerListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, role } = filters;
+  const { name, status, type_of_firm ,state,branch,district} = filters;
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -339,7 +340,7 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (name) {
     inputData = inputData.filter(
-      (user) => user.doc_type.toLowerCase().indexOf(name.toLowerCase()) !== -1
+      (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
     );
   }
 
@@ -347,8 +348,14 @@ function applyFilter({ inputData, comparator, filters }) {
     inputData = inputData.filter((user) => user.doc_type === status);
   }
 
-  if (role.length) {
-    inputData = inputData.filter((user) => role.includes(user.role));
+  if (type_of_firm.length) {
+    inputData = inputData.filter((user) => type_of_firm.includes(user.type_of_firm));
+  } if (state.length) {
+    inputData = inputData.filter((user) => state.includes(user.state));
+  } if (branch.length) {
+    inputData = inputData.filter((user) => branch.includes(user.branch));
+  } if (district.length) {
+    inputData = inputData.filter((user) => district.includes(user.district));
   }
 
   return inputData;

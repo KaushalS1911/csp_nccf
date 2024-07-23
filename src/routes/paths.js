@@ -385,6 +385,7 @@ export const paths = {
     miller:{
       root: `${ROOTS.DASHBOARD}/miller`,
       miller_list: `${ROOTS.DASHBOARD}/miller/miller-list`,
+     miller_view :(title) =>  `${ROOTS.DASHBOARD}/miller/miller-view/${title}`,
       add_miller: `${ROOTS.DASHBOARD}/miller/add-miller`,
      document_upload : `${ROOTS.DASHBOARD}/miller/document-upload`,
           },

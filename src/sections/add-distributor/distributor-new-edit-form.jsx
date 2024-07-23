@@ -28,7 +28,7 @@ export default function DistributorNewEditForm({ currentProduct, distributor }) 
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const { vendor } = useAuthContext();
-
+const [disable,setDisable] = useState(distributor ? true : false)
   const [stateOptions, setStateOptions] = useState([]);
   const [branchOptions, setBranchOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
@@ -164,20 +164,21 @@ export default function DistributorNewEditForm({ currentProduct, distributor }) 
                 md: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="name" label="Distributor Name" />
+              <RHFTextField  disabled={disable} name="name" label="Distributor Name" />
               <RHFAutocomplete
                 name="type_of_firm"
                 label="Type of Firm"
                 placeholder="Choose Your Firm"
                 fullWidth
                 options={['Partnership', 'Property', 'LLP', 'Public Limited', 'Other']}
+                disabled={disable}
                 getOptionLabel={(option) => option}
               />
-              <RHFTextField name="contact_person" label="Contact Person" />
-              <RHFTextField name="phone_number" label="Phone Number" />
-              <RHFTextField name="email" label="Email" />
-              <RHFTextField name="pan_number" label="PAN Number" />
-              <RHFTextField name="gst_number" label="GST Number" />
+              <RHFTextField disabled={disable} name="contact_person" label="Contact Person" />
+              <RHFTextField disabled={disable} name="phone_number" label="Phone Number" />
+              <RHFTextField disabled={disable} name="email" label="Email" />
+              <RHFTextField disabled={disable} name="pan_number" label="PAN Number" />
+              <RHFTextField disabled={disable} name="gst_number" label="GST Number" />
             </Box>
           </Stack>
         </Card>
@@ -209,9 +210,10 @@ export default function DistributorNewEditForm({ currentProduct, distributor }) 
                 md: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="address" label="Address" />
+              <RHFTextField name="address" label="Address" disabled={disable} />
               <RHFAutocomplete
                 name="state"
+                disabled={disable}
                 label="State"
                 placeholder="Choose Your State"
                 fullWidth
@@ -222,7 +224,7 @@ export default function DistributorNewEditForm({ currentProduct, distributor }) 
               <RHFAutocomplete
                 name="branch"
                 label="Branch"
-                placeholder="Choose Your Branch"
+                                placeholder="Choose Your Branch"
                 fullWidth
                 options={branchOptions.map((option) => option?.branch_name)}
                 getOptionLabel={(option) => option}
@@ -237,8 +239,8 @@ export default function DistributorNewEditForm({ currentProduct, distributor }) 
                 getOptionLabel={(option) => option}
                 disabled={!data1}
               />
-              <RHFTextField name="procurement_area" label="Procurement Area" />
-              <RHFTextField name="pincode" label="Pin Code" />
+              <RHFTextField disabled={disable} name="procurement_area" label="Procurement Area" />
+              <RHFTextField disabled={disable} name="pincode" label="Pin Code" />
             </Box>
           </Stack>
         </Card>

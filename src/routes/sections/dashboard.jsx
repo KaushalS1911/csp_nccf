@@ -194,6 +194,8 @@ import DistributorList from '../../pages/dashboard/add-distributor/list';
 import MillerList from '../../pages/dashboard/add-miller/list';
 import SingleDistributorView from '../../sections/add-distributor/view/single-distributor-view';
 import UploadDistributorDocument from '../../sections/add-distributor/view/upload-distributor-document';
+import UploadMillerDocument from '../../sections/add-miller/view/upload-miller-document';
+import SingleMillerView from '../../sections/add-miller/view/single-miller-view';
 
 // ----------------------------------------------------------------------
 
@@ -348,7 +350,8 @@ export const dashboardRoutes = [
           { element: <UploadListView />, index: true },
           { path: 'miller-list', element: <MillerList /> },
           { path: 'add-miller', element: <MillerCreatePage /> },
-          { path: 'document-upload', element: <UploadDocument /> },
+          { path: 'document-upload', element: <UploadMillerDocument /> },
+          { path: 'miller-view/:id', element: <SingleMillerView /> },
         ],
       },
 

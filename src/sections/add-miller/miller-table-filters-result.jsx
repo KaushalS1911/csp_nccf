@@ -29,13 +29,36 @@ export default function MillerTableFiltersResult({
     onFilters('status', 'all');
   }, [onFilters]);
 
-  const handleRemoveRole = useCallback(
+  const handleRemoveTypeoffirm = useCallback(
     (inputValue) => {
-      const newValue = filters.role.filter((item) => item !== inputValue);
+      const newValue = filters.type_of_firm.filter((item) => item !== inputValue);
 
-      onFilters('role', newValue);
+      onFilters('type_of_firm', newValue);
     },
-    [filters.role, onFilters]
+    [filters.type_of_firm, onFilters]
+  );
+
+  const handleRemoveState = useCallback(
+    (inputValue) => {
+      const newValue = filters.state.filter((item) => item !== inputValue);
+
+      onFilters('state', newValue);
+    },
+    [filters.state, onFilters]
+  );const handleRemoveBranch = useCallback(
+    (inputValue) => {
+      const newValue = filters.branch.filter((item) => item !== inputValue);
+
+      onFilters('branch', newValue);
+    },
+    [filters.branch, onFilters]
+  );const handleRemoveDistrict = useCallback(
+    (inputValue) => {
+      const newValue = filters.district.filter((item) => item !== inputValue);
+
+      onFilters('district', newValue);
+    },
+    [filters.district, onFilters]
   );
 
   return (
@@ -54,10 +77,31 @@ export default function MillerTableFiltersResult({
           </Block>
         )}
 
-        {!!filters.role.length && (
-          <Block label="Role:">
-            {filters.role.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveRole(item)} />
+        {!!filters.type_of_firm.length && (
+          <Block label="Type of firm:">
+            {filters.type_of_firm.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveTypeoffirm(item)} />
+            ))}
+          </Block>
+        )}
+        {!!filters.state.length && (
+          <Block label="State:">
+            {filters.state.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveState(item)} />
+            ))}
+          </Block>
+        )}
+        {!!filters.branch.length && (
+          <Block label="Branch:">
+            {filters.branch.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveBranch(item)} />
+            ))}
+          </Block>
+        )}
+        {!!filters.district.length && (
+          <Block label="District:">
+            {filters.district.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveDistrict(item)} />
             ))}
           </Block>
         )}

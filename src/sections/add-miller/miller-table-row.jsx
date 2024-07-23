@@ -21,7 +21,7 @@ import { handleDoctypeLabel } from '../../_mock';
 import Lightbox from '../../components/lightbox';
 import useLightBox from '../../components/lightbox/use-light-box';
 // ----------------------------------------------------------------------
-export default function MillerTableRow({ row, selected, onEditRow, onSelectRow, onViewRow,onDeleteRow, index }) {
+export default function MillerTableRow({ row, selected, onEditRow, onSelectRow, onViewRow,onDeleteRow, index ,onView}) {
   const { name,category, type_of_firm, contact_person, phone_number, email, address} = row;
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([])
@@ -50,7 +50,7 @@ const status = "completed"
         {/*  <Checkbox checked={selected} onClick={onSelectRow} />*/}
         {/*</TableCell>*/}
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{index + 1}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }}>{name}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap',fontWeight:"bold",cursor:"pointer" }} onClick={onView}>{name}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{category}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{type_of_firm}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{contact_person}</TableCell>

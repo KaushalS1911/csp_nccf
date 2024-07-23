@@ -27,7 +27,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 const validationSchema = yup.object().shape({
   doc_type: yup.string().required('Document type is required'),
 });
-function DistributorDocument({documentLabel}) {
+function MillerDocument({documentLabel}) {
   const settings = useSettingsContext();
   const [disName,setDisName] = useState('')
   const router = useRouter();
@@ -194,7 +194,7 @@ function DistributorDocument({documentLabel}) {
       );
       if (responses) {
         enqueueSnackbar('Your Document Uploaded');
-        router.push(paths.dashboard.distributor.distributor_list);
+        router.push(paths.dashboard.miller.miller_list);
         setLoading(false);
       } else {
         enqueueSnackbar('Failed to Upload');
@@ -230,6 +230,9 @@ function DistributorDocument({documentLabel}) {
            {
              name: 'Dashboard',
              href: paths.dashboard.root,
+           },  {
+             name: 'Miller',
+             href: paths.dashboard.miller.miller_list,
            },
 
            {
@@ -393,8 +396,8 @@ function DistributorDocument({documentLabel}) {
                  control={control}
                  render={({ field, fieldState }) => (
                    <FormControl fullWidth error={!!fieldState.error}>
-                     <InputLabel>Select distributor</InputLabel>
-                     <Select {...field} label="Select distributor" >
+                     <InputLabel>Select miller</InputLabel>
+                     <Select {...field} label="Select miller" >
                        {documentLabel?.map((option) => (
                          <MenuItem key={option.name} value={option.code}>
                            {option.label}
@@ -506,4 +509,4 @@ function DistributorDocument({documentLabel}) {
   );
 }
 
-export default DistributorDocument;
+export default MillerDocument;
