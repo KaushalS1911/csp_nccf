@@ -50,33 +50,62 @@ export function useNavData() {
   const { t } = useTranslate();
   const { vendor } = useAuthContext();
   const login_type = localStorage.getItem('login_type');
-  const societyItems = [
+  const societyItems = vendor?.mil_dis_sub_roles === "own_distribution_own_mill" ? [
     {
       title: t('Dashboard'),
       path: paths.dashboard.root,
       icon: ICONS.dashboard,
     },
 
-    // {
-    //   title: t('Stats Overview'),
-    //   path: paths.dashboard.statsOverview.root,
-    //   icon: ICONS.mail,
-    //   children: [
-    //     // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
-    //     { title: t('Branch'), path: paths.dashboard.statsOverview.branch },
-    //     { title: t('Vendor Type'), path: paths.dashboard.statsOverview.vendor_type },
-    //
-    //   ],
-    // },
-    // {
-    //   title: t('Basic Info'),
-    //   path: paths.dashboard.basic_info,
-    //   icon: ICONS.user,
-    // },
+
+
     {
-      title: t('Add Miller'),
-      path: paths.dashboard.addMiller,
+      title: t('Document'),
+      path: paths.dashboard.document.root,
+      icon: ICONS.chat,
+      children: [
+        // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
+        { title: t('Document List'), path: paths.dashboard.document.document_list },
+        { title: t('Upload Document'), path: paths.dashboard.document.document_upload },
+        {
+          title: t('Upload Evidence'),
+          path: paths.dashboard.document.upload_evidence,
+        },
+      ],
+    },
+    // INVOICE
+    {
+      title: t('payment'),
+      path: paths.dashboard.invoice.root,
+      icon: ICONS.invoice,
+      children: [
+        { title: t('list'), path: paths.dashboard.invoice.root },
+        // {
+        //   title: t('details'),
+        //   path: paths.dashboard.invoice.demo.details,
+        // },
+        { title: t('create'), path: paths.dashboard.invoice.new },
+        // { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
+      ],
+    },
+  ]:[
+    {
+      title: t('Dashboard'),
+      path: paths.dashboard.root,
+      icon: ICONS.dashboard,
+    },
+
+
+    {
+      title: t('Miller'),
+      path: paths.dashboard.miller.root,
       icon: ICONS.file,
+      children: [
+        { title: t('Miller List'), path: paths.dashboard.miller.miller_list },
+        { title: t('Add Miller'), path: paths.dashboard.miller.add_miller },
+        { title: t('Upload Document'), path: paths.dashboard.miller.document_upload },
+
+      ],
     },
     {
       title: t('Document'),
@@ -173,6 +202,77 @@ export function useNavData() {
     //   icon: ICONS.user,
     // },
   ];
+
+  const Miller_DistributorItems = [
+    {
+      title: t('Dashboard'),
+      path: paths.dashboard.root,
+      icon: ICONS.dashboard,
+    },
+
+    // {
+    //   title: t('Orders'),
+    //   path: paths.dashboard.orders,
+    //   icon: ICONS.product,
+    // },
+    // {
+    //   title: t('Stats Overview'),
+    //   path: paths.dashboard.statsOverview.root,
+    //   icon: ICONS.mail,
+    //   children: [
+    //     // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
+    //     { title: t('Branch'), path: paths.dashboard.statsOverview.branch },
+    //     { title: t('Vendor Type'), path: paths.dashboard.statsOverview.vendor_type },
+    //
+    //   ],
+    // },
+    {
+      title: t('Basic Info'),
+      path: paths.dashboard.basic_info,
+      icon: ICONS.user,
+    },   {
+      title: t('Distributor Info'),
+      path: paths.dashboard.distributor_info,
+      icon: ICONS.user,
+    },
+
+    {
+      title: t('Document'),
+      path: paths.dashboard.document.root,
+      icon: ICONS.chat,
+      children: [
+        // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
+        { title: t('Document List'), path: paths.dashboard.document.document_list },
+        { title: t('Upload Document'), path: paths.dashboard.document.document_upload },
+        {
+          title: t('Upload Evidence'),
+          path: paths.dashboard.document.upload_evidence,
+        },
+      ],
+    },
+
+    // INVOICE
+    {
+      title: t('payment'),
+      path: paths.dashboard.invoice.root,
+      icon: ICONS.invoice,
+      children: [
+        { title: t('list'), path: paths.dashboard.invoice.root },
+        // {
+        //   title: t('details'),
+        //   path: paths.dashboard.invoice.demo.details,
+        // },
+        { title: t('create'), path: paths.dashboard.invoice.new },
+        // { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
+      ],
+    },
+    // {
+    //   title: t('Head Office'),
+    //   path: paths.dashboard.headOffice.root,
+    //   icon: ICONS.user,
+    // },
+  ];
+
   const branchItem = [
     {
       title: t('Dashboard'),
@@ -438,7 +538,7 @@ export function useNavData() {
       {
         // subheader: t('management'),
         // items: vendor?.category === 'society_cooperative' ? societyItems : otherItems,
-        items: vendor?.category === 'society_cooperative' ? societyItems : login_type === 'branch' ? branchItem : login_type === 'head-office' ? headItems : vendor?.category === "miller" ? millerItems : vendor?.category === "distributor" ? distributeItems : otherItems,
+        items: vendor?.category === "Society" ? societyItems : login_type === 'branch' ? branchItem : login_type === 'head-office' ? headItems : vendor?.category === "miller" ? millerItems : vendor?.category === "distributor" ? distributeItems :vendor.category === "miller_distributor" ? Miller_DistributorItems : otherItems,
       },
     ],
     [t],

@@ -196,6 +196,7 @@ import SingleDistributorView from '../../sections/add-distributor/view/single-di
 import UploadDistributorDocument from '../../sections/add-distributor/view/upload-distributor-document';
 import UploadMillerDocument from '../../sections/add-miller/view/upload-miller-document';
 import SingleMillerView from '../../sections/add-miller/view/single-miller-view';
+import DistributorInfo from '../../pages/dashboard/distributor-info';
 
 // ----------------------------------------------------------------------
 
@@ -280,6 +281,7 @@ export const dashboardRoutes = [
     children: [
       { element: <IndexPage />, index: true },
       { path: 'basic-info', element: <BasicInfoPage /> },
+      { path: 'distributor-info', element: <DistributorInfo /> },
       // { path: 'upload-document', element: <UploadDocument /> },
       // { path: 'document', element: <UploadListView /> },
       { path: 'orders', element: <BranchListPage /> },

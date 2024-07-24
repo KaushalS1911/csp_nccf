@@ -8,6 +8,7 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import { RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
 import { paths } from '../../../routes/paths';
 import { useRouter } from '../../../routes/hooks';
+import { Controller } from 'react-hook-form';
 import { enqueueSnackbar } from 'notistack';
 const RegistrationForm = ({ vendor_category }) => {
   const router = useRouter();
@@ -15,7 +16,7 @@ const RegistrationForm = ({ vendor_category }) => {
   const [branchOptions, setBranchOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const [selectedState, setSelectedState] = useState('');
-  const data1 = stateOptions.find((data) => data?.state_name === selectedState);
+
   const handleStateChange = (event, newValue) => {
     setSelectedState(newValue);
     methods.setValue('state', newValue);
@@ -25,6 +26,7 @@ const RegistrationForm = ({ vendor_category }) => {
   useEffect(() => {
     fetchStates();
   }, []);
+  const data1 = stateOptions?.find((data) => data?.state_name === selectedState);
   useEffect(() => {
     if (data1 && data1.state_id) {
       fetchBranches(data1.state_id);
@@ -130,8 +132,8 @@ const RegistrationForm = ({ vendor_category }) => {
       .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp`, payload)
       .then((res) => {
         if (res?.data?.status == '201') {
-          router.push(paths.auth.jwt.login);
           enqueueSnackbar('Register Successfully');
+          router.push(paths.auth.jwt.login);
         }
       })
       .catch((err) => {
@@ -150,15 +152,15 @@ const RegistrationForm = ({ vendor_category }) => {
             <RHFTextField
               name="name"
               label={
-                vendor_category === 'distributor' || vendor_category === 'miller_distributor'
+                vendor_category === 'distributor'
                   ? 'Distributor Name'
-                  : vendor_category === 'miller'
+                  : vendor_category === 'miller' || vendor_category === 'miller_distributor'
                     ? 'Milling Unit Name'
                     : 'Society Name'
               }
             />
           </Grid>
-          {vendor_category === 'miller' && (
+          {(vendor_category === 'miller' || vendor_category === 'miller_distributor' )&& (
             <Grid item xs={12} sm={6} md={3}>
               <RHFAutocomplete
                 name="milling_type"
@@ -192,7 +194,7 @@ const RegistrationForm = ({ vendor_category }) => {
           <Grid item xs={12} sm={6} md={3}>
             <RHFTextField name="email" label="Email" type="email" />
           </Grid>
-          {(vendor_category === 'distributor' || vendor_category === 'miller_distributor') && (
+          {vendor_category === 'distributor'  && (
             <>
               <Grid item xs={12} sm={6} md={3}>
                 <RHFTextField name="area_of_Opration" label="Area of Opration" />
@@ -220,30 +222,36 @@ const RegistrationForm = ({ vendor_category }) => {
           </Grid>
           {vendor_category === 'society_cooperative' && (
             <Grid item xs={12}>
-              <RadioGroup row aria-label="vendor" name="mil_dis_sub_roles">
-                <FormControlLabel
-                  value="own_distribution_own_mill"
-                  control={<Radio />}
-                  label="Own Mill and Distribution"
-                />
-                <FormControlLabel
-                  value="own_distribution_rent_mill"
-                  control={<Radio />}
-                  label="Own Distribution and Rent Mill"
-                />
-                <FormControlLabel
-                  value="cooperative_rent_mill"
-                  control={<Radio />}
-                  label="Co-operative (Rent Mill)"
-                />
-              </RadioGroup>
+              <Controller
+                name="mil_dis_sub_roles"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup row aria-label="vendor" {...field}>
+                    <FormControlLabel
+                      value="own_distribution_own_mill"
+                      control={<Radio />}
+                      label="Own both (Mill & Distribution)"
+                    />
+                    <FormControlLabel
+                      value="own_distribution_rent_mill"
+                      control={<Radio />}
+                      label="Own Distribution (Rent Mill)"
+                    />
+                    <FormControlLabel
+                      value="cooperative_rent_mill"
+                      control={<Radio />}
+                      label="Co-operative (Rent Mill)"
+                    />
+                  </RadioGroup>
+                )}
+              />
             </Grid>
           )}
         </Grid>
         <Typography variant="h5" gutterBottom className="heading" mt={2}>
           {` ${
             vendor_category === 'distributor' || vendor_category === 'miller_distributor'
-              ? 'Address of Proposed Distributor Premises'
+              ? 'Address of Proposed Milling Unit Premises'
               : vendor_category === 'miller'
                 ? 'Address of Proposed Milling Unit Premises'
                 : 'Address Information'

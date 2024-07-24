@@ -34,7 +34,7 @@ export default function MillerNewEditForm({ miller }) {
   const [districtOptions, setDistrictOptions] = useState([]);
   const [selectedState, setSelectedState] = useState('');
 
-  const data1 = stateOptions.find((data) => data?.state_name === selectedState);
+  const data1 = stateOptions?.find((data) => data?.state_name === selectedState);
   const mdUp = useResponsive('up', 'md');
 
   const handleStateChange = (event, newValue) => {
@@ -241,7 +241,7 @@ export default function MillerNewEditForm({ miller }) {
                 label="State"
                 placeholder="Choose Your State"
                 fullWidth
-                options={stateOptions.map((option) => option?.state_name)}
+                options={stateOptions?.map((option) => option?.state_name)}
                 getOptionLabel={(option) => option}
                 onChange={handleStateChange}
               />
@@ -250,7 +250,7 @@ export default function MillerNewEditForm({ miller }) {
                 label="Branch"
                 placeholder="Choose Your Branch"
                 fullWidth
-                options={branchOptions.map((option) => option?.branch_name)}
+                options={branchOptions?.map((option) => option?.branch_name)}
                 getOptionLabel={(option) => option}
                 disabled={!data1}
               />
@@ -259,7 +259,7 @@ export default function MillerNewEditForm({ miller }) {
                 label="District"
                 placeholder="Choose Your District"
                 fullWidth
-                options={districtOptions.map((option) => option?.district)}
+                options={districtOptions?.map((option) => option?.district)}
                 getOptionLabel={(option) => option}
                 disabled={!data1}
               />

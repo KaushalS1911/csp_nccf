@@ -18,7 +18,8 @@ import { Helmet } from 'react-helmet-async';
 import { RHFTextField } from 'src/components/hook-form';
 import { enqueueSnackbar } from 'notistack';
 import { useGetProfile } from '../../api/vendor.js';
-export default function BasicInfo() {
+
+function DistributorInfo(props) {
   const settings = useSettingsContext();
 
   const { vendor } = useAuthContext();
@@ -192,14 +193,15 @@ export default function BasicInfo() {
                       name="name"
                       disabled={disable}
                       label={
-                        vendor_category === 'distributor'
+                        vendor_category === 'distributor' ||
+                        vendor_category === 'miller_distributor'
                           ? 'Distributor Name'
-                          : (vendor_category === 'miller' || vendor_category === 'miller_distributor')
-                            ? 'Milling Unit Name'
-                            : 'Society Name'
+                          : vendor_category === 'miller'
+                          ? 'Milling Unit Name'
+                          : 'Society Name'
                       }
                     />
-                    {(vendor_category === 'miller' || vendor_category === 'miller_distributor') && (
+                    {vendor_category === 'miller' && (
                       <RHFAutocomplete
                         name="milling_type"
                         type="milling_type"
@@ -227,7 +229,8 @@ export default function BasicInfo() {
                     <RHFTextField name="email" label="Email" disabled={disable} />
                     <RHFTextField name="contact_person" label="Contact Person" disabled={disable} />
                     <RHFTextField name="phone_number" label="Phone Number" disabled={disable} />
-                    {vendor_category === 'distributor' && (
+                    {(vendor_category === 'distributor' ||
+                      vendor_category === 'miller_distributor') && (
                       <>
                         <RHFTextField name="area_of_Opration" label="Area of Opration" />
 
@@ -277,10 +280,10 @@ export default function BasicInfo() {
                       {` ${
                         vendor_category === 'distributor' ||
                         vendor_category === 'miller_distributor'
-                          ? 'Address of Proposed Milling Unit Premises'
+                          ? 'Address of Proposed Distributor Premises'
                           : vendor_category === 'miller'
-                            ? 'Address of Proposed Milling Unit Premises'
-                            : 'Address Information'
+                          ? 'Address of Proposed Milling Unit Premises'
+                          : 'Address Information'
                       }`}
                     </Typography>
                   </Box>
@@ -308,7 +311,7 @@ export default function BasicInfo() {
                         disabled={disable}
                         placeholder="Choose Your State"
                         fullWidth
-                        options={stateOptions.map((option) => option?.state_name)}
+                        options={stateOptions?.map((option) => option?.state_name)}
                         getOptionLabel={(option) => option}
                         onChange={handleStateChange}
                       />
@@ -319,7 +322,7 @@ export default function BasicInfo() {
                         label="District"
                         placeholder="Choose Your District"
                         fullWidth
-                        options={districtOptions.map((option) => option?.district)}
+                        options={districtOptions?.map((option) => option?.district)}
                         getOptionLabel={(option) => option}
                         disabled={!data1}
                       />
@@ -330,7 +333,7 @@ export default function BasicInfo() {
                         label="Branch"
                         placeholder="Choose Your Branch"
                         fullWidth
-                        options={branchOptions.map((option) => option?.branch_name)}
+                        options={branchOptions?.map((option) => option?.branch_name)}
                         getOptionLabel={(option) => option}
                         disabled={!data1}
                       />
@@ -342,7 +345,7 @@ export default function BasicInfo() {
                 </Card>
               </Grid>
             </Grid>
-         <Stack display={'flex'} alignItems={'flex-end'} sx={{ mt: 3 }}>
+            <Stack display={'flex'} alignItems={'flex-end'} sx={{ mt: 3 }}>
               <Box>
                 <Button
                   color="inherit"
@@ -368,3 +371,5 @@ export default function BasicInfo() {
     </>
   );
 }
+
+export default DistributorInfo;
