@@ -227,7 +227,6 @@ export default function BranchListView() {
         primary={params.row.quantity}
       />
     },
-
     {
       field: 'nccf_order_status',
       headerName: 'Status',
