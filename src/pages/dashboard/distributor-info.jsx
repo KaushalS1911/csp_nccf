@@ -148,7 +148,7 @@ function DistributorInfo(props) {
         <title> Dashboard | Basic Info</title>
       </Helmet>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-        <Typography variant="h4"> Basic Information</Typography>
+        <Typography variant="h4"> Distrubutor Information</Typography>
         <Box
           sx={{
             mt: 5,
@@ -170,9 +170,9 @@ function DistributorInfo(props) {
                       fontSize: '18px',
                     }}
                   >
-                    Basic Information
+                    Distributor Information
                     <Typography sx={{ fontSize: '13px', color: '#637381' }}>
-                      Basic Information Input fields
+                      Distributor Information Input fields
                     </Typography>
                   </Box>
                 </Box>
@@ -276,15 +276,8 @@ function DistributorInfo(props) {
                       fontSize: '18px',
                     }}
                   >
-                    <Typography variant="h5" gutterBottom className="heading" mt={2}>
-                      {` ${
-                        vendor_category === 'distributor' ||
-                        vendor_category === 'miller_distributor'
-                          ? 'Address of Proposed Distributor Premises'
-                          : vendor_category === 'miller'
-                          ? 'Address of Proposed Milling Unit Premises'
-                          : 'Address Information'
-                      }`}
+                    <Typography variant="h6" gutterBottom className="heading" mt={2}>
+                      { 'Address of Proposed Distributor Premises'}
                     </Typography>
                   </Box>
                 </Box>

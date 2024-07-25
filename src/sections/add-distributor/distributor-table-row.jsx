@@ -110,7 +110,7 @@ const status = "completed"
       >
         <MenuItem onClick={() => onViewRow()}>
           <Iconify icon="solar:eye-bold" />
-          View
+          View Documents
         </MenuItem>
         {/*<MenuItem*/}
         {/*  onClick={() => {*/}
