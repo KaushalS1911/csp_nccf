@@ -197,6 +197,8 @@ import UploadDistributorDocument from '../../sections/add-distributor/view/uploa
 import UploadMillerDocument from '../../sections/add-miller/view/upload-miller-document';
 import SingleMillerView from '../../sections/add-miller/view/single-miller-view';
 import DistributorInfo from '../../pages/dashboard/distributor-info';
+import MillerDocumentView from '../../sections/add-miller/view/miller-document-view';
+import DistributorDocumentView from '../../sections/add-distributor/view/distributor-document-view';
 
 // ----------------------------------------------------------------------
 
@@ -344,6 +346,7 @@ export const dashboardRoutes = [
           { path: 'add-distributor', element: <DistributorCreatePage /> },
           { path: 'document-upload', element: <UploadDistributorDocument /> },
           { path: 'distributor-view/:id', element: <SingleDistributorView /> },
+          { path: 'distributor-document-view/:id', element: <DistributorDocumentView /> },
         ],
       },
       {
@@ -354,6 +357,7 @@ export const dashboardRoutes = [
           { path: 'add-miller', element: <MillerCreatePage /> },
           { path: 'document-upload', element: <UploadMillerDocument /> },
           { path: 'miller-view/:id', element: <SingleMillerView /> },
+          { path: 'miller-document-view/:id', element: <MillerDocumentView /> },
         ],
       },
 

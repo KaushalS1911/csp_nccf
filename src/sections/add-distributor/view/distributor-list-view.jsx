@@ -44,7 +44,7 @@ import DistributorTableFiltersResult from '../distributor-table-filters-result';
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 const TABLE_HEAD = [
-  { id: 'srNo', label: 'Sr No', width: 88 },
+  { id: 'srNo', label: 'Sr No', width: 88,align:"center" },
   { id: 'name', label: 'Name', width: 100 },
   { id: 'category', label: 'Category', width: 100 },
   { id: 'type_of_firm', label: 'Type of firm', width: 100 },
@@ -52,6 +52,7 @@ const TABLE_HEAD = [
   { id: 'phone', label: 'Phone', width: 100 },
   { id: 'email', label: 'Email', width: 100 },
   { id: 'address', label: 'Address', width: 100 },
+  { id: '', label: '', width: 20 },
 ];
 const defaultFilters = {
   name: '',
@@ -182,8 +183,8 @@ export default function DistributorListView() {
   );
 
   const handleViewRow = useCallback(
-    (id) => {
-      router.push(paths.dashboard.document.document_view);
+    (code) => {
+      router.push(paths.dashboard.distributor.distributor_document_view(code));
     },
     [router]
   );
@@ -313,7 +314,7 @@ export default function DistributorListView() {
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                        onViewRow={() => handleViewRow(row.id)}
+                        onViewRow={() => handleViewRow(row.csp_code)}
                         onEditRow={() => handleEditRow(row.id)}
                         onView={() => handleDistributor(row.csp_code)}
                       />

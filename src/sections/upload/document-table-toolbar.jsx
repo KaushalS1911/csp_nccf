@@ -21,8 +21,24 @@ export default function DocumentTableToolbar({
   filters,
   onFilters,
   //
+  document,
   roleOptions,
 }) {
+  const typeOptions =[
+    { label: 'Registration Certificate', key: 'registration_certificate' },
+    { label: 'Undertaking', key: 'undertaking' },
+    { label: 'Audited Accounts', key: 'audited_accounts' },
+    { label: 'Income Tax', key: 'income_tax' },
+    { label: 'PAN', key: 'pan' },
+    { label: 'GST', key: 'gst' },
+    { label: 'Sale Registration', key: 'sale_registration' },
+    { label: 'Industrial Licence', key: 'industrial_licence' },
+    { label: 'Power Bills', key: 'power_bills' },
+    { label: 'Pollution Certificates', key: 'pollution_certificates' },
+    { label: 'Municipal Property Tax', key: 'municipal_property_tax' },
+    { label: 'FSSAI License', key: 'FSSAI_license' },
+    { label: 'Photographs of Unit', key: 'photographs_of_unit' }
+  ]
   const popover = usePopover();
 
   const handleFilterName = useCallback(
@@ -32,10 +48,10 @@ export default function DocumentTableToolbar({
     [onFilters]
   );
 
-  const handleFilterRole = useCallback(
+  const handleFilterType = useCallback(
     (event) => {
       onFilters(
-        'role',
+        'type',
         typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
       );
     },
@@ -56,34 +72,7 @@ export default function DocumentTableToolbar({
           pr: 2.5,
         }}
       >
-        {/* <FormControl
-          sx={{
-            flexShrink: 0,
-            width: { xs: 1, md: 200 },
-          }}
-        >
-          <InputLabel>Role</InputLabel>
 
-          <Select
-            multiple
-            value={filters.role}
-            onChange={handleFilterRole}
-            input={<OutlinedInput label="Role" />}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
-            MenuProps={{
-              PaperProps: {
-                sx: { maxHeight: 240 },
-              },
-            }}
-          >
-            {roleOptions.map((option) => (
-              <MenuItem key={option} value={option}>
-                <Checkbox disableRipple size="small" checked={filters.role.includes(option)} />
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl> */}
 
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
@@ -104,6 +93,34 @@ export default function DocumentTableToolbar({
           {/*  <Iconify icon="eva:more-vertical-fill" />*/}
           {/*</IconButton>*/}
         </Stack>
+        {document && <FormControl
+          sx={{
+            flexShrink: 0,
+            width: { xs: 1, md: 200 },
+          }}
+        >
+          <InputLabel>Type</InputLabel>
+
+          <Select
+            multiple
+            value={filters.type}
+            onChange={handleFilterType}
+            input={<OutlinedInput label="Type"/>}
+            renderValue={(selected) => selected.map((value) => value).join(', ')}
+            MenuProps={{
+              PaperProps: {
+                sx: { maxHeight: 240 },
+              },
+            }}
+          >
+            {typeOptions.map((option) => (
+              <MenuItem key={option} value={option.key}>
+                <Checkbox disableRipple size="small" checked={filters.type.includes(option.key)}/>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>}
       </Stack>
 
       <CustomPopover

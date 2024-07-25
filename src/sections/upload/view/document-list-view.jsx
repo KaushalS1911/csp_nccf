@@ -53,12 +53,13 @@ const TABLE_HEAD = [
 const defaultFilters = {
   name: '',
   role: [],
+  type:[],
   status: 'all',
 };
 
 // ----------------------------------------------------------------------
 
-export default function DocumentListView({ csp }) {
+export default function DocumentListView({ csp ,document}) {
   const { vendor } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState([]);
@@ -181,7 +182,7 @@ export default function DocumentListView({ csp }) {
           }}
         />}
         <Card>
-          <Tabs
+          { !document && <Tabs
             value={filters.status}
             onChange={handleFilterStatus}
             sx={{
@@ -217,8 +218,8 @@ export default function DocumentListView({ csp }) {
               />
             ))}
           </Tabs>
-
-          <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}/>
+          }
+          <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles} document={document}/>
 
           {canReset && (
             <DocumentTableFiltersResult
@@ -335,7 +336,7 @@ export default function DocumentListView({ csp }) {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, role } = filters;
+  const { name, status, role ,type} = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -358,6 +359,8 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (role.length) {
     inputData = inputData.filter((user) => role.includes(user.role));
+  }if (type.length) {
+    inputData = inputData.filter((user) => type.includes(user.doc_type));
   }
 
   return inputData;

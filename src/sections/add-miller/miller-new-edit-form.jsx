@@ -271,20 +271,7 @@ export default function MillerNewEditForm({ miller }) {
       </Grid>
     </>
   );
-  const table = (
-    <>
-      {mdUp && (
-        <Grid md={4}>
-          <Typography variant="h6" sx={{ mb: 0.5 }}>
-            Document list
-          </Typography>
-        </Grid>
-      )}
-      <Grid xs={12} md={12}>
-        <DocumentListView  csp={miller?.csp_code}/>
-      </Grid>
-    </>
-  );
+
 
   return (
     <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -296,7 +283,7 @@ export default function MillerNewEditForm({ miller }) {
             <Button variant="contained" type="submit">Submit</Button>
           </Box>
         </Grid>}
-        {miller && table}
+
       </Grid>
     </FormProvider>
   );

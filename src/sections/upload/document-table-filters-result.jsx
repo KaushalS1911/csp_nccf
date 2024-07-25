@@ -37,6 +37,14 @@ export default function DocumentTableFiltersResult({
     },
     [filters.role, onFilters]
   );
+  const handleRemoveType = useCallback(
+    (inputValue) => {
+      const newValue = filters.type.filter((item) => item !== inputValue);
+
+      onFilters('type', newValue);
+    },
+    [filters.type, onFilters]
+  );
 
   return (
     <Stack spacing={1.5} {...other}>
@@ -58,6 +66,12 @@ export default function DocumentTableFiltersResult({
           <Block label="Role:">
             {filters.role.map((item) => (
               <Chip key={item} label={item} size="small" onDelete={() => handleRemoveRole(item)} />
+            ))}
+          </Block>
+        )}  {!!filters.type.length && (
+          <Block label="Type:">
+            {filters.type.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveType(item)} />
             ))}
           </Block>
         )}

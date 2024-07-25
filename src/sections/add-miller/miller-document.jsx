@@ -28,8 +28,7 @@ const validationSchema = yup.object().shape({
   doc_type: yup.string().required('Document type is required'),
 });
 function MillerDocument({documentLabel}) {
-  const settings = useSettingsContext();
-  const [disName,setDisName] = useState('')
+  const [selectedRole, setSelectedRole] = useState(true);
   const router = useRouter();
   const { vendor } = useAuthContext();
   const [files, setFiles] = useState([]);
@@ -44,13 +43,15 @@ function MillerDocument({documentLabel}) {
     }),
     [],
   );
-
+  const handleRoleChange = (event) => {
+    setSelectedRole(event.target.value ? false : true);
+  };
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(validationSchema),
   });
 
-  const { handleSubmit, control, setValue, watch } = methods;
+  const { handleSubmit, control, setValue, watch,reset } = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     if (!files[0]?.preview) {
@@ -80,61 +81,22 @@ function MillerDocument({documentLabel}) {
       }
     }
   });
-  const otherOption = [
-    { label: 'Aadhar', key: 'Aadhar' },
-    { label: 'Certificates', key: 'certificates' },
-    { label: 'Gst Number', key: 'gst_number' },
-    { label: 'Pan Number', key: 'pan_number' },
-  ];
-  const Cooperatives = [
-    {
-      label: 'Company profile with ownership details (list of Directors/ partners etc.)',
-      key: 'Company_profile_with_ownership_details',
-    },
-    {
-      label: 'Proposal letter from the firm/Expression of interest ( On letter Head)',
-      key: 'Proposal_letter_from_the_firm/Expression_of_interest',
-    },
+
+  const docTypeOption =[
     { label: 'Registration Certificate', key: 'registration_certificate' },
-    {
-      label: 'Affidavit in the prescribed format ( 100 Rs Stamp)',
-      key: 'Affidavit_in_the_prescribed_format',
-    },
-    {
-      label: 'Audited Accounts for the last 3 years',
-      key: 'Audited_accounts_for_the_last_3_years',
-    },
-    {
-      label: 'Income Tax Return for last financial year',
-      key: 'Income_tax_return_for_last_financial_year',
-    },
-    { label: 'Copy of PAN', key: 'Copy_of_PAN' },
-    {
-      label: 'Copy of G.S.T./VAT/ Sales Tax Registration Certificate',
-      key: 'Copy_of_G.S.T./VAT/_Sales_Tax_Registration_Certificate',
-    },
-    { label: 'Copy of Latest Trade License', key: 'Copy_of_Latest_Trade_License' },
-    {
-      label: 'Municipal/Property Tax Receipt ( If Any)',
-      key: 'Municipal/Property_Tax_Receipt_( If Any)',
-    },
-    { label: 'FSSAI license', key: 'FSSAI_license' },
-    {
-      label: 'Undertaking in prescribed format ( On letter Head )',
-      key: 'Undertaking_in_prescribed_format_( On letter Head )',
-    },
-    {
-      label: 'CSP agreement in prescribed format(1000 Rs Stamp)',
-      key: 'CSP_agreement_in_prescribed_format(1000 Rs Stamp)',
-    },
-    {
-      label: 'Distributors/Retail outlets details ( Hard copy / Excel Format)',
-      key: 'Distributors/Retail_outlets_details_( Hard copy / Excel Format)',
-    },
-    { label: 'Cancelled Cheque', key: 'Cancelled_Cheque' },
+    { label: 'Undertaking', key: 'undertaking' },
+    { label: 'Audited Accounts', key: 'audited_accounts' },
+    { label: 'Income Tax', key: 'income_tax' },
+    { label: 'PAN', key: 'pan' },
+    { label: 'GST', key: 'gst' },
+    { label: 'Sale Registration', key: 'sale_registration' },
+    { label: 'Industrial Licence', key: 'industrial_licence' },
+    { label: 'Power Bills', key: 'power_bills' },
+    { label: 'Pollution Certificates', key: 'pollution_certificates' },
+    { label: 'Municipal Property Tax', key: 'municipal_property_tax' },
+    { label: 'FSSAI License', key: 'FSSAI_license' },
+    { label: 'Photographs of Unit', key: 'photographs_of_unit' }
   ];
-  const docTypeOption =
-    vendor?.mil_dis_sub_roles === 'cooperative_rent_mill' ? Cooperatives  : otherOption;
 
   files[0]?.preview ? onSubmit() : null;
   const handleDropMultiFile = useCallback(
@@ -151,14 +113,7 @@ function MillerDocument({documentLabel}) {
     [files],
   );
 
-  const handleRemoveFile = (inputFile) => {
-    const filesFiltered = files.filter((fileFiltered) => fileFiltered !== inputFile);
-    setFiles(filesFiltered);
-  };
 
-  const handleRemoveAllFiles = () => {
-    setFiles([]);
-  };
   const handleAllSubmit = useCallback(async (data) => {
     setLoading(true);
     const options = {
@@ -194,7 +149,11 @@ function MillerDocument({documentLabel}) {
       );
       if (responses) {
         enqueueSnackbar('Your Document Uploaded');
-        router.push(paths.dashboard.miller.miller_list);
+        setSelected([])
+        setFiles([]);
+        reset(defaultValues);
+        // router.push(paths.dashboard.miller.miller_list);
+
         setLoading(false);
       } else {
         enqueueSnackbar('Failed to Upload');
@@ -216,7 +175,6 @@ function MillerDocument({documentLabel}) {
   const handleImageClick = () => {
     fileInputRef.current.click();
   };
-
   const renderDetails = (
     <>
       <Helmet>
@@ -245,140 +203,9 @@ function MillerDocument({documentLabel}) {
        />
 
        <Card>
-         {/*<Stack spacing={3} sx={{ p: 3 }}>*/}
-         {/*  <Stack>*/}
-         {/*    {*/}
-         {/*      documentLabel &&  <Box*/}
-         {/*        rowGap={3}*/}
-         {/*        columnGap={2}*/}
-         {/*        display="grid"*/}
-         {/*        gridTemplateColumns={{*/}
-         {/*          xs: 'repeat(1, 1fr)',*/}
-         {/*          sm: 'repeat(1, 1fr)',*/}
-         {/*          md:  'repeat(1, 1fr)',*/}
-         {/*        }}*/}
-         {/*      >*/}
 
-         {/*        <Controller*/}
-         {/*          name="csp"*/}
-         {/*          control={control}*/}
-         {/*          render={({ field, fieldState }) => (*/}
-         {/*            <FormControl fullWidth error={!!fieldState.error}>*/}
-         {/*              <InputLabel>Select distributor</InputLabel>*/}
-         {/*              <Select {...field} label="Select distributor" >*/}
-         {/*                {documentLabel?.map((option) => (*/}
-         {/*                  <MenuItem key={option.name} value={option.code}>*/}
-         {/*                    {option.label}*/}
-         {/*                  </MenuItem>*/}
-         {/*                ))}*/}
-         {/*              </Select>*/}
-         {/*              {fieldState.error && (*/}
-         {/*                <Typography variant="caption" color="error">*/}
-         {/*                  {fieldState.error.message}*/}
-         {/*                </Typography>*/}
-         {/*              )}*/}
-         {/*            </FormControl>*/}
-         {/*          )}*/}
-         {/*        />*/}
-         {/*      </Box>*/}
-         {/*    }*/}
-         {/*    <Box*/}
-         {/*      rowGap={2}*/}
-         {/*      columnGap={2}*/}
-         {/*      display="grid"*/}
-         {/*      gridTemplateColumns={{*/}
-         {/*        xs: 'repeat(1, 1fr)',*/}
-         {/*        sm: 'repeat(1, 1fr)',*/}
-         {/*        md:  'repeat(1, 1fr)' ,*/}
-         {/*      }}*/}
-         {/*      sx={{mt:3}}*/}
-         {/*    >*/}
-
-         {/*      <Controller*/}
-         {/*        name="doc_type"*/}
-         {/*        control={control}*/}
-         {/*        render={({ field, fieldState }) => (*/}
-         {/*          <FormControl fullWidth error={!!fieldState.error}>*/}
-         {/*            <InputLabel>Document Type</InputLabel>*/}
-         {/*            <Select {...field} label="Document Type"  >*/}
-         {/*              {docTypeOption.map((option) => (*/}
-         {/*                <MenuItem key={option.key} value={option.key}>*/}
-         {/*                  {option.label}*/}
-         {/*                </MenuItem>*/}
-         {/*              ))}*/}
-         {/*            </Select>*/}
-         {/*            {fieldState.error && (*/}
-         {/*              <Typography variant="caption" color="error">*/}
-         {/*                {fieldState.error.message}*/}
-         {/*              </Typography>*/}
-         {/*            )}*/}
-         {/*          </FormControl>*/}
-         {/*        )}*/}
-         {/*      />*/}
-         {/*    </Box>*/}
-
-         {/*    <Box sx={{ position: 'relative' }}>*/}
-         {/*      <Upload*/}
-         {/*        sx={{*/}
-         {/*          height: '100px',*/}
-         {/*          width: '100px',*/}
-         {/*          position: 'absolute',*/}
-         {/*          right: '0%',*/}
-         {/*          zIndex: '200',*/}
-         {/*          opacity: '0',*/}
-         {/*        }}*/}
-         {/*        accept={{*/}
-         {/*          'image/jpeg': [],*/}
-         {/*          'image/jpg': [],*/}
-         {/*          'image/png': [],*/}
-         {/*        }}*/}
-         {/*        disabled={selected.length >= 5}*/}
-         {/*        multiple*/}
-         {/*        onDrop={handleDropMultiFile}*/}
-         {/*      />*/}
-         {/*      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: '20px' }}>*/}
-         {/*        <Button style={{ cursor: 'pointer', maxWidth: '200px' }} variant="contained">*/}
-         {/*          Choose File*/}
-         {/*        </Button>*/}
-         {/*      </Box>*/}
-         {/*    </Box>*/}
-         {/*  </Stack>*/}
-         {/*</Stack>*/}
          <Stack spacing={3} sx={{ p: 3 }}>
            <Stack>
-             {/*<Box*/}
-             {/*    rowGap={3}*/}
-             {/*    columnGap={2}*/}
-             {/*    display="grid"*/}
-             {/*    gridTemplateColumns={{*/}
-             {/*      xs: 'repeat(1, 1fr)',*/}
-             {/*      sm: 'repeat(1, 1fr)',*/}
-             {/*      md:  'repeat(3, 1fr)',*/}
-             {/*    }}*/}
-             {/*  >*/}
-
-             {/*    <Controller*/}
-             {/*      name="csp"*/}
-             {/*      control={control}*/}
-             {/*      render={({ field, fieldState }) => (*/}
-             {/*        <FormControl fullWidth error={!!fieldState.error}>*/}
-             {/*          <InputLabel>Select distributor</InputLabel>*/}
-             {/*          <Select {...field} label="Select distributor" >*/}
-             {/*            {documentLabel?.map((option) => (*/}
-             {/*              <MenuItem key={option.name} value={option.code}>*/}
-             {/*                {option.label}*/}
-             {/*              </MenuItem>*/}
-             {/*            ))}*/}
-             {/*          </Select>*/}
-             {/*          {fieldState.error && (*/}
-             {/*            <Typography variant="caption" color="error">*/}
-             {/*              {fieldState.error.message}*/}
-             {/*            </Typography>*/}
-             {/*          )}*/}
-             {/*        </FormControl>*/}
-             {/*      )}*/}
-             {/*    />*/}
-             {/*  </Box>*/}
 
              <Box
                rowGap={2}
@@ -397,7 +224,10 @@ function MillerDocument({documentLabel}) {
                  render={({ field, fieldState }) => (
                    <FormControl fullWidth error={!!fieldState.error}>
                      <InputLabel>Select miller</InputLabel>
-                     <Select {...field} label="Select miller" >
+                     <Select {...field} label="Select miller"   onChange={(event) => {
+                       field.onChange(event);
+                       handleRoleChange(event);
+                     }}>
                        {documentLabel?.map((option) => (
                          <MenuItem key={option.name} value={option.code}>
                            {option.label}
@@ -416,6 +246,7 @@ function MillerDocument({documentLabel}) {
                <Controller
                  name="doc_type"
                  control={control}
+                 disabled={selectedRole}
                  render={({ field, fieldState }) => (
                    <FormControl fullWidth error={!!fieldState.error}>
                      <InputLabel>Document Type</InputLabel>
@@ -436,8 +267,9 @@ function MillerDocument({documentLabel}) {
                />
              </Box>
 
-             <Box sx={{ position: 'relative' }}>
+             <Box sx={{ position: 'relative' }} disabled={selectedRole}>
                <Upload
+
                  sx={{
                    height: '100px',
                    width: '100px',
@@ -451,12 +283,12 @@ function MillerDocument({documentLabel}) {
                    'image/jpg': [],
                    'image/png': [],
                  }}
-                 disabled={selected.length >= 5}
+                 disabled={(selected.length >= 5 || selectedRole)}
                  multiple
                  onDrop={handleDropMultiFile}
                />
                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: '20px' }}>
-                 <Button style={{ cursor: 'pointer', maxWidth: '200px' }} variant="contained">
+                 <Button style={{ cursor: 'pointer', maxWidth: '200px' }} disabled={selectedRole} variant="contained">
                    Choose File
                  </Button>
                </Box>

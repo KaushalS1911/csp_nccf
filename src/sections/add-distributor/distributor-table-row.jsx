@@ -94,6 +94,12 @@ const status = "completed"
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell> */}
+        <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+
+          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+            <Iconify icon="eva:more-vertical-fill" />
+          </IconButton>
+        </TableCell>
       </TableRow>
       <DocumentQuickEditForm currentUser={row} open={quickEdit.value} onClose={quickEdit.onFalse} />
       <CustomPopover
@@ -102,7 +108,7 @@ const status = "completed"
         arrow="right-top"
         sx={{ width: 140 }}
       >
-        <MenuItem onClick={() => handleViewDialog(url)}>
+        <MenuItem onClick={() => onViewRow()}>
           <Iconify icon="solar:eye-bold" />
           View
         </MenuItem>
