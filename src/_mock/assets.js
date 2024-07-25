@@ -513,7 +513,6 @@ export const _descriptions = [
   `Ipsam aliquam velit nobis repellendus officiis aut deserunt id et. Nihil sunt aut dolores aut. Dolores est ipsa quia et laborum quidem laborum accusamus id. Facilis odit quod hic laudantium saepe omnis nisi in sint. Sed cupiditate possimus id.`,
   `Magnam non eveniet optio optio ut aliquid atque. Velit libero aspernatur quis laborum consequatur laudantium. Tempora facere optio fugit accusantium ut. Omnis aspernatur reprehenderit autem esse ut ut enim voluptatibus.`,
 ];
-
 export function handleDoctypeLabel(doc) {
   switch (doc) {
     case 'certificates': {
@@ -534,11 +533,38 @@ export function handleDoctypeLabel(doc) {
     case 'milling_unit_photo': {
       return 'Milling Unit Photo';
     }
+    case 'registration_certificate':
+      return 'Registration Certificate';
+    case 'undertaking':
+      return 'Undertaking';
+    case 'audited_accounts':
+      return 'Audited Accounts';
+    case 'income_tax':
+      return 'Income Tax';
+    case 'pan':
+      return 'PAN';
+    case 'gst':
+      return 'GST';
+    case 'sale_registration':
+      return 'Sale Registration';
+    case 'industrial_licence':
+      return 'Industrial Licence';
+    case 'power_bills':
+      return 'Power Bills';
+    case 'pollution_certificates':
+      return 'Pollution Certificates';
+    case 'municipal_property_tax':
+      return 'Municipal Property Tax';
+    case 'FSSAI_license':
+      return 'FSSAI License';
+    case 'photographs_of_unit':
+      return 'Photographs of Unit';
     default: {
       return '';
     }
   }
 }
+
 
 export function handleFilterTypes(type) {
   switch (type) {
