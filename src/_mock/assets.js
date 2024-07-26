@@ -564,6 +564,64 @@ export function handleDoctypeLabel(doc) {
     }
   }
 }
+export function handleDoctypeValue(label) {
+  switch (label) {
+    case 'Certificates': {
+      return 'certificates';
+    }
+    case 'GST': {
+      return 'gst_number';
+    }
+    case 'PAN': {
+      return 'pan_number';
+    }
+    case 'Aadhar': {
+      return 'Aadhar';
+    }
+    case 'Milling Unit Video': {
+      return 'milling_unit_video';
+    }
+    case 'Milling Unit Photo': {
+      return 'milling_unit_photo';
+    }
+    case 'Registration Certificate': {
+      return 'registration_certificate';
+    }
+    case 'Undertaking': {
+      return 'undertaking';
+    }
+    case 'Audited Accounts': {
+      return 'audited_accounts';
+    }
+    case 'Income Tax': {
+      return 'income_tax';
+    }
+    case 'Sale Registration': {
+      return 'sale_registration';
+    }
+    case 'Industrial Licence': {
+      return 'industrial_licence';
+    }
+    case 'Power Bills': {
+      return 'power_bills';
+    }
+    case 'Pollution Certificates': {
+      return 'pollution_certificates';
+    }
+    case 'Municipal Property Tax': {
+      return 'municipal_property_tax';
+    }
+    case 'FSSAI License': {
+      return 'FSSAI_license';
+    }
+    case 'Photographs of Unit': {
+      return 'photographs_of_unit';
+    }
+    default: {
+      return '';
+    }
+  }
+}
 
 
 export function handleFilterTypes(type) {

@@ -22,6 +22,7 @@ import { error } from 'src/theme/palette';
 import { useAuthContext } from 'src/auth/hooks';
 import { LoadingScreen } from 'src/components/loading-screen';
 import imageCompression from 'browser-image-compression';
+import { handleDoctypeLabel } from '../../_mock';
 
 const validationSchema = yup.object().shape({
   doc_type: yup.string().required('Document type is required'),
@@ -30,10 +31,12 @@ const validationSchema = yup.object().shape({
 export default function UploadDocument() {
   const settings = useSettingsContext();
   const router = useRouter();
+  const [docs, setDocs] = useState('');
   const { vendor } = useAuthContext();
   const [files, setFiles] = useState([]);
   const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [tableData, setTableData] = useState([]);
 
   const defaultValues = useMemo(
     () => ({
@@ -42,7 +45,19 @@ export default function UploadDocument() {
     }),
     []
   );
+  useEffect(() => {
+    getAllDocument();
+  }, [vendor?.csp_code]);
 
+  function getAllDocument() {
+
+    if (vendor?.csp_code) {
+      axios
+        .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/documents`)
+        .then((res) => setTableData(res?.data?.data))
+        .catch((err) => console.error(err));
+    }
+  }
   const methods = useForm({
     defaultValues,
     resolver: yupResolver(validationSchema),
@@ -108,23 +123,37 @@ export default function UploadDocument() {
   const handleRemoveAllFiles = () => {
     setFiles([]);
   };
-  const handleAllSubmit = useCallback(async (data) => {
+  const handleAllSubmit = async (data) => {
+
+    const filteredData = tableData?.filter((item) => item.doc_type === docs);
+
+    if (filteredData.length >= 5) {
+      // enqueueSnackbar(`${handleDoctypeLabel(filteredData[0]?.doc_type)} upload limit exceed. (If you want to upload more document of ${handleDoctypeLabel(filteredData[0]?.doc_type)}, then remove existing ${handleDoctypeLabel(filteredData[0]?.doc_type)}.)`, { variant: 'error' });
+      enqueueSnackbar(
+        <Box sx={{p:"5px"}}>
+          <Typography variant="subtitle1" style={{ fontWeight: 'bold' }}>
+            {` ${handleDoctypeLabel(filteredData[0]?.doc_type)} upload limit exceed`}
+          </Typography>
+          <Typography variant="body2">
+            {`If you want to upload more document of ${handleDoctypeLabel(filteredData[0]?.doc_type)}, then remove existing ${handleDoctypeLabel(filteredData[0]?.doc_type)}`}
+          </Typography>
+        </Box>,
+        {
+          variant: 'error',
+          autoHideDuration: 3000,
+        }
+      );
+      return;
+    }
+
     setLoading(true);
     const options = {
-maxSizeMB: 0.5,
-maxWidthOrHeight: 1200,
-useWebWorker: true,
-};
-    // const formDataList = await Promise.all(
-    //   data.map((value) => {
-    //     const formData = new FormData();
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 1200,
+      useWebWorker: true,
+    };
 
-    //     formData.append('file', value?.image);
-    //     formData.append('doc_type', value?.type);
-    //     formData.append('csp_code', vendor?.csp_code);
-    //     return formData;
-    //   })
-    // );
+    try {
       const formDataList = await Promise.all(
         data.map(async (value) => {
           const formData = new FormData();
@@ -135,7 +164,7 @@ useWebWorker: true,
           return formData;
         })
       );
-    try {
+
       const responses = await Promise.all(
         formDataList.map((formData) =>
           axios.post(
@@ -149,17 +178,20 @@ useWebWorker: true,
           )
         )
       );
+
       if (responses) {
         enqueueSnackbar('Your Document Uploaded');
         router.push(paths.dashboard.document.document_list);
       } else {
-        enqueueSnackbar('Failed to Upload',{variant:"error"});
+        enqueueSnackbar('Failed to Upload', { variant: 'error' });
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      enqueueSnackbar('Failed to Upload',{variant:"error"});
+      enqueueSnackbar('Failed to Upload', { variant: 'error' });
+    } finally {
+      setLoading(false);
     }
-  }, []);
+  };
   const handleDeleteRow = useCallback(
     (id) => {
       const deleteRow = selected.filter((row) => row.id !== id);
@@ -200,7 +232,10 @@ useWebWorker: true,
                 render={({ field, fieldState }) => (
                   <FormControl fullWidth error={!!fieldState.error}>
                     <InputLabel>Document Type</InputLabel>
-                    <Select {...field} label="Document Type" disabled={selected.length >= 5}>
+                    <Select {...field} label="Document Type" disabled={selected.length >= 5} onChange={(event) => {
+                      field.onChange(event);
+                      setDocs(event.target.value);
+                    }}>
                       {docTypeOption.map((option) => (
                         <MenuItem key={option.key} value={option.key}>
                           {option.label}

@@ -106,7 +106,7 @@ const status = "completed"
         open={popover.open}
         onClose={popover.onClose}
         arrow="right-top"
-        sx={{ width: 140 }}
+        // sx={{ width: 140 }}
       >
         <MenuItem onClick={() => onViewRow()}>
           <Iconify icon="solar:eye-bold" />
