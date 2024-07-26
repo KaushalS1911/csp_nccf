@@ -143,7 +143,7 @@ function MillerDocument({ documentLabel }) {
               {` ${handleDoctypeLabel(filteredData[0]?.doc_type)} upload limit exceed`}
             </Typography>
             <Typography variant="body2">
-              {`If you want to upload more document of ${handleDoctypeLabel(filteredData[0]?.doc_type)}, then remove existing ${handleDoctypeLabel(filteredData[0]?.doc_type)}`}
+              {`If you want to upload more document of ${handleDoctypeLabel(filteredData[0]?.doc_type)}, then remove existing ${handleDoctypeLabel(filteredData[0]?.doc_type)} document.`}
             </Typography>
           </Box>,
           {
