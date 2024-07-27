@@ -1,1 +1,0 @@
-import{j as r,H as t}from"./index-wjyZnJOr.js";import{O as e}from"./order-details-view-0jxpllqP.js";import"./DatePicker-9VsZ8pIB.js";import"./custom-date-range-picker-tuigdCl4.js";import"./TimelineItem-J5QAeMns.js";function d(){return r.jsxs(r.Fragment,{children:[r.jsx(t,{children:r.jsx("title",{children:" Dashboard: Order List"})}),r.jsx(e,{})]})}export{d as default};
