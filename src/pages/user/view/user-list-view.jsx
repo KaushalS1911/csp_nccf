@@ -53,29 +53,28 @@ const defaultFilters = {
   status: 'all',
 };
 // ----------------------------------------------------------------------
-export default function UserListView({ tableData: initialTableData }) {
+export default function UserListView({ tableData }) {
   const { enqueueSnackbar } = useSnackbar();
   const settings = useSettingsContext();
   const router = useRouter();
   const confirm = useBoolean();
   const table = useTable();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(0);
   const [filters, setFilters] = useState(defaultFilters);
-  const [edit,setEdit] = useState('');
-  const [tableData, setTableData] = useState(initialTableData);
-  useEffect(() => {
-    setTableData(initialTableData);
-  }, [initialTableData]);
+  const [edit,setEdit] = useState({});
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
+
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
   );
+
   const denseHeight = table.dense ? 56 : 76;
   const canReset = !isEqual(defaultFilters, filters);
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
@@ -89,9 +88,11 @@ export default function UserListView({ tableData: initialTableData }) {
     },
     [table]
   );
+
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
   }, []);
+
   const handleDeleteRow = useCallback(
     (id) => {
       const deleteRow = tableData.filter((row) => row.id !== id);
@@ -101,6 +102,7 @@ export default function UserListView({ tableData: initialTableData }) {
     },
     [dataInPage.length, enqueueSnackbar, table, tableData]
   );
+
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !table.selected.includes(row.id));
     enqueueSnackbar('Delete success!');
@@ -110,24 +112,30 @@ export default function UserListView({ tableData: initialTableData }) {
       totalRowsFiltered: dataFiltered.length,
     });
   }, [dataFiltered.length, dataInPage.length, enqueueSnackbar, table, tableData]);
+
   const handleEditRow = useCallback(
-    (id) => {
-      setEditDialogOpen(true)
+    (row) => {
+      setEditDialogOpen(row?.id)
+      setEdit(row)
+      // console.log(id);
     },
     [router]
   );
+
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
     },
     [handleFilters]
   );
+
   const handleAddOrder = useCallback(
     (newOrder) => {
       setTableData((prevData) => [...prevData, newOrder]);
     },
     [enqueueSnackbar]
   );
+
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xxl'}>
@@ -141,14 +149,7 @@ export default function UserListView({ tableData: initialTableData }) {
               variant="contained"
               startIcon={<Iconify icon="mingcute:add-line" />}
               onClick={() => {
-                setDialogOpen(true),
-                  handleAddOrder({
-                    id: String(Date.now()),
-                    srNo: String(tableData.length + 1),
-                    commodity: 'New Commodity',
-                    created_at: new Date().toISOString(),
-                    status: 'placed',
-                  });
+                setDialogOpen(true)
               }}
             >
               Add Order
@@ -215,7 +216,7 @@ export default function UserListView({ tableData: initialTableData }) {
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
                         onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
+                        onEditRow={() => handleEditRow(row)}
                       />
                     ))}
                   <TableEmptyRows
@@ -256,8 +257,9 @@ export default function UserListView({ tableData: initialTableData }) {
           </Button>
         }
       />
-      <AppDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} editId={edit}/>
-      <EditOrderDialog editDialogOpen={editDialogOpen} setEditDialogOpen={setEditDialogOpen} editId={edit}/>
+
+      <AppDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} editId={edit} />
+      <EditOrderDialog editDialogOpen={editDialogOpen} setEditDialogOpen={setEditDialogOpen} editData={edit} dataFiltered={dataFiltered}/>
     </>
   );
 }

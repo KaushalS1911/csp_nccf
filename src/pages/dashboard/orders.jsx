@@ -15,6 +15,15 @@ import RHFAutocomplete from 'src/components/hook-form/rhf-autocomplete';
 import { useAuthContext } from '../../auth/hooks';
 import { useSettingsContext } from '../../components/settings/context';
 import { Helmet } from 'react-helmet-async';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+
+
+const validationSchema = yup.object().shape({
+  commodity: yup.string().required('Commodity is required'),
+  quantity: yup.string().required('Quantity is required'),
+});
+
 
 export default function OrderNewForm() {
   const [commodities, setCommodities] = useState([]);
@@ -34,6 +43,8 @@ export default function OrderNewForm() {
     });
   }
 
+
+
   const defaultValues = useMemo(
     () => ({
       csp_code: vendor.csp_code,
@@ -44,6 +55,7 @@ export default function OrderNewForm() {
   );
   const methods = useForm({
     defaultValues,
+    resolver: yupResolver(validationSchema),
   });
 
   const {

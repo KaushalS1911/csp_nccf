@@ -154,7 +154,6 @@ const MillerUploadDocument = () => {
       data.map(async (value) => {
         const formData = new FormData();
         const compressedFile = await imageCompression(value?.image, options);
-        console.log(compressedFile, 'fileCompress');
         formData.append('file', compressedFile);
         // formData.append('file', value?.image);
         formData.append('doc_type', value?.type);
@@ -163,7 +162,6 @@ const MillerUploadDocument = () => {
       })
     );
     try {
-      console.log(formDataList);
       // const responses = await Promise.all(
       //   formDataList.map((formData) =>
       //     axios.post(

@@ -93,7 +93,7 @@ export default function DocumentTableToolbar({
           {/*  <Iconify icon="eva:more-vertical-fill" />*/}
           {/*</IconButton>*/}
         </Stack>
-        {document && <FormControl
+         <FormControl
           sx={{
             flexShrink: 0,
             width: { xs: 1, md: 200 },
@@ -120,7 +120,7 @@ export default function DocumentTableToolbar({
               </MenuItem>
             ))}
           </Select>
-        </FormControl>}
+        </FormControl>
       </Stack>
 
       <CustomPopover

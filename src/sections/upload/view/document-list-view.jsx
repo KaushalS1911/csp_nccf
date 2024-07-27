@@ -181,43 +181,43 @@ export default function DocumentListView({ csp ,document}) {
           }}
         />}
         <Card>
-          { !document && <Tabs
-            value={filters.status}
-            onChange={handleFilterStatus}
-            sx={{
-              px: 2.5,
-              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-            }}
-          >
-            {(csp ? tab : DOCUMENTS).map((tab) => (
-              <Tab
-                key={tab.value}
-                iconPosition="end"
-                value={tab.value}
-                label={tab.label}
-                icon={
-                  <Label
-                    variant={
-                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
-                    }
-                    color={
-                      (tab.value === 'Aadhar' && 'secondary') ||
-                      (tab.value === 'certificates' && 'warning') ||
-                      (tab.value === 'gst_number' && 'success') ||
-                      (tab.value === 'pan_number' && 'info') ||
-                      (tab.value === 'milling_unit_video' && 'error') ||
-                      'default'
-                    }
-                  >
-                    {tab.value === 'all'
-                      ? tableData.length
-                      : tableData.filter((user) => user.doc_type === tab.value).length}
-                  </Label>
-                }
-              />
-            ))}
-          </Tabs>
-          }
+          {/*{ !document && <Tabs*/}
+          {/*  value={filters.status}*/}
+          {/*  onChange={handleFilterStatus}*/}
+          {/*  sx={{*/}
+          {/*    px: 2.5,*/}
+          {/*    boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  {(csp ? tab : DOCUMENTS).map((tab) => (*/}
+          {/*    <Tab*/}
+          {/*      key={tab.value}*/}
+          {/*      iconPosition="end"*/}
+          {/*      value={tab.value}*/}
+          {/*      label={tab.label}*/}
+          {/*      icon={*/}
+          {/*        <Label*/}
+          {/*          variant={*/}
+          {/*            ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'*/}
+          {/*          }*/}
+          {/*          color={*/}
+          {/*            (tab.value === 'Aadhar' && 'secondary') ||*/}
+          {/*            (tab.value === 'certificates' && 'warning') ||*/}
+          {/*            (tab.value === 'gst_number' && 'success') ||*/}
+          {/*            (tab.value === 'pan_number' && 'info') ||*/}
+          {/*            (tab.value === 'milling_unit_video' && 'error') ||*/}
+          {/*            'default'*/}
+          {/*          }*/}
+          {/*        >*/}
+          {/*          {tab.value === 'all'*/}
+          {/*            ? tableData.length*/}
+          {/*            : tableData.filter((user) => user.doc_type === tab.value).length}*/}
+          {/*        </Label>*/}
+          {/*      }*/}
+          {/*    />*/}
+          {/*  ))}*/}
+          {/*</Tabs>*/}
+          {/*}*/}
           <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles} document={document}/>
 
           {canReset && (

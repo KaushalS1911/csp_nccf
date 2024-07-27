@@ -35,6 +35,8 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
   function handleClose() {
     setOpen(false)
   }
+
+  console.log(doc_type);
   function handleViewDialog(url) {
     setImages([url]);
     popover.onClose()
