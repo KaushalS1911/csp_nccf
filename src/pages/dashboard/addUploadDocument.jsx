@@ -154,7 +154,9 @@ export default function UploadDocument({ container }) {
   const docTypeOption =
     vendor?.mil_dis_sub_roles === 'cooperative_rent_mill' ? Cooperatives : otherOption;
 
-  files[0]?.preview ? onSubmit() : null;
+  useEffect(() => {
+    files[0]?.preview ? onSubmit() : null;
+  },[files])
   const handleDropMultiFile = useCallback(
     (acceptedFiles) => {
       setFiles([

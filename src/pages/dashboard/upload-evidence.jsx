@@ -100,7 +100,9 @@ export default function UploadDocument() {
     { label: 'Milling Unit Photo', key: 'milling_unit_photo' },
     { label: 'Milling Unit Video', key: 'milling_unit_video' },
   ];
-  files[0]?.preview ? onSubmit() : null;
+  useEffect(() => {
+    files[0]?.preview ? onSubmit() : null;
+  },[files])
   const handleDropMultiFile = useCallback(
     (acceptedFiles) => {
       setFiles([
@@ -124,7 +126,6 @@ export default function UploadDocument() {
     setFiles([]);
   };
   const handleAllSubmit = async (data) => {
-
     const filteredData = tableData?.filter((item) => item.doc_type === docs);
 
     if (filteredData.length >= 5) {
