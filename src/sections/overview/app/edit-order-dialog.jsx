@@ -125,7 +125,7 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import { enqueueSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
-export default function EditOrderDialog({ editDialogOpen, setEditDialogOpen, editData, dataFiltered }) {
+export default function EditOrderDialog({ editDialogOpen, setEditDialogOpen, editData, dataFiltered,fetchAllOrdersDemo }) {
   const [commodities, setCommodities] = useState([]);
   const { vendor } = useAuthContext();
 const [edit,setEdit] = useState({})
@@ -181,6 +181,7 @@ const [edit,setEdit] = useState({})
       );
       if (response.data.status == '201') {
         enqueueSnackbar('Order added successfully!');
+        fetchAllOrdersDemo()
       } else if (response.data.status == '400') {
         enqueueSnackbar('Failed to add order.', { variant: 'error' });
       }

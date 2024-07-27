@@ -24,7 +24,7 @@ const validationSchema = yup.object().shape({
   quantity: yup.string().required('Quantity is required'),
 });
 
-export default function AppDialog({ dialogOpen, setDialogOpen, editId }) {
+export default function AppDialog({ dialogOpen, setDialogOpen, editId,fetchAllOrdersDemo }) {
   const [commodities, setCommodities] = useState([]);
   const [orderList, setOrderList] = useState([]);
   const { vendor } = useAuthContext();
@@ -78,6 +78,7 @@ export default function AppDialog({ dialogOpen, setDialogOpen, editId }) {
       if (response.data.status == '201') {
         enqueueSnackbar('Order added successfully!');
         setDialogOpen(false);
+        fetchAllOrdersDemo()
         reset(defaultValues)
       } else if (response.data.status == '400') {
         enqueueSnackbar('Something went wrong!');

@@ -53,7 +53,7 @@ const defaultFilters = {
   status: 'all',
 };
 // ----------------------------------------------------------------------
-export default function UserListView({ tableData }) {
+export default function UserListView({ tableData ,fetchAllOrdersDemo}) {
   const { enqueueSnackbar } = useSnackbar();
   const settings = useSettingsContext();
   const router = useRouter();
@@ -258,8 +258,8 @@ export default function UserListView({ tableData }) {
         }
       />
 
-      <AppDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} editId={edit} />
-      <EditOrderDialog editDialogOpen={editDialogOpen} setEditDialogOpen={setEditDialogOpen} editData={edit} dataFiltered={dataFiltered}/>
+      <AppDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} editId={edit} fetchAllOrdersDemo={fetchAllOrdersDemo}/>
+      <EditOrderDialog editDialogOpen={editDialogOpen} setEditDialogOpen={setEditDialogOpen} editData={edit} dataFiltered={dataFiltered} fetchAllOrdersDemo={fetchAllOrdersDemo}/>
     </>
   );
 }
