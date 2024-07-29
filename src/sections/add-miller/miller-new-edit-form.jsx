@@ -22,6 +22,7 @@ import { useRouter } from '../../routes/hooks';
 import { useAuthContext } from '../../auth/hooks';
 import { useResponsive } from '../../hooks/use-responsive';
 import { DocumentListView } from '../upload/view';
+import { LoadingScreen } from '../../components/loading-screen';
 // ----------------------------------------------------------------------
 
 export default function MillerNewEditForm({ miller }) {
@@ -33,6 +34,7 @@ export default function MillerNewEditForm({ miller }) {
   const [branchOptions, setBranchOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const [selectedState, setSelectedState] = useState('');
+  const [loading,setLoading] = useState(false)
 
   const data1 = stateOptions?.find((data) => data?.state_name === selectedState);
   const mdUp = useResponsive('up', 'md');
@@ -126,19 +128,21 @@ export default function MillerNewEditForm({ miller }) {
   }, [miller, reset, defaultValues]);
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log(data,"heeer");
+    setLoading(true)
     try {
       axios
         .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/partner_onboarding`, { ...data, onboarder_csp_code: vendor?.csp_code, category: vendor?.category, mode: "test" })
         .then((res) => {
           if (res?.data?.status == '201') {
             enqueueSnackbar('Distributor added successfully');
+            setLoading(false)
             router.push(paths.dashboard.miller.miller_list);
           }
         });
     } catch (err) {
       console.log(err);
       enqueueSnackbar('Something went wrong', { variant: 'error' });
+            setLoading(false)
     }
     // try {
     //   axios
@@ -274,18 +278,35 @@ export default function MillerNewEditForm({ miller }) {
 
 
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Grid container spacing={3}>
-        {renderProperties}
-        {addressInfo}
-        {!miller &&  <Grid xs={12}>
-          <Box sx={{ display: "flex", justifyContent: "end" }}>
-            <Button variant="contained" type="submit">Submit</Button>
-          </Box>
-        </Grid>}
+    <>
+      {loading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '80vh',
+            backgroundColor: "white"
+          }}
+        >
 
-      </Grid>
-    </FormProvider>
+
+          <LoadingScreen sx={{ margin: 'auto' }}/>
+        </Box>
+      ) : (<FormProvider methods={methods} onSubmit={onSubmit}>
+        <Grid container spacing={3}>
+          {renderProperties}
+          {addressInfo}
+          {!miller &&  <Grid xs={12}>
+            <Box sx={{ display: "flex", justifyContent: "end" }}>
+              <Button variant="contained" type="submit">Submit</Button>
+            </Box>
+          </Grid>}
+
+        </Grid>
+      </FormProvider>)}
+
+    </>
   );
 }
 

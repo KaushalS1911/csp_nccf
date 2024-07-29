@@ -17,7 +17,7 @@ function MillerDocumentView(props) {
   const table = (
     <>
             <Grid xs={12} md={12}>
-        <DocumentListView  csp={distributor?.csp_code} document={true}/>
+        <DocumentListView  csp={distributor?.csp_code} document={true} miller={true}/>
       </Grid>
     </>
   );
@@ -25,26 +25,7 @@ function MillerDocumentView(props) {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
 
-        <CustomBreadcrumbs
-          heading={`Miller Documents`}
-          links={[
-            {
-              name: 'Dashboard',
-              href: paths.dashboard.root,
-            },
-            {
-              name: 'Miller List',
-              href: paths.dashboard.miller.miller_list,
-            },
 
-            {
-              name: `Miller Documents`,
-            },
-          ]}
-          sx={{
-            mb: { xs: 3, md: 5 },
-          }}
-        />
         {table}
         </Container>
     </>

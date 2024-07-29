@@ -1,5 +1,5 @@
 import isEqual from 'lodash/isEqual';
-import { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Card from '@mui/material/Card';
@@ -39,6 +39,8 @@ import DocumentTableFiltersResult from '../document-table-filters-result';
 import { DOCUMENTS } from 'src/_mock/_document';
 import axios from 'axios';
 import { useAuthContext } from '../../../auth/hooks';
+import { Box } from '@mui/system';
+import { LoadingScreen } from '../../../components/loading-screen';
 
 // ----------------------------------------------------------------------
 
@@ -53,16 +55,17 @@ const TABLE_HEAD = [
 const defaultFilters = {
   name: '',
   role: [],
-  type:[],
+  type: [],
   status: 'all',
 };
 
 // ----------------------------------------------------------------------
 
-export default function DocumentListView({ csp ,document}) {
+export default function DocumentListView({ csp, document, miller }) {
   const { vendor } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const tab = [
     { value: 'all', label: 'All' },
     { value: 'Aadhar', label: 'Aadhar' },
@@ -75,12 +78,16 @@ export default function DocumentListView({ csp ,document}) {
   }, [csp]); // Add csp as a dependency
 
   function getAllDocument() {
+    setLoading(true);
     const cspCode = csp || vendor?.csp_code;
 
     if (cspCode) {
       axios
         .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${cspCode}/documents`)
-        .then((res) => setTableData(res?.data?.data))
+        .then((res) => {
+          setTableData(res?.data?.data);
+          setLoading(false);
+        })
         .catch((err) => console.error(err));
     }
   }
@@ -165,177 +172,179 @@ export default function DocumentListView({ csp ,document}) {
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-        {!csp &&  <CustomBreadcrumbs
-          heading={ 'List'}
-          links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            {
-              name: 'Document',
-              href: paths.dashboard.document,
-            },
-            { name: 'List' },
-          ]}
+      {loading ? (
+        <Box
           sx={{
-            mb: { xs: 3, md: 5 },
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '80vh',
+            backgroundColor: 'white',
           }}
-        />}
-        <Card>
-          {/*{ !document && <Tabs*/}
-          {/*  value={filters.status}*/}
-          {/*  onChange={handleFilterStatus}*/}
-          {/*  sx={{*/}
-          {/*    px: 2.5,*/}
-          {/*    boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,*/}
-          {/*  }}*/}
-          {/*>*/}
-          {/*  {(csp ? tab : DOCUMENTS).map((tab) => (*/}
-          {/*    <Tab*/}
-          {/*      key={tab.value}*/}
-          {/*      iconPosition="end"*/}
-          {/*      value={tab.value}*/}
-          {/*      label={tab.label}*/}
-          {/*      icon={*/}
-          {/*        <Label*/}
-          {/*          variant={*/}
-          {/*            ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'*/}
-          {/*          }*/}
-          {/*          color={*/}
-          {/*            (tab.value === 'Aadhar' && 'secondary') ||*/}
-          {/*            (tab.value === 'certificates' && 'warning') ||*/}
-          {/*            (tab.value === 'gst_number' && 'success') ||*/}
-          {/*            (tab.value === 'pan_number' && 'info') ||*/}
-          {/*            (tab.value === 'milling_unit_video' && 'error') ||*/}
-          {/*            'default'*/}
-          {/*          }*/}
-          {/*        >*/}
-          {/*          {tab.value === 'all'*/}
-          {/*            ? tableData.length*/}
-          {/*            : tableData.filter((user) => user.doc_type === tab.value).length}*/}
-          {/*        </Label>*/}
-          {/*      }*/}
-          {/*    />*/}
-          {/*  ))}*/}
-          {/*</Tabs>*/}
-          {/*}*/}
-          <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles} document={document}/>
+        >
 
-          {canReset && (
-            <DocumentTableFiltersResult
-              filters={filters}
-              onFilters={handleFilters}
-              onResetFilters={handleResetFilters}
-              results={dataFiltered.length}
-              sx={{ p: 2.5, pt: 0 }}
-            />
-          )}
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={true}
-              numSelected={table.selected.length}
-              rowCount={dataFiltered.length}
-              onSelectAllRows={(checked) =>
-                table.onSelectAllRows(
-                  checked,
-                  dataFiltered.map((row) => row.id),
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={confirm.onTrue}>
-                    <Iconify icon="solar:trash-bin-trash-bold"/>
-                  </IconButton>
-                </Tooltip>
-              }
-            />
+          <LoadingScreen sx={{ margin: 'auto' }}/>
+        </Box>
+      ) : (<>
+        <Container maxWidth={settings.themeStretch ? false : 'xl'}>
 
-            <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-                <TableHeadCustom
-                  order={table.order}
-                  orderBy={table.orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={dataFiltered.length}
-                  numSelected={table.selected.length}
-                  onSort={table.onSort}
-                  onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
-                      checked,
-                      dataFiltered.map((row) => row.id),
-                    )
-                  }
-                />
-                <TableBody>
-                  {dataFiltered
-                    .slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage,
-                    )
-                    .map((row, index) => (
-                      <DocumentTableRow
-                        key={row.id}
-                        index={index}
-                        row={row}
-                        selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onViewRow={() => handleViewRow(row.id)}
-                        onEditRow={() => handleEditRow(row.id)}
-                      />
-                    ))}
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
-                  />
-                  <TableNoData notFound={notFound}/>
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
+          <CustomBreadcrumbs
+            heading={miller ? 'Miller Documents' : `Distributor Documents`}
+            links={[
+              {
+                name: 'Dashboard',
+                href: paths.dashboard.root,
+              },
+              {
+                name: miller ? 'Miller List' : 'Distributor List',
+                href: miller ? paths.dashboard.miller.miller_list : paths.dashboard.distributor.distributor_list,
+              },
 
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
-            onPageChange={table.onChangePage}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-            dense={true}
-            onChangeDense={table.onChangeDense}
+              {
+                name: miller ? `Miller Documents` : `Distributor Documents`,
+              },
+            ]}
+            sx={{ mb: { xs: 3, md: 5 } }}
+            action={
+              dataFiltered?.length == 0 &&
+              <Button
+                component={RouterLink}
+                href={miller ? paths.dashboard.miller.document_upload : paths.dashboard.distributor.document_upload}
+                variant="contained"
+                startIcon={<Iconify icon="mingcute:add-line"/>}
+
+              >
+                Upload Document
+              </Button>
+            }
           />
-        </Card>
-      </Container>
+          <Card>
 
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong>{table.selected.length}</strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirm.onFalse();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
+            <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles} document={document}/>
+
+            {canReset && (
+              <DocumentTableFiltersResult
+                filters={filters}
+                onFilters={handleFilters}
+                onResetFilters={handleResetFilters}
+                results={dataFiltered.length}
+                sx={{ p: 2.5, pt: 0 }}
+              />
+            )}
+
+            <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+              <TableSelectedAction
+                dense={true}
+                numSelected={table.selected.length}
+                rowCount={dataFiltered.length}
+                onSelectAllRows={(checked) =>
+                  table.onSelectAllRows(
+                    checked,
+                    dataFiltered.map((row) => row.id),
+                  )
+                }
+                action={
+                  <Tooltip title="Delete">
+                    <IconButton color="primary" onClick={confirm.onTrue}>
+                      <Iconify icon="solar:trash-bin-trash-bold"/>
+                    </IconButton>
+                  </Tooltip>
+                }
+              />
+
+              <Scrollbar>
+                <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                  <TableHeadCustom
+                    order={table.order}
+                    orderBy={table.orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={dataFiltered.length}
+                    numSelected={table.selected.length}
+                    onSort={table.onSort}
+                    onSelectAllRows={(checked) =>
+                      table.onSelectAllRows(
+                        checked,
+                        dataFiltered.map((row) => row.id),
+                      )
+                    }
+                  />
+                  <TableBody>
+                    {dataFiltered
+                      .slice(
+                        table.page * table.rowsPerPage,
+                        table.page * table.rowsPerPage + table.rowsPerPage,
+                      )
+                      .map((row, index) => (
+                        <DocumentTableRow
+                          key={row.id}
+                          index={index}
+                          row={row}
+                          selected={table.selected.includes(row.id)}
+                          onSelectRow={() => table.onSelectRow(row.id)}
+                          onDeleteRow={() => handleDeleteRow(row.id)}
+                          onViewRow={() => handleViewRow(row.id)}
+                          onEditRow={() => handleEditRow(row.id)}
+                        />
+                      ))}
+                    <TableEmptyRows
+                      height={denseHeight}
+                      emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
+                    />
+                    <TableNoData notFound={notFound}/>
+                  </TableBody>
+                </Table>
+              </Scrollbar>
+            </TableContainer>
+
+            <TablePaginationCustom
+              count={dataFiltered.length}
+              page={table.page}
+              rowsPerPage={table.rowsPerPage}
+              onPageChange={table.onChangePage}
+              onRowsPerPageChange={table.onChangeRowsPerPage}
+              dense={true}
+              onChangeDense={table.onChangeDense}
+            />
+          </Card>
+        </Container>
+
+        <ConfirmDialog
+          open={confirm.value}
+          onClose={confirm.onFalse}
+          title="Delete"
+          content={
+            <>
+              Are you sure want to delete <strong>{table.selected.length}</strong> items?
+            </>
+          }
+          action={
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                handleDeleteRows();
+                confirm.onFalse();
+              }}
+            >
+              Delete
+            </Button>
+          }
+        />
+      </>)
+      }
     </>
   );
 }
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, role ,type} = filters;
+function applyFilter(
+  {
+    inputData, comparator, filters,
+  },
+) {
+  const { name, status, role, type } = filters;
 
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -358,7 +367,8 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (role.length) {
     inputData = inputData.filter((user) => role.includes(user.role));
-  }if (type.length) {
+  }
+  if (type.length) {
     inputData = inputData.filter((user) => type.includes(user.doc_type));
   }
 

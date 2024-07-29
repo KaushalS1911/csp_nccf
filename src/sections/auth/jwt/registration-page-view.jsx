@@ -20,6 +20,7 @@ import { paths } from '../../../routes/paths';
 import { useRouter } from '../../../routes/hooks';
 import { Controller } from 'react-hook-form';
 import { enqueueSnackbar } from 'notistack';
+import { LoadingScreen } from '../../../components/loading-screen';
 const RegistrationForm = ({ vendor_category }) => {
   const router = useRouter();
   const [stateOptions, setStateOptions] = useState([]);
@@ -64,9 +65,67 @@ const RegistrationForm = ({ vendor_category }) => {
   }
   const gstNumberRegex = /^([0][1-9]|[1-2][0-9]|3[0-5])[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/
   const panNumberRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const millingTypeOptions = ['Dry', 'Wet', 'Both'];
-  // const districtOptions = ['Amreli', 'Bhavanagar'];
-  const NewBlogSchema = Yup.object().shape({
+  const MillerBlogSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    milling_type: Yup.string().required('Milling type is required'),
+    type_of_firm: Yup.string().required('Type of firm is required'),
+    confirm_password: Yup.string().min(6,"Minimum 6 character should be required")
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm password is required'),
+    password: Yup.string().min(6,"Minimum 6 character should be required")
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm password is required'),
+    contact_person: Yup.string().required('Contact Person is required'),
+    gst_number: Yup.string()
+      .matches(gstNumberRegex, 'Invalid GST number format')
+      .required('GST number is required'),
+    email: Yup.string().matches(emailRegex, 'Invalide email format').required('Email is required'),
+    address: Yup.string().required('Address is required'),
+    state: Yup.string().required('State is required'),
+    district: Yup.string().required('District is required'),
+    branch: Yup.string().required('Branch is required'),
+
+    pan_number:  Yup.string()
+      .matches(panNumberRegex, 'Invalid PAN number format')
+      .required('PAN number is required'),
+    procurement_area:Yup.string().required('Procurement area is required'),
+    pincode:Yup.string().max(6,"Invalide pincode number") .required('Pincode is required'),
+
+    phone_number: Yup.string().max(10,"Enter valid contact number").required('Phone Number is required'),
+  });
+  const DistributorBlogSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    capacity: Yup.string().required('Capacity is required'),
+    mode_of_sale: Yup.string().required('Mode of sale is required'),
+    area_of_opration: Yup.string().required('Area of opration is required'),
+    type_of_firm: Yup.string().required('Type of firm is required'),
+    confirm_password: Yup.string().min(6,"Minimum 6 character should be required")
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm password is required'),
+    password: Yup.string().min(6,"Minimum 6 character should be required")
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm password is required'),
+    contact_person: Yup.string().required('Contact Person is required'),
+    gst_number: Yup.string()
+      .required('GST number is required')
+      .matches(gstNumberRegex, 'Invalid GST number format'),
+    email: Yup.string().matches(emailRegex, 'Invalide email format').required('Email is required'),
+    address: Yup.string().required('Address is required'),
+    state: Yup.string().required('State is required'),
+    district: Yup.string().required('District is required'),
+    branch: Yup.string().required('Branch is required'),
+
+    pan_number:  Yup.string()
+      .required('PAN number is required')
+      .matches(panNumberRegex, 'Invalid PAN number format'),
+    procurement_area:Yup.string().required('Procurement area is required'),
+    pincode:Yup.string().max(6,"Invalide pincode number") .required('Pincode is required'),
+
+    phone_number: Yup.string().max(10,"Enter valid contact number").required('Phone Number is required'),
+  });
+  const SocietyBlogSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     confirm_password: Yup.string().min(6,"Minimum 6 character should be required")
       .oneOf([Yup.ref('password'), null], 'Passwords must match')
@@ -78,9 +137,8 @@ const RegistrationForm = ({ vendor_category }) => {
     gst_number: Yup.string()
       .matches(gstNumberRegex, 'Invalid GST number format')
       .required('GST number is required'),
-    // milling_type: Yup.string().required('Milling Type is required'),
     mil_dis_sub_roles:Yup.string().required('Sub category is required'),
-    email: Yup.string().required('Email is required'),
+    email: Yup.string().matches(emailRegex, 'Invalide email format').required('Email is required'),
     address: Yup.string().required('Address is required'),
     state: Yup.string().required('State is required'),
     district: Yup.string().required('District is required'),
@@ -114,9 +172,13 @@ const RegistrationForm = ({ vendor_category }) => {
     pan_number: '',
     gst_number: '',
     mode: '',
+    area_of_opration:'',
+    mode_of_sale:'',
+    capacity:''
   };
+  const NewBlogSchema = vendor_category === "distributor" ? DistributorBlogSchema : vendor_category === "society_cooperative" ? SocietyBlogSchema : MillerBlogSchema
   const methods = useForm({
-    resolver: yupResolver(NewBlogSchema),
+    // resolver: yupResolver(NewBlogSchema),
     defaultValues,
   });
   const {
@@ -150,7 +212,7 @@ const RegistrationForm = ({ vendor_category }) => {
       mode: '',
     };
     axios
-      .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp`, payload)
+      .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csps`, payload)
       .then((res) => {
         if (res?.data?.status == '201') {
           enqueueSnackbar('Register Successfully');
@@ -160,8 +222,8 @@ const RegistrationForm = ({ vendor_category }) => {
       })
       .catch((err) => {
         console.log(err);
-        enqueueSnackbar('Something want wrong', { variant: 'error' });
           setLoading(false)
+        enqueueSnackbar('Something want wrong', { variant: 'error' });
       });
   });
   return (
@@ -173,16 +235,12 @@ const RegistrationForm = ({ vendor_category }) => {
            justifyContent: 'center',
            alignItems: 'center',
            height: '80vh',
+           backgroundColor:"white"
          }}
        >
-         <Backdrop
-           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-           open={loading}
-           onClick={() => setLoading(false)}
-         >
-           <CircularProgress color="inherit"/>
-         </Backdrop>
-         {/*<LoadingScreen sx={{ margin: 'auto' }}/>*/}
+
+
+         <LoadingScreen sx={{ margin: 'auto' }}/>
        </Box>
      ) : (<Box p={5} className="registerForm" sx={{ backgroundColor: 'white', borderRadius: '10px' }}>
        <Typography variant="h5" gutterBottom className="heading">
@@ -239,14 +297,14 @@ const RegistrationForm = ({ vendor_category }) => {
            {vendor_category === 'distributor'  && (
              <>
                <Grid item xs={12} sm={6} md={3}>
-                 <RHFTextField name="area_of_Opration" label="Area of Opration" />
+                 <RHFTextField name="area_of_opration" label="Area of Opration" />
                </Grid>
                <Grid item xs={12} sm={6} md={3}>
                  <RHFTextField name="capacity" label="Capacity /day (MT)" />
                </Grid>
                <Grid item xs={12} sm={3}>
                  <RHFAutocomplete
-                   name="mode"
+                   name="mode_of_sale"
                    label="Mode of Sale"
                    placeholder="Choose mode of sale"
                    fullWidth

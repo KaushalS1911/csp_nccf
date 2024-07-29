@@ -20,6 +20,7 @@ import { useRouter } from '../../routes/hooks';
 import { useAuthContext } from '../../auth/hooks';
 import { useResponsive } from '../../hooks/use-responsive';
 import { DocumentListView } from '../upload/view';
+import { LoadingScreen } from '../../components/loading-screen';
 
 // ----------------------------------------------------------------------
 
@@ -28,11 +29,12 @@ export default function DistributorNewEditForm({ currentProduct, distributor }) 
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
   const { vendor } = useAuthContext();
-const [disable,setDisable] = useState(distributor ? true : false)
+  const [disable, setDisable] = useState(distributor ? true : false);
   const [stateOptions, setStateOptions] = useState([]);
   const [branchOptions, setBranchOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const [selectedState, setSelectedState] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const data1 = stateOptions.find((data) => data?.state_name === selectedState);
   const mdUp = useResponsive('up', 'md');
@@ -107,7 +109,7 @@ const [disable,setDisable] = useState(distributor ? true : false)
       procurement_area: distributor?.procurement_area || '',
       pincode: distributor?.pincode || '',
     }),
-    [distributor]
+    [distributor],
   );
 
   const methods = useForm({
@@ -124,17 +126,25 @@ const [disable,setDisable] = useState(distributor ? true : false)
   }, [distributor, reset, defaultValues]);
 
   const onSubmit = handleSubmit(async (data) => {
+    setLoading(true);
     try {
       axios
-        .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/partner_onboarding`, { ...data, onboarder_csp_code: vendor?.csp_code, category: vendor?.category, mode: "test" })
+        .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/partner_onboarding`, {
+          ...data,
+          onboarder_csp_code: vendor?.csp_code,
+          category: vendor?.category,
+          mode: 'test',
+        })
         .then((res) => {
           if (res?.data?.status == '201') {
-            router.push(paths.dashboard.distributor.distributor_list);
             enqueueSnackbar('Distributor added successfully');
+            setLoading(false);
+            router.push(paths.dashboard.distributor.distributor_list);
           }
         });
     } catch (err) {
       console.log(err);
+      setLoading(false);
       enqueueSnackbar('Something went wrong', { variant: 'error' });
     }
   });
@@ -164,7 +174,7 @@ const [disable,setDisable] = useState(distributor ? true : false)
                 md: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField  disabled={disable} name="name" label="Distributor Name" />
+              <RHFTextField disabled={disable} name="name" label="Distributor Name"/>
               <RHFAutocomplete
                 name="type_of_firm"
                 label="Type of Firm"
@@ -174,11 +184,11 @@ const [disable,setDisable] = useState(distributor ? true : false)
                 disabled={disable}
                 getOptionLabel={(option) => option}
               />
-              <RHFTextField disabled={disable} name="contact_person" label="Contact Person" />
-              <RHFTextField disabled={disable} name="phone_number" label="Phone Number" />
-              <RHFTextField disabled={disable} name="email" label="Email" />
-              <RHFTextField disabled={disable} name="pan_number" label="PAN Number" />
-              <RHFTextField disabled={disable} name="gst_number" label="GST Number" />
+              <RHFTextField disabled={disable} name="contact_person" label="Contact Person"/>
+              <RHFTextField disabled={disable} name="phone_number" label="Phone Number"/>
+              <RHFTextField disabled={disable} name="email" label="Email"/>
+              <RHFTextField disabled={disable} name="pan_number" label="PAN Number"/>
+              <RHFTextField disabled={disable} name="gst_number" label="GST Number"/>
             </Box>
           </Stack>
         </Card>
@@ -210,7 +220,7 @@ const [disable,setDisable] = useState(distributor ? true : false)
                 md: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="address" label="Address" disabled={disable} />
+              <RHFTextField name="address" label="Address" disabled={disable}/>
               <RHFAutocomplete
                 name="state"
                 disabled={disable}
@@ -224,7 +234,7 @@ const [disable,setDisable] = useState(distributor ? true : false)
               <RHFAutocomplete
                 name="branch"
                 label="Branch"
-                                placeholder="Choose Your Branch"
+                placeholder="Choose Your Branch"
                 fullWidth
                 options={branchOptions.map((option) => option?.branch_name)}
                 getOptionLabel={(option) => option}
@@ -239,15 +249,15 @@ const [disable,setDisable] = useState(distributor ? true : false)
                 getOptionLabel={(option) => option}
                 disabled={!data1}
               />
-              <RHFTextField disabled={disable} name="procurement_area" label="Procurement Area" />
-              <RHFTextField disabled={disable} name="pincode" label="Pin Code" />
+              <RHFTextField disabled={disable} name="procurement_area" label="Procurement Area"/>
+              <RHFTextField disabled={disable} name="pincode" label="Pin Code"/>
             </Box>
           </Stack>
         </Card>
       </Grid>
     </>
   );
-const table = (
+  const table = (
     <>
       {mdUp && (
         <Grid md={4}>
@@ -257,24 +267,42 @@ const table = (
         </Grid>
       )}
       <Grid xs={12} md={12}>
-          <DocumentListView  csp={distributor?.csp_code}/>
+        <DocumentListView csp={distributor?.csp_code}/>
       </Grid>
     </>
   );
 
   return (
-    <FormProvider methods={methods} onSubmit={onSubmit}>
-      <Grid container spacing={3}>
-        {renderProperties}
-        {addressInfo}
-        {!distributor &&  <Grid xs={12}>
-          <Box sx={{ display: "flex", justifyContent: "end" }}>
-            <Button variant="contained" type="submit">Submit</Button>
-          </Box>
-        </Grid>}
-        {/*{distributor && table}*/}
-      </Grid>
-    </FormProvider>
+    <>
+      {loading ? (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+            backgroundColor: 'white',
+          }}
+        >
+
+
+          <LoadingScreen sx={{ margin: 'auto' }}/>
+        </Box>
+      ) : (
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+          <Grid container spacing={3}>
+            {renderProperties}
+            {addressInfo}
+            {!distributor && <Grid xs={12}>
+              <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+                <Button variant="contained" type="submit">Submit</Button>
+              </Box>
+            </Grid>}
+          </Grid>
+        </FormProvider>
+      )
+      }
+    </>
   );
 }
 

@@ -25,26 +25,7 @@ function DistributorDocumentView(props) {
     <>
       <Container maxWidth={settings.themeStretch ? false : 'lg'}>
 
-        <CustomBreadcrumbs
-          heading={`Distributor Documents`}
-          links={[
-            {
-              name: 'Dashboard',
-              href: paths.dashboard.root,
-            },
-            {
-              name: 'Distributor List',
-              href: paths.dashboard.distributor.distributor_list,
-            },
 
-            {
-              name: `Distributor Documents`,
-            },
-          ]}
-          sx={{
-            mb: { xs: 3, md: 5 },
-          }}
-        />
         {table}
         </Container>
     </>

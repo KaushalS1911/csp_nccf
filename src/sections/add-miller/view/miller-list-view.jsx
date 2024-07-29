@@ -39,6 +39,8 @@ import { useAuthContext } from '../../../auth/hooks';
 import MillerTableToolbar from '../miller-table-toolbar';
 import MillerTableFiltersResult from '../miller-table-filters-result';
 import MillerTableRow from '../miller-table-row';
+import { Box } from '@mui/system';
+import { LoadingScreen } from '../../../components/loading-screen';
 
 // ----------------------------------------------------------------------
 
@@ -72,6 +74,7 @@ export default function MillerListView() {
   const [stateOptions, setStateOptions] = useState([]);
   const [branchOptions, setBranchOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
+  const [loading,setLoading] = useState(false)
   useEffect(() => {
     fetchStates();
   }, [tableData]);
@@ -79,11 +82,15 @@ export default function MillerListView() {
     getAllDocument();
   }, []);
   function getAllDocument() {
+    setLoading(true)
     axios
       .get(
         `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/sub_mil_dist`
       )
-      .then((res) => setTableData(res?.data?.data))
+      .then((res) => {
+        setTableData(res?.data?.data);
+        setLoading(false)
+      })
       .catch((err) => console.error(err));
   }
 
@@ -195,132 +202,148 @@ export default function MillerListView() {
 
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-        <CustomBreadcrumbs
-          heading="Miller list"
-          links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'miller', href: paths.dashboard.miller },
-            { name: 'List' },
-          ]}
+      {loading ? (
+        <Box
           sx={{
-            mb: { xs: 3, md: 5 },
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '80vh',
+            backgroundColor: "white"
           }}
-        />
-        <Card>
+        >
 
 
-          <MillerTableToolbar  filters={filters} onFilters={handleFilters} roleOptions={_roles} stateOptions={stateOptions} branchOptions={branchOptions} districtOptions={districtOptions} />
-
-          {canReset && (
-            <MillerTableFiltersResult
-              filters={filters}
-              onFilters={handleFilters}
-              onResetFilters={handleResetFilters}
-              results={dataFiltered.length}
-              sx={{ p: 2.5, pt: 0 }}
-            />
-          )}
-
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={true}
-              numSelected={table.selected.length}
-              rowCount={dataFiltered.length}
-              onSelectAllRows={(checked) =>
-                table.onSelectAllRows(
-                  checked,
-                  dataFiltered.map((row) => row.id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={confirm.onTrue}>
-                    <Iconify icon="solar:trash-bin-trash-bold" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-
-            <Scrollbar>
-              <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-                <TableHeadCustom
-                  order={table.order}
-                  orderBy={table.orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={dataFiltered.length}
-                  numSelected={table.selected.length}
-                  onSort={table.onSort}
-                  onSelectAllRows={(checked) =>
-                    table.onSelectAllRows(
-                      checked,
-                      dataFiltered.map((row) => row.id)
-                    )
-                  }
-                />
-                <TableBody>
-                  {dataFiltered
-                    ?.slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
-                    )
-                    ?.map((row, index) => (
-                      <MillerTableRow
-                        key={row.id}
-                        index={index}
-                        row={row}
-                        selected={table.selected.includes(row.id)}
-                        onSelectRow={() => table.onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onViewRow={() => handleViewRow(row.csp_code)}
-                        onEditRow={() => handleEditRow(row.id)}
-                        onView={() => handleMiller(row.csp_code)}
-                      />
-                    ))}
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
-                  />
-                  <TableNoData notFound={notFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={table.page}
-            rowsPerPage={table.rowsPerPage}
-            onPageChange={table.onChangePage}
-            onRowsPerPageChange={table.onChangeRowsPerPage}
-            dense={true}
-            onChangeDense={table.onChangeDense}
-          />
-        </Card>
-      </Container>
-
-      <ConfirmDialog
-        open={confirm.value}
-        onClose={confirm.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong>{table.selected.length}</strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirm.onFalse();
+          <LoadingScreen sx={{ margin: 'auto' }}/>
+        </Box>
+      ) : (<>
+        <Container maxWidth={settings.themeStretch ? false : 'xl'}>
+          <CustomBreadcrumbs
+            heading="Miller list"
+            links={[
+              { name: 'Dashboard', href: paths.dashboard.root },
+              { name: 'miller', href: paths.dashboard.miller },
+              { name: 'List' },
+            ]}
+            sx={{
+              mb: { xs: 3, md: 5 },
             }}
-          >
-            Delete
-          </Button>
-        }
-      />
+          />
+          <Card>
+
+
+            <MillerTableToolbar  filters={filters} onFilters={handleFilters} roleOptions={_roles} stateOptions={stateOptions} branchOptions={branchOptions} districtOptions={districtOptions} />
+
+            {canReset && (
+              <MillerTableFiltersResult
+                filters={filters}
+                onFilters={handleFilters}
+                onResetFilters={handleResetFilters}
+                results={dataFiltered.length}
+                sx={{ p: 2.5, pt: 0 }}
+              />
+            )}
+
+            <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+              <TableSelectedAction
+                dense={true}
+                numSelected={table.selected.length}
+                rowCount={dataFiltered.length}
+                onSelectAllRows={(checked) =>
+                  table.onSelectAllRows(
+                    checked,
+                    dataFiltered.map((row) => row.id)
+                  )
+                }
+                action={
+                  <Tooltip title="Delete">
+                    <IconButton color="primary" onClick={confirm.onTrue}>
+                      <Iconify icon="solar:trash-bin-trash-bold" />
+                    </IconButton>
+                  </Tooltip>
+                }
+              />
+
+              <Scrollbar>
+                <Table size={table.dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+                  <TableHeadCustom
+                    order={table.order}
+                    orderBy={table.orderBy}
+                    headLabel={TABLE_HEAD}
+                    rowCount={dataFiltered.length}
+                    numSelected={table.selected.length}
+                    onSort={table.onSort}
+                    onSelectAllRows={(checked) =>
+                      table.onSelectAllRows(
+                        checked,
+                        dataFiltered.map((row) => row.id)
+                      )
+                    }
+                  />
+                  <TableBody>
+                    {dataFiltered
+                      ?.slice(
+                        table.page * table.rowsPerPage,
+                        table.page * table.rowsPerPage + table.rowsPerPage
+                      )
+                      ?.map((row, index) => (
+                        <MillerTableRow
+                          key={row.id}
+                          index={index}
+                          row={row}
+                          selected={table.selected.includes(row.id)}
+                          onSelectRow={() => table.onSelectRow(row.id)}
+                          onDeleteRow={() => handleDeleteRow(row.id)}
+                          onViewRow={() => handleViewRow(row.csp_code)}
+                          onEditRow={() => handleEditRow(row.id)}
+                          onView={() => handleMiller(row.csp_code)}
+                        />
+                      ))}
+                    <TableEmptyRows
+                      height={denseHeight}
+                      emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
+                    />
+                    <TableNoData notFound={notFound} />
+                  </TableBody>
+                </Table>
+              </Scrollbar>
+            </TableContainer>
+
+            <TablePaginationCustom
+              count={dataFiltered.length}
+              page={table.page}
+              rowsPerPage={table.rowsPerPage}
+              onPageChange={table.onChangePage}
+              onRowsPerPageChange={table.onChangeRowsPerPage}
+              dense={true}
+              onChangeDense={table.onChangeDense}
+            />
+          </Card>
+        </Container>
+
+        <ConfirmDialog
+          open={confirm.value}
+          onClose={confirm.onFalse}
+          title="Delete"
+          content={
+            <>
+              Are you sure want to delete <strong>{table.selected.length}</strong> items?
+            </>
+          }
+          action={
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                handleDeleteRows();
+                confirm.onFalse();
+              }}
+            >
+              Delete
+            </Button>
+          }
+        />
+      </>)}
     </>
   );
 }

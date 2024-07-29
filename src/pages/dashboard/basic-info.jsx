@@ -76,7 +76,6 @@ export default function BasicInfo() {
     contact_person: '',
     phone_number: '',
     email: '',
-
     address: '',
     state: '',
     district: '',
