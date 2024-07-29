@@ -56,9 +56,11 @@ export function useNavData() {
       path: paths.dashboard.root,
       icon: ICONS.dashboard,
     },
-
-
-
+    {
+      title: t('Basic Info'),
+      path: paths.dashboard.basic_info,
+      icon: ICONS.user,
+    },
     {
       title: t('Document'),
       path: paths.dashboard.document.root,
@@ -94,7 +96,11 @@ export function useNavData() {
       path: paths.dashboard.root,
       icon: ICONS.dashboard,
     },
-
+    {
+      title: t('Basic Info'),
+      path: paths.dashboard.basic_info,
+      icon: ICONS.user,
+    },
 
     {
       title: t('Miller'),
@@ -107,6 +113,7 @@ export function useNavData() {
 
       ],
     },
+
     {
       title: t('Document'),
       path: paths.dashboard.document.root,
@@ -538,7 +545,7 @@ export function useNavData() {
       {
         // subheader: t('management'),
         // items: vendor?.category === 'society_cooperative' ? societyItems : otherItems,
-        items: vendor?.category === "Society" ? societyItems : login_type === 'branch' ? branchItem : login_type === 'head-office' ? headItems : vendor?.category === "miller" ? millerItems : vendor?.category === "distributor" ? distributeItems :vendor.category === "miller_distributor" ? Miller_DistributorItems : otherItems,
+        items: vendor?.category === "cooperative_rent_mill" || vendor?.category === "own_distribution_rent_mill" || vendor?.category === "own_distribution_own_mill" ? societyItems : login_type === 'branch' ? branchItem : login_type === 'head-office' ? headItems : vendor?.category === "miller" ? millerItems : vendor?.category === "distributor" ? distributeItems :vendor.category === "miller_distributor" ? Miller_DistributorItems : otherItems,
       },
     ],
     [t],
