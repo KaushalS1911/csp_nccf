@@ -5,21 +5,18 @@ import { useSettingsContext } from 'src/components/settings';
 import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
-import { ToastContainer, toast } from 'react-toastify';
 import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { MenuItem, Select, FormControl, InputLabel, Button } from '@mui/material';
 import axios from 'axios';
-import { SingleFilePreview, Upload } from 'src/components/upload';
+import { Upload } from 'src/components/upload';
 import { Helmet } from 'react-helmet-async';
 import { enqueueSnackbar } from 'notistack';
 import { useRouter } from 'src/routes/hooks';
 import { paths } from 'src/routes/paths';
 import imageCompression from 'browser-image-compression';
 import { UploadDocumentListView } from 'src/sections/add-upload/view';
-import FileThumbnail from 'src/components/file-thumbnail';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { error } from 'src/theme/palette';
 import { useAuthContext } from 'src/auth/hooks';
 import { LoadingScreen } from 'src/components/loading-screen';
 import { handleDoctypeLabel } from '../../_mock';
@@ -91,11 +88,20 @@ export default function UploadDocument({ container }) {
       }
     }
   });
-  const otherOption = [
-    { label: 'Aadhar', key: 'Aadhar' },
-    { label: 'Certificates', key: 'certificates' },
-    { label: 'Gst Number', key: 'gst_number' },
-    { label: 'Pan Number', key: 'pan_number' },
+  const otherOption =[
+    { label: 'Registration Certificate', key: 'registration_certificate' },
+    { label: 'Undertaking', key: 'undertaking' },
+    { label: 'Audited Accounts', key: 'audited_accounts' },
+    { label: 'Income Tax', key: 'income_tax' },
+    { label: 'PAN', key: 'pan' },
+    { label: 'GST', key: 'gst' },
+    { label: 'Sale Registration', key: 'sale_registration' },
+    { label: 'Industrial Licence', key: 'industrial_licence' },
+    { label: 'Power Bills', key: 'power_bills' },
+    { label: 'Pollution Certificates', key: 'pollution_certificates' },
+    { label: 'Municipal Property Tax', key: 'municipal_property_tax' },
+    { label: 'FSSAI License', key: 'FSSAI_license' },
+    { label: 'Photographs of Unit', key: 'photographs_of_unit' },
   ];
   const Cooperatives = [
     {
@@ -147,7 +153,9 @@ export default function UploadDocument({ container }) {
   const docTypeOption =
     vendor?.mil_dis_sub_roles === 'cooperative_rent_mill' ? Cooperatives : otherOption;
 
-  files[0]?.preview ? onSubmit() : null;
+  useEffect(() => {
+    files[0]?.preview ? onSubmit() : null;
+  },[files])
   const handleDropMultiFile = useCallback(
     (acceptedFiles) => {
       setFiles([

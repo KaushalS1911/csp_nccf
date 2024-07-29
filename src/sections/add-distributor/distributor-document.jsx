@@ -112,7 +112,9 @@ function DistributorDocument({ documentLabel }) {
     { label: 'Photographs of Unit', key: 'photographs_of_unit' },
   ];
 
-  files[0]?.preview ? onSubmit() : null;
+  useEffect(() => {
+    files[0]?.preview ? onSubmit() : null;
+  },[files])
   const handleDropMultiFile = useCallback(
     (acceptedFiles) => {
       setFiles([

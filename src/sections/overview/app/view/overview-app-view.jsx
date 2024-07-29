@@ -18,8 +18,9 @@ export default function OverviewAppView({ vendorCode }) {
   const {vendor} = useAuthContext()
   const settings = useSettingsContext();
 
-  const [orderList, setOrderList] = useState([]);
   const [stats, setStats] = useState({});
+  const [orderList, setOrderList] = useState([]);
+  const [count,setCount] = useState(0)
 
 
   useEffect(() => {
@@ -27,8 +28,13 @@ export default function OverviewAppView({ vendorCode }) {
       fetchAllOrders();
       getStats();
     }
-  }, [vendor]);
+  }, [count]);
 
+  function fetchAllOrdersDemo(){
+    setCount((ev) => ev+1 )
+  }
+
+  // console.log(count);
   function getStats() {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor.csp_code}/orders_stats`).then((res) => {
       setStats(res.data?.data[0]);
@@ -41,7 +47,7 @@ export default function OverviewAppView({ vendorCode }) {
     });
   }
 
-  return (
+    return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
         <Grid xs={12} md={3}>
@@ -76,7 +82,7 @@ export default function OverviewAppView({ vendorCode }) {
           />
         </Grid>
         <Grid xs={12} lg={12}>
-          <UserListView tableData={orderList}/>
+          <UserListView tableData={orderList} fetchAllOrdersDemo={fetchAllOrdersDemo} />
         </Grid>
       </Grid>
     </Container>

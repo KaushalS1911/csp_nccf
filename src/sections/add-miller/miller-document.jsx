@@ -38,6 +38,7 @@ function MillerDocument({ documentLabel }) {
   const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(false);
   const single = documentLabel.find((data) => data.code == disName);
+
   const defaultValues = useMemo(
     () => ({
       doc_type: '',
@@ -67,6 +68,7 @@ function MillerDocument({ documentLabel }) {
         .catch((err) => console.error(err));
     }
   }
+
 
   const { handleSubmit, control, setValue, watch, reset } = methods;
 
@@ -115,7 +117,9 @@ function MillerDocument({ documentLabel }) {
     { label: 'Photographs of Unit', key: 'photographs_of_unit' },
   ];
 
-  files[0]?.preview ? onSubmit() : null;
+  useEffect(() => {
+    files[0]?.preview ? onSubmit() : null;
+  },[files])
   const handleDropMultiFile = useCallback(
     (acceptedFiles) => {
       setFiles([
@@ -132,8 +136,9 @@ function MillerDocument({ documentLabel }) {
 
 
   const handleAllSubmit = async (data) => {
+    const filteredData = await tableData?.filter((item) => item.doc_type == docs);
+    console.log(filteredData,"heet")
 
-    const filteredData = tableData?.filter((item) => item.doc_type == docs);
     if (filteredData.length > 0) {
       if (filteredData[0].doc_type !== 'photographs_of_unit' && filteredData.length >= 2) {
         // enqueueSnackbar(`${handleDoctypeLabel(filteredData[0]?.doc_type)} upload limit exceed. (If you want to upload more document of ${handleDoctypeLabel(filteredData[0]?.doc_type)}, then remove existing ${handleDoctypeLabel(filteredData[0]?.doc_type)}.)`, { variant: 'error' });
@@ -178,7 +183,7 @@ function MillerDocument({ documentLabel }) {
       const responses = await Promise.all(
         formDataList.map((formData) =>
           axios.post(
-            'http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/upload_document',
+            'http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/upload_documentg',
             formData,
             {
               headers: {
@@ -194,7 +199,7 @@ function MillerDocument({ documentLabel }) {
         setSelected([]);
         setFiles([]);
         reset(defaultValues);
-        // router.push(paths.dashboard.miller.miller_list); // Uncomment if needed
+        // router.reload();
       } else {
         enqueueSnackbar('Failed to Upload', { variant: 'error' });
       }
@@ -202,6 +207,7 @@ function MillerDocument({ documentLabel }) {
       console.error('Error submitting form:', error);
       enqueueSnackbar('Failed to Upload', { variant: 'error' });
     } finally {
+      setSelected([]);
       setLoading(false);
     }
   };
