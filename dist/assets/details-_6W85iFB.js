@@ -1,1 +1,0 @@
-import{j as s,H as r,bJ as a}from"./index-jKnsTm0t.js";import{u as i}from"./use-params-BVdXl7XT.js";function c(){const t=i(),{id:e}=t;return s.jsxs(s.Fragment,{children:[s.jsx(r,{children:s.jsx("title",{children:" Product: Details"})}),s.jsx(a,{id:`${e}`})]})}export{c as default};
