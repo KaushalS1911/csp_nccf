@@ -63,6 +63,7 @@ function DistributorDocument({ documentLabel }) {
     }
   }
 
+  // console.log(tableData,"hello");
 
   const { handleSubmit, control, setValue, watch, reset } = methods;
 
