@@ -272,7 +272,12 @@ export default function BasicInfo() {
                       fontSize: '18px',
                     }}
                   >
-                    <Typography variant="h5" gutterBottom className="heading" mt={2}>
+                    <Box  sx={{
+                      mb: '30px',
+                      mt: '10px',
+                      fontWeight: '600',
+                      fontSize: '18px',
+                    }}>
                       {` ${
                         vendor_category === 'distributor' ||
                         vendor_category === 'miller_distributor'
@@ -281,7 +286,7 @@ export default function BasicInfo() {
                             ? 'Address of Proposed Milling Unit Premises'
                             : 'Address Information'
                       }`}
-                    </Typography>
+                    </Box>
                   </Box>
                 </Box>
               </Grid>

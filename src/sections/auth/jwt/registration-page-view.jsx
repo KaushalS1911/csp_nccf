@@ -212,7 +212,7 @@ const RegistrationForm = ({ vendor_category }) => {
       mode: '',
     };
     axios
-      .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csps`, payload)
+      .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp`, payload)
       .then((res) => {
         if (res?.data?.status == '201') {
           enqueueSnackbar('Register Successfully');
