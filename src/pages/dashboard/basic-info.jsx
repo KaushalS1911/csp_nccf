@@ -211,7 +211,9 @@ export default function BasicInfo() {
                       />
                     )}
 
-                    {(vendor_category !== 'own_distribution_own_mill' || vendor_category !== 'own_distribution_rent_mill' || vendor_category !== 'cooperative_rent_mill') && (
+                    {(vendor_category !== 'own_distribution_own_mill' &&
+                      vendor_category !== 'own_distribution_rent_mill' &&
+                      vendor_category !== 'cooperative_rent_mill') && (
                       <RHFAutocomplete
                         disabled={disable}
                         name="type_of_firm"
