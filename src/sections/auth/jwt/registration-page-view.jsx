@@ -178,7 +178,7 @@ const RegistrationForm = ({ vendor_category }) => {
   };
   const NewBlogSchema = vendor_category === "distributor" ? DistributorBlogSchema : vendor_category === "society_cooperative" ? SocietyBlogSchema : MillerBlogSchema
   const methods = useForm({
-    // resolver: yupResolver(NewBlogSchema),
+    resolver: yupResolver(NewBlogSchema),
     defaultValues,
   });
   const {
