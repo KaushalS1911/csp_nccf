@@ -78,7 +78,6 @@ export default function UploadDocument({ container }) {
 
     setSelected((prevSelected) => [...prevSelected, payload]);
     setFiles([]);
-
     const formData = new FormData();
     formData.append('doc_type', data.doc_type);
     formData.append('csp_code', vendor);
@@ -166,6 +165,7 @@ export default function UploadDocument({ container }) {
 
   const handleAllSubmit = async (data) => {
 
+
     const filteredData = tableData?.filter((item) => item.doc_type === docs);
     if (filteredData.length >= 2) {
       // enqueueSnackbar(`${handleDoctypeLabel(filteredData[0]?.doc_type)} upload limit exceed. (If you want to upload more document of ${handleDoctypeLabel(filteredData[0]?.doc_type)}, then remove existing ${handleDoctypeLabel(filteredData[0]?.doc_type)}.)`, { variant: 'error' });
@@ -221,7 +221,7 @@ export default function UploadDocument({ container }) {
 
       if (responses) {
         enqueueSnackbar('Your Document Uploaded');
-        router.push(paths.dashboard.document.document_list);
+        // router.push(paths.dashboard.document.document_list);
       } else {
         enqueueSnackbar('Failed to Upload');
       }
