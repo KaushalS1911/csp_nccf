@@ -9,6 +9,7 @@ import { useParams } from 'react-router';
 import UploadListView from '../../../pages/dashboard/upload-document';
 import { DocumentListView } from '../../upload/view';
 import MillerNewEditForm from '../miller-new-edit-form';
+import MillerDocumentView from './miller-document-view';
 
 
 function SingleMillerView(props) {
@@ -41,6 +42,7 @@ const {id} = useParams()
       />
 
       <MillerNewEditForm miller={distributor}  />
+      <MillerDocumentView />
 
     </Container>
   );

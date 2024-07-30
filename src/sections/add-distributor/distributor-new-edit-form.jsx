@@ -21,6 +21,7 @@ import { useAuthContext } from '../../auth/hooks';
 import { useResponsive } from '../../hooks/use-responsive';
 import { DocumentListView } from '../upload/view';
 import { LoadingScreen } from '../../components/loading-screen';
+import SingleDistributorView from './view/single-distributor-view';
 
 // ----------------------------------------------------------------------
 
@@ -289,17 +290,19 @@ export default function DistributorNewEditForm({ currentProduct, distributor }) 
           <LoadingScreen sx={{ margin: 'auto' }}/>
         </Box>
       ) : (
-        <FormProvider methods={methods} onSubmit={onSubmit}>
-          <Grid container spacing={3}>
-            {renderProperties}
-            {addressInfo}
-            {!distributor && <Grid xs={12}>
-              <Box sx={{ display: 'flex', justifyContent: 'end' }}>
-                <Button variant="contained" type="submit">Submit</Button>
-              </Box>
-            </Grid>}
-          </Grid>
-        </FormProvider>
+        <>
+          <FormProvider methods={methods} onSubmit={onSubmit}>
+            <Grid container spacing={3}>
+              {renderProperties}
+              {addressInfo}
+              {!distributor && <Grid xs={12}>
+                <Box sx={{ display: 'flex', justifyContent: 'end' }}>
+                  <Button variant="contained" type="submit">Submit</Button>
+                </Box>
+              </Grid>}
+            </Grid>
+          </FormProvider>
+        </>
       )
       }
     </>

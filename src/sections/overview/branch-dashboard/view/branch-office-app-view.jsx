@@ -12,6 +12,8 @@ import BranchWidgetSummary from '../branch-widget-summary';
 import BranchCurrentDownload from '../branch-current-download';
 import BranchDataActivity from '../branch-data-activity';
 import BranchNewInvoice from '../branch-new-invoice';
+import BranchListView from '../branch/branch-list-view';
+import { handleCategoryTypes } from '../../../../_mock';
 
 
 // ----------------------------------------------------------------------
@@ -24,6 +26,7 @@ export default function BranchDashboardView({ vendorCode }) {
 
   const [orderList, setOrderList] = useState([]);
   const [stats, setStats] = useState({});
+  const [branch, setBranch] = useState([]);
 
 
   const TIME_LABELS = {
@@ -36,6 +39,7 @@ export default function BranchDashboardView({ vendorCode }) {
       fetchAllOrders();
       getStats();
     }
+      getBranch()
   }, [vendor]);
 
   function getStats() {
@@ -43,65 +47,75 @@ export default function BranchDashboardView({ vendorCode }) {
       setStats(res.data?.data[0]);
     });
   }
+  function getBranch() {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/noida/csp/stats`).then((res) => {
+      setBranch(res?.data?.data);
+    });
+  }
+
+  console.log(branch,"heet");
 
   function fetchAllOrders() {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor.csp_code}/orders`).then((res) => {
       setOrderList(res.data?.data);
     });
   }
+  const color=[[theme.palette.success.light, theme.palette.success.main],[theme.palette.warning.light, theme.palette.warning.main],[theme.palette.info.light, theme.palette.info.main],[theme.palette.secondary.light, theme.palette.secondary.main]]
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
-        <Grid xs={12} md={3}>
-          <BranchWidgetSummary
-            title="Miller"
-            // percent={0.2}
-            total={4876}
-            chart={{
-              // colors: [theme.palette.warning.light, theme.palette.warning.main],
-              series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-            }}
-          />
-        </Grid>
-        <Grid xs={12} md={3}>
-          <BranchWidgetSummary
-            title="Distributor"
-            // percent={-0.1}
-            total={678}
-            chart={{
-              colors: [theme.palette.warning.light, theme.palette.warning.main],
-              series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-            }}
+        {branch && branch.map((data,ind) => (
+         ind >0 && <Grid xs={12} md={3}>
+            <BranchWidgetSummary
+              title={handleCategoryTypes(data?.category)}
+              // percent={0.2}
+              total={data['COUNT(id)']}
+              chart={{
+                colors: color[ind],
+                series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+              }}
+            />
+          </Grid>
+        )) }
+        {/*<Grid xs={12} md={3}>*/}
+        {/*  <BranchWidgetSummary*/}
+        {/*    title="Distributor"*/}
+        {/*    // percent={-0.1}*/}
+        {/*    total={678}*/}
+        {/*    chart={{*/}
+        {/*      colors: [theme.palette.warning.light, theme.palette.warning.main],*/}
+        {/*      series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],*/}
+        {/*    }}*/}
 
-          />
-        </Grid>
+        {/*  />*/}
+        {/*</Grid>*/}
 
-        <Grid xs={12} md={3}>
-          <BranchWidgetSummary
-            title="Miller & Distributor"
-            // percent={0.2}
-            total={4876}
-            chart={{
-              colors: [theme.palette.info.light, theme.palette.info.main],
-              series: [20, 41, 63, 33, 28, 35, 50, 46, 11, 26],
-            }}
+        {/*<Grid xs={12} md={3}>*/}
+        {/*  <BranchWidgetSummary*/}
+        {/*    title="Miller & Distributor"*/}
+        {/*    // percent={0.2}*/}
+        {/*    total={4876}*/}
+        {/*    chart={{*/}
+        {/*      colors: [theme.palette.info.light, theme.palette.info.main],*/}
+        {/*      series: [20, 41, 63, 33, 28, 35, 50, 46, 11, 26],*/}
+        {/*    }}*/}
 
-          />
-        </Grid>
+        {/*  />*/}
+        {/*</Grid>*/}
 
-        <Grid xs={12} md={3}>
-          <BranchWidgetSummary
-            title="Society/Co-operative"
-            // percent={-0.1}
-            total={678}
-            chart={{
-              colors: [theme.palette.secondary.light, theme.palette.secondary.main],
-              series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-            }}
+        {/*<Grid xs={12} md={3}>*/}
+        {/*  <BranchWidgetSummary*/}
+        {/*    title="Society/Co-operative"*/}
+        {/*    // percent={-0.1}*/}
+        {/*    total={678}*/}
+        {/*    chart={{*/}
+        {/*      colors: [theme.palette.secondary.light, theme.palette.secondary.main],*/}
+        {/*      series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],*/}
+        {/*    }}*/}
 
-          />
-        </Grid>
+        {/*  />*/}
+        {/*</Grid>*/}
 
         <Grid xs={12} md={6} lg={4}>
           <BranchCurrentDownload
@@ -215,19 +229,20 @@ export default function BranchDashboardView({ vendorCode }) {
           {/*</div>*/}
         </Grid>
         <Grid xs={12} >
-          <BranchNewInvoice
-            title="Orders"
-            head={true}
-            tableData={orderList}
-            tableLabels={[
-              { id: 'sr no', label: '#' },
-              { id: 'commodity', label: 'Commodity' },
-              { id: 'quantity', label: 'Quantity' },
-              { id: 'date', label: 'Date' },
-              { id: 'status', label: 'Status' },
-              { id: '' },
-            ]}
-          />
+          {/*<BranchNewInvoice*/}
+          {/*  title="Orders"*/}
+          {/*  head={true}*/}
+          {/*  tableData={orderList}*/}
+          {/*  tableLabels={[*/}
+          {/*    { id: 'sr no', label: '#' },*/}
+          {/*    { id: 'commodity', label: 'Commodity' },*/}
+          {/*    { id: 'quantity', label: 'Quantity' },*/}
+          {/*    { id: 'date', label: 'Date' },*/}
+          {/*    { id: 'status', label: 'Status' },*/}
+          {/*    { id: '' },*/}
+          {/*  ]}*/}
+          {/*/>*/}
+          {/*<BranchListView />*/}
         </Grid>
         {/*<Grid xs={12} lg={12}>*/}
         {/*  <UserListView tableData={orderList}/>*/}

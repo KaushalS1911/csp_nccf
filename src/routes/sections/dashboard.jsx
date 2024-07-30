@@ -199,6 +199,7 @@ import SingleMillerView from '../../sections/add-miller/view/single-miller-view'
 import DistributorInfo from '../../pages/dashboard/distributor-info';
 import MillerDocumentView from '../../sections/add-miller/view/miller-document-view';
 import DistributorDocumentView from '../../sections/add-distributor/view/distributor-document-view';
+import Csp from '../../pages/dashboard/Csp';
 
 // ----------------------------------------------------------------------
 
@@ -287,6 +288,7 @@ export const dashboardRoutes = [
       // { path: 'upload-document', element: <UploadDocument /> },
       // { path: 'document', element: <UploadListView /> },
       { path: 'orders', element: <BranchListPage /> },
+      { path: 'csp', element: <Csp /> },
       { path: 'add-miller', element: <MillerCreatePage /> },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },

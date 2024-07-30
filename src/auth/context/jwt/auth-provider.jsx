@@ -139,7 +139,7 @@ export function AuthProvider({ children }) {
   //HEAD_OFFICE_LOGIN
   const ho_login = useCallback(async (data) => {
     axios
-      .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/login`, data)
+      .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/admin/login`, data)
       .then((response) => {
         if (response?.data?.status === '200') {
           const res = response?.data?.data[0];

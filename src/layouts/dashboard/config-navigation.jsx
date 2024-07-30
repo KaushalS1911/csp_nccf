@@ -290,6 +290,10 @@ export function useNavData() {
       title: t('Orders'),
       path: paths.dashboard.orders,
       icon: ICONS.order,
+    },   {
+      title: t('CSP'),
+      path: paths.dashboard.csp,
+      icon: ICONS.booking,
     },
     {
       title: t('Basic Info'),

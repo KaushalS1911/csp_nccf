@@ -636,3 +636,17 @@ export function handleFilterTypes(type) {
       return type;
   }
 }
+export function handleCategoryTypes(type) {
+  switch (type) {
+    case 'society_cooperative':
+      return 'Society/Co-operative';
+    case 'miller':
+      return 'Miller';
+    case 'disributor':
+      return 'Distributor';
+      case 'miller_distributor':
+      return 'Miller & Distributor';
+    default:
+      return type;
+  }
+}

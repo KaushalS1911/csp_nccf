@@ -9,6 +9,7 @@ import { useGetDistributor } from '../../../api/vendor';
 import { useParams } from 'react-router';
 import UploadListView from '../../../pages/dashboard/upload-document';
 import { DocumentListView } from '../../upload/view';
+import DistributorDocumentView from './distributor-document-view';
 
 
 function SingleDistributorView(props) {
@@ -41,6 +42,7 @@ const {id} = useParams()
       />
 
       <DistributorNewEditForm distributor={distributor}  />
+<DistributorDocumentView />
 
     </Container>
   );

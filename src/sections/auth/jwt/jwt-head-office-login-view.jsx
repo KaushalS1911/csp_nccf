@@ -35,14 +35,14 @@ export default function JwtHeadOfficeLoginView() {
   const searchParams = useSearchParams();
   const returnTo = searchParams.get('returnTo');
   const LoginSchema = Yup.object().shape({
-    phone_number: Yup.string().required('Phone number is required'),
+    branch_code: Yup.string().required('Branch code is required'),
     password: Yup.string().required('Password is required'),
-    category: Yup.string().required('Vendor category is required'),
+    category: Yup.string().required('Category is required'),
   });
   const defaultValues = {
-    phone_number: '',
+    branch_code: '',
     password: '',
-    category: 'head_office',
+    category: '',
   };
   const methods = useForm({
     resolver: yupResolver(LoginSchema),
@@ -53,7 +53,7 @@ export default function JwtHeadOfficeLoginView() {
     control,
     register,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { errors },
   } = methods;
   const onSubmit = handleSubmit(async (data) => {
 
@@ -90,10 +90,38 @@ export default function JwtHeadOfficeLoginView() {
               <FormProvider onSubmit={onSubmit} methods={methods}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    <RHFTextField name="phone_number" label="Phone Number" />
+                    <RHFTextField name="branch_code" label="Branch Code" />
                   </Grid>
                   <Grid item xs={12} sx={{ my: '10px' }}>
                     <RHFTextField name={'password'} label={'Password'} type={'password'} />
+                  </Grid>
+
+                  <Grid item xs={12} >
+
+                    <Controller
+                      name="category"
+                      control={control}
+                      render={({ field }) => (
+                        <Box>
+                          <RadioGroup row aria-label="vendor" {...field}>
+                            <FormControlLabel
+                              value="head_office"
+                              control={<Radio />}
+                              label="Head Office"
+                            />
+                            <FormControlLabel
+                              value="branch"
+                              control={<Radio />}
+                              label="Branch"
+                            />
+
+                          </RadioGroup>
+                          {errors.category && (
+                            <Typography color="error">{errors.category.message}</Typography>
+                          )}
+                        </Box>
+                      )}
+                    />
                   </Grid>
 
                   {/*<Grid item xs={12}>*/}
@@ -108,9 +136,9 @@ export default function JwtHeadOfficeLoginView() {
                   {/*    ]}*/}
                   {/*  />*/}
                   {/*</Grid>*/}
-                  <Grid item xs={12}>
-                    <RHFCheckbox name={'remember_me'} label={'Keep me logged in'} />
-                  </Grid>
+                  {/*<Grid item xs={12}>*/}
+                  {/*  <RHFCheckbox name={'remember_me'} label={'Keep me logged in'} />*/}
+                  {/*</Grid>*/}
                   <Grid item xs={12}>
                     <Button
                       variant="contained"

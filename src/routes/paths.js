@@ -298,6 +298,7 @@ export const paths = {
     // upload_document: `${ROOTS.DASHBOARD}/upload-document`,
     // document_list: `${ROOTS.DASHBOARD}/document-list`,
     orders: `${ROOTS.DASHBOARD}/orders`,
+    csp: `${ROOTS.DASHBOARD}/csp`,
     addMiller: `${ROOTS.DASHBOARD}/add-miller`,
     mail: `${ROOTS.DASHBOARD}/mail`,
     chat: `${ROOTS.DASHBOARD}/chat`,
