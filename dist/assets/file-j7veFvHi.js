@@ -1,1 +1,0 @@
-import{j as e,H as i,dB as r}from"./index-8I1ACQUa.js";function t(){return e.jsxs(e.Fragment,{children:[e.jsx(i,{children:e.jsx("title",{children:" Dashboard: File"})}),e.jsx(r,{})]})}export{t as default};
