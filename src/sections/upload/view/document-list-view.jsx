@@ -46,11 +46,12 @@ import { LoadingScreen } from '../../../components/loading-screen';
 
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 const TABLE_HEAD = [
-  { id: 'srNo', label: 'Sr No', width: 88 },
-  { id: 'object_url', label: 'Document Image', width: 100 },
-  { id: 'doc_type', label: 'Document Type', width: 100 },
-  { id: 'uploaded_on', label: 'Date', width: 100 },
+  { id: 'srNo', label: 'Sr No', width: 100 },
+  { id: 'object_url', label: 'Document Image', width: 180 },
+  { id: 'doc_type', label: 'Document Type', width: 180 },
+  { id: 'uploaded_on', label: 'Date', width: 180 },
   { id: 'status', label: 'Status', width: 100 },
+  { id: '', width: 100 },
 ];
 const defaultFilters = {
   name: '',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { useForm, Controller } from 'react-hook-form';
 import {
@@ -43,7 +43,15 @@ export default function JwtLoginView() {
   const [subSociety, setSubSociety] = useState('');
   const returnTo = searchParams.get('returnTo');
   const [loading, setLoading] = useState(false);
-
+//   const [session,setSession] = useState([])
+//   console.log(session,"shshs");
+// useEffect(() => {
+//   const session1 = JSON.parse(sessionStorage.getItem('res'));
+//   setSession(session1)
+//   if (session?.data) {
+//     setLoading(false);
+//   }
+// },[session])
   const LoginSchema = Yup.object().shape({
     phone_number: Yup.string().required('Phone number is required'),
     password: Yup.string().required('Password is required'),
@@ -62,7 +70,7 @@ export default function JwtLoginView() {
     category: '',
     sub: '',
   };
-const validation = society === "society" ? LoginSchema : LoginSchema2
+  const validation = society === 'society' ? LoginSchema : LoginSchema2;
   const methods = useForm({
     resolver: yupResolver(validation),
     defaultValues,
@@ -76,18 +84,20 @@ const validation = society === "society" ? LoginSchema : LoginSchema2
     formState: { errors },
   } = methods;
   const onSubmit = handleSubmit(async (data) => {
-  setLoading(true)
+    setLoading(true);
     try {
-      await login?.({ ...data,category: society === "society" ?  subSociety : data.category });
-      localStorage.setItem("login_type", "other-login");
+      await login?.({ ...data, category: society === 'society' ? subSociety : data.category });
+      localStorage.setItem('login_type', 'other-login');
       setLoading(false)
     } catch (error) {
       console.error(error);
       reset();
       setErrorMsg(typeof error === 'string' ? error : error.message);
-      setLoading(false)
+      setLoading(false);
     }
+
   });
+
   return (
     <>
       {loading ? (
@@ -97,7 +107,7 @@ const validation = society === "society" ? LoginSchema : LoginSchema2
               justifyContent: 'center',
               alignItems: 'center',
               height: '100vh',
-              backgroundColor: "white"
+              backgroundColor: 'white',
             }}
           >
 
@@ -174,7 +184,7 @@ const validation = society === "society" ? LoginSchema : LoginSchema2
                         )}
                       />
                     </Grid>
-                    {society == "society" && <Grid item xs={12}>
+                    {society == 'society' && <Grid item xs={12}>
                       <Controller
                         name="sub"
                         control={control}

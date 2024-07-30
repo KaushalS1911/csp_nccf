@@ -44,7 +44,7 @@ const TABLE_HEAD = [
   { id: 'quantity', label: 'Quantity', width: 200 },
   { id: 'created_at', label: 'Date', width: 180 },
   { id: 'status', label: 'Status', width: 100 },
-  // { id: '', width: 88 },
+  { id: '', width: 88 },
 ];
 const defaultFilters = {
   name: '',

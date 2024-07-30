@@ -108,6 +108,7 @@ export function AuthProvider({ children }) {
     axios
       .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp_login`, data)
       .then((response) => {
+        sessionStorage.setItem("res",JSON.stringify(response))
         if (response?.data?.status === '200') {
           const res = response?.data?.data[0];
           setSession(res);

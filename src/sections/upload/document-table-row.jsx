@@ -80,6 +80,11 @@ const status = "completed"
             {status}
           </Label>
         </TableCell>
+        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+            <Iconify icon="eva:more-vertical-fill" />
+          </IconButton>
+        </TableCell>
         {/* <TableCell sx={{ whiteSpace: 'nowrap' }}>completed</TableCell> */}
         {/* <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}> */}
         {/*<Tooltip title="Quick Edit" placement="top" arrow>*/}
@@ -99,29 +104,29 @@ const status = "completed"
         arrow="right-top"
         sx={{ width: 140 }}
       >
-        <MenuItem onClick={() => handleViewDialog(url)}>
-          <Iconify icon="solar:eye-bold" />
-          View
+        {/*<MenuItem onClick={() => handleViewDialog(url)}>*/}
+        {/*  <Iconify icon="solar:eye-bold" />*/}
+        {/*  View*/}
+        {/*</MenuItem>*/}
+        <MenuItem
+          onClick={() => {
+            onEditRow();
+            popover.onClose();
+          }}
+        >
+          <Iconify icon="solar:pen-bold" />
+          Edit
         </MenuItem>
-        {/*<MenuItem*/}
-        {/*  onClick={() => {*/}
-        {/*    onEditRow();*/}
-        {/*    popover.onClose();*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  <Iconify icon="solar:pen-bold" />*/}
-        {/*  Edit*/}
-        {/*</MenuItem>*/}
-        {/*<MenuItem*/}
-        {/*  onClick={() => {*/}
-        {/*    confirm.onTrue();*/}
-        {/*    popover.onClose();*/}
-        {/*  }}*/}
-        {/*  sx={{ color: 'error.main' }}*/}
-        {/*>*/}
-        {/*  <Iconify icon="solar:trash-bin-trash-bold" />*/}
-        {/*  Delete*/}
-        {/*</MenuItem>*/}
+        <MenuItem
+          onClick={() => {
+            confirm.onTrue();
+            popover.onClose();
+          }}
+          sx={{ color: 'error.main' }}
+        >
+          <Iconify icon="solar:trash-bin-trash-bold" />
+          Delete
+        </MenuItem>
       </CustomPopover>
       <Lightbox
         index={lightbox.selected}
