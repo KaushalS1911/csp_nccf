@@ -201,7 +201,7 @@ const MOCK_ID = _id[1];
 const MOCK_TITLE = _postTitles[2];
 
 const ROOTS = {
-  AUTH: '/auth',
+  AUTH: '/',
   AUTH_DEMO: '/auth-demo',
   DASHBOARD: '/dashboard',
 };
@@ -252,10 +252,10 @@ export const paths = {
       forgotPassword: `${ROOTS.AUTH}/amplify/forgot-password`,
     },
     jwt: {
-      login: `${ROOTS.AUTH}/jwt/login`,
-      branch:`${ROOTS.AUTH}/jwt/branch`,
-      headlogin: `${ROOTS.AUTH}/jwt/ho-login`,
-      register: `${ROOTS.AUTH}/jwt/register`,
+      login: `/login`,
+      branch:`/branch`,
+      headlogin: `/ho-login`,
+      register: `/register`,
     },
     firebase: {
       login: `${ROOTS.AUTH}/firebase/login`,
