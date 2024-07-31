@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import BranchListView from '../../sections/overview/branch-dashboard/branch/branch-list-view';
+import CspListView from '../../sections/csp/view/csp-list-view';
 
 function Csp(props) {
   return (
@@ -8,7 +8,7 @@ function Csp(props) {
       <Helmet>
         <title> Dashboard | CSP</title>
       </Helmet>
-    <BranchListView />
+    <CspListView />
     </>
   );
 }

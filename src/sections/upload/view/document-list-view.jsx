@@ -62,7 +62,7 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function DocumentListView({ csp, document, miller }) {
+export default function DocumentListView({ csp, document, miller ,cspt}) {
   const { vendor } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState([]);
@@ -76,8 +76,7 @@ export default function DocumentListView({ csp, document, miller }) {
   ];
   useEffect(() => {
     getAllDocument();
-  }, [csp]); // Add csp as a dependency
-
+  }, [csp]);
   function getAllDocument() {
     setLoading(true);
     const cspCode = csp || vendor?.csp_code;
@@ -191,24 +190,24 @@ export default function DocumentListView({ csp, document, miller }) {
         <Container maxWidth={settings.themeStretch ? false : 'xl'}>
 
           <CustomBreadcrumbs
-            heading={miller ? 'Miller Documents' : `Distributor Documents`}
+            heading={miller ? 'Miller Documents' : cspt ? "CSP Documents" : `Distributor Documents`}
             links={[
               {
                 name: 'Dashboard',
                 href: paths.dashboard.root,
               },
               {
-                name: miller ? 'Miller List' : 'Distributor List',
-                href: miller ? paths.dashboard.miller.miller_list : paths.dashboard.distributor.distributor_list,
+                name: miller ? 'Miller List' : cspt ? "CSP List"  : 'Distributor List',
+                href: miller ? paths.dashboard.miller.miller_list : cspt ? paths.dashboard.csp.csp_list :paths.dashboard.distributor.distributor_list,
               },
 
               {
-                name: miller ? `Miller Documents` : `Distributor Documents`,
+                name: miller ? `Miller Documents` : cspt ? 'CSP Document' : `Distributor Documents`,
               },
             ]}
             sx={{ mb: { xs: 3, md: 5 } }}
             action={
-              dataFiltered?.length == 0 &&
+              dataFiltered?.length == 0 || !cspt &&
               <Button
                 component={RouterLink}
                 href={miller ? paths.dashboard.miller.document_upload : paths.dashboard.distributor.document_upload}

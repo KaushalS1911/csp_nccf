@@ -15,7 +15,7 @@ import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { RouterLink } from 'src/routes/components';
 import { useBoolean } from 'src/hooks/use-boolean';
-import { _roles, _userList, USER_STATUS_OPTIONS } from 'src/_mock';
+import { _roles, _userList, ORDER_STATUS_OPTIONS, USER_STATUS_OPTIONS } from 'src/_mock';
 import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
@@ -51,7 +51,7 @@ import { useGetBranchOrder, useGetBranchOrderCount } from '../../../api/branch-o
 
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
+// const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 const TABLE_HEAD = [
   { id: 'srNo', label: 'Sr No', width: 88,align:"center" },
   { id: 'name', label: 'Name', },
@@ -64,14 +64,14 @@ const TABLE_HEAD = [
 const defaultFilters = {
   name: '',
   commodity: [],
-  status:[],
+  status: 'all',
   branch:[]
 
 };
 
 // ----------------------------------------------------------------------
-
 export default function BranchOrderListView() {
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' },{value: "accepted",label: "Accepted"}, {value: "placed",label:"Placed"},{value:"declined",label:"Declined"}];
   const { vendor } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState([]);
@@ -228,7 +228,7 @@ export default function BranchOrderListView() {
 
               <Grid xs={12} md={2.4}>
                 <AppWidgetSummary
-                  title="Declined Pending"
+                  title="Declined Orders"
                   total={orderCount?.declined_orders || '0'}
 
                 />
@@ -236,7 +236,7 @@ export default function BranchOrderListView() {
 
               <Grid xs={12} md={2.4}>
                 <AppWidgetSummary
-                  title="Placed Accepted"
+                  title="Placed Orders"
                   total={orderCount?.placed_orders || '0'}
 
                 />
@@ -244,7 +244,7 @@ export default function BranchOrderListView() {
 
               <Grid xs={12} md={2.4}>
                 <AppWidgetSummary
-                  title="Accepted Declined"
+                  title="Accepted Orders"
                   total={orderCount?.accepted_orders || '0'}
 
                 />
@@ -265,7 +265,40 @@ export default function BranchOrderListView() {
               }}
             />
             <Card>
-
+              <Tabs
+                value={filters.status}
+                onChange={handleFilterStatus}
+                sx={{
+                  px: 2.5,
+                  boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+                }}
+              >
+                {STATUS_OPTIONS.map((tab) => (
+                  <Tab
+                    key={tab.value}
+                    iconPosition="end"
+                    value={tab.value}
+                    label={tab.label}
+                    icon={
+                      <Label
+                        variant={
+                          ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
+                        }
+                        color={
+                          (tab.value === 'accepted' && 'success') ||
+                          (tab.value === 'placed' && 'warning') ||
+                          (tab.value === 'declined' && 'error') ||
+                          'default'
+                        }
+                      >
+                        {['accepted', 'declined', 'placed'].includes(tab.value)
+                          ? tableData.filter((user) => user.nccf_order_status === tab.value).length
+                          : tableData.length}
+                      </Label>
+                    }
+                  />
+                ))}
+              </Tabs>
 
               <BranchTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}  branchOptions={branchOptions} />
 
@@ -403,8 +436,9 @@ function applyFilter({ inputData, comparator, filters }) {
     );
   }
 
-  if (status.length) {
-    inputData = inputData.filter((user) => status.includes(user?.nccf_order_status));
+
+  if (status !== 'all') {
+    inputData = inputData.filter((user) => user.nccf_order_status === status);
   }
 
   if (commodity.length) {

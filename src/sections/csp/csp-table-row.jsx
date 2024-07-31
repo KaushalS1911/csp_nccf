@@ -9,10 +9,10 @@ import Iconify from 'src/components/iconify';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { useState } from 'react';
-import { handleCategoryTypes } from '../../../../_mock';
+import { handleCategoryTypes } from '../../_mock';
 
 // ----------------------------------------------------------------------
-export default function BranchTableRow({ row, selected, onEditRow, onSelectRow, onViewRow,onDeleteRow, index,onView }) {
+export default function CspTableRow({ row, selected, onEditRow, onSelectRow, onViewRow,onDeleteRow, index,onView }) {
   const { name,category, type_of_firm, contact_person, phone_number, email, address} = row;
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([])
@@ -31,7 +31,7 @@ const status = "completed"
         {/*  <Checkbox checked={selected} onClick={onSelectRow} />*/}
         {/*</TableCell>*/}
         <TableCell sx={{ whiteSpace: 'nowrap' ,textAlign:"center"}}>{index + 1}</TableCell>
-        <TableCell sx={{ whiteSpace: 'nowrap' }} >{name}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' ,fontWeight:"bold",cursor:"pointer"}} onClick={onView} >{name}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{handleCategoryTypes(category)}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{type_of_firm}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{contact_person}</TableCell>
@@ -75,12 +75,12 @@ const status = "completed"
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell> */}
-        {/*<TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>*/}
+        <TableCell align="center" sx={{ px: 1, whiteSpace: 'nowrap' }}>
 
-        {/*  <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>*/}
-        {/*    <Iconify icon="eva:more-vertical-fill" />*/}
-        {/*  </IconButton>*/}
-        {/*</TableCell>*/}
+          <IconButton color={popover.open ? 'inherit' : 'default'} onClick={popover.onOpen}>
+            <Iconify icon="eva:more-vertical-fill" />
+          </IconButton>
+        </TableCell>
       </TableRow>
       <CustomPopover
         open={popover.open}
@@ -127,7 +127,7 @@ const status = "completed"
     </>
   );
 }
-BranchTableRow.propTypes = {
+CspTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
   onEditRow: PropTypes.func,
   onSelectRow: PropTypes.func,

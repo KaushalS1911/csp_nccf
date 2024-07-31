@@ -30,12 +30,19 @@ import {
 } from 'src/components/table';
 import axios from 'axios';
 import { Box } from '@mui/system';
-import BranchTableToolbar from './branch-table-toolbar';
-import BranchTableFiltersResult from './branch-table-filters-result';
-import BranchTableRow from './branch-table-row';
-import { useAuthContext } from '../../../../auth/hooks';
-import { LoadingScreen } from '../../../../components/loading-screen';
-import { useGetCSP } from '../../../../api/branch-csp';
+// import BranchTableToolbar from './branch-table-toolbar';
+// import BranchTableFiltersResult from './branch-table-filters-result';
+// import BranchTableRow from './branch-table-row';
+import { useAuthContext } from '../../../auth/hooks';
+import { useGetCSP } from '../../../api/branch-csp';
+import { LoadingScreen } from '../../../components/loading-screen';
+import CspTableToolbar from '../csp-table-toolbar';
+import CspTableFiltersResult from '../csp-table-filters-result';
+import CspTableRow from '../csp-table-row';
+import Tabs from '@mui/material/Tabs';
+import { alpha } from '@mui/material/styles';
+import Tab from '@mui/material/Tab';
+import Label from '../../../components/label';
 
 // ----------------------------------------------------------------------
 
@@ -49,7 +56,7 @@ const TABLE_HEAD = [
   { id: 'phone', label: 'Phone', width: 100 },
   { id: 'email', label: 'Email', width: 100 },
   { id: 'address', label: 'Address', width: 100 },
-  // { id: '', label: '', width: 20 },
+  { id: '', label: '', width: 20 },
 ];
 const defaultFilters = {
   name: '',
@@ -63,7 +70,8 @@ const defaultFilters = {
 
 // ----------------------------------------------------------------------
 
-export default function BranchListView() {
+export default function CspListView() {
+  const STATUS_OPTIONS = [{ value: 'all', label: 'All' },{value:'miller',label: 'Miller'},{value:"disributor",label:"Distributor"},{value: "society_cooperative",label: "Society"},{value: "miller_distributor",label: "Miller & Distributor"}]
   const { vendor } = useAuthContext();
   const { enqueueSnackbar } = useSnackbar();
   const [tableData, setTableData] = useState([]);
@@ -175,7 +183,7 @@ export default function BranchListView() {
 
   const handleViewRow = useCallback(
     (code) => {
-      router.push(paths.dashboard.distributor.distributor_document_view(code));
+      router.push(paths.dashboard.csp.csp_document_view(code));
     },
     [router],
   );
@@ -187,7 +195,7 @@ export default function BranchListView() {
     [handleFilters],
   );
   const handleDistributor = (code) => {
-    router.push(paths.dashboard.distributor.distributor_view(code));
+    router.push(paths.dashboard.csp.csp_view(code));
 
   };
 
@@ -223,13 +231,47 @@ export default function BranchListView() {
             />
             <Card>
 
-
-              <BranchTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
+              <Tabs
+                value={filters.status}
+                onChange={handleFilterStatus}
+                sx={{
+                  px: 2.5,
+                  boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+                }}
+              >
+                {STATUS_OPTIONS.map((tab) => (
+                  <Tab
+                    key={tab.value}
+                    iconPosition="end"
+                    value={tab.value}
+                    label={tab.label}
+                    icon={
+                      <Label
+                        variant={
+                          ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
+                        }
+                        color={
+                          (tab.value === 'miller' && 'success') ||
+                          (tab.value === 'distributor' && 'warning') ||
+                          (tab.value === 'miller_distributor' && 'error') ||
+                          (tab.value === 'society_cooperative' && 'info') ||
+                          'default'
+                        }
+                      >
+                        {['miller', 'distributor', 'miller_distributor', 'society_cooperative'].includes(tab.value)
+                          ? tableData.filter((user) => user.category === tab.value).length
+                          : tableData.length}
+                      </Label>
+                    }
+                  />
+                ))}
+              </Tabs>
+              <CspTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
                                   stateOptions={stateOptions} branchOptions={branchOptions}
                                   districtOptions={districtOptions}/>
 
               {canReset && (
-                <BranchTableFiltersResult
+                <CspTableFiltersResult
                   filters={filters}
                   onFilters={handleFilters}
                   onResetFilters={handleResetFilters}
@@ -281,7 +323,7 @@ export default function BranchListView() {
                           table.page * table.rowsPerPage + table.rowsPerPage,
                         )
                         ?.map((row, index) => (
-                          <BranchTableRow
+                          <CspTableRow
                             key={row.id}
                             index={index}
                             row={row}
@@ -363,7 +405,7 @@ function applyFilter({ inputData, comparator, filters }) {
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((user) => user.doc_type === status);
+    inputData = inputData.filter((user) => user.category === status);
   }
 
   if (type_of_firm.length) {

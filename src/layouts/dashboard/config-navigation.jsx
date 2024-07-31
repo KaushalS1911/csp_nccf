@@ -292,9 +292,20 @@ export function useNavData() {
     },
     {
       title: t('CSP'),
-      path: paths.dashboard.csp,
+      path: paths.dashboard.csp.csp_list,
       icon: ICONS.booking,
     },
+    // {
+    //   title: t('CSP'),
+    //   path: paths.dashboard.csp.root,
+    //   icon: ICONS.file,
+    //   children: [
+    //     { title: t('CSP List'), path: paths.dashboard.csp.csp_list },
+    //     // { title: t('Add Distributor'), path: paths.dashboard.csp.add_distributor },
+    //     { title: t('Upload Document'), path: paths.dashboard.csp.document_upload },
+    //
+    //   ],
+    // },
 
 
     // {

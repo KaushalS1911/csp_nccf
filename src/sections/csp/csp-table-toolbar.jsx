@@ -15,11 +15,11 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import axios from 'axios';
-import { handleCategoryTypes } from '../../../../_mock';
+import { handleCategoryTypes } from '../../_mock';
 
 // ----------------------------------------------------------------------
 
-export default function BranchTableToolbar({
+export default function CspTableToolbar({
                                                   filters,
                                                   onFilters,
                                                   //
@@ -146,34 +146,34 @@ export default function BranchTableToolbar({
             ))}
           </Select>
         </FormControl>
-        <FormControl
-          sx={{
-            flexShrink: 0,
-            width: { xs: 1, md: 200 },
-          }}
-        >
-          <InputLabel>Category</InputLabel>
+        {/*<FormControl*/}
+        {/*  sx={{*/}
+        {/*    flexShrink: 0,*/}
+        {/*    width: { xs: 1, md: 200 },*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <InputLabel>Category</InputLabel>*/}
 
-          <Select
-            multiple
-            value={filters.category}
-            onChange={handleFilterCategory}
-            input={<OutlinedInput label="Category"/>}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
-            MenuProps={{
-              PaperProps: {
-                sx: { maxHeight: 240 },
-              },
-            }}
-          >
-            {['society_cooperative', 'miller', 'disributor', 'miller_distributor'].map((option) => (
-              <MenuItem key={option} value={option}>
-                <Checkbox disableRipple size="small" checked={filters.category.includes(option)}/>
-                {handleCategoryTypes(option)}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {/*  <Select*/}
+        {/*    multiple*/}
+        {/*    value={filters.category}*/}
+        {/*    onChange={handleFilterCategory}*/}
+        {/*    input={<OutlinedInput label="Category"/>}*/}
+        {/*    renderValue={(selected) => selected.map((value) => value).join(', ')}*/}
+        {/*    MenuProps={{*/}
+        {/*      PaperProps: {*/}
+        {/*        sx: { maxHeight: 240 },*/}
+        {/*      },*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    {['society_cooperative', 'miller', 'disributor', 'miller_distributor'].map((option) => (*/}
+        {/*      <MenuItem key={option} value={option}>*/}
+        {/*        <Checkbox disableRipple size="small" checked={filters.category.includes(option)}/>*/}
+        {/*        {handleCategoryTypes(option)}*/}
+        {/*      </MenuItem>*/}
+        {/*    ))}*/}
+        {/*  </Select>*/}
+        {/*</FormControl>*/}
 
         <FormControl
           sx={{
@@ -300,7 +300,7 @@ export default function BranchTableToolbar({
   );
 }
 
-BranchTableToolbar.propTypes = {
+CspTableToolbar.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
   roleOptions: PropTypes.array,

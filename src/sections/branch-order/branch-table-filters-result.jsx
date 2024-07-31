@@ -43,15 +43,17 @@ export default function BranchTableFiltersResult({
     },
     [filters.branch, onFilters]
   );
-  const handleRemoveStatus = useCallback(
-    (inputValue) => {
-      const newValue = filters.status.filter((item) => item !== inputValue);
-
-      onFilters('status', newValue);
-    },
-    [filters.status, onFilters]
-  );
-
+  // const handleRemoveStatus = useCallback(
+  //   (inputValue) => {
+  //     const newValue = filters.status.filter((item) => item !== inputValue);
+  //
+  //     onFilters('status', newValue);
+  //   },
+  //   [filters.status, onFilters]
+  // );
+  const handleRemoveStatus = useCallback(() => {
+    onFilters('status', 'all');
+  }, [onFilters]);
 
 
   return (
@@ -64,22 +66,26 @@ export default function BranchTableFiltersResult({
       </Box>
 
       <Stack flexGrow={1} spacing={1} direction="row" flexWrap="wrap" alignItems="center">
-
+        {filters.status !== 'all' && (
+          <Block label="Status:">
+            <Chip size="small" label={filters.status} onDelete={handleRemoveStatus} />
+          </Block>
+        )}
 
         {!!filters.commodity.length && (
           <Block label="commodity:">
             {filters.commodity.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveStatus(item)} />
-            ))}
-          </Block>
-        )}
-        {!!filters.status.length && (
-          <Block label="status:">
-            {filters.status.map((item) => (
               <Chip key={item} label={item} size="small" onDelete={() => handleRemoveCommodity(item)} />
             ))}
           </Block>
         )}
+        {/*{!!filters.status.length && (*/}
+        {/*  <Block label="status:">*/}
+        {/*    {filters.status.map((item) => (*/}
+        {/*      <Chip key={item} label={item} size="small" onDelete={() => handleRemoveCommodity(item)} />*/}
+        {/*    ))}*/}
+        {/*  </Block>*/}
+        {/*)}*/}
         {!!filters.branch.length && (
           <Block label="Branch:">
             {filters.branch.map((item) => (

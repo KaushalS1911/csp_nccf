@@ -8,11 +8,11 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
 import Iconify from 'src/components/iconify';
-import { handleFilterTypes } from '../../../../_mock';
+import { handleFilterTypes } from '../../_mock';
 
 // ----------------------------------------------------------------------
 
-export default function BranchTableFiltersResult({
+export default function CspTableFiltersResult({
   filters,
   onFilters,
   //
@@ -140,7 +140,7 @@ export default function BranchTableFiltersResult({
   );
 }
 
-BranchTableFiltersResult.propTypes = {
+CspTableFiltersResult.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
   onResetFilters: PropTypes.func,

@@ -298,7 +298,6 @@ export const paths = {
     // upload_document: `${ROOTS.DASHBOARD}/upload-document`,
     // document_list: `${ROOTS.DASHBOARD}/document-list`,
     orders: `${ROOTS.DASHBOARD}/orders`,
-    csp: `${ROOTS.DASHBOARD}/csp`,
     addMiller: `${ROOTS.DASHBOARD}/add-miller`,
     mail: `${ROOTS.DASHBOARD}/mail`,
     chat: `${ROOTS.DASHBOARD}/chat`,
@@ -392,6 +391,13 @@ export const paths = {
      miller_document_view :(title) =>  `${ROOTS.DASHBOARD}/miller/miller-document-view/${title}`,
       add_miller: `${ROOTS.DASHBOARD}/miller/add-miller`,
      document_upload : `${ROOTS.DASHBOARD}/miller/document-upload`,
+          },
+    csp:{
+      root: `${ROOTS.DASHBOARD}/csp`,
+      csp_list: `${ROOTS.DASHBOARD}/csp/csp-list`,
+     csp_view :(title) =>  `${ROOTS.DASHBOARD}/csp/csp-view/${title}`,
+     csp_document_view :(title) =>  `${ROOTS.DASHBOARD}/csp/csp-document-view/${title}`,
+
           },
 
     statsOverview: {

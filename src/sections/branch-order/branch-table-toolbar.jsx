@@ -15,6 +15,9 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import axios from 'axios';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { formHelperTextClasses } from '@mui/material/FormHelperText';
+import { GridToolbarColumnsButton, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +28,19 @@ export default function BranchTableToolbar({
                                              branchOptions,
                                                 }) {
 
+  const handleFilterStartDate = useCallback(
+    (newValue) => {
+      onFilters('startDate', newValue);
+    },
+    [onFilters]
+  );
+
+  const handleFilterEndDate = useCallback(
+    (newValue) => {
+      onFilters('endDate', newValue);
+    },
+    [onFilters]
+  );
 
   const popover = usePopover();
 
@@ -78,6 +94,40 @@ export default function BranchTableToolbar({
         }}
       >
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
+
+          <DatePicker
+            label="Start date"
+            value={filters.startDate}
+            onChange={handleFilterStartDate}
+            slotProps={{
+              textField: {
+                fullWidth: true,
+              },
+            }}
+            sx={{
+              maxWidth: { md: 200 },
+            }}
+          />
+
+          <DatePicker
+            label="End date"
+            value={filters.endDate}
+            onChange={handleFilterEndDate}
+            slotProps={{
+              textField: {
+                fullWidth: true,
+                // error: dateError,
+                // helperText: dateError && 'End date must be later than start date',
+              },
+            }}
+            sx={{
+              maxWidth: { md: 200 },
+              [`& .${formHelperTextClasses.root}`]: {
+                position: { md: 'absolute' },
+                bottom: { md: -40 },
+              },
+            }}
+          />
           <TextField
             fullWidth
             value={filters.name}
@@ -124,64 +174,68 @@ export default function BranchTableToolbar({
             ))}
           </Select>
         </FormControl>
+        {/*<GridToolbarColumnsButton />*/}
+        {/*<GridToolbarFilterButton />*/}
+        {/*<GridToolbarExport />*/}
 
-        <FormControl
-          sx={{
-            flexShrink: 0,
-            width: { xs: 1, md: 200 },
-          }}
-        >
-          <InputLabel>Status</InputLabel>
+        {/*<FormControl*/}
+        {/*  sx={{*/}
+        {/*    flexShrink: 0,*/}
+        {/*    width: { xs: 1, md: 200 },*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <InputLabel>Status</InputLabel>*/}
 
-          <Select
-            multiple
-            value={filters.status}
-            onChange={handleFilterStatus}
-            input={<OutlinedInput label="Status"/>}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
-            MenuProps={{
-              PaperProps: {
-                sx: { maxHeight: 240 },
-              },
-            }}
-          >
-            {['placed', 'declined', 'accepted'].map((option) => (
-              <MenuItem key={option} value={option}>
-                <Checkbox disableRipple size="small" checked={filters.status.includes(option)}/>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {/*  <Select*/}
+        {/*    multiple*/}
+        {/*    value={filters.status}*/}
+        {/*    onChange={handleFilterStatus}*/}
+        {/*    input={<OutlinedInput label="Status"/>}*/}
+        {/*    renderValue={(selected) => selected.map((value) => value).join(', ')}*/}
+        {/*    MenuProps={{*/}
+        {/*      PaperProps: {*/}
+        {/*        sx: { maxHeight: 240 },*/}
+        {/*      },*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    {['placed', 'declined', 'accepted'].map((option) => (*/}
+        {/*      <MenuItem key={option} value={option}>*/}
+        {/*        <Checkbox disableRipple size="small" checked={filters.status.includes(option)}/>*/}
+        {/*        {option}*/}
+        {/*      </MenuItem>*/}
+        {/*    ))}*/}
+        {/*  </Select>*/}
+        {/*</FormControl>*/}
 
-        <FormControl
-          sx={{
-            flexShrink: 0,
-            width: { xs: 1, md: 200 },
-          }}
-        >
-          <InputLabel>Branch</InputLabel>
+        {/*<FormControl*/}
+        {/*  sx={{*/}
+        {/*    flexShrink: 0,*/}
+        {/*    width: { xs: 1, md: 200 },*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <InputLabel>Branch</InputLabel>*/}
 
-          <Select
-            multiple
-            value={filters.branch}
-            onChange={handleFilterBranch}
-            input={<OutlinedInput label="Branch"/>}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
-            MenuProps={{
-              PaperProps: {
-                sx: { maxHeight: 240 },
-              },
-            }}
-          >
-            {branchOptions?.map((option) => (
-              <MenuItem key={option} value={option}>
-                <Checkbox disableRipple size="small" checked={filters.branch.includes(option)}/>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {/*  <Select*/}
+        {/*    multiple*/}
+        {/*    value={filters.branch}*/}
+        {/*    onChange={handleFilterBranch}*/}
+        {/*    input={<OutlinedInput label="Branch"/>}*/}
+        {/*    renderValue={(selected) => selected.map((value) => value).join(', ')}*/}
+        {/*    MenuProps={{*/}
+        {/*      PaperProps: {*/}
+        {/*        sx: { maxHeight: 240 },*/}
+        {/*      },*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    {branchOptions?.map((option) => (*/}
+        {/*      <MenuItem key={option} value={option}>*/}
+        {/*        <Checkbox disableRipple size="small" checked={filters.branch.includes(option)}/>*/}
+        {/*        {option}*/}
+        {/*      </MenuItem>*/}
+        {/*    ))}*/}
+        {/*  </Select>*/}
+        {/*</FormControl>*/}
+
 
       </Stack>
 
