@@ -200,6 +200,8 @@ import DistributorInfo from '../../pages/dashboard/distributor-info';
 import MillerDocumentView from '../../sections/add-miller/view/miller-document-view';
 import DistributorDocumentView from '../../sections/add-distributor/view/distributor-document-view';
 import Csp from '../../pages/dashboard/Csp';
+import OrderListView from '../../sections/order/view/order-list-view';
+import BranchOrderListView from '../../sections/branch-order/view/branch-order-list-view';
 
 // ----------------------------------------------------------------------
 
@@ -287,7 +289,7 @@ export const dashboardRoutes = [
       { path: 'distributor-info', element: <DistributorInfo /> },
       // { path: 'upload-document', element: <UploadDocument /> },
       // { path: 'document', element: <UploadListView /> },
-      { path: 'orders', element: <BranchListPage /> },
+      { path: 'orders', element: <BranchOrderListView /> },
       { path: 'csp', element: <Csp /> },
       { path: 'add-miller', element: <MillerCreatePage /> },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },

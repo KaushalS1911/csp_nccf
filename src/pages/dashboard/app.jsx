@@ -11,7 +11,6 @@ import { useAuthContext } from '../../auth/hooks';
 export default function OverviewAppPage() {
   const {vendor} = useAuthContext()
  const login_type = localStorage.getItem("login_type")
-  console.log(vendor);
   return (
     <>
       <Helmet>

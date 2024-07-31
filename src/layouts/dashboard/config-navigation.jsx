@@ -286,24 +286,22 @@ export function useNavData() {
       icon: ICONS.dashboard,
     },
     {
-      title: t('Orders'),
-      path: paths.dashboard.orders,
-      icon: ICONS.order,
-    },   {
-      title: t('CSP'),
-      path: paths.dashboard.csp,
-      icon: ICONS.booking,
-    },
-    {
       title: t('Basic Info'),
       path: paths.dashboard.basic_info,
       icon: ICONS.user,
     },
     {
-      title: t('Add Miller'),
-      path: paths.dashboard.addMiller,
-      icon: ICONS.file,
+      title: t('CSP'),
+      path: paths.dashboard.csp,
+      icon: ICONS.booking,
     },
+
+
+    // {
+    //   title: t('Add Miller'),
+    //   path: paths.dashboard.addMiller,
+    //   icon: ICONS.file,
+    // },
     {
       title: t('Document'),
       path: paths.dashboard.document.root,
@@ -317,6 +315,11 @@ export function useNavData() {
           path: paths.dashboard.document.upload_evidence,
         },
       ],
+    },
+    {
+      title: t('Orders'),
+      path: paths.dashboard.orders,
+      icon: ICONS.order,
     },
     // INVOICE
     {

@@ -17,7 +17,7 @@ import { useSettingsContext } from 'src/components/settings/context';
 import { Helmet } from 'react-helmet-async';
 import { RHFTextField } from 'src/components/hook-form';
 import { enqueueSnackbar } from 'notistack';
-import { useGetProfile } from '../../api/vendor.js';
+import { useGetProfile } from '../../api/basic-info';
 
 function DistributorInfo(props) {
   const settings = useSettingsContext();

@@ -19,7 +19,7 @@ import { handleCategoryTypes } from '../../../../_mock';
 // ----------------------------------------------------------------------
 
 export default function BranchDashboardView({ vendorCode }) {
-  const {vendor} = useAuthContext()
+  const { vendor } = useAuthContext();
   const settings = useSettingsContext();
   const theme = useTheme();
 
@@ -27,6 +27,7 @@ export default function BranchDashboardView({ vendorCode }) {
   const [orderList, setOrderList] = useState([]);
   const [stats, setStats] = useState({});
   const [branch, setBranch] = useState([]);
+  const [labelCount, setLabelCount] = useState([]);
 
 
   const TIME_LABELS = {
@@ -39,14 +40,27 @@ export default function BranchDashboardView({ vendorCode }) {
       fetchAllOrders();
       getStats();
     }
-      getBranch()
+
+    getBranch();
   }, [vendor]);
+
+  useEffect(() => {
+    const count = branch?.map((data, ind) => {
+      if (data?.category !== "Distributor") {
+        return { label: handleCategoryTypes(data?.category), value: data?.count };
+      }
+      return null;
+    }).filter(item => item !== null);
+
+    setLabelCount(count);
+  }, [branch]);
 
   function getStats() {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor.csp_code}/orders_stats`).then((res) => {
-      setStats(res.data?.data[0]);
+      setStats(res?.data?.data[0]);
     });
   }
+
   function getBranch() {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/noida/csp/stats`).then((res) => {
       setBranch(res?.data?.data);
@@ -54,29 +68,30 @@ export default function BranchDashboardView({ vendorCode }) {
   }
 
 
+
   function fetchAllOrders() {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor.csp_code}/orders`).then((res) => {
-      setOrderList(res.data?.data);
+      setOrderList(res?.data?.data);
     });
   }
-  const color=[[theme.palette.success.light, theme.palette.success.main],[theme.palette.warning.light, theme.palette.warning.main],[theme.palette.info.light, theme.palette.info.main],[theme.palette.secondary.light, theme.palette.secondary.main]]
 
+  const color = [[theme.palette.success.light, theme.palette.success.main], [theme.palette.warning.light, theme.palette.warning.main], [theme.palette.info.light, theme.palette.info.main], [theme.palette.secondary.light, theme.palette.secondary.main]];
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
-        {branch && branch.map((data,ind) => (
-         ind >0 && <Grid xs={12} md={3}>
+        {branch && branch.map((data, ind) => (
+          data?.category !== "Distributor" && <Grid xs={12} md={3}>
             <BranchWidgetSummary
               title={handleCategoryTypes(data?.category)}
               // percent={0.2}
-              total={data['COUNT(id)']}
+              total={data?.count}
               chart={{
-                colors: color[ind],
+                colors: color[ind-1],
                 series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
               }}
             />
           </Grid>
-        )) }
+        ))}
         {/*<Grid xs={12} md={3}>*/}
         {/*  <BranchWidgetSummary*/}
         {/*    title="Distributor"*/}
@@ -117,23 +132,18 @@ export default function BranchDashboardView({ vendorCode }) {
         {/*</Grid>*/}
 
         <Grid xs={12} md={6} lg={4}>
-          <BranchCurrentDownload
+          {labelCount !== [] && <BranchCurrentDownload
             title="Current Orders"
             chart={{
               colors: [
-                "#5DD095",
-                "#0D7566",
-                "#004B50",
-                "#C8FAD6",
+                '#004B50',
+                '#0D7566',
+                '#5DD095',
+                '#C8FAD6',
               ],
-              series: [
-                { label: 'Miller', value: 12244 },
-                { label: 'Distributor', value: 53345 },
-                { label: 'Miller + Distributor', value: 44313 },
-                { label: 'Society/Co-operative', value: 78343 },
-              ],
+              series: labelCount,
             }}
-          />
+          />}
         </Grid>
         <Grid xs={12} md={6} lg={8}>
           <BranchDataActivity
@@ -227,7 +237,7 @@ export default function BranchDashboardView({ vendorCode }) {
           {/*  </Stack>*/}
           {/*</div>*/}
         </Grid>
-        <Grid xs={12} >
+        <Grid xs={12}>
           {/*<BranchNewInvoice*/}
           {/*  title="Orders"*/}
           {/*  head={true}*/}
