@@ -22,7 +22,7 @@ export default function BranchTableToolbar({
                                                   filters,
                                                   onFilters,
                                                   //
-
+                                             branchOptions,
                                                 }) {
 
 
@@ -38,6 +38,16 @@ export default function BranchTableToolbar({
     (event) => {
       onFilters(
         'commodity',
+        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value,
+      );
+    },
+    [onFilters],
+  );
+
+  const handleFilterBranch = useCallback(
+    (event) => {
+      onFilters(
+        'branch',
         typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value,
       );
     },
@@ -144,7 +154,34 @@ export default function BranchTableToolbar({
           </Select>
         </FormControl>
 
+        <FormControl
+          sx={{
+            flexShrink: 0,
+            width: { xs: 1, md: 200 },
+          }}
+        >
+          <InputLabel>Branch</InputLabel>
 
+          <Select
+            multiple
+            value={filters.branch}
+            onChange={handleFilterBranch}
+            input={<OutlinedInput label="Branch"/>}
+            renderValue={(selected) => selected.map((value) => value).join(', ')}
+            MenuProps={{
+              PaperProps: {
+                sx: { maxHeight: 240 },
+              },
+            }}
+          >
+            {branchOptions?.map((option) => (
+              <MenuItem key={option} value={option}>
+                <Checkbox disableRipple size="small" checked={filters.branch.includes(option)}/>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
       </Stack>
 

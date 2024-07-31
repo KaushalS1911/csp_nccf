@@ -20,7 +20,7 @@ import { handleDoctypeLabel } from '../../_mock';
 
 // ----------------------------------------------------------------------
 export default function BranchTableRow({ row, selected, onEditRow, onSelectRow, onViewRow,onDeleteRow, index,onView }) {
-  const { name,commodity, nccf_order_status, quantity, } = row;
+  const { name,commodity,branch, nccf_order_status, quantity, } = row;
 
   // const firstPart = object_url.substring(0, secondSlashIndex);
   const confirm = useBoolean();
@@ -38,6 +38,7 @@ const status = "completed"
         <TableCell sx={{ whiteSpace: 'nowrap'}} >{name}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{commodity}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{quantity}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{branch}</TableCell>
 
         <TableCell>
           <Label

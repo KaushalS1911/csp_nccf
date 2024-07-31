@@ -57,6 +57,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', },
   { id: 'commodity', label: 'Commodity' },
   { id: 'quantity', label: 'Quantity' },
+  { id: 'branch', label: 'Branch' },
   { id: 'nccf_order_status', label: 'Status' },
    { id: '', label: '', width: 20 },
 ];
@@ -64,6 +65,7 @@ const defaultFilters = {
   name: '',
   commodity: [],
   status:[],
+  branch:[]
 
 };
 
@@ -104,13 +106,7 @@ export default function BranchOrderListView() {
 
   function fetchStates() {
     dataFiltered?.map((data) => {
-      setStateOptions((item) => {
-        if (!item.includes(data.state)) {
-          return [...item, data.state];
-        } else {
-          return item;
-        }
-      });
+
       setBranchOptions((item) =>
       {
         if (!item.includes(data.branch)) {
@@ -119,13 +115,7 @@ export default function BranchOrderListView() {
           return item;
         }
       });
-      setDistrictOptions((item) => {
-        if (!item.includes(data.district)) {
-          return [...item, data.district];
-        } else {
-          return item;
-        }
-      });
+
     });
   }
 
@@ -277,7 +267,7 @@ export default function BranchOrderListView() {
             <Card>
 
 
-              <BranchTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}  />
+              <BranchTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}  branchOptions={branchOptions} />
 
               {canReset && (
                 <BranchTableFiltersResult
@@ -396,7 +386,7 @@ export default function BranchOrderListView() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, commodity } = filters;
+  const { name, status, commodity,branch } = filters;
 
   const stabilizedThis = inputData?.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -420,6 +410,8 @@ function applyFilter({ inputData, comparator, filters }) {
   if (commodity.length) {
     inputData = inputData.filter((user) => commodity.includes(user.commodity));
   }
-
+  if (branch.length) {
+    inputData = inputData.filter((user) => branch.includes(user.branch));
+  }
   return inputData;
 }

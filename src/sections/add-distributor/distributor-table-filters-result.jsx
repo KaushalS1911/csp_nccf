@@ -52,7 +52,8 @@ export default function DistributorTableFiltersResult({
       onFilters('branch', newValue);
     },
     [filters.branch, onFilters]
-  );const handleRemoveDistrict = useCallback(
+  );
+  const handleRemoveDistrict = useCallback(
     (inputValue) => {
       const newValue = filters.district.filter((item) => item !== inputValue);
 

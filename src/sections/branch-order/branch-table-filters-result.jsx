@@ -35,7 +35,14 @@ export default function BranchTableFiltersResult({
     },
     [filters.commodity, onFilters]
   );
+  const handleRemoveBranch = useCallback(
+    (inputValue) => {
+      const newValue = filters.branch.filter((item) => item !== inputValue);
 
+      onFilters('branch', newValue);
+    },
+    [filters.branch, onFilters]
+  );
   const handleRemoveStatus = useCallback(
     (inputValue) => {
       const newValue = filters.status.filter((item) => item !== inputValue);
@@ -73,7 +80,13 @@ export default function BranchTableFiltersResult({
             ))}
           </Block>
         )}
-
+        {!!filters.branch.length && (
+          <Block label="Branch:">
+            {filters.branch.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveBranch(item)} />
+            ))}
+          </Block>
+        )}
 
         {!!filters.name && (
           <Block label="Keyword:">
