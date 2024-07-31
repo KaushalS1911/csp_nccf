@@ -49,7 +49,6 @@ const ICONS = {
 export function useNavData() {
   const { t } = useTranslate();
   const { vendor } = useAuthContext();
-  const login_type = localStorage.getItem('login_type');
   const societyItems = vendor?.mil_dis_sub_roles === "own_distribution_own_mill" ? [
     {
       title: t('Dashboard'),
@@ -549,7 +548,7 @@ export function useNavData() {
       {
         // subheader: t('management'),
         // items: vendor?.category === 'society_cooperative' ? societyItems : otherItems,
-        items: vendor?.category === "cooperative_rent_mill" || vendor?.category === "own_distribution_rent_mill" || vendor?.category === "own_distribution_own_mill" ? societyItems : login_type === 'branch' ? branchItem : login_type === 'head-office' ? headItems : vendor?.category === "miller" ? millerItems : vendor?.category === "distributor" ? distributeItems :vendor.category === "miller_distributor" ? Miller_DistributorItems : otherItems,
+        items: vendor?.category === "cooperative_rent_mill" || vendor?.category === "own_distribution_rent_mill" || vendor?.category === "own_distribution_own_mill" ? societyItems : vendor?.category === 'branch' ? branchItem : vendor?.category === 'head_office' ? headItems : vendor?.category === "miller" ? millerItems : vendor?.category === "distributor" ? distributeItems :vendor.category === "miller_distributor" ? Miller_DistributorItems : otherItems,
       },
     ],
     [t],

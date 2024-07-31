@@ -53,7 +53,6 @@ export default function BranchDashboardView({ vendorCode }) {
     });
   }
 
-  console.log(branch,"heet");
 
   function fetchAllOrders() {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor.csp_code}/orders`).then((res) => {
