@@ -113,7 +113,7 @@ const authJwt = {
       ),
     },
     {
-      path: 'branch',
+      path: 'admin',
       element: (
         <GuestGuard>
           <AuthClassicLayout>

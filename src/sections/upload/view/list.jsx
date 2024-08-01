@@ -40,10 +40,11 @@ import DocumentTableToolbar from '../document-table-toolbar';
 import DocumentTableFiltersResult from '../document-table-filters-result';
 import moment from 'moment';
 import Avatar from '@mui/material/Avatar';
-import useLightBox from '../../../components/lightbox/use-light-box';
-import Lightbox from '../../../components/lightbox';
 import { getComparator } from '../../../components/table';
 import { Box } from '@mui/system';
+import Lightbox from "../../../components/lightbox"
+import useLightBox from "../../../components/lightbox/use-light-box"
+import { usePopover } from '../../../components/custom-popover';
 // import BranchTableFiltersResult from '../branch-table-filters-result';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
@@ -92,6 +93,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   const [districtOptions, setDistrictOptions] = useState([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
   const [images, setImages] = useState([]);
+  const popover = usePopover();
   const dataFiltered = applyFilter({
     inputData: tableData,
     // comparator: getComparator(table.order, table.orderBy),
@@ -100,6 +102,9 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
 
   useEffect(() => {
     getAllDocument();
+    handleViewDialog('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file/undefined/Aadhar/Aadhar_2024-07-22_12-27-31.jpg')
+
+
   }, []);
   useEffect(() => {
     dataFiltered?.forEach((data, index) => {
@@ -145,6 +150,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
     },
     [enqueueSnackbar, tableData],
   );
+
   const slides = images.map((img) => ({
     src: img,
   }));
@@ -152,10 +158,9 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
 
   function handleViewDialog(url) {
     setImages([url]);
-    // popover.onClose()
+    popover.onClose()
     lightbox.onOpen(url);
   }
-
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
 
@@ -211,6 +216,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
         const secondSlashIndex = object_url?.indexOf('/', 8);
         const secondPart = object_url?.substring(secondSlashIndex);
         const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
+
         return (
           <Box py={1}>
             <Avatar
@@ -239,23 +245,41 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
         {moment(params.row.uploaded_on).format('DD/MM/YYYY')}
       </Box>,
     },
+    // {
+    //   field: 'status',
+    //   headerName: 'Status',
+    //   width: 160,
+    //   renderCell: (params) => <Box>
+    //     <Label
+    //       variant="soft"
+    //       color={'success'
+    //         // (params.row.nccf_order_status === 'accepted' && 'success') ||
+    //         // (params.row.nccf_order_status === 'placed' && 'warning') ||
+    //         // (params.row.nccf_order_status === 'declined' && 'error') ||
+    //         // 'default'
+    //       }
+    //     >
+    //       {/*{params.row.nccf_order_status}*/}
+    //       Completed
+    //     </Label></Box>,
+    // },
     {
-      field: 'status',
+      field: 'csp_status',
       headerName: 'Status',
-      width: 160,
-      renderCell: (params) => <Box>
+      renderCell: (params) => <TableCell>
         <Label
           variant="soft"
-          color={'success'
-            // (params.row.nccf_order_status === 'accepted' && 'success') ||
-            // (params.row.nccf_order_status === 'placed' && 'warning') ||
-            // (params.row.nccf_order_status === 'declined' && 'error') ||
-            // 'default'
+          color={
+            (params.row.csp_status === '1' && 'success') ||
+            (params.row.csp_status === '0' && 'warning') ||
+            // (params.row.csp_status === 'declined' && 'error') ||
+            'default'
           }
         >
-          {/*{params.row.nccf_order_status}*/}
-          Completed
-        </Label></Box>,
+          {params.row.csp_status === "0" ? "Approval Pending" : "Approval"}
+        </Label></TableCell>,
+      // width: 250,
+      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
       type: 'actions',
@@ -291,10 +315,10 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   <Lightbox
     index={lightbox.selected}
     slides={slides}
-    open={lightbox.open}
+    open={true}
     close={lightbox.onClose}
     onGetCurrentIndex={(index) => lightbox.setSelected(index)}
-  />;
+  />
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);

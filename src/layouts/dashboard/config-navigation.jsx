@@ -6,6 +6,7 @@ import { useTranslate } from 'src/locales';
 
 import SvgColor from 'src/components/svg-color';
 import { useAuthContext } from 'src/auth/hooks';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -293,7 +294,7 @@ export function useNavData() {
     {
       title: t('CSP'),
       path: paths.dashboard.csp.csp_list,
-      icon: ICONS.booking,
+      icon: <Iconify icon="ooui:user-group-rtl" sx={{ width: 1, height: 1 }}></Iconify>,
     },
     // {
     //   title: t('CSP'),

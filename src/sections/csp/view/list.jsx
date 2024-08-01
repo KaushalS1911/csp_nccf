@@ -94,12 +94,15 @@ function CspListView(props) {
 
   useEffect(() => {
     if (csp?.length) {
-      setTableData(csp);
+
+      csp.map((data,index) => setTableData((pdata) => [...pdata ,{...data,id:index+1}]))
+      // setTableData(csp);
     }
   }, [csp]);
   useEffect(() => {
     fetchStates();
   }, [tableData]);
+
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -196,7 +199,7 @@ function CspListView(props) {
     {
       field: 'id',
       headerName: '#',
-      width: 142,
+      // width: 142,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
@@ -217,13 +220,13 @@ function CspListView(props) {
     {
       field: 'type_of_firm',
       headerName: 'Type Of Firm',
-      width: 190,
+      width: 150,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
       field: 'contact_person',
       headerName: 'Contact Person',
-      width: 190,
+      width: 160,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
@@ -242,6 +245,28 @@ function CspListView(props) {
       field: 'address',
       headerName: 'Address',
       width: 250,
+      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+    },
+    {
+      field: 'branch_approval_status',
+      headerName: 'Status',
+      renderCell: (params) => (
+        <TableCell>
+          <Label
+            variant="soft"
+            color={
+             ( params.row.branch_approval_status === '1'
+                ? 'success'
+                : params.row.branch_approval_status === '0'
+                ? 'warning'
+                : 'default')
+            }
+          >
+            {params.row.branch_approval_status === "1" ? "Placed" : "Pending"}
+          </Label>
+        </TableCell>
+      ),
+      // width: 250,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     // {
@@ -269,7 +294,7 @@ function CspListView(props) {
     //   renderCell: (params) => <RenderCellPublish params={params} />,
     // },
     {
-      type: 'actions',
+      // type: 'actions',
       field: 'actions',
       headerName: ' ',
       align: 'right',
@@ -278,24 +303,25 @@ function CspListView(props) {
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
-      getActions: (params) => [
-
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:eye-bold" />}
-          label="View Documents"
-          onClick={() => handleViewRow(params.row.csp_code)}
-        />,
-        // <GridActionsCellItem
-        //   showInMenu
-        //   icon={<Iconify icon="solar:trash-bin-trash-bold" />}
-        //   label="Delete"
-        //   onClick={() => {
-        //     handleDeleteRow(params.row.id);
-        //   }}
-        //   sx={{ color: 'error.main' }}
-        // />,
-      ],
+      renderCell: (params) => <Button variant={"contained"} sx={{backgroundColor:params.row.document_count === 0 ? "gray" : "Green"}} onClick={() => handleViewRow(params.row.csp_code)} disabled={params.row.document_count === 0}>View</Button>
+      // getActions: (params) => [
+      //
+      //   <GridActionsCellItem
+      //     showInMenu
+      //     icon={<Iconify icon="solar:eye-bold" />}
+      //     label="View Documents"
+      //     onClick={() => handleViewRow(params.row.csp_code)}
+      //   />,
+      //   // <GridActionsCellItem
+      //   //   showInMenu
+      //   //   icon={<Iconify icon="solar:trash-bin-trash-bold" />}
+      //   //   label="Delete"
+      //   //   onClick={() => {
+      //   //     handleDeleteRow(params.row.id);
+      //   //   }}
+      //   //   sx={{ color: 'error.main' }}
+      //   // />,
+      // ],
     },
   ];
   const handleFilterStatus = useCallback(
@@ -345,7 +371,7 @@ function CspListView(props) {
 
         <Card
           sx={{
-            height: canReset ? 740 : 650 ,
+            // height: canReset ? 740 : 650 ,
             flexGrow: { md: 1 },
             display: { md: 'flex' },
             flexDirection: { md: 'column' },
@@ -432,8 +458,8 @@ function CspListView(props) {
                         </Button>
                       )}
 
-                      <GridToolbarColumnsButton />
-                      <GridToolbarFilterButton />
+                      {/*<GridToolbarColumnsButton />*/}
+                      {/*<GridToolbarFilterButton />*/}
                       <GridToolbarExport />
                     </Stack>
                     <CspTableToolbar  filters={filters} onFilters={handleFilters} roleOptions={_roles}

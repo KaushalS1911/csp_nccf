@@ -176,34 +176,34 @@ export default function CspTableToolbar({
         {/*  </Select>*/}
         {/*</FormControl>*/}
 
-        <FormControl
-          sx={{
-            flexShrink: 0,
-            width: { xs: 1, md: 200 },
-          }}
-        >
-          <InputLabel>State</InputLabel>
+        {/*<FormControl*/}
+        {/*  sx={{*/}
+        {/*    flexShrink: 0,*/}
+        {/*    width: { xs: 1, md: 200 },*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <InputLabel>State</InputLabel>*/}
 
-          <Select
-            multiple
-            value={filters.state}
-            onChange={handleFilterState}
-            input={<OutlinedInput label="State"/>}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
-            MenuProps={{
-              PaperProps: {
-                sx: { maxHeight: 240 },
-              },
-            }}
-          >
-            {stateOptions?.map((option) => (
-              <MenuItem key={option} value={option}>
-                <Checkbox disableRipple size="small" checked={filters.state.includes(option)}/>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {/*  <Select*/}
+        {/*    multiple*/}
+        {/*    value={filters.state}*/}
+        {/*    onChange={handleFilterState}*/}
+        {/*    input={<OutlinedInput label="State"/>}*/}
+        {/*    renderValue={(selected) => selected.map((value) => value).join(', ')}*/}
+        {/*    MenuProps={{*/}
+        {/*      PaperProps: {*/}
+        {/*        sx: { maxHeight: 240 },*/}
+        {/*      },*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    {stateOptions?.map((option) => (*/}
+        {/*      <MenuItem key={option} value={option}>*/}
+        {/*        <Checkbox disableRipple size="small" checked={filters.state.includes(option)}/>*/}
+        {/*        {option}*/}
+        {/*      </MenuItem>*/}
+        {/*    ))}*/}
+        {/*  </Select>*/}
+        {/*</FormControl>*/}
         {/*<FormControl*/}
         {/*  sx={{*/}
         {/*    flexShrink: 0,*/}

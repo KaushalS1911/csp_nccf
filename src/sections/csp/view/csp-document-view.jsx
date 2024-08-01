@@ -19,7 +19,7 @@ function CspDocumentView() {
   const distributor = csp?.find((data) => data.csp_code === id )
   const table = (
     <>
-            <Grid xs={12} md={12}>
+            <Grid item xs={12} md={12}>
         {/*<DocumentListView  csp={distributor?.csp_code} cspt={true}/>*/}
               <DocumentList  csp={distributor?.csp_code} cspt={true}/>
       </Grid>

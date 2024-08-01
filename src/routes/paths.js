@@ -253,7 +253,7 @@ export const paths = {
     },
     jwt: {
       login: `/login`,
-      branch:`/branch`,
+      branch:`/admin`,
       headlogin: `/ho-login`,
       register: `/register`,
     },
@@ -395,6 +395,7 @@ export const paths = {
     csp:{
       root: `${ROOTS.DASHBOARD}/csp`,
       csp_list: `${ROOTS.DASHBOARD}/csp/csp-list`,
+      // csp_list:(tital) =>  `${ROOTS.DASHBOARD}/nccf/branch/${tital}/csp/list`,
      csp_view :(title) =>  `${ROOTS.DASHBOARD}/csp/csp-view/${title}`,
      csp_document_view :(title) =>  `${ROOTS.DASHBOARD}/csp/csp-document-view/${title}`,
 
