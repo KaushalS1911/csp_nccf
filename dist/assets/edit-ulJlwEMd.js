@@ -1,1 +1,0 @@
-import{j as r,H as o}from"./index-KMW5Xsh7.js";import{u as a}from"./use-params-fP7oIUHb.js";import{g as i}from"./job-details-view-reN4ebEY.js";import"./country-select-i9G6ePfg.js";function p(){const s=a(),{id:t}=s;return r.jsxs(r.Fragment,{children:[r.jsx(o,{children:r.jsx("title",{children:" Dashboard: Dashboard: Job Edit"})}),r.jsx(i,{id:`${t}`})]})}export{p as default};
