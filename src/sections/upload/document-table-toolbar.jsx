@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Select from '@mui/material/Select';
@@ -14,16 +14,31 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
+import { useAuthContext } from '../../auth/hooks';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
 export default function DocumentTableToolbar({
   filters,
   onFilters,
+  vendorData,
+  setB,
+  getAllDocument,
   //
   document,
   roleOptions,
 }) {
+  const {vendor} = useAuthContext()
+  const [data,setData] = useState([])
+  const [branch,setBranch] = useState([])
+  // const branch = vandor
+  // console.log(vendor);
+  useEffect(() => {
+    if(vendor){
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/noida/csp/list`).then((res) => setData(res?.data?.data)).catch((err) => console.log(err))
+    }
+  },[])
   const typeOptions =[
     { label: 'Registration Certificate', key: 'registration_certificate' },
     { label: 'Undertaking', key: 'undertaking' },
@@ -54,6 +69,18 @@ export default function DocumentTableToolbar({
         'type',
         typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
       );
+    },
+    [onFilters]
+  );
+  const handleFilterCSP = useCallback(
+    (event) => {
+      setB(event.target.value[0])
+      setBranch(event.target.value)
+      getAllDocument(event.target.value.at(0))
+      // onFilters(
+      //   'type',
+      //   typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
+      // );
     },
     [onFilters]
   );
@@ -122,6 +149,35 @@ export default function DocumentTableToolbar({
             ))}
           </Select>
         </FormControl>
+
+        {vendorData && <FormControl
+          sx={{
+            flexShrink: 0,
+            width: { xs: 1, md: 200 },
+          }}
+        >
+          <InputLabel>CSP</InputLabel>
+
+          <Select
+            multiple
+            value={branch}
+            onChange={handleFilterCSP}
+            input={<OutlinedInput label="Type"/>}
+            // renderValue={(selected) => selected.map((value) => value).join(', ')}
+            MenuProps={{
+              PaperProps: {
+                sx: { maxHeight: 240 },
+              },
+            }}
+          >
+            {data.map((option) => (
+              <MenuItem key={option} value={option?.csp_code}>
+                <Checkbox disableRipple size="small" checked={branch?.includes(option?.csp_code)}/>
+                {option?.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>}
       </Stack>
 
       <CustomPopover

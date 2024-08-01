@@ -93,6 +93,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   const [districtOptions, setDistrictOptions] = useState([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
   const [images, setImages] = useState([]);
+  const [b,setB] = useState('')
   const popover = usePopover();
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -101,20 +102,20 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   });
 
   useEffect(() => {
-    getAllDocument();
-    handleViewDialog('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file/undefined/Aadhar/Aadhar_2024-07-22_12-27-31.jpg')
-
-
+    getAllDocument(b);
   }, []);
+
+    const cspCode = vendor?.category === "branch" ? b : csp || vendor?.csp_code;
+
   useEffect(() => {
     dataFiltered?.forEach((data, index) => {
       setDataId((prevDataId) => [...prevDataId, { ...data, id: index + 1 }]);
     });
   }, [tableData]);
-
+  // console.log(session,"jje");
   function getAllDocument() {
     // setLoading(true)
-    const cspCode = csp || vendor?.csp_code;
+
     axios
       .get(
         `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${cspCode}/documents`,
@@ -425,7 +426,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                       <GridToolbarFilterButton/>
                       <GridToolbarExport/>
                     </Stack>
-                    <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
+                    <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles} getAllDocument={getAllDocument} vendorData={vendor?.category === "branch" ? true : false } setB={setB}
                                           document={document}/>
                     {canReset && (
                       <DocumentTableFiltersResult
