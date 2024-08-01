@@ -8,6 +8,7 @@ import { DocumentListView } from '../../upload/view';
 import { Grid, Typography } from '@mui/material';
 import { useResponsive } from '../../../hooks/use-responsive';
 import { useSettingsContext } from '../../../components/settings';
+import DocumentList from '../../upload/view/list';
 
 function DistributorDocumentView(props) {
   const {id} = useParams()
@@ -16,14 +17,15 @@ function DistributorDocumentView(props) {
   const {distributor} = useGetDistributor(id)
   const table = (
     <>
-            <Grid xs={12} md={12}>
-        <DocumentListView  csp={distributor?.csp_code} document={true}/>
-      </Grid>
+            {/*<Grid xs={12} md={12}>*/}
+        {/*<DocumentListView  csp={distributor?.csp_code} document={true}/>*/}
+        <DocumentList  csp={distributor?.csp_code} document={true}/>
+      {/*</Grid>*/}
     </>
   );
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <Container maxWidth={settings.themeStretch ? false : 'xl'}>
 
 
         {table}

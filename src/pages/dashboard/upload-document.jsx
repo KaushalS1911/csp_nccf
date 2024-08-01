@@ -185,11 +185,13 @@
 import React from 'react';
 import { OverviewDocumentView } from 'src/sections/upload-document/view';
 import { DocumentListView } from 'src/sections/upload/view';
+import DocumentList from '../../sections/upload/view/list';
 const UploadListView = () => {
   return (
     <>
       {/* <OverviewDocumentView /> */}
-      <DocumentListView />
+      {/*<DocumentListView />*/}
+      <DocumentList docu={true} />
     </>
   );
 };

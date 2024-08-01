@@ -70,6 +70,7 @@ export default function DocumentTableToolbar({
         sx={{
           p: 2.5,
           pr: 2.5,
+          width:"100%"
         }}
       >
 

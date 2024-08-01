@@ -202,10 +202,12 @@ import DistributorDocumentView from '../../sections/add-distributor/view/distrib
 import Csp from '../../pages/dashboard/Csp';
 import OrderListView from '../../sections/order/view/order-list-view';
 import BranchOrderListView from '../../sections/branch-order/view/branch-order-list-view';
-import CspListView from '../../sections/csp/view/csp-list-view';
 import CspDocumentView from '../../sections/csp/view/csp-document-view';
 import SingleCspView from '../../sections/csp/view/single-csp-view';
 import List from '../../sections/branch-order/view/list';
+import CspListView from '../../sections/csp/view/list';
+import DistributorListView from '../../sections/add-distributor/view/list';
+import MillerListView from '../../sections/add-miller/view/list';
 
 // ----------------------------------------------------------------------
 
@@ -293,8 +295,8 @@ export const dashboardRoutes = [
       { path: 'distributor-info', element: <DistributorInfo /> },
       // { path: 'upload-document', element: <UploadDocument /> },
       // { path: 'document', element: <UploadListView /> },
-      { path: 'orders', element: <BranchOrderListView /> },
-      // { path: 'orders', element: <List /> },
+      // { path: 'orders', element: <BranchOrderListView /> },
+      { path: 'orders', element: <List /> },
       { path: 'add-miller', element: <MillerCreatePage /> },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },
@@ -350,8 +352,9 @@ export const dashboardRoutes = [
         path: 'distributor',
         children: [
           { element: <UploadListView />, index: true },
-          { path: 'distributor-list', element: <DistributorList /> },
-          { path: 'add-distributor', element: <DistributorCreatePage /> },
+          // { path: 'distributor-list', element: <DistributorList /> },
+          { path: 'distributor-list', element: <DistributorListView /> },
+                    { path: 'add-distributor', element: <DistributorCreatePage /> },
           { path: 'document-upload', element: <UploadDistributorDocument /> },
           { path: 'distributor-view/:id', element: <SingleDistributorView /> },
           { path: 'distributor-document-view/:id', element: <DistributorDocumentView /> },
@@ -361,7 +364,7 @@ export const dashboardRoutes = [
         path: 'csp',
         children: [
           { element: <UploadListView />, index: true },
-          { path: 'csp-list', element: <CspListView /> },
+          { path: 'csp-list', element: <CspListView  /> },
           { path: 'csp-view/:id', element: <SingleCspView /> },
           { path: 'csp-document-view/:id', element: <CspDocumentView /> },
         ],
@@ -370,7 +373,8 @@ export const dashboardRoutes = [
         path: 'miller',
         children: [
           { element: <UploadListView />, index: true },
-          { path: 'miller-list', element: <MillerList /> },
+          // { path: 'miller-list', element: <MillerList /> },
+          { path: 'miller-list', element: <MillerListView /> },
           { path: 'add-miller', element: <MillerCreatePage /> },
           { path: 'document-upload', element: <UploadMillerDocument /> },
           { path: 'miller-view/:id', element: <SingleMillerView /> },

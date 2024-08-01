@@ -37,6 +37,8 @@ import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Label from '../../../components/label';
 import BranchTableFiltersResult from '../branch-table-filters-result';
+import TableCell from '@mui/material/TableCell';
+import { Box } from '@mui/system';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
 // import {
@@ -56,7 +58,7 @@ const defaultFilters = {
   stock: [],
   commodity: [],
   status: 'all',
-  branch:[],
+  branch: [],
   name: '',
 
 };
@@ -118,9 +120,12 @@ function List(props) {
 
       setTableData(deleteRow);
     },
-    [enqueueSnackbar, tableData]
+    [enqueueSnackbar, tableData],
   );
-  const STATUS_OPTIONS = [{ value: 'all', label: 'All' },{value: "accepted",label: "Accepted"}, {value: "placed",label:"Placed"},{value:"declined",label:"Declined"}];
+  const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: 'accepted', label: 'Accepted' }, {
+    value: 'placed',
+    label: 'Placed',
+  }, { value: 'declined', label: 'Declined' }];
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
 
@@ -133,59 +138,70 @@ function List(props) {
     (id) => {
       // router.push(paths.dashboard.product.edit(id));
     },
-    [router]
+    [router],
   );
 
   const handleViewRow = useCallback(
     (id) => {
       // router.push(paths.dashboard.product.details(id));
     },
-    [router]
+    [router],
   );
-
+let i =0
   const columns = [
     // {
     //   field: 'category',
     //   headerName: 'Category',
     //   filterable: false,
     // },
-    // {
-    //   field: 'id',
-    //   headerName: '#',
-    //   width: 100,
-    //   // renderCell: (params) => <RenderCellCreatedAt params={params} />,
-    // },
+    {
+      field: 'id',
+      headerName: '#',
+      width: 142,
+      renderCell: (params) => <Box>{i+=1}</Box>,
+    },
     {
       field: 'name',
       headerName: 'Name',
       flex: 1,
-      minWidth: 300,
+      minWidth: 250,
       hideable: false,
       // renderCell: (params) => <RenderCellProduct params={params} />,
     },
     {
       field: 'commodity',
       headerName: 'Commodity',
-      width: 160,
+      width: 300,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
 
     {
       field: 'quantity',
       headerName: 'Quantity',
-      width: 160,
+      width: 200,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
       field: 'branch',
       headerName: 'Branch',
-      width: 160,
+      width: 300,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     }, {
       field: 'nccf_order_status',
       headerName: 'Status',
       width: 160,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+      renderCell: (params) => <TableCell>
+        <Label
+          variant="soft"
+          color={
+            (params.row.nccf_order_status === 'accepted' && 'success') ||
+            (params.row.nccf_order_status === 'placed' && 'warning') ||
+            (params.row.nccf_order_status === 'declined' && 'error') ||
+            'default'
+          }
+        >
+          {params.row.nccf_order_status}
+        </Label></TableCell>,
     },
     // {
     //   field: 'inventoryType',
@@ -225,17 +241,17 @@ function List(props) {
 
         <GridActionsCellItem
           showInMenu
-          icon={<Iconify icon="solar:pen-bold" />}
+          icon={<Iconify icon="solar:pen-bold"/>}
           label="Edit"
-          onClick={() => handleEditRow(params.row.id)}
+          // onClick={() => handleEditRow(params.row.id)}
         />,
         <GridActionsCellItem
           showInMenu
-          icon={<Iconify icon="solar:trash-bin-trash-bold" />}
+          icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
           label="Delete"
-          onClick={() => {
-            handleDeleteRow(params.row.id);
-          }}
+          // onClick={() => {
+          //   handleDeleteRow(params.row.id);
+          // }}
           sx={{ color: 'error.main' }}
         />,
       ],
@@ -245,7 +261,7 @@ function List(props) {
     (event, newValue) => {
       handleFilters('status', newValue);
     },
-    [handleFilters]
+    [handleFilters],
   );
   const getTogglableColumns = () =>
     columns
@@ -255,12 +271,12 @@ function List(props) {
   return (
     <>
       <Container
-        maxWidth={settings.themeStretch ? false : 'lg'}
-        sx={{
-          flexGrow: 1,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
+        maxWidth={settings.themeStretch ? false : 'xl'}
+        // sx={{
+        //   flexGrow: 1,
+        //   display: 'flex',
+        //   flexDirection: 'column',
+        // }}
       >
         <CustomBreadcrumbs
           heading="Order List"
@@ -292,7 +308,7 @@ function List(props) {
 
         <Card
           sx={{
-            height: { xs: 800, md: 2 },
+            height: canReset ? 720 : 650,
             flexGrow: { md: 1 },
             display: { md: 'flex' },
             flexDirection: { md: 'column' },
@@ -360,7 +376,7 @@ function List(props) {
                     {/*  stockOptions={PRODUCT_STOCK_OPTIONS}*/}
                     {/*  publishOptions={PUBLISH_OPTIONS}*/}
                     {/*/>*/}
-                      <BranchTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}  branchOptions={["hello"]} />
+
                     {canReset && (
                       <BranchTableFiltersResult
                         filters={filters}
@@ -383,17 +399,19 @@ function List(props) {
                         <Button
                           size="small"
                           color="error"
-                          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+                          startIcon={<Iconify icon="solar:trash-bin-trash-bold"/>}
                           onClick={confirmRows.onTrue}
                         >
                           Delete ({selectedRowIds.length})
                         </Button>
                       )}
 
-                      <GridToolbarColumnsButton />
-                      <GridToolbarFilterButton />
-                      <GridToolbarExport />
+                      <GridToolbarColumnsButton/>
+                      <GridToolbarFilterButton/>
+                      <GridToolbarExport/>
                     </Stack>
+                    <BranchTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
+                                        branchOptions={['hello']}/>
                   </GridToolbarContainer>
 
                   {/*{canReset && (*/}
@@ -407,8 +425,8 @@ function List(props) {
                   {/*)}*/}
                 </>
               ),
-              noRowsOverlay: () => <EmptyContent title="No Data" />,
-              noResultsOverlay: () => <EmptyContent title="No results found" />,
+              noRowsOverlay: () => <EmptyContent title="No Data"/>,
+              noResultsOverlay: () => <EmptyContent title="No results found"/>,
             }}
             slotProps={{
               columnsPanel: {
@@ -444,8 +462,9 @@ function List(props) {
     </>
   );
 }
+
 function applyFilter({ inputData, filters }) {
-  const { stock, publish,status,commodity,name,branch } = filters;
+  const { stock, publish, status, commodity, name, branch } = filters;
 
   if (stock.length) {
     inputData = inputData.filter((product) => stock.includes(product.inventoryType));
@@ -456,7 +475,7 @@ function applyFilter({ inputData, filters }) {
   }
   if (name) {
     inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1
+      (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1,
     );
   }
 
@@ -473,4 +492,5 @@ function applyFilter({ inputData, filters }) {
   }
   return inputData;
 }
+
 export default List;

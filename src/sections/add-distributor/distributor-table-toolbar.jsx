@@ -86,6 +86,7 @@ export default function DistributorTableToolbar({
         sx={{
           p: 2.5,
           pr: 2.5,
+          width:"100%"
         }}
       >
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>

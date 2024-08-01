@@ -52,6 +52,13 @@
   transform: translateY(-50%);
 }
 
-.css-172b5f1-MuiDataGrid-root .MuiDataGrid-withBorderColor{
-  padding-block: 10px !important;
+/*.css-172b5f1-MuiDataGrid-root .MuiDataGrid-withBorderColor{*/
+/*  padding-block: 10px !important;*/
+/*}*/
+
+
+
+
+.MuiDataGrid-columnHeaders MuiDataGrid-withBorderColor css-f4fkqn-MuiDataGrid-columnHeaders{
+  max-height: 0 !important;
 }

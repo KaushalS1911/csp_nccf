@@ -207,7 +207,7 @@ export default function DocumentListView({ csp, document, miller ,cspt}) {
             ]}
             sx={{ mb: { xs: 3, md: 5 } }}
             action={
-              dataFiltered?.length == 0 || !cspt &&
+              (dataFiltered?.length == 0 && !cspt) &&
               <Button
                 component={RouterLink}
                 href={miller ? paths.dashboard.miller.document_upload : paths.dashboard.distributor.document_upload}

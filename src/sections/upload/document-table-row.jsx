@@ -25,8 +25,8 @@ export default function DocumentTableRow({ row, selected, onEditRow, onSelectRow
   const { doc_type, object_url, uploaded_on } = row;
   const [open, setOpen] = useState(false);
   const [images, setImages] = useState([])
-  const secondSlashIndex = object_url.indexOf("/", 8);
   // const firstPart = object_url.substring(0, secondSlashIndex);
+  const secondSlashIndex = object_url.indexOf("/", 8);
   const secondPart = object_url.substring(secondSlashIndex);
   const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
   const confirm = useBoolean();

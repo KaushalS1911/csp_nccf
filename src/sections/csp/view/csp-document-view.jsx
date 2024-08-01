@@ -9,6 +9,7 @@ import { Grid, Typography } from '@mui/material';
 import { useResponsive } from '../../../hooks/use-responsive';
 import { useSettingsContext } from '../../../components/settings';
 import { useGetCSP } from '../../../api/branch-csp';
+import DocumentList from '../../upload/view/list';
 
 function CspDocumentView() {
   const {id} = useParams()
@@ -19,13 +20,14 @@ function CspDocumentView() {
   const table = (
     <>
             <Grid xs={12} md={12}>
-        <DocumentListView  csp={distributor?.csp_code} cspt={true}/>
+        {/*<DocumentListView  csp={distributor?.csp_code} cspt={true}/>*/}
+              <DocumentList  csp={distributor?.csp_code} cspt={true}/>
       </Grid>
     </>
   );
   return (
     <>
-      <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+      <Container maxWidth={settings.themeStretch ? false : 'xl'}>
 
 
         {table}
