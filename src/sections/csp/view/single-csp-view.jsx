@@ -18,7 +18,7 @@ const {id} = useParams()
 const distributor = csp?.find((data) => data.csp_code === id )
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
 
       <CustomBreadcrumbs
         heading={`Csp view`}

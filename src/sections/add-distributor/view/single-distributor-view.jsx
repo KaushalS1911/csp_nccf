@@ -18,7 +18,7 @@ const {id} = useParams()
   const {distributor} = useGetDistributor(id)
 
   return (
-    <Container maxWidth={settings.themeStretch ? false : 'lg'}>
+    <Container maxWidth={settings.themeStretch ? false : 'xl'}>
 
       <CustomBreadcrumbs
         heading={`Distributor view`}
