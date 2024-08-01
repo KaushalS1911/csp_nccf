@@ -276,7 +276,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
             'default'
           }
         >
-          {params.row.branch_approval_status === "0" ? "Approval Pending" : "Approval"}
+          {params.row.branch_approval_status === "0" ? "Approval Pending" : "Approved"}
         </Label></TableCell>,
       width: 250,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,

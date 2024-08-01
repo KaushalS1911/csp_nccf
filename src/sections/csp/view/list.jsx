@@ -233,7 +233,7 @@ const {vendor} = useAuthContext()
     {
       field: 'phone_number',
       headerName: 'Contact',
-      width: 190,
+      width: 150,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
@@ -245,7 +245,7 @@ const {vendor} = useAuthContext()
     {
       field: 'address',
       headerName: 'Address',
-      width: 250,
+      width: 240,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
@@ -262,11 +262,11 @@ const {vendor} = useAuthContext()
               'default'
             }
           >
-            {params.row.csp_status === "0" ? "Approval Pending" : "Approval"}
+            {params.row.csp_status === "0" ? "Approved" : "Approval Pending"}
           </Label>
         </TableCell>
       ),
-      width: 100,
+      width: 150,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     // {
