@@ -1,0 +1,1 @@
+import{j as r,H as i}from"./index-KMW5Xsh7.js";import{u as o}from"./use-params-fP7oIUHb.js";import{g as a}from"./tour-details-view-7sXz2CLN.js";import"./country-select-i9G6ePfg.js";function u(){const t=o(),{id:s}=t;return r.jsxs(r.Fragment,{children:[r.jsx(i,{children:r.jsx("title",{children:" Dashboard: Tour Edit"})}),r.jsx(a,{id:`${s}`})]})}export{u as default};
