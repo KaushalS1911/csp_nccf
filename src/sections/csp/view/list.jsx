@@ -40,6 +40,7 @@ import CspTableToolbar from '../csp-table-toolbar';
 import CspTableFiltersResult from '../csp-table-filters-result';
 import { useGetCSP } from '../../../api/branch-csp';
 import TableCell from '@mui/material/TableCell';
+import { useAuthContext } from '../../../auth/hooks';
 // import BranchTableFiltersResult from '../branch-table-filters-result';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
@@ -74,7 +75,7 @@ const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
 function CspListView(props) {
   const { enqueueSnackbar } = useSnackbar();
-
+const {vendor} = useAuthContext()
   const confirmRows = useBoolean();
 
   const router = useRouter();
@@ -248,25 +249,25 @@ function CspListView(props) {
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
-      field: 'branch_approval_status',
+      field: 'csp_status',
       headerName: 'Status',
       renderCell: (params) => (
-        <TableCell>
+        <TableCell sx={{px:0}}>
           <Label
             variant="soft"
             color={
-             ( params.row.branch_approval_status === '1'
+             ( params.row.csp_status === '1'
                 ? 'success'
-                : params.row.branch_approval_status === '0'
+                : params.row.csp_status === '0'
                 ? 'warning'
                 : 'default')
             }
           >
-            {params.row.branch_approval_status === "1" ? "Placed" : "Pending"}
+            {params.row.csp_status === "1" ? "Placed" : "Pending"}
           </Label>
         </TableCell>
       ),
-      // width: 250,
+      width: 100,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     // {

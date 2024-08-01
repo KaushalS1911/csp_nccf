@@ -154,6 +154,7 @@ export function AuthProvider({ children }) {
                 mil_dis_sub_roles: res?.mil_dis_sub_roles,
                 name: res?.name,
                 phone_number: res?.phone_number,
+                branch:res?.branch
               },
             },
           });

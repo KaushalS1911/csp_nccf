@@ -264,21 +264,21 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
     //     </Label></Box>,
     // },
     {
-      field: 'csp_status',
+      field: 'branch_approval_status',
       headerName: 'Status',
-      renderCell: (params) => <TableCell>
+      renderCell: (params) => <TableCell sx={{px:0}}>
         <Label
           variant="soft"
           color={
-            (params.row.csp_status === '1' && 'success') ||
-            (params.row.csp_status === '0' && 'warning') ||
-            // (params.row.csp_status === 'declined' && 'error') ||
+            (params.row.branch_approval_status === '1' && 'success') ||
+            (params.row.branch_approval_status === '0' && 'warning') ||
+            // (params.row.branch_approval_status === 'declined' && 'error') ||
             'default'
           }
         >
-          {params.row.csp_status === "0" ? "Approval Pending" : "Approval"}
+          {params.row.branch_approval_status === "0" ? "Approval Pending" : "Approval"}
         </Label></TableCell>,
-      // width: 250,
+      width: 250,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
