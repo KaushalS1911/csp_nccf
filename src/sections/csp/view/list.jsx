@@ -256,14 +256,13 @@ const {vendor} = useAuthContext()
           <Label
             variant="soft"
             color={
-             ( params.row.csp_status === '1'
-                ? 'success'
-                : params.row.csp_status === '0'
-                ? 'warning'
-                : 'default')
+              (params.row.csp_status === '0' && 'success') ||
+              (params.row.csp_status === '1' && 'warning') ||
+              // (params.row.branch_approval_status === 'declined' && 'error') ||
+              'default'
             }
           >
-            {params.row.csp_status === "1" ? "Placed" : "Pending"}
+            {params.row.csp_status === "0" ? "Approval Pending" : "Approval"}
           </Label>
         </TableCell>
       ),
