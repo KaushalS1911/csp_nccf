@@ -200,23 +200,26 @@ const {vendor} = useAuthContext()
     {
       field: 'id',
       headerName: '#',
-      // width: 142,
+      align: 'center',
+      headerAlign: 'center',
+      width: 10,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
       field: 'name',
       headerName: 'Name',
       flex: 1,
-      minWidth: 236,
+      // width: 220,
+      minWidth: 106,
       hideable: false,
       renderCell: (params) => <TableCell sx={{ fontWeight:"bold",cursor:"pointer",px:"0"}} onClick={() => handleDistributor(params.row.csp_code)} >{params.row.name}</TableCell>,
     },
-    {
-      field: 'category',
-      headerName: 'Category',
-      width: 200,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
-    },
+    // {
+    //   field: 'category',
+    //   headerName: 'Category',
+    //   width: 200,
+    //   // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+    // },
 
     {
       field: 'type_of_firm',
@@ -239,7 +242,7 @@ const {vendor} = useAuthContext()
     {
       field: 'email',
       headerName: 'Email',
-      width: 190,
+      width: 160,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {

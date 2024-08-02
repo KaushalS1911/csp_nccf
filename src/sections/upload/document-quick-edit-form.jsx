@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -15,16 +15,17 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 
 import { countries } from 'src/assets/data';
-import { USER_STATUS_OPTIONS } from 'src/_mock';
+import { handleDoctypeLabel, USER_STATUS_OPTIONS } from 'src/_mock';
 
 import { useSnackbar } from 'src/components/snackbar';
 import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
+import Avatar from '@mui/material/Avatar';
+import { TextField } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentQuickEditForm({ currentUser, open, onClose }) {
+export default function DocumentQuickEditForm({ currentUser, open, onClose ,setOpen}) {
   const { enqueueSnackbar } = useSnackbar();
-
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
@@ -67,15 +68,20 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose }) {
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      onClose();
-      enqueueSnackbar('Update success!');
-      console.info('DATA', data);
+      setOpen(false)
+      // onClose();
+      // await new Promise((resolve) => setTimeout(resolve, 500));
+      // reset();
+      // enqueueSnackbar('Update success!');
+      // console.info('DATA', data);
     } catch (error) {
       console.error(error);
     }
   });
+  const object_url =currentUser?.object_url;
+  const secondSlashIndex = object_url?.indexOf('/', 8);
+  const secondPart = object_url?.substring(secondSlashIndex);
+  const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
 
   return (
     <Dialog
@@ -84,66 +90,73 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose }) {
       open={open}
       onClose={onClose}
       PaperProps={{
-        sx: { maxWidth: 720 },
+        sx: { maxWidth: 600 },
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>Quick Update</DialogTitle>
+        <DialogTitle>{handleDoctypeLabel(currentUser.doc_type)}</DialogTitle>
 
         <DialogContent>
-          <Alert variant="outlined" severity="info" sx={{ mb: 3 }}>
-            Account is waiting for confirmation
-          </Alert>
 
-          <Box
-            rowGap={3}
-            columnGap={2}
-            display="grid"
-            gridTemplateColumns={{
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-            }}
-          >
-            <RHFSelect name="status" label="Status">
-              {USER_STATUS_OPTIONS.map((status) => (
-                <MenuItem key={status.value} value={status.value}>
-                  {status.label}
-                </MenuItem>
-              ))}
-            </RHFSelect>
+        {/*  <Box*/}
+        {/*    rowGap={3}*/}
+        {/*    columnGap={2}*/}
+        {/*    display="grid"*/}
+        {/*    gridTemplateColumns={{*/}
+        {/*      xs: 'repeat(1, 1fr)',*/}
+        {/*      sm: 'repeat(2, 1fr)',*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    <RHFSelect name="status" label="Status">*/}
+        {/*      {USER_STATUS_OPTIONS.map((status) => (*/}
+        {/*        <MenuItem key={status.value} value={status.value}>*/}
+        {/*          {status.label}*/}
+        {/*        </MenuItem>*/}
+        {/*      ))}*/}
+        {/*    </RHFSelect>*/}
 
-            <Box sx={{ display: { xs: 'none', sm: 'block' } }} />
+        {/*    <Box sx={{ display: { xs: 'none', sm: 'block' } }} />*/}
 
-            <RHFTextField name="name" label="Full Name" />
-            <RHFTextField name="email" label="Email Address" />
-            <RHFTextField name="phoneNumber" label="Phone Number" />
+        {/*    <RHFTextField name="name" label="Full Name" />*/}
+        {/*    <RHFTextField name="email" label="Email Address" />*/}
+        {/*    <RHFTextField name="phoneNumber" label="Phone Number" />*/}
 
-            <RHFAutocomplete
-              name="country"
-              type="country"
-              label="Country"
-              placeholder="Choose a country"
-              fullWidth
-              options={countries.map((option) => option.label)}
-              getOptionLabel={(option) => option}
+        {/*    <RHFAutocomplete*/}
+        {/*      name="country"*/}
+        {/*      type="country"*/}
+        {/*      label="Country"*/}
+        {/*      placeholder="Choose a country"*/}
+        {/*      fullWidth*/}
+        {/*      options={countries.map((option) => option.label)}*/}
+        {/*      getOptionLabel={(option) => option}*/}
+        {/*    />*/}
+
+        {/*    <RHFTextField name="state" label="State/Region" />*/}
+        {/*    <RHFTextField name="city" label="City" />*/}
+        {/*    <RHFTextField name="address" label="Address" />*/}
+        {/*    <RHFTextField name="zipCode" label="Zip/Code" />*/}
+        {/*    <RHFTextField name="company" label="Company" />*/}
+        {/*    <RHFTextField name="role" label="Role" />*/}
+        {/*  </Box>*/}
+          <Box py={1} mb={3}>
+            <Avatar
+              alt={object_url}
+              src={url}
+              sx={{ mr: 2, height: 400, width: '100%', cursor: 'pointer' }}
+              variant="rounded"
+              // onClick={() => handleViewDialog(url)}
             />
-
-            <RHFTextField name="state" label="State/Region" />
-            <RHFTextField name="city" label="City" />
-            <RHFTextField name="address" label="Address" />
-            <RHFTextField name="zipCode" label="Zip/Code" />
-            <RHFTextField name="company" label="Company" />
-            <RHFTextField name="role" label="Role" />
           </Box>
+          <TextField name="Reason" label="reason" multiline={true} rows={4} fullWidth={true} />
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" onClick={onClose}>
-            Cancel
+          <Button variant="outlined" onClick={() => setOpen(false)}>
+            Reject
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Update
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting}  onClick={() => setOpen(false)}>
+            Approve
           </LoadingButton>
         </DialogActions>
       </FormProvider>

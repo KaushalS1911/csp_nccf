@@ -42,9 +42,11 @@ import moment from 'moment';
 import Avatar from '@mui/material/Avatar';
 import { getComparator } from '../../../components/table';
 import { Box } from '@mui/system';
-import Lightbox from "../../../components/lightbox"
-import useLightBox from "../../../components/lightbox/use-light-box"
+import Lightbox from '../../../components/lightbox';
+import useLightBox from '../../../components/lightbox/use-light-box';
 import { usePopover } from '../../../components/custom-popover';
+import DocumentQuickEditForm from '../document-quick-edit-form';
+import { Checkbox, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 // import BranchTableFiltersResult from '../branch-table-filters-result';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
@@ -92,33 +94,63 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   const [branchOptions, setBranchOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
+  const [open, setOpen] = useState(false);
+  const [currentData, setCurrentData] = useState({});
+  const [dataCSP, setDataCSP] = useState([]);
+  const [branch, setBranch] = useState([]);
   const [images, setImages] = useState([]);
-  const [b,setB] = useState('')
+  const [b, setB] = useState([]);
   const popover = usePopover();
-  const dataFiltered = applyFilter({
+  let dataFiltered = applyFilter({
     inputData: tableData,
     // comparator: getComparator(table.order, table.orderBy),
     filters,
   });
-
   useEffect(() => {
-    getAllDocument(b);
+    if (vendor) {
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`).then((res) => setDataCSP(res?.data?.data)).catch((err) => console.log(err));
+    }
   }, []);
 
-    const cspCode = vendor?.category === "branch" ? b : csp || vendor?.csp_code;
+  const handleFilterCSP = useCallback(
+    (event) => {
+      setB(event.target.value[0] || []);
+
+      setBranch(event.target.value);
+      // getAllDocument(event.target.value.at(0))
+      // onFilters(
+      //   'type',
+      //   typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
+      // );
+    },
+    [branch],
+  );
+  const cspCode = csp || vendor?.csp_code;
+  useEffect(() => {
+    if (vendor.category === 'branch') {
+      setTableData([]);
+      setDataId([]);
+      dataFiltered = [];
+      getAllDocument(b);
+    } else {
+
+      getAllDocument(cspCode);
+    }
+  }, [b]);
+
 
   useEffect(() => {
-    dataFiltered?.forEach((data, index) => {
+    dataFiltered?.map((data, index) => {
       setDataId((prevDataId) => [...prevDataId, { ...data, id: index + 1 }]);
     });
   }, [tableData]);
-  // console.log(session,"jje");
-  function getAllDocument() {
+
+  function getAllDocument(code) {
     // setLoading(true)
 
     axios
       .get(
-        `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${cspCode}/documents`,
+        `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${code}/documents`,
       )
       .then((res) => {
         setTableData(res?.data?.data);
@@ -159,9 +191,10 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
 
   function handleViewDialog(url) {
     setImages([url]);
-    popover.onClose()
+    popover.onClose();
     lightbox.onOpen(url);
   }
+
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
 
@@ -267,7 +300,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
     {
       field: 'branch_approval_status',
       headerName: 'Status',
-      renderCell: (params) => <TableCell sx={{px:0}}>
+      renderCell: (params) => <TableCell sx={{ px: 0 }}>
         <Label
           variant="soft"
           color={
@@ -277,7 +310,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
             'default'
           }
         >
-          {params.row.branch_approval_status === "0" ? "Approval Pending" : "Approved"}
+          {params.row.branch_approval_status === '0' ? 'Approval Pending' : 'Approved'}
         </Label></TableCell>,
       width: 250,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
@@ -298,7 +331,10 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
           showInMenu
           icon={<Iconify icon="solar:pen-bold"/>}
           label="Edit"
-          // onClick={() => handleEditRow(params.row.id)}
+          onClick={() => {
+            setOpen(true);
+            setCurrentData(params.row);
+          }}
         />,
         <GridActionsCellItem
           showInMenu
@@ -312,14 +348,13 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
       ],
     },
   ];
-
   <Lightbox
     index={lightbox.selected}
     slides={slides}
     open={true}
     close={lightbox.onClose}
     onGetCurrentIndex={(index) => lightbox.setSelected(index)}
-  />
+  />;
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
@@ -336,6 +371,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
         maxWidth={'xl'}
 
       >
+        <DocumentQuickEditForm currentUser={currentData} open={open} setOpen={setOpen}/>
         <CustomBreadcrumbs
           heading={miller ? 'Miller Documents' : cspt ? 'CSP Documents' : docu ? 'Documents' : `Distributor Documents`}
           links={[
@@ -354,7 +390,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
           ]}
           sx={{ mb: { xs: 3, md: 5 } }}
           action={
-            (dataFiltered?.length == 0 && !cspt) &&
+            (vendor?.category !== 'branch' && !cspt) &&
             <Button
               component={RouterLink}
               href={miller ? paths.dashboard.miller.document_upload : docu ? paths.dashboard.distributor.document_upload : paths.dashboard.distributor.document_upload}
@@ -409,24 +445,60 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                       flexGrow={1}
                       direction="row"
                       alignItems="center"
-                      justifyContent="flex-end"
+                      justifyContent={vendor?.category === 'branch' ? 'space-between' : 'flex-end'}
                     >
-                      {!!selectedRowIds.length && (
-                        <Button
-                          size="small"
-                          color="error"
-                          startIcon={<Iconify icon="solar:trash-bin-trash-bold"/>}
-                          onClick={confirmRows.onTrue}
-                        >
-                          Delete ({selectedRowIds.length})
-                        </Button>
-                      )}
+                      {/*{!!selectedRowIds.length && (*/}
+                      {/*  <Button*/}
+                      {/*    size="small"*/}
+                      {/*    color="error"*/}
+                      {/*    startIcon={<Iconify icon="solar:trash-bin-trash-bold"/>}*/}
+                      {/*    onClick={confirmRows.onTrue}*/}
+                      {/*  >*/}
+                      {/*    Delete ({selectedRowIds.length})*/}
+                      {/*  </Button>*/}
+                      {/*)}*/}
 
-                      <GridToolbarColumnsButton/>
-                      <GridToolbarFilterButton/>
-                      <GridToolbarExport/>
+                      {vendor?.category === 'branch' && <FormControl
+                        sx={{
+                          flexShrink: 0,
+                          width: { xs: 1, md: 200 },
+                        }}
+                      >
+                        <InputLabel>CSP</InputLabel>
+
+                        <Select
+                          multiple
+                          value={branch}
+                          onChange={handleFilterCSP}
+                          input={<OutlinedInput label="Type"/>}
+                          MenuProps={{
+                            PaperProps: {
+                              sx: { maxHeight: 240 },
+                            },
+                          }}
+                          renderValue={(selected) => selected.join(', ')}
+                        >
+                          {dataCSP.map((option) => (
+                            <MenuItem key={option.csp_code} value={option.csp_code}>
+                              <Checkbox
+                                disableRipple
+                                size="small"
+                                checked={branch.includes(option.csp_code)}
+                              />
+                              {option.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>}
+
+
+                      <Box> <GridToolbarColumnsButton/>
+                        <GridToolbarFilterButton/>
+                        <GridToolbarExport/></Box>
                     </Stack>
-                    <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles} getAllDocument={getAllDocument} vendorData={vendor?.category === "branch" ? true : false } setB={setB}
+                    <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
+                                          getAllDocument={getAllDocument}
+                                          vendorData={vendor?.category === 'branch' ? true : false} setB={setB}
                                           document={document}/>
                     {canReset && (
                       <DocumentTableFiltersResult

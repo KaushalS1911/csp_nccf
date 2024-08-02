@@ -30,15 +30,11 @@ export default function DocumentTableToolbar({
   roleOptions,
 }) {
   const {vendor} = useAuthContext()
-  const [data,setData] = useState([])
+  const [dataCSP,setData] = useState([])
   const [branch,setBranch] = useState([])
   // const branch = vandor
   // console.log(vendor);
-  useEffect(() => {
-    if(vendor){
-      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/noida/csp/list`).then((res) => setData(res?.data?.data)).catch((err) => console.log(err))
-    }
-  },[])
+
   const typeOptions =[
     { label: 'Registration Certificate', key: 'registration_certificate' },
     { label: 'Undertaking', key: 'undertaking' },
@@ -150,34 +146,34 @@ export default function DocumentTableToolbar({
           </Select>
         </FormControl>
 
-        {vendorData && <FormControl
-          sx={{
-            flexShrink: 0,
-            width: { xs: 1, md: 200 },
-          }}
-        >
-          <InputLabel>CSP</InputLabel>
+        {/*{vendorData && <FormControl*/}
+        {/*  sx={{*/}
+        {/*    flexShrink: 0,*/}
+        {/*    width: { xs: 1, md: 200 },*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <InputLabel>CSP</InputLabel>*/}
 
-          <Select
-            multiple
-            value={branch}
-            onChange={handleFilterCSP}
-            input={<OutlinedInput label="Type"/>}
-            // renderValue={(selected) => selected.map((value) => value).join(', ')}
-            MenuProps={{
-              PaperProps: {
-                sx: { maxHeight: 240 },
-              },
-            }}
-          >
-            {data.map((option) => (
-              <MenuItem key={option} value={option?.csp_code}>
-                <Checkbox disableRipple size="small" checked={branch?.includes(option?.csp_code)}/>
-                {option?.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>}
+        {/*  <Select*/}
+        {/*    multiple*/}
+        {/*    value={branch}*/}
+        {/*    onChange={handleFilterCSP}*/}
+        {/*    input={<OutlinedInput label="Type"/>}*/}
+        {/*    // renderValue={(selected) => selected.map((value) => value).join(', ')}*/}
+        {/*    MenuProps={{*/}
+        {/*      PaperProps: {*/}
+        {/*        sx: { maxHeight: 240 },*/}
+        {/*      },*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    {data.map((option) => (*/}
+        {/*      <MenuItem key={option} value={option?.csp_code}>*/}
+        {/*        <Checkbox disableRipple size="small" checked={branch?.includes(option?.csp_code)}/>*/}
+        {/*        {option?.name}*/}
+        {/*      </MenuItem>*/}
+        {/*    ))}*/}
+        {/*  </Select>*/}
+        {/*</FormControl>}*/}
       </Stack>
 
       <CustomPopover
