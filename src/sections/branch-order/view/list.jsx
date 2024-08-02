@@ -148,17 +148,121 @@ function List(props) {
     [router],
   );
 let i =0
+  // const columns = [
+  //   // {
+  //   //   field: 'category',
+  //   //   headerName: 'Category',
+  //   //   filterable: false,
+  //   // },
+  //   {
+  //     field: 'id',
+  //     headerName: '#',
+  //     width: 142,
+  //     renderCell: (params) => <Box>{i+=1}</Box>,
+  //   },
+  //   {
+  //     field: 'name',
+  //     headerName: 'Name',
+  //     flex: 1,
+  //     minWidth: 250,
+  //     hideable: false,
+  //     // renderCell: (params) => <RenderCellProduct params={params} />,
+  //   },
+  //   {
+  //     field: 'commodity',
+  //     headerName: 'Commodity',
+  //     width: 300,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //
+  //   {
+  //     field: 'quantity',
+  //     headerName: 'Quantity',
+  //     width: 200,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //   {
+  //     field: 'branch',
+  //     headerName: 'Branch',
+  //     width: 300,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   }, {
+  //     field: 'nccf_order_status',
+  //     headerName: 'Status',
+  //     width: 160,
+  //     renderCell: (params) => <TableCell>
+  //       <Label
+  //         variant="soft"
+  //         color={
+  //           (params.row.nccf_order_status === 'accepted' && 'success') ||
+  //           (params.row.nccf_order_status === 'placed' && 'warning') ||
+  //           (params.row.nccf_order_status === 'declined' && 'error') ||
+  //           'default'
+  //         }
+  //       >
+  //         {params.row.nccf_order_status}
+  //       </Label></TableCell>,
+  //   },
+  //   // {
+  //   //   field: 'inventoryType',
+  //   //   headerName: 'Stock',
+  //   //   width: 160,
+  //   //   type: 'singleSelect',
+  //   //   valueOptions: PRODUCT_STOCK_OPTIONS,
+  //   //   renderCell: (params) => <RenderCellStock params={params} />,
+  //   // },
+  //   // {
+  //   //   field: 'price',
+  //   //   headerName: 'Price',
+  //   //   width: 140,
+  //   //   editable: true,
+  //   //   renderCell: (params) => <RenderCellPrice params={params} />,
+  //   // },
+  //   // {
+  //   //   field: 'publish',
+  //   //   headerName: 'Publish',
+  //   //   width: 110,
+  //   //   type: 'singleSelect',
+  //   //   editable: true,
+  //   //   valueOptions: PUBLISH_OPTIONS,
+  //   //   renderCell: (params) => <RenderCellPublish params={params} />,
+  //   // },
+  //   {
+  //     type: 'actions',
+  //     field: 'actions',
+  //     headerName: ' ',
+  //     align: 'right',
+  //     headerAlign: 'right',
+  //     width: 80,
+  //     sortable: false,
+  //     filterable: false,
+  //     disableColumnMenu: true,
+  //     getActions: (params) => [
+  //
+  //       <GridActionsCellItem
+  //         showInMenu
+  //         icon={<Iconify icon="solar:pen-bold"/>}
+  //         label="Edit"
+  //         // onClick={() => handleEditRow(params.row.id)}
+  //       />,
+  //       <GridActionsCellItem
+  //         showInMenu
+  //         icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
+  //         label="Delete"
+  //         // onClick={() => {
+  //         //   handleDeleteRow(params.row.id);
+  //         // }}
+  //         sx={{ color: 'error.main' }}
+  //       />,
+  //     ],
+  //   },
+  // ];
   const columns = [
-    // {
-    //   field: 'category',
-    //   headerName: 'Category',
-    //   filterable: false,
-    // },
     {
       field: 'id',
       headerName: '#',
-      width: 142,
-      renderCell: (params) => <Box>{i+=1}</Box>,
+      width: 80,
+      renderCell: (params) => <Box>{params.row.id}</Box>, // You can use params.row.id directly
     },
     {
       field: 'name',
@@ -166,67 +270,42 @@ let i =0
       flex: 1,
       minWidth: 250,
       hideable: false,
-      // renderCell: (params) => <RenderCellProduct params={params} />,
     },
     {
       field: 'commodity',
       headerName: 'Commodity',
       width: 300,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
-
     {
       field: 'quantity',
       headerName: 'Quantity',
       width: 200,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
       field: 'branch',
       headerName: 'Branch',
       width: 300,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
-    }, {
+    },
+    {
       field: 'nccf_order_status',
       headerName: 'Status',
       width: 160,
-      renderCell: (params) => <TableCell>
-        <Label
-          variant="soft"
-          color={
-            (params.row.nccf_order_status === 'accepted' && 'success') ||
-            (params.row.nccf_order_status === 'placed' && 'warning') ||
-            (params.row.nccf_order_status === 'declined' && 'error') ||
-            'default'
-          }
-        >
-          {params.row.nccf_order_status}
-        </Label></TableCell>,
+      renderCell: (params) => (
+        <TableCell>
+          <Label
+            variant="soft"
+            color={
+              (params.row.nccf_order_status === 'accepted' && 'success') ||
+              (params.row.nccf_order_status === 'placed' && 'warning') ||
+              (params.row.nccf_order_status === 'declined' && 'error') ||
+              'default'
+            }
+          >
+            {params.row.nccf_order_status}
+          </Label>
+        </TableCell>
+      ),
     },
-    // {
-    //   field: 'inventoryType',
-    //   headerName: 'Stock',
-    //   width: 160,
-    //   type: 'singleSelect',
-    //   valueOptions: PRODUCT_STOCK_OPTIONS,
-    //   renderCell: (params) => <RenderCellStock params={params} />,
-    // },
-    // {
-    //   field: 'price',
-    //   headerName: 'Price',
-    //   width: 140,
-    //   editable: true,
-    //   renderCell: (params) => <RenderCellPrice params={params} />,
-    // },
-    // {
-    //   field: 'publish',
-    //   headerName: 'Publish',
-    //   width: 110,
-    //   type: 'singleSelect',
-    //   editable: true,
-    //   valueOptions: PUBLISH_OPTIONS,
-    //   renderCell: (params) => <RenderCellPublish params={params} />,
-    // },
     {
       type: 'actions',
       field: 'actions',
@@ -238,25 +317,23 @@ let i =0
       filterable: false,
       disableColumnMenu: true,
       getActions: (params) => [
-
         <GridActionsCellItem
           showInMenu
-          icon={<Iconify icon="solar:pen-bold"/>}
+          icon={<Iconify icon="solar:pen-bold" />}
           label="Edit"
-          // onClick={() => handleEditRow(params.row.id)}
+          onClick={() => handleEditRow(params.row.id)} // Implement this function as needed
         />,
         <GridActionsCellItem
           showInMenu
-          icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
+          icon={<Iconify icon="solar:trash-bin-trash-bold" />}
           label="Delete"
-          // onClick={() => {
-          //   handleDeleteRow(params.row.id);
-          // }}
+          onClick={() => handleDeleteRow(params.row.id)} // Implement this function as needed
           sx={{ color: 'error.main' }}
         />,
       ],
     },
   ];
+
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
@@ -308,7 +385,7 @@ let i =0
 
         <Card
           sx={{
-            height: canReset ? 720 : 650,
+            height: dataFiltered?.length > 0 ? "unset" : 700,
             flexGrow: { md: 1 },
             display: { md: 'flex' },
             flexDirection: { md: 'column' },

@@ -223,38 +223,154 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   // );
 
 
+  // const columns = [
+  //   // {
+  //   //   field: 'category',
+  //   //   headerName: 'Category',
+  //   //   filterable: false,
+  //   // },
+  //   {
+  //     field: 'id',
+  //     headerName: '#',
+  //     width: 142,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //   {
+  //     field: 'object_url',
+  //     headerName: 'Document Image',
+  //     flex: 1,
+  //     minWidth: 236,
+  //     hideable: false,
+  //     renderCell: (params) => {
+  //       const object_url = params?.row?.object_url;
+  //       const secondSlashIndex = object_url?.indexOf('/', 8);
+  //       const secondPart = object_url?.substring(secondSlashIndex);
+  //       const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
+  //       return (
+  //       <>
+  //
+  //         <Box py={1} onClick={() => handleViewDialog(url)}>
+  //
+  //           <Avatar
+  //             alt={object_url}
+  //             src={url}
+  //             sx={{ mr: 2, height: 46, width: 46, cursor: 'pointer' }}
+  //             variant="rounded"
+  //           />
+  //         </Box>
+  //       </>
+  //       );
+  //     },
+  //   },
+  //   {
+  //     field: 'doc_type',
+  //     headerName: 'Document Type',
+  //     width: 300,
+  //     renderCell: (params) => <Box sx={{ whiteSpace: 'nowrap' }}>{handleDoctypeLabel(params.row.doc_type)}</Box>,
+  //   },
+  //
+  //   {
+  //     field: 'uploaded_on',
+  //     headerName: 'Date',
+  //     width: 300,
+  //     renderCell: (params) => <Box sx={{ whiteSpace: 'nowrap' }}>
+  //       {moment(params.row.uploaded_on).format('DD/MM/YYYY')}
+  //     </Box>,
+  //   },
+  //   // {
+  //   //   field: 'status',
+  //   //   headerName: 'Status',
+  //   //   width: 160,
+  //   //   renderCell: (params) => <Box>
+  //   //     <Label
+  //   //       variant="soft"
+  //   //       color={'success'
+  //   //         // (params.row.nccf_order_status === 'accepted' && 'success') ||
+  //   //         // (params.row.nccf_order_status === 'placed' && 'warning') ||
+  //   //         // (params.row.nccf_order_status === 'declined' && 'error') ||
+  //   //         // 'default'
+  //   //       }
+  //   //     >
+  //   //       {/*{params.row.nccf_order_status}*/}
+  //   //       Completed
+  //   //     </Label></Box>,
+  //   // },
+  //   {
+  //     field: 'branch_approval_status',
+  //     headerName: 'Status',
+  //     renderCell: (params) => <TableCell sx={{ px: 0 }}>
+  //       <Label
+  //         variant="soft"
+  //         color={
+  //           (params.row.branch_approval_status === '1' && 'success') ||
+  //           (params.row.branch_approval_status === '0' && 'warning') ||
+  //           // (params.row.branch_approval_status === 'declined' && 'error') ||
+  //           'default'
+  //         }
+  //       >
+  //         {params.row.branch_approval_status === '0' ? 'Approval Pending' : 'Approved'}
+  //       </Label></TableCell>,
+  //     width: 250,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //
+  //   {
+  //     type: 'actions',
+  //     field: 'actions',
+  //     headerName: ' ',
+  //     align: 'right',
+  //     headerAlign: 'right',
+  //     width: 80,
+  //     sortable: false,
+  //     filterable: false,
+  //     disableColumnMenu: true,
+  //     getActions: (params) => [
+  //
+  //       <GridActionsCellItem
+  //         showInMenu
+  //         icon={<Iconify icon="solar:pen-bold"/>}
+  //         label="Edit"
+  //         onClick={() => {
+  //           setOpen(true);
+  //           setCurrentData(params.row);
+  //         }}
+  //       />,
+  //       <GridActionsCellItem
+  //         showInMenu
+  //         icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
+  //         label="Delete"
+  //         // onClick={() => {
+  //         //   handleDeleteRow(params.row.id);
+  //         // }}
+  //         sx={{ color: 'error.main' }}
+  //       />,
+  //     ],
+  //   },
+  // ];
   const columns = [
-    // {
-    //   field: 'category',
-    //   headerName: 'Category',
-    //   filterable: false,
-    // },
     {
       field: 'id',
       headerName: '#',
-      width: 142,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+      width: 120,
+      minWidth: 80,
     },
     {
       field: 'object_url',
       headerName: 'Document Image',
       flex: 1,
-      minWidth: 236,
-      hideable: false,
+      minWidth: 180,
       renderCell: (params) => {
         const object_url = params?.row?.object_url;
         const secondSlashIndex = object_url?.indexOf('/', 8);
         const secondPart = object_url?.substring(secondSlashIndex);
         const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
-
         return (
-          <Box py={1}>
+          <Box py={1} onClick={() => handleViewDialog(url)}>
             <Avatar
               alt={object_url}
               src={url}
-              sx={{ mr: 2, height: 46, width: 46, cursor: 'pointer' }}
+              sx={{ mr: 2, height: { xs: 36, sm: 46 }, width: { xs: 36, sm: 46 }, cursor: 'pointer' }}
               variant="rounded"
-              onClick={() => handleViewDialog(url)}
             />
           </Box>
         );
@@ -263,70 +379,54 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
     {
       field: 'doc_type',
       headerName: 'Document Type',
-      width: 300,
+      flex: 1,
+      minWidth: 200,
       renderCell: (params) => <Box sx={{ whiteSpace: 'nowrap' }}>{handleDoctypeLabel(params.row.doc_type)}</Box>,
     },
-
     {
       field: 'uploaded_on',
       headerName: 'Date',
-      width: 300,
+      flex: 1,
+      minWidth: 200,
       renderCell: (params) => <Box sx={{ whiteSpace: 'nowrap' }}>
         {moment(params.row.uploaded_on).format('DD/MM/YYYY')}
       </Box>,
     },
-    // {
-    //   field: 'status',
-    //   headerName: 'Status',
-    //   width: 160,
-    //   renderCell: (params) => <Box>
-    //     <Label
-    //       variant="soft"
-    //       color={'success'
-    //         // (params.row.nccf_order_status === 'accepted' && 'success') ||
-    //         // (params.row.nccf_order_status === 'placed' && 'warning') ||
-    //         // (params.row.nccf_order_status === 'declined' && 'error') ||
-    //         // 'default'
-    //       }
-    //     >
-    //       {/*{params.row.nccf_order_status}*/}
-    //       Completed
-    //     </Label></Box>,
-    // },
     {
       field: 'branch_approval_status',
       headerName: 'Status',
-      renderCell: (params) => <TableCell sx={{ px: 0 }}>
-        <Label
-          variant="soft"
-          color={
-            (params.row.branch_approval_status === '1' && 'success') ||
-            (params.row.branch_approval_status === '0' && 'warning') ||
-            // (params.row.branch_approval_status === 'declined' && 'error') ||
-            'default'
-          }
-        >
-          {params.row.branch_approval_status === '0' ? 'Approval Pending' : 'Approved'}
-        </Label></TableCell>,
-      width: 250,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params) => (
+        <TableCell sx={{ px: 0 }}>
+          <Label
+            variant="soft"
+            color={
+              (params.row.branch_approval_status === '1' && 'success') ||
+              (params.row.branch_approval_status === '0' && 'warning') ||
+              'default'
+            }
+          >
+            {params.row.branch_approval_status === '0' ? 'Approval Pending' : 'Approved'}
+          </Label>
+        </TableCell>
+      ),
     },
-
     {
       type: 'actions',
       field: 'actions',
       headerName: ' ',
       align: 'right',
       headerAlign: 'right',
-      width: 80,
+      width: 100,
+      minWidth: 80,
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
       getActions: (params) => [
-
         <GridActionsCellItem
           showInMenu
-          icon={<Iconify icon="solar:pen-bold"/>}
+          icon={<Iconify icon="solar:pen-bold" />}
           label="Edit"
           onClick={() => {
             setOpen(true);
@@ -335,23 +435,14 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
         />,
         <GridActionsCellItem
           showInMenu
-          icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
+          icon={<Iconify icon="solar:trash-bin-trash-bold" />}
           label="Delete"
-          // onClick={() => {
-          //   handleDeleteRow(params.row.id);
-          // }}
           sx={{ color: 'error.main' }}
         />,
       ],
     },
   ];
-  <Lightbox
-    index={lightbox.selected}
-    slides={slides}
-    open={true}
-    close={lightbox.onClose}
-    onGetCurrentIndex={(index) => lightbox.setSelected(index)}
-  />;
+
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
@@ -359,6 +450,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
     [handleFilters],
   );
   const getTogglableColumns = () =>
+
     columns
       .filter((column) => !HIDE_COLUMNS_TOGGLABLE.includes(column.field))
       .map((column) => column.field);
@@ -368,6 +460,8 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
         maxWidth={'xl'}
 
       >
+        <Button
+          onClick={() => handleViewDialog('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file/HFVG3435487_Uttar Pradesh/Registration_Certificate/Registration_Certificate_2024-07-27_08-34-39.jpg')}>submit</Button>
         <DocumentQuickEditForm currentUser={currentData} open={open} setOpen={setOpen}/>
         <CustomBreadcrumbs
           heading={miller ? 'Miller Documents' : cspt ? 'CSP Documents' : docu ? 'Documents' : `Distributor Documents`}
@@ -402,7 +496,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
 
         <Card
           sx={{
-            height: dataId?.length > 0 ? "unset" : 700,
+            height: dataId?.length > 0 ? 'unset' : 700,
             // flexGrow: { md: 1 },
             // display: { md: 'flex' },
             // flexDirection: { md: 'column' },
@@ -456,8 +550,6 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                       {/*)}*/}
 
 
-
-
                       <Box> <GridToolbarColumnsButton/>
                         <GridToolbarFilterButton/>
                         <GridToolbarExport/></Box>
@@ -502,7 +594,13 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
           />
         </Card>
       </Container>
-
+      <Lightbox
+        index={lightbox.selected}
+        slides={slides}
+        open={lightbox.open}
+        close={lightbox.onClose}
+        onGetCurrentIndex={(index) => lightbox.setSelected(index)}
+      />
       <ConfirmDialog
         open={confirmRows.value}
         onClose={confirmRows.onFalse}

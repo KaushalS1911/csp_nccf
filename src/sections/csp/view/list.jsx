@@ -191,113 +191,211 @@ const {vendor} = useAuthContext()
   //   [router]
   // );
 
+  // const columns = [
+  //   // {
+  //   //   field: 'category',
+  //   //   headerName: 'Category',
+  //   //   filterable: false,
+  //   // },
+  //   {
+  //     field: 'id',
+  //     headerName: '#',
+  //     align: 'center',
+  //     headerAlign: 'center',
+  //     width: 10,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //   {
+  //     field: 'name',
+  //     headerName: 'Name',
+  //     flex: 1,
+  //     // width: 220,
+  //     minWidth: 106,
+  //     hideable: false,
+  //     renderCell: (params) => <TableCell sx={{ fontWeight:"bold",cursor:"pointer",px:"0"}} onClick={() => handleDistributor(params.row.csp_code)} >{params.row.name}</TableCell>,
+  //   },
+  //   // {
+  //   //   field: 'category',
+  //   //   headerName: 'Category',
+  //   //   width: 200,
+  //   //   // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   // },
+  //
+  //   {
+  //     field: 'type_of_firm',
+  //     headerName: 'Type Of Firm',
+  //     width: 150,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //   {
+  //     field: 'contact_person',
+  //     headerName: 'Contact Person',
+  //     width: 160,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //   {
+  //     field: 'phone_number',
+  //     headerName: 'Contact',
+  //     width: 150,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //   {
+  //     field: 'email',
+  //     headerName: 'Email',
+  //     width: 160,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //   {
+  //     field: 'address',
+  //     headerName: 'Address',
+  //     width: 240,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //   {
+  //     field: 'csp_status',
+  //     headerName: 'Status',
+  //     renderCell: (params) => (
+  //       <TableCell sx={{px:0}}>
+  //         <Label
+  //           variant="soft"
+  //           color={
+  //             (params.row.csp_status === '0' && 'success') ||
+  //             (params.row.csp_status === '1' && 'warning') ||
+  //             // (params.row.branch_approval_status === 'declined' && 'error') ||
+  //             'default'
+  //           }
+  //         >
+  //           {params.row.csp_status === "0" ? "Approved" : "Approval Pending"}
+  //         </Label>
+  //       </TableCell>
+  //     ),
+  //     width: 150,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //   // {
+  //   //   field: 'inventoryType',
+  //   //   headerName: 'Stock',
+  //   //   width: 160,
+  //   //   type: 'singleSelect',
+  //   //   valueOptions: PRODUCT_STOCK_OPTIONS,
+  //   //   renderCell: (params) => <RenderCellStock params={params} />,
+  //   // },
+  //   // {
+  //   //   field: 'price',
+  //   //   headerName: 'Price',
+  //   //   width: 140,
+  //   //   editable: true,
+  //   //   renderCell: (params) => <RenderCellPrice params={params} />,
+  //   // },
+  //   // {
+  //   //   field: 'publish',
+  //   //   headerName: 'Publish',
+  //   //   width: 110,
+  //   //   type: 'singleSelect',
+  //   //   editable: true,
+  //   //   valueOptions: PUBLISH_OPTIONS,
+  //   //   renderCell: (params) => <RenderCellPublish params={params} />,
+  //   // },
+  //   {
+  //     // type: 'actions',
+  //     field: 'actions',
+  //     headerName: ' ',
+  //     align: 'right',
+  //     headerAlign: 'right',
+  //     width: 100,
+  //     sortable: false,
+  //     filterable: false,
+  //     disableColumnMenu: true,
+  //     renderCell: (params) => <Button variant={"contained"} sx={{backgroundColor:params.row.document_count === 0 ? "gray" : "Green"}} onClick={() => handleViewRow(params.row.csp_code)} disabled={params.row.document_count === 0}>View</Button>
+  //     // getActions: (params) => [
+  //     //
+  //     //   <GridActionsCellItem
+  //     //     showInMenu
+  //     //     icon={<Iconify icon="solar:eye-bold" />}
+  //     //     label="View Documents"
+  //     //     onClick={() => handleViewRow(params.row.csp_code)}
+  //     //   />,
+  //     //   // <GridActionsCellItem
+  //     //   //   showInMenu
+  //     //   //   icon={<Iconify icon="solar:trash-bin-trash-bold" />}
+  //     //   //   label="Delete"
+  //     //   //   onClick={() => {
+  //     //   //     handleDeleteRow(params.row.id);
+  //     //   //   }}
+  //     //   //   sx={{ color: 'error.main' }}
+  //     //   // />,
+  //     // ],
+  //   },
+  // ];
+
   const columns = [
-    // {
-    //   field: 'category',
-    //   headerName: 'Category',
-    //   filterable: false,
-    // },
     {
       field: 'id',
       headerName: '#',
       align: 'center',
       headerAlign: 'center',
-      width: 10,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+      width: 70,
+      // Optional: Add a minWidth if needed
     },
     {
       field: 'name',
       headerName: 'Name',
       flex: 1,
-      // width: 220,
-      minWidth: 106,
+      minWidth: 150,
       hideable: false,
-      renderCell: (params) => <TableCell sx={{ fontWeight:"bold",cursor:"pointer",px:"0"}} onClick={() => handleDistributor(params.row.csp_code)} >{params.row.name}</TableCell>,
+      renderCell: (params) => (
+        <TableCell sx={{ fontWeight: "bold", cursor: "pointer", px: "0" }} onClick={() => handleDistributor(params.row.csp_code)}>
+          {params.row.name}
+        </TableCell>
+      ),
     },
-    // {
-    //   field: 'category',
-    //   headerName: 'Category',
-    //   width: 200,
-    //   // renderCell: (params) => <RenderCellCreatedAt params={params} />,
-    // },
-
     {
       field: 'type_of_firm',
       headerName: 'Type Of Firm',
       width: 150,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
       field: 'contact_person',
       headerName: 'Contact Person',
       width: 160,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
       field: 'phone_number',
       headerName: 'Contact',
       width: 150,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
       field: 'email',
       headerName: 'Email',
       width: 160,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
     {
       field: 'address',
       headerName: 'Address',
       width: 240,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+      flex: 1,
+      minWidth: 200,
     },
     {
       field: 'csp_status',
       headerName: 'Status',
       renderCell: (params) => (
-        <TableCell sx={{px:0}}>
+        <TableCell sx={{ px: 0 }}>
           <Label
             variant="soft"
             color={
               (params.row.csp_status === '0' && 'success') ||
               (params.row.csp_status === '1' && 'warning') ||
-              // (params.row.branch_approval_status === 'declined' && 'error') ||
               'default'
             }
           >
-            {params.row.csp_status === "0" ? "Approved" : "Approval Pending"}
+            {params.row.csp_status === '0' ? 'Approved' : 'Approval Pending'}
           </Label>
         </TableCell>
       ),
       width: 150,
-      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
-    // {
-    //   field: 'inventoryType',
-    //   headerName: 'Stock',
-    //   width: 160,
-    //   type: 'singleSelect',
-    //   valueOptions: PRODUCT_STOCK_OPTIONS,
-    //   renderCell: (params) => <RenderCellStock params={params} />,
-    // },
-    // {
-    //   field: 'price',
-    //   headerName: 'Price',
-    //   width: 140,
-    //   editable: true,
-    //   renderCell: (params) => <RenderCellPrice params={params} />,
-    // },
-    // {
-    //   field: 'publish',
-    //   headerName: 'Publish',
-    //   width: 110,
-    //   type: 'singleSelect',
-    //   editable: true,
-    //   valueOptions: PUBLISH_OPTIONS,
-    //   renderCell: (params) => <RenderCellPublish params={params} />,
-    // },
     {
-      // type: 'actions',
       field: 'actions',
       headerName: ' ',
       align: 'right',
@@ -306,27 +404,19 @@ const {vendor} = useAuthContext()
       sortable: false,
       filterable: false,
       disableColumnMenu: true,
-      renderCell: (params) => <Button variant={"contained"} sx={{backgroundColor:params.row.document_count === 0 ? "gray" : "Green"}} onClick={() => handleViewRow(params.row.csp_code)} disabled={params.row.document_count === 0}>View</Button>
-      // getActions: (params) => [
-      //
-      //   <GridActionsCellItem
-      //     showInMenu
-      //     icon={<Iconify icon="solar:eye-bold" />}
-      //     label="View Documents"
-      //     onClick={() => handleViewRow(params.row.csp_code)}
-      //   />,
-      //   // <GridActionsCellItem
-      //   //   showInMenu
-      //   //   icon={<Iconify icon="solar:trash-bin-trash-bold" />}
-      //   //   label="Delete"
-      //   //   onClick={() => {
-      //   //     handleDeleteRow(params.row.id);
-      //   //   }}
-      //   //   sx={{ color: 'error.main' }}
-      //   // />,
-      // ],
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: params.row.document_count === 0 ? "gray" : "green" }}
+          onClick={() => handleViewRow(params.row.csp_code)}
+          disabled={params.row.document_count === 0}
+        >
+          View
+        </Button>
+      ),
     },
   ];
+
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);

@@ -109,7 +109,6 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
   const secondSlashIndex = object_url?.indexOf('/', 8);
   const secondPart = object_url?.substring(secondSlashIndex);
   const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
-  console.log(remark);
   return (
     <Dialog
       fullWidth
