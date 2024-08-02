@@ -114,7 +114,8 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
 
   const handleFilterCSP = useCallback(
     (event) => {
-      setB(event.target.value[0] || []);
+      console.log(event.target.value);
+      setB(event.target.value);
 
       setBranch(event.target.value);
       // getAllDocument(event.target.value.at(0))
@@ -405,10 +406,10 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
 
         <Card
           sx={{
-            // height: 700,
-            flexGrow: { md: 1 },
-            display: { md: 'flex' },
-            flexDirection: { md: 'column' },
+            height: dataId?.length > 0 ? "unset" : 700,
+            // flexGrow: { md: 1 },
+            // display: { md: 'flex' },
+            // flexDirection: { md: 'column' },
           }}
         >
 
@@ -467,7 +468,6 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                         <InputLabel>CSP</InputLabel>
 
                         <Select
-                          multiple
                           value={branch}
                           onChange={handleFilterCSP}
                           input={<OutlinedInput label="Type"/>}
@@ -476,15 +476,15 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                               sx: { maxHeight: 240 },
                             },
                           }}
-                          renderValue={(selected) => selected.join(', ')}
+                          // renderValue={(selected) => selected.join(', ')}
                         >
                           {dataCSP.map((option) => (
                             <MenuItem key={option.csp_code} value={option.csp_code}>
-                              <Checkbox
-                                disableRipple
-                                size="small"
-                                checked={branch.includes(option.csp_code)}
-                              />
+                              {/*<Checkbox*/}
+                              {/*  disableRipple*/}
+                              {/*  size="small"*/}
+                              {/*  checked={branch.includes(option.csp_code)}*/}
+                              {/*/>*/}
                               {option.name}
                             </MenuItem>
                           ))}
