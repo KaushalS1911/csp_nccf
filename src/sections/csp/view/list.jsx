@@ -375,6 +375,7 @@ const {vendor} = useAuthContext()
         <Card
           sx={{
             // height: canReset ? 740 : 650 ,
+            height: dataFiltered?.length > 0 ? "unset" : 700,
             flexGrow: { md: 1 },
             display: { md: 'flex' },
             flexDirection: { md: 'column' },

@@ -128,7 +128,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   );
   const cspCode = csp || vendor?.csp_code;
   useEffect(() => {
-    if (vendor.category === 'branch') {
+    if (docu) {
       setTableData([]);
       setDataId([]);
       dataFiltered = [];
@@ -444,9 +444,9 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                     <Stack
                       spacing={1}
                       flexGrow={1}
-                      direction={vendor?.category === 'branch' ? { xs:'column',md:"row" } :'row'}
+                      direction={docu ? { xs:'column',md:"row" } :'row'}
                       // alignItems="center"
-                      justifyContent={vendor?.category === 'branch' ? 'space-between' : 'flex-end'}
+                      justifyContent={docu ? 'space-between' : 'flex-end'}
                     >
                       {/*{!!selectedRowIds.length && (*/}
                       {/*  <Button*/}
@@ -459,7 +459,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                       {/*  </Button>*/}
                       {/*)}*/}
 
-                      {vendor?.category === 'branch' && <FormControl
+                      {docu && <FormControl
                         sx={{
                           flexShrink: 0,
                           width: { xs: 1, md: 200 },
