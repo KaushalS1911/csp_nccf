@@ -1,4 +1,5 @@
-import CancelIcon from '@mui/icons-material/Cancel';import React, { useState, useEffect, useCallback } from 'react';
+import CancelIcon from '@mui/icons-material/Cancel';
+import React, { useState, useEffect, useCallback } from 'react';
 import isEqual from 'lodash/isEqual';
 
 import Card from '@mui/material/Card';
@@ -76,6 +77,7 @@ const HIDE_COLUMNS = {
 };
 
 const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
+
 function CspList({ csp, document, miller, cspt, docu }) {
   const { enqueueSnackbar } = useSnackbar();
 
@@ -100,7 +102,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
   const [branch, setBranch] = useState([]);
   const [images, setImages] = useState([]);
   const [b, setB] = useState([]);
-  const [approve,setApprove] = useState(false)
+  const [approve, setApprove] = useState(false);
   const popover = usePopover();
   let dataFiltered = applyFilter({
     inputData: tableData,
@@ -140,11 +142,11 @@ function CspList({ csp, document, miller, cspt, docu }) {
   }, [b]);
 
 
-  useEffect(() => {
-    dataFiltered?.map((data, index) => {
-      setDataId((prevDataId) => [...prevDataId, { ...data, id: index + 1 }]);
-    });
-  }, [tableData]);
+  // useEffect(() => {
+  //   dataFiltered?.map((data, index) => {
+  //     setDataId((prevDataId) => [...prevDataId, { ...data, id: index + 1 }]);
+  //   });
+  // }, [tableData]);
 
   function getAllDocument(code) {
     // setLoading(true)
@@ -280,24 +282,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
         {moment(params.row.uploaded_on).format('DD/MM/YYYY')}
       </Box>,
     },
-    // {
-    //   field: 'status',
-    //   headerName: 'Status',
-    //   width: 160,
-    //   renderCell: (params) => <Box>
-    //     <Label
-    //       variant="soft"
-    //       color={'success'
-    //         // (params.row.nccf_order_status === 'accepted' && 'success') ||
-    //         // (params.row.nccf_order_status === 'placed' && 'warning') ||
-    //         // (params.row.nccf_order_status === 'declined' && 'error') ||
-    //         // 'default'
-    //       }
-    //     >
-    //       {/*{params.row.nccf_order_status}*/}
-    //       Completed
-    //     </Label></Box>,
-    // },
+
     {
       field: 'branch_approval_status',
       headerName: 'Status',
@@ -322,19 +307,19 @@ function CspList({ csp, document, miller, cspt, docu }) {
       renderCell: (params) => <TableCell sx={{ px: 0 }}>
         <Button
 
-        // role={undefined}
-        variant="contained"
-onClick={() => {
-  setCurrentData(params.row);
-  setApprove(true)
-  setOpen(true);
-}}
-        sx={{backgroundColor:"green"}}
+          // role={undefined}
+          variant="contained"
+          onClick={() => {
+            setCurrentData(params.row);
+            setApprove(true);
+            setOpen(true);
+          }}
+          sx={{ backgroundColor: 'green' }}
 
-      >
-        <VerifiedIcon />  Approve
-        {/*<VisuallyHiddenInput type="file" />*/}
-      </Button>
+        >
+          <VerifiedIcon/> Approve
+          {/*<VisuallyHiddenInput type="file" />*/}
+        </Button>
 
       </TableCell>,
       width: 120,
@@ -346,21 +331,21 @@ onClick={() => {
       renderCell: (params) => <TableCell sx={{ px: 0 }}>
 
         <Button
-        onClick={() => {
-          setCurrentData(params.row);
-  setApprove(false)
-          setOpen(true);
-        }}
+          onClick={() => {
+            setCurrentData(params.row);
+            setApprove(false);
+            setOpen(true);
+          }}
 
-        // role={undefined}
-        variant="contained"
+          // role={undefined}
+          variant="contained"
 
-        sx={{backgroundColor:"red"}}
+          sx={{ backgroundColor: 'red' }}
 
-      >
-        <CancelIcon /> Reject
-        {/*<VisuallyHiddenInput type="file" />*/}
-      </Button>
+        >
+          <CancelIcon/> Reject
+          {/*<VisuallyHiddenInput type="file" />*/}
+        </Button>
       </TableCell>,
       width: 120,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
@@ -421,7 +406,7 @@ onClick={() => {
         maxWidth={'xl'}
 
       >
-        <DocumentQuickEditForm currentUser={currentData} open={open} setOpen={setOpen} approve={ approve}/>
+        <DocumentQuickEditForm currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={b}/>
         <CustomBreadcrumbs
           heading={'CSP Documents'}
           links={[
@@ -430,8 +415,8 @@ onClick={() => {
               href: paths.dashboard.root,
             },
             {
-              name: 'CSP List' ,
-              href:  paths.dashboard.csp.csp_list ,
+              name: 'CSP List',
+              href: paths.dashboard.csp.csp_list,
             },
 
             {
@@ -444,7 +429,7 @@ onClick={() => {
 
         <Card
           sx={{
-            height: dataId?.length > 0 ? "unset" : 700,
+            height: dataId?.length > 0 ? 'unset' : 700,
             // flexGrow: { md: 1 },
             // display: { md: 'flex' },
             // flexDirection: { md: 'column' },
@@ -454,7 +439,7 @@ onClick={() => {
           <DataGrid
             // checkboxSelection
             disableRowSelectionOnClick
-            rows={dataId}
+            rows={dataFiltered}
             columns={columns}
             // loading={cspLoading}
             getRowHeight={() => 'auto'}
@@ -482,9 +467,9 @@ onClick={() => {
                     <Stack
                       spacing={1}
                       flexGrow={1}
-                      direction={ { xs:'column',md:"row" } }
+                      direction={{ xs: 'column', md: 'row' }}
                       // alignItems="center"
-                      justifyContent={ csp ? "flex-end":'space-between'}
+                      justifyContent={csp ? 'flex-end' : 'space-between'}
                     >
                       {/*{!!selectedRowIds.length && (*/}
                       {/*  <Button*/}

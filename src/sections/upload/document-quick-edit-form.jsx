@@ -1,31 +1,26 @@
 import * as Yup from 'yup';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 import Box from '@mui/material/Box';
-import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-import MenuItem from '@mui/material/MenuItem';
 import LoadingButton from '@mui/lab/LoadingButton';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-
-import { countries } from 'src/assets/data';
-import { handleDoctypeLabel, USER_STATUS_OPTIONS } from 'src/_mock';
-
+import { handleDoctypeLabel } from 'src/_mock';
 import { useSnackbar } from 'src/components/snackbar';
-import FormProvider, { RHFSelect, RHFTextField, RHFAutocomplete } from 'src/components/hook-form';
-import Avatar from '@mui/material/Avatar';
+import FormProvider from 'src/components/hook-form';
 import { TextField } from '@mui/material';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentQuickEditForm({ currentUser, open, onClose ,setOpen,approve}) {
+export default function DocumentQuickEditForm({ currentUser, open, onClose, setOpen, approve,cspCode }) {
   const { enqueueSnackbar } = useSnackbar();
+  const [remark,setRemark] = useState("")
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
@@ -52,7 +47,7 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose ,setO
       company: currentUser?.company || '',
       role: currentUser?.role || '',
     }),
-    [currentUser]
+    [currentUser],
   );
 
   const methods = useForm({
@@ -68,21 +63,53 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose ,setO
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      setOpen(false)
-      // onClose();
-      // await new Promise((resolve) => setTimeout(resolve, 500));
-      // reset();
-      // enqueueSnackbar('Update success!');
-      // console.info('DATA', data);
+      setOpen(false);
+
     } catch (error) {
       console.error(error);
     }
   });
-  const object_url =currentUser?.object_url;
+  const handelSubmit = () => {
+    setOpen(false);
+    if (approve){
+    const payload = {
+      document_id: currentUser?.id,
+      status: '1',
+    };
+      axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/csp/document/validate', payload).then((res) => {
+        if (res) {
+          enqueueSnackbar('Document approved successfully');
+        } else {
+
+          enqueueSnackbar('Something want wrong', { variant: 'error' });
+        }
+      }).catch((err) => console.log(err))
+    }
+    else {
+      {
+        const payload = {
+          document_id: currentUser?.id,
+          status: '0',
+          // remark:remark
+        };
+        axios.post("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/document/remark",{csp_code:cspCode,remark:remark,mode:"test",document_id:currentUser?.id})
+        axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/document/validate', payload).then((res) => {
+          if (res) {
+            setRemark("")
+            enqueueSnackbar('Document rejected successfully');
+          } else {
+
+            enqueueSnackbar('Something want wrong', { variant: 'error' });
+          }
+        }).catch((err) => console.log(err))
+      }
+    }
+  };
+  const object_url = currentUser?.object_url;
   const secondSlashIndex = object_url?.indexOf('/', 8);
   const secondPart = object_url?.substring(secondSlashIndex);
   const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
-
+  console.log(remark);
   return (
     <Dialog
       fullWidth
@@ -90,7 +117,7 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose ,setO
       open={open}
       onClose={onClose}
       PaperProps={{
-        sx: { maxWidth: {md: 600 ,xs:"100%"} },
+        sx: { maxWidth: { md: 600, xs: '100%' } },
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -98,66 +125,25 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose ,setO
 
         <DialogContent>
 
-          {/*  <Box*/}
-          {/*    rowGap={3}*/}
-          {/*    columnGap={2}*/}
-          {/*    display="grid"*/}
-          {/*    gridTemplateColumns={{*/}
-          {/*      xs: 'repeat(1, 1fr)',*/}
-          {/*      sm: 'repeat(2, 1fr)',*/}
-          {/*    }}*/}
-          {/*  >*/}
-          {/*    <RHFSelect name="status" label="Status">*/}
-          {/*      {USER_STATUS_OPTIONS.map((status) => (*/}
-          {/*        <MenuItem key={status.value} value={status.value}>*/}
-          {/*          {status.label}*/}
-          {/*        </MenuItem>*/}
-          {/*      ))}*/}
-          {/*    </RHFSelect>*/}
 
-          {/*    <Box sx={{ display: { xs: 'none', sm: 'block' } }} />*/}
+          <Box py={1} sx={{ mr: 2, mb: 2, height: { md: 400, xs: 200 }, cursor: 'pointer' }}>
 
-          {/*    <RHFTextField name="name" label="Full Name" />*/}
-          {/*    <RHFTextField name="email" label="Email Address" />*/}
-          {/*    <RHFTextField name="phoneNumber" label="Phone Number" />*/}
+            <img src={url} alt={url} style={{ width: '100%', aspectRatio: 4 / 3 }}/>
 
-          {/*    <RHFAutocomplete*/}
-          {/*      name="country"*/}
-          {/*      type="country"*/}
-          {/*      label="Country"*/}
-          {/*      placeholder="Choose a country"*/}
-          {/*      fullWidth*/}
-          {/*      options={countries.map((option) => option.label)}*/}
-          {/*      getOptionLabel={(option) => option}*/}
-          {/*    />*/}
-
-          {/*    <RHFTextField name="state" label="State/Region" />*/}
-          {/*    <RHFTextField name="city" label="City" />*/}
-          {/*    <RHFTextField name="address" label="Address" />*/}
-          {/*    <RHFTextField name="zipCode" label="Zip/Code" />*/}
-          {/*    <RHFTextField name="company" label="Company" />*/}
-          {/*    <RHFTextField name="role" label="Role" />*/}
-          {/*  </Box>*/}
-          <Box py={1} sx={{ mr: 2,mb:2, height: { md:400, xs:200 },cursor: 'pointer' }}>
-            {/*<Avatar*/}
-            <img src={url} alt={url} style={{width:"100%",aspectRatio:4/3}} />
-            {/*  alt={object_url}*/}
-            {/*  src={url}*/}
-            {/*  sx={{ mr: 2, height: { md:400, xs:200 }, width: '100%', cursor: 'pointer' }}*/}
-            {/*  variant="rounded"*/}
-            {/*  // onClick={() => handleViewDialog(url)}*/}
-            {/*/>*/}
           </Box>
-          {!approve && <TextField name="Reason" label="reason" multiline={true} rows={4} fullWidth={true}/>}
+          {!approve && <TextField name="Remark" label="remark" value={remark} multiline={true} rows={4} fullWidth={true} onChange={(e) => setRemark(e.target.value)}/>}
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" onClick={() => setOpen(false)}>
+          <Button variant="outlined" onClick={() => {
+            setOpen(false);
+            setRemark("")
+          }}>
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}  onClick={() => setOpen(false)}>
-            {approve ? "Approve" :"Reject"}
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting} onClick={handelSubmit} disabled={!approve && remark == ""}>
+            {approve ? 'Approve' : 'Reject'}
           </LoadingButton>
         </DialogActions>
       </FormProvider>
