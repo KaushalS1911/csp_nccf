@@ -208,6 +208,7 @@ import List from '../../sections/branch-order/view/list';
 import CspListView from '../../sections/csp/view/list';
 import DistributorListView from '../../sections/add-distributor/view/list';
 import MillerListView from '../../sections/add-miller/view/list';
+import SingleCsp from '../../sections/csp/view/single-csp';
 
 // ----------------------------------------------------------------------
 
@@ -367,6 +368,7 @@ export const dashboardRoutes = [
           { path: 'csp-list', element: <CspListView  /> },
           // { path: '/nccf/branch/${tital}/csp/list', element: <CspListView  /> },
           { path: 'csp-view/:id', element: <SingleCspView /> },
+          // { path: 'csp-view/:id', element: <SingleCsp /> },
           { path: 'csp-document-view/:id', element: <CspDocumentView /> },
         ],
       },

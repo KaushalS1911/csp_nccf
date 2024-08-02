@@ -10,6 +10,7 @@ import { useResponsive } from '../../../hooks/use-responsive';
 import { useSettingsContext } from '../../../components/settings';
 import { useGetCSP } from '../../../api/branch-csp';
 import DocumentList from '../../upload/view/list';
+import CspList from '../../upload/view/csp-list';
 
 function CspDocumentView() {
   const {id} = useParams()
@@ -21,7 +22,8 @@ function CspDocumentView() {
     <>
             <Grid item xs={12} md={12}>
         {/*<DocumentListView  csp={distributor?.csp_code} cspt={true}/>*/}
-              <DocumentList  csp={distributor?.csp_code} cspt={true}/>
+        {/*      <DocumentList  csp={distributor?.csp_code} cspt={true}/>*/}
+             <CspList csp={distributor?.csp_code} cspt={true}/>
       </Grid>
     </>
   );

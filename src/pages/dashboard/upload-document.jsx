@@ -186,12 +186,18 @@ import React from 'react';
 import { OverviewDocumentView } from 'src/sections/upload-document/view';
 import { DocumentListView } from 'src/sections/upload/view';
 import DocumentList from '../../sections/upload/view/list';
+import { useAuthContext } from '../../auth/hooks';
+import CspList from '../../sections/upload/view/csp-list';
 const UploadListView = () => {
+  const {vendor} = useAuthContext()
   return (
     <>
       {/* <OverviewDocumentView /> */}
       {/*<DocumentListView />*/}
-      <DocumentList docu={true} />
+      {vendor.category === "branch" ?
+      <CspList docu={true}/> :
+      <DocumentList  />
+      }
     </>
   );
 };

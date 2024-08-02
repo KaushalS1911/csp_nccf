@@ -1,6 +1,5 @@
+import CancelIcon from '@mui/icons-material/Cancel';import React, { useState, useEffect, useCallback } from 'react';
 import isEqual from 'lodash/isEqual';
-import React, { useState, useEffect, useCallback } from 'react';
-import VerifiedIcon from '@mui/icons-material/Verified';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -47,7 +46,8 @@ import Lightbox from '../../../components/lightbox';
 import useLightBox from '../../../components/lightbox/use-light-box';
 import { usePopover } from '../../../components/custom-popover';
 import DocumentQuickEditForm from '../document-quick-edit-form';
-import { Checkbox, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { Checkbox, Fab, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import VerifiedIcon from '@mui/icons-material/Verified';
 // import BranchTableFiltersResult from '../branch-table-filters-result';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
@@ -76,8 +76,7 @@ const HIDE_COLUMNS = {
 };
 
 const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
-
-function DocumentList({ csp, document, miller, cspt, docu }) {
+function CspList({ csp, document, miller, cspt, docu }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const confirmRows = useBoolean();
@@ -101,6 +100,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   const [branch, setBranch] = useState([]);
   const [images, setImages] = useState([]);
   const [b, setB] = useState([]);
+  const [approve,setApprove] = useState(false)
   const popover = usePopover();
   let dataFiltered = applyFilter({
     inputData: tableData,
@@ -128,11 +128,16 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   );
   const cspCode = csp || vendor?.csp_code;
   useEffect(() => {
-    if (cspCode) {
-      getAllDocument(cspCode);
+    if (docu) {
+      setTableData([]);
+      setDataId([]);
+      dataFiltered = [];
+      getAllDocument(b);
+    } else {
 
+      getAllDocument(cspCode);
     }
-  }, [cspCode]);
+  }, [b]);
 
 
   useEffect(() => {
@@ -308,42 +313,90 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
         >
           {params.row.branch_approval_status === '0' ? 'Approval Pending' : 'Approved'}
         </Label></TableCell>,
-      width: 250,
+      width: 265,
       // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
-
     {
-      type: 'actions',
-      field: 'actions',
-      headerName: ' ',
-      align: 'right',
-      headerAlign: 'right',
-      width: 80,
-      sortable: false,
-      filterable: false,
-      disableColumnMenu: true,
-      getActions: (params) => [
+      field: 'vendor1',
+      headerName: 'Approve',
+      renderCell: (params) => <TableCell sx={{ px: 0 }}>
+        <Button
 
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:pen-bold"/>}
-          label="Edit"
-          onClick={() => {
-            setOpen(true);
-            setCurrentData(params.row);
-          }}
-        />,
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
-          label="Delete"
-          // onClick={() => {
-          //   handleDeleteRow(params.row.id);
-          // }}
-          sx={{ color: 'error.main' }}
-        />,
-      ],
+        // role={undefined}
+        variant="contained"
+onClick={() => {
+  setCurrentData(params.row);
+  setApprove(true)
+  setOpen(true);
+}}
+        sx={{backgroundColor:"green"}}
+
+      >
+        <VerifiedIcon />  Approve
+        {/*<VisuallyHiddenInput type="file" />*/}
+      </Button>
+
+      </TableCell>,
+      width: 120,
+      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
     },
+    {
+      field: 'vendor',
+      headerName: 'Reject',
+      renderCell: (params) => <TableCell sx={{ px: 0 }}>
+
+        <Button
+        onClick={() => {
+          setCurrentData(params.row);
+  setApprove(false)
+          setOpen(true);
+        }}
+
+        // role={undefined}
+        variant="contained"
+
+        sx={{backgroundColor:"red"}}
+
+      >
+        <CancelIcon /> Reject
+        {/*<VisuallyHiddenInput type="file" />*/}
+      </Button>
+      </TableCell>,
+      width: 120,
+      // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+    },
+    // {
+    //   type: 'actions',
+    //   field: 'actions',
+    //   headerName: ' ',
+    //   align: 'right',
+    //   headerAlign: 'right',
+    //   width: 80,
+    //   sortable: false,
+    //   filterable: false,
+    //   disableColumnMenu: true,
+    //   getActions: (params) => [
+    //
+    //     <GridActionsCellItem
+    //       showInMenu
+    //       icon={<Iconify icon="solar:pen-bold"/>}
+    //       label="Edit"
+    //       onClick={() => {
+    //         setOpen(true);
+    //         setCurrentData(params.row);
+    //       }}
+    //     />,
+    //     <GridActionsCellItem
+    //       showInMenu
+    //       icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
+    //       label="Delete"
+    //       // onClick={() => {
+    //       //   handleDeleteRow(params.row.id);
+    //       // }}
+    //       sx={{ color: 'error.main' }}
+    //     />,
+    //   ],
+    // },
   ];
   <Lightbox
     index={lightbox.selected}
@@ -368,36 +421,25 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
         maxWidth={'xl'}
 
       >
-        <DocumentQuickEditForm currentUser={currentData} open={open} setOpen={setOpen}/>
+        <DocumentQuickEditForm currentUser={currentData} open={open} setOpen={setOpen} approve={ approve}/>
         <CustomBreadcrumbs
-          heading={miller ? 'Miller Documents' : cspt ? 'CSP Documents' : docu ? 'Documents' : `Distributor Documents`}
+          heading={'CSP Documents'}
           links={[
             {
               name: 'Dashboard',
               href: paths.dashboard.root,
             },
             {
-              name: miller ? 'Miller List' : cspt ? 'CSP List' : docu ? 'Document List' : 'Distributor List',
-              href: miller ? paths.dashboard.miller.miller_list : cspt ? paths.dashboard.csp.csp_list : docu ? paths.dashboard.document.document_list : paths.dashboard.distributor.distributor_list,
+              name: 'CSP List' ,
+              href:  paths.dashboard.csp.csp_list ,
             },
 
             {
-              name: miller ? `Miller Documents` : cspt ? 'CSP Document' : docu ? 'List' : `Distributor Documents`,
+              name: 'CSP Document',
             },
           ]}
           sx={{ mb: { xs: 3, md: 5 } }}
-          action={
-            (vendor?.category !== 'branch' && !cspt) &&
-            <Button
-              component={RouterLink}
-              href={miller ? paths.dashboard.miller.document_upload : docu ? paths.dashboard.distributor.document_upload : paths.dashboard.distributor.document_upload}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line"/>}
 
-            >
-              Upload Document
-            </Button>
-          }
         />
 
         <Card
@@ -440,9 +482,9 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                     <Stack
                       spacing={1}
                       flexGrow={1}
-                      direction={'row'}
+                      direction={ { xs:'column',md:"row" } }
                       // alignItems="center"
-                      justifyContent={'flex-end'}
+                      justifyContent={ csp ? "flex-end":'space-between'}
                     >
                       {/*{!!selectedRowIds.length && (*/}
                       {/*  <Button*/}
@@ -455,7 +497,37 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                       {/*  </Button>*/}
                       {/*)}*/}
 
+                      {!cspt && <FormControl
+                        sx={{
+                          flexShrink: 0,
+                          width: { xs: 1, md: 200 },
+                        }}
+                      >
+                        <InputLabel>CSP</InputLabel>
 
+                        <Select
+                          value={branch}
+                          onChange={handleFilterCSP}
+                          input={<OutlinedInput label="Type"/>}
+                          MenuProps={{
+                            PaperProps: {
+                              sx: { maxHeight: 240 },
+                            },
+                          }}
+                          // renderValue={(selected) => selected.join(', ')}
+                        >
+                          {dataCSP.map((option) => (
+                            <MenuItem key={option.csp_code} value={option.csp_code}>
+                              {/*<Checkbox*/}
+                              {/*  disableRipple*/}
+                              {/*  size="small"*/}
+                              {/*  checked={branch.includes(option.csp_code)}*/}
+                              {/*/>*/}
+                              {option.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>}
 
 
                       <Box> <GridToolbarColumnsButton/>
@@ -557,4 +629,4 @@ function applyFilter(
   return inputData;
 }
 
-export default DocumentList;
+export default CspList;

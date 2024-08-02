@@ -24,7 +24,7 @@ import { TextField } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentQuickEditForm({ currentUser, open, onClose ,setOpen}) {
+export default function DocumentQuickEditForm({ currentUser, open, onClose ,setOpen,approve}) {
   const { enqueueSnackbar } = useSnackbar();
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -148,16 +148,16 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose ,setO
             {/*  // onClick={() => handleViewDialog(url)}*/}
             {/*/>*/}
           </Box>
-          <TextField name="Reason" label="reason" multiline={true} rows={4} fullWidth={true} />
+          {!approve && <TextField name="Reason" label="reason" multiline={true} rows={4} fullWidth={true}/>}
         </DialogContent>
 
         <DialogActions>
           <Button variant="outlined" onClick={() => setOpen(false)}>
-            Reject
+            Cancel
           </Button>
 
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}  onClick={() => setOpen(false)}>
-            Approve
+            {approve ? "Approve" :"Reject"}
           </LoadingButton>
         </DialogActions>
       </FormProvider>
