@@ -90,7 +90,7 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose ,setO
       open={open}
       onClose={onClose}
       PaperProps={{
-        sx: { maxWidth: 600 },
+        sx: { maxWidth: {md: 600 ,xs:"100%"} },
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
@@ -138,14 +138,15 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose ,setO
         {/*    <RHFTextField name="company" label="Company" />*/}
         {/*    <RHFTextField name="role" label="Role" />*/}
         {/*  </Box>*/}
-          <Box py={1} mb={3}>
-            <Avatar
-              alt={object_url}
-              src={url}
-              sx={{ mr: 2, height: 400, width: '100%', cursor: 'pointer' }}
-              variant="rounded"
-              // onClick={() => handleViewDialog(url)}
-            />
+          <Box py={1} sx={{ mr: 2,mb:2, height: { md:400, xs:200 },cursor: 'pointer' }}>
+            {/*<Avatar*/}
+            <img src={url} alt={url} style={{width:"100%",aspectRatio:4/3}} />
+            {/*  alt={object_url}*/}
+            {/*  src={url}*/}
+            {/*  sx={{ mr: 2, height: { md:400, xs:200 }, width: '100%', cursor: 'pointer' }}*/}
+            {/*  variant="rounded"*/}
+            {/*  // onClick={() => handleViewDialog(url)}*/}
+            {/*/>*/}
           </Box>
           <TextField name="Reason" label="reason" multiline={true} rows={4} fullWidth={true} />
         </DialogContent>
