@@ -98,46 +98,46 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose ,setO
 
         <DialogContent>
 
-        {/*  <Box*/}
-        {/*    rowGap={3}*/}
-        {/*    columnGap={2}*/}
-        {/*    display="grid"*/}
-        {/*    gridTemplateColumns={{*/}
-        {/*      xs: 'repeat(1, 1fr)',*/}
-        {/*      sm: 'repeat(2, 1fr)',*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    <RHFSelect name="status" label="Status">*/}
-        {/*      {USER_STATUS_OPTIONS.map((status) => (*/}
-        {/*        <MenuItem key={status.value} value={status.value}>*/}
-        {/*          {status.label}*/}
-        {/*        </MenuItem>*/}
-        {/*      ))}*/}
-        {/*    </RHFSelect>*/}
+          {/*  <Box*/}
+          {/*    rowGap={3}*/}
+          {/*    columnGap={2}*/}
+          {/*    display="grid"*/}
+          {/*    gridTemplateColumns={{*/}
+          {/*      xs: 'repeat(1, 1fr)',*/}
+          {/*      sm: 'repeat(2, 1fr)',*/}
+          {/*    }}*/}
+          {/*  >*/}
+          {/*    <RHFSelect name="status" label="Status">*/}
+          {/*      {USER_STATUS_OPTIONS.map((status) => (*/}
+          {/*        <MenuItem key={status.value} value={status.value}>*/}
+          {/*          {status.label}*/}
+          {/*        </MenuItem>*/}
+          {/*      ))}*/}
+          {/*    </RHFSelect>*/}
 
-        {/*    <Box sx={{ display: { xs: 'none', sm: 'block' } }} />*/}
+          {/*    <Box sx={{ display: { xs: 'none', sm: 'block' } }} />*/}
 
-        {/*    <RHFTextField name="name" label="Full Name" />*/}
-        {/*    <RHFTextField name="email" label="Email Address" />*/}
-        {/*    <RHFTextField name="phoneNumber" label="Phone Number" />*/}
+          {/*    <RHFTextField name="name" label="Full Name" />*/}
+          {/*    <RHFTextField name="email" label="Email Address" />*/}
+          {/*    <RHFTextField name="phoneNumber" label="Phone Number" />*/}
 
-        {/*    <RHFAutocomplete*/}
-        {/*      name="country"*/}
-        {/*      type="country"*/}
-        {/*      label="Country"*/}
-        {/*      placeholder="Choose a country"*/}
-        {/*      fullWidth*/}
-        {/*      options={countries.map((option) => option.label)}*/}
-        {/*      getOptionLabel={(option) => option}*/}
-        {/*    />*/}
+          {/*    <RHFAutocomplete*/}
+          {/*      name="country"*/}
+          {/*      type="country"*/}
+          {/*      label="Country"*/}
+          {/*      placeholder="Choose a country"*/}
+          {/*      fullWidth*/}
+          {/*      options={countries.map((option) => option.label)}*/}
+          {/*      getOptionLabel={(option) => option}*/}
+          {/*    />*/}
 
-        {/*    <RHFTextField name="state" label="State/Region" />*/}
-        {/*    <RHFTextField name="city" label="City" />*/}
-        {/*    <RHFTextField name="address" label="Address" />*/}
-        {/*    <RHFTextField name="zipCode" label="Zip/Code" />*/}
-        {/*    <RHFTextField name="company" label="Company" />*/}
-        {/*    <RHFTextField name="role" label="Role" />*/}
-        {/*  </Box>*/}
+          {/*    <RHFTextField name="state" label="State/Region" />*/}
+          {/*    <RHFTextField name="city" label="City" />*/}
+          {/*    <RHFTextField name="address" label="Address" />*/}
+          {/*    <RHFTextField name="zipCode" label="Zip/Code" />*/}
+          {/*    <RHFTextField name="company" label="Company" />*/}
+          {/*    <RHFTextField name="role" label="Role" />*/}
+          {/*  </Box>*/}
           <Box py={1} sx={{ mr: 2,mb:2, height: { md:400, xs:200 },cursor: 'pointer' }}>
             {/*<Avatar*/}
             <img src={url} alt={url} style={{width:"100%",aspectRatio:4/3}} />
