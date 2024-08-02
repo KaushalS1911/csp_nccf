@@ -1,0 +1,1 @@
+import{j as s,H as a}from"./index-MYS2nqn5.js";import{u as e}from"./use-params-4FITJ6BL.js";import{T as i}from"./tour-details-view-lLm1N1d4.js";import"./country-select-zQGQYv5R.js";function u(){const r=e(),{id:t}=r;return s.jsxs(s.Fragment,{children:[s.jsx(a,{children:s.jsx("title",{children:" Dashboard: Analytics"})}),s.jsx(i,{id:`${t}`})]})}export{u as default};
