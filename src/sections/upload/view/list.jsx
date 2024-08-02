@@ -443,8 +443,8 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                     <Stack
                       spacing={1}
                       flexGrow={1}
-                      direction="row"
-                      alignItems="center"
+                      direction={vendor?.category === 'branch' ? { xs:'column',md:"row" } :'row'}
+                      // alignItems="center"
                       justifyContent={vendor?.category === 'branch' ? 'space-between' : 'flex-end'}
                     >
                       {/*{!!selectedRowIds.length && (*/}
