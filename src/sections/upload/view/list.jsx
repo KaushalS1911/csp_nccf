@@ -405,7 +405,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
 
         <Card
           sx={{
-            height: 700,
+            // height: 700,
             flexGrow: { md: 1 },
             display: { md: 'flex' },
             flexDirection: { md: 'column' },
