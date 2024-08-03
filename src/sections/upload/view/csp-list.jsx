@@ -451,7 +451,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
       field: 'vendor1',
       headerName: 'Approve',
       flex: 0.5,
-      minWidth: 100,
+      minWidth: 150,
       renderCell: (params) => <TableCell sx={{ px: 0 }}>
         <Button
           variant="contained"
@@ -460,7 +460,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
             setApprove(true);
             setOpen(true);
           }}
-          sx={{ backgroundColor: 'green' }}
+          sx={{ backgroundColor: 'green' ,width:90}}
         >
           <VerifiedIcon/> Approve
         </Button>
@@ -470,7 +470,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
       field: 'vendor',
       headerName: 'Reject',
       flex: 0.5,
-      minWidth: 100,
+      minWidth: 150,
       renderCell: (params) => <TableCell sx={{ px: 0 }}>
         <Button
           onClick={() => {
@@ -479,7 +479,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
             setOpen(true);
           }}
           variant="contained"
-          sx={{ backgroundColor: 'red' }}
+          sx={{ backgroundColor: 'red',width:80 }}
         >
           <CancelIcon/> Reject
         </Button>

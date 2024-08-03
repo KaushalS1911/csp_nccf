@@ -296,11 +296,11 @@ export default function CspNewEditForm({ currentProduct, distributor ,cspt}) {
               {/*{addressInfo}*/}
 
               <Grid container spacing={2}>
-                <Grid xs={4} item>
+                <Grid xs={12} md={4} item>
                   <Box sx={{ ml: { md: '60px', xs: '0' }, mt: '60px' }}>
                     <Box
                       sx={{
-                        mb: '30px',
+                        mb: {md: '30px' },
                         mt: '10px',
                         fontWeight: '600',
                         fontSize: '18px',
@@ -313,8 +313,8 @@ export default function CspNewEditForm({ currentProduct, distributor ,cspt}) {
                     </Box>
                   </Box>
                 </Grid>
-                <Grid item xs={8}>
-                  <Box sx={{ my: 8 }}>
+                <Grid item xs={12} md={8}>
+                  <Box sx={{ my: { md:8 } }}>
 
                     <Box sx={{
                       ml: { xs: 0, md: 10 },
@@ -323,35 +323,35 @@ export default function CspNewEditForm({ currentProduct, distributor ,cspt}) {
                       justifyContent: 'space-between',
                       flexWrap: 'wrap',
                     }}>
-                      <Grid xs={6}>
-                        <Box sx={{ display: 'flex' }}>
+                      <Grid xs={12} md={6}>
+                        <Box sx={{ display: {md:'flex' } }}>
                           <Box sx={{ fontSize: 17, fontWeight: 'bold' }}>Distributor name :</Box><Box sx={{ ml: 1 }}>{distributor?.name}</Box>
                         </Box>
                       </Grid>
-                      <Grid xs={6}>
-                        <Box sx={{ display: 'flex' }}>
+                      <Grid xs={12} md={6}>
+                        <Box sx={{ display: {md:'flex' } }}>
                           <Box sx={{ fontSize: 17, fontWeight: 'bold' }}>Type of Firm :</Box><Box sx={{ ml: 1 }}>{distributor?.type_of_firm}</Box>
                         </Box>
                       </Grid>
 
-                      <Grid xs={6}>
-                        <Box sx={{ display: 'flex' }}>
+                      <Grid xs={12} md={6}>
+                        <Box sx={{ display: {md:'flex' } }}>
                           <Box sx={{ fontSize: 17, fontWeight: 'bold' }}>Email :</Box><Box sx={{ ml: 1 }}>{distributor?.email}</Box>
                         </Box>
                       </Grid>
-                      <Grid xs={6}>
-                        <Box sx={{ display: 'flex' }}>
+                      <Grid xs={12} md={6}>
+                        <Box sx={{ display: {md:'flex' } }}>
                           <Box sx={{ fontSize: 17, fontWeight: 'bold' }}>Contact Person :</Box><Box sx={{ ml: 1 }}>{distributor?.contact_person}</Box>
                         </Box>
                       </Grid>
                       {/*<Box sx={{ width: '100%', display: 'flex', mt: 2 }}>*/}
-                      <Grid xs={6}> <Box sx={{ display: 'flex' }}>
+                      <Grid xs={12} md={6}> <Box sx={{ display: {md:'flex' } }}>
                         <Box sx={{ fontSize: 17, fontWeight: 'bold' }}>Phone Number :</Box><Box sx={{ ml: 1 }}>{distributor?.phone_number}</Box>
                       </Box></Grid>
-                      <Grid xs={6}> <Box sx={{ display: 'flex' }}>
+                      <Grid xs={12} md={6}> <Box sx={{ display: {md:'flex' } }}>
                         <Box sx={{ fontSize: 17, fontWeight: 'bold' }}>Pan Number :</Box><Box sx={{ ml: 1 }}>{distributor?.pan_number}</Box>
                       </Box></Grid>
-                      <Grid xs={6}><Box sx={{ display: 'flex' }}>
+                      <Grid xs={12} md={6}><Box sx={{ display: {md:'flex' } }}>
                         <Box sx={{ fontSize: 17, fontWeight: 'bold' }}> GST Number:</Box><Box sx={{ ml: 1 }}>{distributor?.gst_number}</Box>
                       </Box>
                       </Grid>
@@ -362,11 +362,11 @@ export default function CspNewEditForm({ currentProduct, distributor ,cspt}) {
 
                   </Box>
                 </Grid>
-                <Grid xs={4} item>
+                <Grid xs={12} md={4} item>
                   <Box sx={{ ml: { md: '60px', xs: '0' }, mt: '60px' }}>
                     <Box
                       sx={{
-                        mb: '30px',
+                        mb: { md:'30px' },
                         mt: '10px',
                         fontWeight: '600',
                         fontSize: '18px',
@@ -379,8 +379,8 @@ export default function CspNewEditForm({ currentProduct, distributor ,cspt}) {
                     </Box>
                   </Box>
                 </Grid>
-                <Grid item xs={8}>
-                  <Box sx={{ my: 8 }}>
+                <Grid item md={8} xs={12}>
+                  <Box sx={{ my: {md: 8 }}}>
 
                     <Box sx={{
                       ml: { xs: 0, md: 10 },
@@ -389,32 +389,32 @@ export default function CspNewEditForm({ currentProduct, distributor ,cspt}) {
                       justifyContent: 'space-between',
                       flexWrap: 'wrap',
                     }}>
-                      <Grid xs={6}>
-                        <Box sx={{ display: 'flex' }}>
+                      <Grid xs={12} md={6}>
+                        <Box sx={{ display: {md:'flex' } }}>
                           <Box sx={{ fontSize: 17, fontWeight: 'bold' }}>Address :</Box><Box sx={{ ml: 1 }}>{distributor?.address}</Box>
                         </Box>
                       </Grid>
 
-                      <Grid xs={6}>
-                        <Box sx={{ display: 'flex' }}>
+                      <Grid xs={12} md={6}>
+                        <Box sx={{ display: {md:'flex' } }}>
                           <Box sx={{ fontSize: 17, fontWeight: 'bold' }}>State :</Box><Box sx={{ ml: 1 }}>{distributor?.state}</Box>
                         </Box>
                       </Grid>
-                      <Grid xs={6}>
-                        <Box sx={{ display: 'flex' }}>
+                      <Grid xs={12} md={6}>
+                        <Box sx={{ display: {md:'flex' } }}>
                           <Box sx={{ fontSize: 17, fontWeight: 'bold' }}>Branch :</Box><Box sx={{ ml: 1 }}>{distributor?.branch}</Box>
                         </Box>
                       </Grid>
                       {/*<Box sx={{ width: '100%', display: 'flex', mt: 2 }}>*/}
-                      <Grid xs={6}> <Box sx={{ display: 'flex' }}>
+                      <Grid xs={12} md={6}> <Box sx={{ display: {md:'flex' } }}>
                         <Box sx={{ fontSize: 17, fontWeight: 'bold' }}>District :</Box><Box sx={{ ml: 1 }}>{distributor?.district}</Box>
                       </Box></Grid>
-                      <Grid xs={6}>
-                        <Box sx={{ display: 'flex' }}>
+                      <Grid xs={12} md={6}>
+                        <Box sx={{ display: {md:'flex' } }}>
                         <Box sx={{ fontSize: 17, fontWeight: 'bold' }}>Procurement Area :</Box><Box sx={{ ml: 1 }}>{distributor?.procurement_area}</Box>
                       </Box>
-                      </Grid>  <Grid xs={6}>
-                        <Box sx={{ display: 'flex' }}>
+                      </Grid>  <Grid xs={12} md={6}>
+                        <Box sx={{ display: {md:'flex' } }}>
                         <Box sx={{ fontSize: 17, fontWeight: 'bold' }}>Pin Code :</Box><Box sx={{ ml: 1 }}>{distributor?.pincode}</Box>
                       </Box>
                       </Grid>

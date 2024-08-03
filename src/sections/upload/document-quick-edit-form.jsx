@@ -15,6 +15,7 @@ import { useSnackbar } from 'src/components/snackbar';
 import FormProvider from 'src/components/hook-form';
 import { TextField } from '@mui/material';
 import axios from 'axios';
+import ClearIcon from '@mui/icons-material/Clear';
 
 // ----------------------------------------------------------------------
 
@@ -116,18 +117,23 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
       open={open}
       onClose={onClose}
       PaperProps={{
-        sx: { maxWidth: { md: 600, xs: '100%' } },
+        sx: { maxWidth: { md: 700, xs: '100%' } },
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <DialogTitle>{handleDoctypeLabel(currentUser.doc_type)}</DialogTitle>
+        <Box sx={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+          <DialogTitle>{handleDoctypeLabel(currentUser.doc_type)}</DialogTitle>
+          <DialogTitle>
+            <ClearIcon sx={{cursor:"pointer"}} onClick={() => setOpen(false)}/>
+          </DialogTitle>
+        </Box>
 
         <DialogContent>
 
 
-          <Box py={1} sx={{ mr: 2, mb: 2, height: { md: 400, xs: 200 }, cursor: 'pointer' }}>
+          <Box py={1} sx={{ mr: 2, mb: 2, height: { md: 500, xs: 300 }, cursor: 'pointer' }}>
 
-            <img src={url} alt={url} style={{ width: '100%', aspectRatio: 4 / 3 }}/>
+            <img src={url} alt={url} style={{ width: '100%',height:"100%", aspectRatio: 4 / 3 }}/>
 
           </Box>
           {!approve && <TextField name="Remark" label="remark" value={remark} multiline={true} rows={4} fullWidth={true} onChange={(e) => setRemark(e.target.value)}/>}
