@@ -9,6 +9,8 @@ import { paths } from 'src/routes/paths';
 import { useGetCSP } from '../../../api/branch-csp';
 import CspNewEditForm from '../csp-new-edit-form';
 import CspDocumentView from './csp-document-view';
+import Orders from '../Orders';
+import List from '../../branch-order/view/list';
   const TABS = [
     {
       value: 'basic',
@@ -85,6 +87,7 @@ const {id} = useParams()
         {/*)}*/}
 
         {currentTab === 'document' && <CspDocumentView  />}
+        {currentTab === 'orders' && <Orders singleCode={id}/>}
 
         {/*{currentTab === 'social' && <AccountSocialLinks socialLinks={_userAbout.socialLinks} />}*/}
 

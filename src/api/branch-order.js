@@ -3,8 +3,8 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { useAuthContext } from '../auth/hooks/index.js';
 
-export function useGetBranchOrder() {
-  const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/noida/order`;
+export function useGetBranchOrder(code) {
+  const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${code}/orders`;
 
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
   const memoizedValue = useMemo(

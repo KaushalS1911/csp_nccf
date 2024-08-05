@@ -30,19 +30,22 @@ import EmptyContent from 'src/components/empty-content';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
-import { useGetBranchOrder } from '../../../api/branch-order';
-import BranchTableToolbar from '../branch-table-toolbar';
+// import BranchTableToolbar from '../branch-table-toolbar';
 import Tabs from '@mui/material/Tabs';
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
-import Label from '../../../components/label';
-import BranchTableFiltersResult from '../branch-table-filters-result';
+// import Label from '../../../components/label';
+// import BranchTableFiltersResult from '../branch-table-filters-result';
 import TableCell from '@mui/material/TableCell';
 import { Box } from '@mui/system';
 import { FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import axios from 'axios';
-import { useAuthContext } from '../../../auth/hooks';
 import moment from 'moment';
+import BranchTableFiltersResult from '../branch/branch-table-filters-result';
+// import BranchTableToolbar from '../branch/branch-table-toolbar';
+import Label from '../../components/label';
+import { useAuthContext } from '../../auth/hooks';
+import BranchTableToolbar from '../branch-order/branch-table-toolbar';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
 // import {
@@ -73,7 +76,7 @@ const HIDE_COLUMNS = {
 
 const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
-function List({singleCode}) {
+function Orders({singleCode}) {
   const { enqueueSnackbar } = useSnackbar();
 
   const confirmRows = useBoolean();
@@ -81,7 +84,7 @@ function List({singleCode}) {
   const router = useRouter();
 
   const settings = useSettingsContext();
-const {vendor} = useAuthContext()
+  const {vendor} = useAuthContext()
 
   const [tableData, setTableData] = useState([]);
 
@@ -96,13 +99,13 @@ const {vendor} = useAuthContext()
   const [b, setB] = useState([]);
 
   useEffect(() => {
-    const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/orders`;
+    const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${singleCode}/orders`;
 
     axios.get(URL).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
     // if (order.length) {
     //   setTableData(order);
     // }
-  }, [branch,]);
+  }, [singleCode,]);
   useEffect(() => {
     if (vendor) {
       axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`).then((res) => setDataCSP(res?.data?.data)).catch((err) => console.log(err));
@@ -174,7 +177,7 @@ const {vendor} = useAuthContext()
     },
     [router],
   );
-let i =0
+  let i =0
   // const columns = [
   //   // {
   //   //   field: 'category',
@@ -478,7 +481,7 @@ let i =0
                     {/*  stockOptions={PRODUCT_STOCK_OPTIONS}*/}
                     {/*  publishOptions={PUBLISH_OPTIONS}*/}
                     {/*/>*/}
-                    <FormControl
+                    {!singleCode && <FormControl
                       sx={{
                         flexShrink: 0,
                         width: { xs: 1, md: 200 },
@@ -498,7 +501,7 @@ let i =0
                         // renderValue={(selected) => selected.join(', ')}
                       >
                         {dataCSP.map((option) => (
-                          <MenuItem key={option.csp_code} value={option.csp_code} >
+                          <MenuItem key={option.csp_code} value={option.csp_code}>
                             {/*<Checkbox*/}
                             {/*  disableRipple*/}
                             {/*  size="small"*/}
@@ -508,7 +511,7 @@ let i =0
                           </MenuItem>
                         ))}
                       </Select>
-                    </FormControl>
+                    </FormControl>}
                     {canReset && (
                       <BranchTableFiltersResult
                         filters={filters}
@@ -625,4 +628,4 @@ function applyFilter({ inputData, filters }) {
   return inputData;
 }
 
-export default List;
+export default Orders;
