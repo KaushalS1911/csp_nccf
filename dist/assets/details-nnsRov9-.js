@@ -1,1 +1,0 @@
-import{j as r,H as t}from"./index-3Lchtwv8.js";import{u as a}from"./use-params-ontHGz2X.js";import{O as i}from"./order-details-view-VcCR_Vgk.js";import"./TimelineItem-qzi8nrW3.js";function l(){const s=a(),{id:e}=s;return r.jsxs(r.Fragment,{children:[r.jsx(t,{children:r.jsx("title",{children:" Dashboard: Order Details"})}),r.jsx(i,{id:`${e}`})]})}export{l as default};
