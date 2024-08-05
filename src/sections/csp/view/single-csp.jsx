@@ -87,7 +87,7 @@ const {id} = useParams()
         {/*)}*/}
 
         {currentTab === 'document' && <CspDocumentView  />}
-        {/*{currentTab === 'orders' && <Orders singleCode={id}/>}*/}
+        {currentTab === 'orders' && <Orders singleCode={id}/>}
 
         {/*{currentTab === 'social' && <AccountSocialLinks socialLinks={_userAbout.socialLinks} />}*/}
 
