@@ -131,7 +131,7 @@ export default function BranchDashboardView({ vendorCode }) {
 
         <Grid xs={12} md={6} lg={4}>
           {labelCount !== [] && <BranchCurrentDownload
-            title="Current Orders"
+            title="CSP Distribution"
             chart={{
               colors: [
                 '#004B50',

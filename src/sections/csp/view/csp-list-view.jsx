@@ -389,14 +389,14 @@ export default function CspListView() {
 function applyFilter({ inputData, comparator, filters }) {
   const { name, status, type_of_firm, state, branch, district, category } = filters;
 
-  const stabilizedThis = inputData?.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-
-  inputData = stabilizedThis.map((el) => el[0]);
+  // const stabilizedThis = inputData?.map((el, index) => [el, index]);
+  // stabilizedThis.sort((a, b) => {
+  //   const order = comparator(a[0], b[0]);
+  //   if (order !== 0) return order;
+  //   return a[1] - b[1];
+  // });
+  //
+  // inputData = stabilizedThis.map((el) => el[0]);
 
   if (name) {
     inputData = inputData.filter(

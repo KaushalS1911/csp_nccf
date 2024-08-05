@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { ToastContainer, toast } from 'react-toastify';
 import { useForm, Controller, FormProvider } from 'react-hook-form';
-import { MenuItem, Select, FormControl, InputLabel, Button } from '@mui/material';
+import { MenuItem, Select, FormControl, InputLabel, Button, OutlinedInput } from '@mui/material';
 import axios from 'axios';
 import { SingleFilePreview, Upload } from 'src/components/upload';
 import { Helmet } from 'react-helmet-async';
@@ -37,7 +37,9 @@ export default function UploadDocument() {
   const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(false);
   const [tableData, setTableData] = useState([]);
-
+  const [branch, setBranch] = useState([]);
+  const [b, setB] = useState([]);
+  const [dataCSP, setDataCSP] = useState([]);
   const defaultValues = useMemo(
     () => ({
       doc_type: '',
@@ -46,6 +48,9 @@ export default function UploadDocument() {
     []
   );
   useEffect(() => {
+    if (vendor) {
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`).then((res) => setDataCSP(res?.data?.data)).catch((err) => console.log(err));
+    }
     getAllDocument();
   }, [vendor?.csp_code]);
 
@@ -183,6 +188,7 @@ export default function UploadDocument() {
       if (responses) {
         enqueueSnackbar('Your Document Uploaded');
         router.push(paths.dashboard.document.document_list);
+        setBranch([])
       } else {
         enqueueSnackbar('Failed to Upload', { variant: 'error' });
       }
@@ -209,6 +215,20 @@ export default function UploadDocument() {
     const file = event.target.files[0];
   };
 
+  const handleFilterCSP = useCallback(
+    (event) => {
+      setB(event.target.value);
+
+      setBranch(event.target.value);
+      // getAllDocument(event.target.value.at(0))
+      // onFilters(
+      //   'type',
+      //   typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
+      // );
+    },
+    [branch],
+  );
+
   const renderDetails = (
     <>
       <Helmet>
@@ -227,6 +247,38 @@ export default function UploadDocument() {
                 md: 'repeat(2, 1fr)',
               }}
             >
+              {vendor?.category === "branch" && <FormControl
+                sx={{
+                  flexShrink: 0,
+                  // width: { xs: 1, md: 200 },
+
+                }}
+              >
+                <InputLabel>CSP</InputLabel>
+
+                <Select
+                  value={branch}
+                  onChange={handleFilterCSP}
+                  input={<OutlinedInput label="Type"/>}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: { maxHeight: 240 },
+                    },
+                  }}
+                  // renderValue={(selected) => selected.join(', ')}
+                >
+                  {dataCSP.map((option) => (
+                    <MenuItem key={option.csp_code} value={option.csp_code}>
+                      {/*<Checkbox*/}
+                      {/*  disableRipple*/}
+                      {/*  size="small"*/}
+                      {/*  checked={branch.includes(option.csp_code)}*/}
+                      {/*/>*/}
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>}
               <Controller
                 name="doc_type"
                 control={control}

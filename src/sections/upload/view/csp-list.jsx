@@ -100,8 +100,8 @@ function CspList({ csp, document, miller, cspt, docu }) {
   const [currentData, setCurrentData] = useState({});
   const [dataCSP, setDataCSP] = useState([]);
   const [branch, setBranch] = useState([]);
-  const [images, setImages] = useState([]);
   const [b, setB] = useState([]);
+  const [images, setImages] = useState([]);
   const [approve, setApprove] = useState(false);
   const popover = usePopover();
   let dataFiltered = applyFilter({
@@ -433,7 +433,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
       field: 'branch_approval_status',
       headerName: 'Status',
       flex: 1,
-      minWidth: 150,
+      minWidth: 120,
       renderCell: (params) => <TableCell sx={{ px: 0 }}>
         <Label
           variant="soft"
@@ -449,42 +449,57 @@ function CspList({ csp, document, miller, cspt, docu }) {
     },
     {
       field: 'vendor1',
-      headerName: 'Approve',
+      headerName: 'Action',
       flex: 0.5,
-      minWidth: 150,
-      renderCell: (params) => <TableCell sx={{ px: 0 }}>
-        <Button
-          variant="contained"
-          onClick={() => {
-            setCurrentData(params.row);
-            setApprove(true);
-            setOpen(true);
-          }}
-          sx={{ backgroundColor: 'green' ,width:90}}
-        >
-          <VerifiedIcon/> Approve
-        </Button>
-      </TableCell>,
+      minWidth: 250,
+      renderCell: (params) =><>
+        <TableCell sx={{ px: 0,marginRight:2 }}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setCurrentData(params.row);
+              setApprove(true);
+              setOpen(true);
+            }}
+            sx={{ backgroundColor: 'green' ,width:90}}
+          >
+            <VerifiedIcon/> Approve
+          </Button>
+        </TableCell>
+        <TableCell sx={{ px: 0 }}>
+          <Button
+            onClick={() => {
+              setCurrentData(params.row);
+              setApprove(false);
+              setOpen(true);
+            }}
+            variant="contained"
+            sx={{ backgroundColor: 'red',width:80 }}
+          >
+            <CancelIcon/> Reject
+          </Button>
+        </TableCell>
+      </>
     },
-    {
-      field: 'vendor',
-      headerName: 'Reject',
-      flex: 0.5,
-      minWidth: 150,
-      renderCell: (params) => <TableCell sx={{ px: 0 }}>
-        <Button
-          onClick={() => {
-            setCurrentData(params.row);
-            setApprove(false);
-            setOpen(true);
-          }}
-          variant="contained"
-          sx={{ backgroundColor: 'red',width:80 }}
-        >
-          <CancelIcon/> Reject
-        </Button>
-      </TableCell>,
-    },
+    // {
+    //   field: 'vendor',
+    //   headerName: 'Reject',
+    //   flex: 0.5,
+    //   minWidth: 100,
+    //   renderCell: (params) => <TableCell sx={{ px: 0 }}>
+    //     <Button
+    //       onClick={() => {
+    //         setCurrentData(params.row);
+    //         setApprove(false);
+    //         setOpen(true);
+    //       }}
+    //       variant="contained"
+    //       sx={{ backgroundColor: 'red',width:80 }}
+    //     >
+    //       <CancelIcon/> Reject
+    //     </Button>
+    //   </TableCell>,
+    // },
   ];
 
   const handleFilterStatus = useCallback(
@@ -601,7 +616,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
                           // renderValue={(selected) => selected.join(', ')}
                         >
                           {dataCSP.map((option) => (
-                            <MenuItem key={option.csp_code} value={option.csp_code}>
+                            <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.document_count == 0}>
                               {/*<Checkbox*/}
                               {/*  disableRipple*/}
                               {/*  size="small"*/}

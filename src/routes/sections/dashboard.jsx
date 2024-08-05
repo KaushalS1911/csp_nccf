@@ -365,6 +365,7 @@ export const dashboardRoutes = [
         path: 'csp',
         children: [
           { element: <UploadListView />, index: true },
+          // { path: 'csp-list', element: <CspListView  /> },
           { path: 'csp-list', element: <CspListView  /> },
           // { path: '/nccf/branch/${tital}/csp/list', element: <CspListView  /> },
           // { path: 'csp-view/:id', element: <SingleCspView /> },

@@ -357,7 +357,7 @@ const {vendor} = useAuthContext()
     {
       field: 'contact_person',
       headerName: 'Contact Person',
-      width: 160,
+      width: 120,
     },
     {
       field: 'phone_number',
@@ -374,7 +374,14 @@ const {vendor} = useAuthContext()
       headerName: 'Address',
       width: 240,
       flex: 1,
-      minWidth: 200,
+      minWidth: 20,
+    },
+    {
+      field: 'order_count',
+      headerName: 'Orders',
+      // width: 40,
+      // flex: 1,
+      minWidth: 50,
     },
     {
       field: 'csp_status',
@@ -534,6 +541,7 @@ const {vendor} = useAuthContext()
                     {/*  stockOptions={PRODUCT_STOCK_OPTIONS}*/}
                     {/*  publishOptions={PUBLISH_OPTIONS}*/}
                     {/*/>*/}
+                    {/*<GridToolbarQuickFilter />*/}
                     <Stack
                       spacing={1}
                       flexGrow={1}

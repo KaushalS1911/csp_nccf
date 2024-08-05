@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Select from '@mui/material/Select';
@@ -16,6 +16,7 @@ import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { useAuthContext } from '../../auth/hooks';
 import axios from 'axios';
+import { GridToolbarQuickFilter } from '@mui/x-data-grid';
 
 // ----------------------------------------------------------------------
 
@@ -98,25 +99,27 @@ export default function DocumentTableToolbar({
       >
 
 
-        <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
-          <TextField
-            fullWidth
-            value={filters.name}
-            onChange={handleFilterName}
-            placeholder="Search..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                </InputAdornment>
-              ),
-            }}
-          />
+        {vendor ? <GridToolbarQuickFilter sx={{ width: "500px" }}/> :
+          <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
+            <TextField
+              fullWidth
+              value={filters.name}
+              onChange={handleFilterName}
+              placeholder="Search..."
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }}/>
+                  </InputAdornment>
+                ),
+              }}
+            />
 
-          {/*<IconButton onClick={popover.onOpen}>*/}
-          {/*  <Iconify icon="eva:more-vertical-fill" />*/}
-          {/*</IconButton>*/}
-        </Stack>
+            {/*<IconButton onClick={popover.onOpen}>*/}
+            {/*  <Iconify icon="eva:more-vertical-fill" />*/}
+            {/*</IconButton>*/}
+          </Stack>
+        }
          <FormControl
           sx={{
             flexShrink: 0,

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Select from '@mui/material/Select';
@@ -16,6 +16,8 @@ import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import axios from 'axios';
 import { handleCategoryTypes } from '../../_mock';
+import { useAuthContext } from '../../auth/hooks';
+import { GridToolbarQuickFilter } from '@mui/x-data-grid';
 
 // ----------------------------------------------------------------------
 
@@ -32,7 +34,7 @@ export default function CspTableToolbar({
 
   const popover = usePopover();
 
-
+const {vendor} = useAuthContext()
   const handleFilterName = useCallback(
     (event) => {
       onFilters('name', event.target.value);
@@ -100,6 +102,7 @@ export default function CspTableToolbar({
           width:"100%"
         }}
       >
+        {vendor?.category === "branch" ? <GridToolbarQuickFilter sx={{width:"500px"}}/> :
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
             fullWidth
@@ -118,7 +121,7 @@ export default function CspTableToolbar({
           {/*<IconButton onClick={popover.onOpen}>*/}
           {/*  <Iconify icon="eva:more-vertical-fill" />*/}
           {/*</IconButton>*/}
-        </Stack>
+        </Stack>}
         <FormControl
           sx={{
             flexShrink: 0,

@@ -136,7 +136,7 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
             <img src={url} alt={url} style={{ width: '100%',height:"100%", aspectRatio: 4 / 3 }}/>
 
           </Box>
-          {!approve && <TextField name="Remark" label="remark" value={remark} multiline={true} rows={4} fullWidth={true} onChange={(e) => setRemark(e.target.value)}/>}
+          {!approve && <TextField name="Remark" label="Remark" value={remark} multiline={true} rows={4} fullWidth={true} onChange={(e) => setRemark(e.target.value)}/>}
         </DialogContent>
 
         <DialogActions>

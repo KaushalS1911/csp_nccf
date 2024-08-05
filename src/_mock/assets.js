@@ -560,7 +560,7 @@ export function handleDoctypeLabel(doc) {
     case 'photographs_of_unit':
       return 'Photographs of Unit';
     default: {
-      return '';
+      return doc;
     }
   }
 }
@@ -618,7 +618,7 @@ export function handleDoctypeValue(label) {
       return 'photographs_of_unit';
     }
     default: {
-      return '';
+      return label;
     }
   }
 }

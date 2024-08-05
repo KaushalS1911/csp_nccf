@@ -14,7 +14,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 import Iconify from 'src/components/iconify';
 import CustomPopover, { usePopover } from 'src/components/custom-popover';
-
+import { GridToolbarQuickFilter } from '@mui/x-data-grid';
 // ----------------------------------------------------------------------
 
 export default function MillerTableToolbar({
@@ -88,20 +88,20 @@ export default function MillerTableToolbar({
         }}
       >
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
-          <TextField
-            fullWidth
-            value={filters.name}
-            onChange={handleFilterName}
-            placeholder="Search..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }}/>
-                </InputAdornment>
-              ),
-            }}
-          />
-
+          {/*<TextField*/}
+          {/*  fullWidth*/}
+          {/*  value={filters.name}*/}
+          {/*  onChange={handleFilterName}*/}
+          {/*  placeholder="Search..."*/}
+          {/*  InputProps={{*/}
+          {/*    startAdornment: (*/}
+          {/*      <InputAdornment position="start">*/}
+          {/*        <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }}/>*/}
+          {/*      </InputAdornment>*/}
+          {/*    ),*/}
+          {/*  }}*/}
+          {/*/>*/}
+          <GridToolbarQuickFilter />
           {/*<IconButton onClick={popover.onOpen}>*/}
           {/*  <Iconify icon="eva:more-vertical-fill" />*/}
           {/*</IconButton>*/}

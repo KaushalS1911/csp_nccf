@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Select from '@mui/material/Select';
@@ -17,7 +17,13 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import axios from 'axios';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { formHelperTextClasses } from '@mui/material/FormHelperText';
-import { GridToolbarColumnsButton, GridToolbarExport, GridToolbarFilterButton } from '@mui/x-data-grid';
+import {
+  GridToolbarColumnsButton,
+  GridToolbarExport,
+  GridToolbarFilterButton,
+  GridToolbarQuickFilter,
+} from '@mui/x-data-grid';
+import { useAuthContext } from '../../auth/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +33,7 @@ export default function BranchTableToolbar({
                                                   //
                                              branchOptions,
                                                 }) {
-
+const {vendor} = useAuthContext()
   const handleFilterStartDate = useCallback(
     (newValue) => {
       onFilters('startDate', newValue);
@@ -129,19 +135,22 @@ export default function BranchTableToolbar({
               },
             }}
           />
-          <TextField
-            fullWidth
-            value={filters.name}
-            onChange={handleFilterName}
-            placeholder="Search..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }}/>
-                </InputAdornment>
-              ),
-            }}
-          />
+
+          {vendor?.category === "branch" ? <GridToolbarQuickFilter sx={{ width: "500px" }}/> :
+            <TextField
+              fullWidth
+              value={filters.name}
+              onChange={handleFilterName}
+              placeholder="Search..."
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }}/>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          }
 
           {/*<IconButton onClick={popover.onOpen}>*/}
           {/*  <Iconify icon="eva:more-vertical-fill" />*/}

@@ -6,7 +6,7 @@ import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { useForm, Controller, FormProvider } from 'react-hook-form';
-import { MenuItem, Select, FormControl, InputLabel, Button } from '@mui/material';
+import { MenuItem, Select, FormControl, InputLabel, Button, OutlinedInput } from '@mui/material';
 import axios from 'axios';
 import { Upload } from 'src/components/upload';
 import { Helmet } from 'react-helmet-async';
@@ -33,7 +33,10 @@ export default function UploadDocument({ container }) {
   const [files, setFiles] = useState([]);
   const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [dataCSP, setDataCSP] = useState([]);
   const [tableData, setTableData] = useState([]);
+  const [branch, setBranch] = useState([]);
+  const [b, setB] = useState([]);
   const defaultValues = useMemo(
     () => ({
       doc_type: '',
@@ -41,7 +44,15 @@ export default function UploadDocument({ container }) {
     }),
     []
   );
+  // useEffect(() => {
+  //   if (vendor) {
+  //     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`).then((res) => setDataCSP(res?.data?.data)).catch((err) => console.log(err));
+  //   }
+  // }, []);
   useEffect(() => {
+    if (vendor) {
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`).then((res) => setDataCSP(res?.data?.data)).catch((err) => console.log(err));
+    }
     getAllDocument();
   }, [vendor?.csp_code]);
 
@@ -60,7 +71,7 @@ export default function UploadDocument({ container }) {
     resolver: yupResolver(validationSchema),
   });
 
-  const { handleSubmit, control, setValue, watch } = methods;
+  const { handleSubmit, control, setValue, watch ,reset} = methods;
 
   const onSubmit = handleSubmit(async (data) => {
     if (!files[0]?.preview) {
@@ -170,7 +181,7 @@ export default function UploadDocument({ container }) {
     [files]
   );
 
-
+const code = vendor?.category === "branch" ? branch : vendor?.csp_code
   const handleAllSubmit = async (data) => {
 
 
@@ -196,7 +207,7 @@ export default function UploadDocument({ container }) {
 
     setLoading(true);
     const options = {
-      maxSizeMB: 0.5,
+      maxSizeMB: 0.2,
       maxWidthOrHeight: 1200,
       useWebWorker: true,
     };
@@ -205,10 +216,10 @@ export default function UploadDocument({ container }) {
       const formDataList = await Promise.all(
         data.map(async (value) => {
           const formData = new FormData();
-          const compressedFile = await imageCompression(value?.image, options);
+          const compressedFile = (value?.image.size > (200 * 1024)) ? await imageCompression(value?.image, options) : value?.image;
           formData.append('file', compressedFile);
           formData.append('doc_type', value?.type);
-          formData.append('csp_code', vendor?.csp_code);
+          formData.append('csp_code', code);
           return formData;
         })
       );
@@ -229,6 +240,9 @@ export default function UploadDocument({ container }) {
 
       if (responses) {
         enqueueSnackbar('Your Document Uploaded');
+        setSelected([])
+        setBranch([])
+        reset(defaultValues)
         // router.push(paths.dashboard.document.document_list);
       } else {
         enqueueSnackbar('Failed to Upload');
@@ -240,6 +254,19 @@ export default function UploadDocument({ container }) {
       setLoading(false);
     }
   };
+  const handleFilterCSP = useCallback(
+    (event) => {
+      setB(event.target.value);
+
+      setBranch(event.target.value);
+      // getAllDocument(event.target.value.at(0))
+      // onFilters(
+      //   'type',
+      //   typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
+      // );
+    },
+    [branch],
+  );
   const handleDeleteRow = useCallback(
     (id) => {
       const deleteRow = selected.filter((row) => row.id !== id);
@@ -275,6 +302,38 @@ export default function UploadDocument({ container }) {
                 md: container ? 'repeat(1, 1fr)' : 'repeat(2, 1fr)',
               }}
             >
+              {vendor?.category === "branch" && <FormControl
+                sx={{
+                  flexShrink: 0,
+                  // width: { xs: 1, md: 200 },
+
+                }}
+              >
+                <InputLabel>CSP</InputLabel>
+
+                <Select
+                  value={branch}
+                  onChange={handleFilterCSP}
+                  input={<OutlinedInput label="Type"/>}
+                  MenuProps={{
+                    PaperProps: {
+                      sx: { maxHeight: 240 },
+                    },
+                  }}
+                  // renderValue={(selected) => selected.join(', ')}
+                >
+                  {dataCSP.map((option) => (
+                    <MenuItem key={option.csp_code} value={option.csp_code}>
+                      {/*<Checkbox*/}
+                      {/*  disableRipple*/}
+                      {/*  size="small"*/}
+                      {/*  checked={branch.includes(option.csp_code)}*/}
+                      {/*/>*/}
+                      {option.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>}
               <Controller
                 name="doc_type"
                 control={control}
