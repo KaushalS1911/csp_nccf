@@ -1,1 +1,0 @@
-import{j as e,H as i,dD as r}from"./index-4Yc1XJ6j.js";function t(){return e.jsxs(e.Fragment,{children:[e.jsx(i,{children:e.jsx("title",{children:" Dashboard: File"})}),e.jsx(r,{})]})}export{t as default};
