@@ -101,7 +101,7 @@ export default function MillerTableToolbar({
           {/*    ),*/}
           {/*  }}*/}
           {/*/>*/}
-          <GridToolbarQuickFilter />
+          <GridToolbarQuickFilter sx={{ width: "100% !important" }}/>
           {/*<IconButton onClick={popover.onOpen}>*/}
           {/*  <Iconify icon="eva:more-vertical-fill" />*/}
           {/*</IconButton>*/}

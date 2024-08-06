@@ -104,7 +104,7 @@ export default function DistributorTableToolbar({
         {/*      ),*/}
         {/*    }}*/}
         {/*  />*/}
-          <GridToolbarQuickFilter />
+          <GridToolbarQuickFilter sx={{ width: "100% !important" }}/>
 
           {/*<IconButton onClick={popover.onOpen}>*/}
           {/*  <Iconify icon="eva:more-vertical-fill" />*/}

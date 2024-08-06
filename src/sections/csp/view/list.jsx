@@ -374,7 +374,7 @@ const {vendor} = useAuthContext()
       headerName: 'Address',
       width: 240,
       flex: 1,
-      minWidth: 20,
+      minWidth: 240,
     },
     {
       field: 'order_count',

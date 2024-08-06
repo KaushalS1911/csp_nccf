@@ -136,7 +136,7 @@ const {vendor} = useAuthContext()
             }}
           />
 
-          {vendor?.category === "branch" ? <GridToolbarQuickFilter sx={{ width: "500px" }}/> :
+          {vendor?.category === "branch" ? <GridToolbarQuickFilter sx={{ width: "100% !important" }}/> :
             <TextField
               fullWidth
               value={filters.name}

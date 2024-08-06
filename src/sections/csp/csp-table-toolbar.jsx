@@ -102,7 +102,7 @@ const {vendor} = useAuthContext()
           width:"100%"
         }}
       >
-        {vendor?.category === "branch" ? <GridToolbarQuickFilter sx={{width:"500px"}}/> :
+        {vendor?.category === "branch" ? <GridToolbarQuickFilter sx={{ width: "100% !important" }}/> :
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
           <TextField
             fullWidth
