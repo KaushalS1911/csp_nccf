@@ -498,7 +498,7 @@ let i =0
                         // renderValue={(selected) => selected.join(', ')}
                       >
                         {dataCSP.map((option) => (
-                          <MenuItem key={option.csp_code} value={option.csp_code} >
+                          <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.order_count === 0}>
                             {/*<Checkbox*/}
                             {/*  disableRipple*/}
                             {/*  size="small"*/}
