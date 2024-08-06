@@ -43,7 +43,7 @@ import { FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/m
 import axios from 'axios';
 import { useAuthContext } from '../../../auth/hooks';
 import moment from 'moment';
-
+import { isAfter, isBetween } from '../../../utils/format-time';
 // import ProductTableFiltersResult from '../product-table-filters-result';
 // import {
 //   RenderCellStock,
@@ -64,6 +64,8 @@ const defaultFilters = {
   status: 'all',
   branch: [],
   name: '',
+  startDate: null,
+  endDate: null,
 
 };
 
@@ -94,7 +96,7 @@ const {vendor} = useAuthContext()
   const [dataCSP, setDataCSP] = useState([]);
   const [branch, setBranch] = useState([]);
   const [b, setB] = useState([]);
-
+  const dateError = isAfter(filters.startDate, filters.endDate);
   useEffect(() => {
     const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/orders`;
 
@@ -111,6 +113,7 @@ const {vendor} = useAuthContext()
   const dataFiltered = applyFilter({
     inputData: tableData,
     filters,
+    dateError,
   });
 
   const handleFilterCSP = useCallback(
@@ -126,7 +129,7 @@ const {vendor} = useAuthContext()
     },
     [branch],
   );
-  const canReset = !isEqual(defaultFilters, filters);
+  const canReset = !isEqual(defaultFilters, filters) || (!!filters.startDate && !!filters.endDate);
 
   const handleFilters = useCallback((name, value) => {
     setFilters((prevState) => ({
@@ -543,7 +546,7 @@ let i =0
                       <GridToolbarExport/>
                     </Stack>
                     <BranchTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
-                                        branchOptions={['hello']}/>
+                                        branchOptions={['hello']} dateError={dateError}/>
                   </GridToolbarContainer>
 
                   {/*{canReset && (*/}
@@ -594,14 +597,19 @@ let i =0
     </>
   );
 }
-
-function applyFilter({ inputData, filters }) {
-  const { stock, publish, status, commodity, name, branch } = filters;
+// function applyFilter({ inputData, comparator, filters,dateError }) {
+//   const { name, status, type_of_firm, state, branch, district, category, startDate, endDate  } = filters;
+function applyFilter({ inputData, filters,dateError }) {
+  const { stock, publish, status, commodity, name, branch , startDate, endDate} = filters;
 
   if (stock.length) {
     inputData = inputData.filter((product) => stock.includes(product.inventoryType));
   }
-
+  if (!dateError) {
+    if (startDate && endDate) {
+      inputData = inputData.filter((product) => isBetween(product.created_at, startDate, endDate));
+    }
+  }
   if (publish.length) {
     inputData = inputData.filter((product) => publish.includes(product.publish));
   }

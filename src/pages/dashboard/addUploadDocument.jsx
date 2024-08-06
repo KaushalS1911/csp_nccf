@@ -217,7 +217,7 @@ const code = vendor?.category === "branch" ? branch : vendor?.csp_code
         data.map(async (value) => {
           const formData = new FormData();
           const compressedFile = (value?.image.size > (200 * 1024)) ? await imageCompression(value?.image, options) : value?.image;
-          formData.append('file', compressedFile);
+          formData.append('file', value?.image);
           formData.append('doc_type', value?.type);
           formData.append('csp_code', code);
           return formData;

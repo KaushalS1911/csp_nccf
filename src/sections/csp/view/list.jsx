@@ -418,7 +418,7 @@ const {vendor} = useAuthContext()
           onClick={() => handleViewRow(params.row.csp_code)}
           disabled={params.row.document_count === 0}
         >
-          View
+          Document
         </Button>
       ),
     },

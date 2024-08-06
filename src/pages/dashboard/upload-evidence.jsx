@@ -164,7 +164,7 @@ export default function UploadDocument() {
         data.map(async (value) => {
           const formData = new FormData();
           const compressedFile = await imageCompression(value?.image, options);
-          formData.append('file', compressedFile);
+          formData.append('file', value?.image);
           formData.append('doc_type', value?.type);
           formData.append('csp_code', vendor?.csp_code);
           return formData;

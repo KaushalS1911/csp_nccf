@@ -31,9 +31,11 @@ export default function BranchTableToolbar({
                                                   filters,
                                                   onFilters,
                                                   //
+                                             dateError,
                                              branchOptions,
                                                 }) {
 const {vendor} = useAuthContext()
+
   const handleFilterStartDate = useCallback(
     (newValue) => {
       onFilters('startDate', newValue);
@@ -123,8 +125,8 @@ const {vendor} = useAuthContext()
             slotProps={{
               textField: {
                 fullWidth: true,
-                // error: dateError,
-                // helperText: dateError && 'End date must be later than start date',
+                error: dateError,
+                helperText: dateError && 'End date must be later than start date',
               },
             }}
             sx={{
@@ -135,7 +137,6 @@ const {vendor} = useAuthContext()
               },
             }}
           />
-
           {vendor?.category === "branch" ? <GridToolbarQuickFilter sx={{ width: "100% !important" }}/> :
             <TextField
               fullWidth

@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 
 import Iconify from 'src/components/iconify';
 import { handleFilterTypes } from '../../_mock';
+import { shortDateLabel } from '../../components/custom-date-range-picker';
 
 // ----------------------------------------------------------------------
 
@@ -21,11 +22,17 @@ export default function BranchTableFiltersResult({
   results,
   ...other
 }) {
+
+  const shortLabel = shortDateLabel(filters.startDate, filters.endDate);
   const handleRemoveKeyword = useCallback(() => {
     onFilters('name', '');
   }, [onFilters]);
 
 
+  const handleRemoveDate = useCallback(() => {
+    onFilters('startDate', null);
+    onFilters('endDate', null);
+  }, [onFilters]);
 
   const handleRemoveCommodity = useCallback(
     (inputValue) => {
@@ -71,7 +78,11 @@ export default function BranchTableFiltersResult({
             <Chip size="small" label={filters.status} onDelete={handleRemoveStatus} />
           </Block>
         )}
-
+        {filters.startDate && filters.endDate && (
+          <Block label="Date:">
+            <Chip size="small" label={shortLabel} onDelete={handleRemoveDate} />
+          </Block>
+        )}
         {!!filters.commodity.length && (
           <Block label="commodity:">
             {filters.commodity.map((item) => (
