@@ -136,7 +136,6 @@ function CspList({ csp, document, miller, cspt, docu }) {
       dataFiltered = [];
       getAllDocument(b);
     } else {
-
       getAllDocument(cspCode);
     }
   }, [b]);
@@ -431,7 +430,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
     },
     {
       field: 'branch_approval_status',
-      headerName: 'Status',
+      headerName: 'Branch Status',
       flex: 1,
       minWidth: 120,
       renderCell: (params) => <TableCell sx={{ px: 0 }}>
@@ -439,11 +438,11 @@ function CspList({ csp, document, miller, cspt, docu }) {
           variant="soft"
           color={
             (params.row.branch_approval_status === '1' && 'success') ||
-            (params.row.branch_approval_status === '0' && 'warning') ||
-            'default'
+            (params.row.branch_approval_status === '' && 'warning') ||
+            'error'
           }
         >
-          {params.row.branch_approval_status === '0' ? 'Approval Pending' : 'Approved'}
+          {params.row.branch_approval_status === '' ? 'Approval Pending' :params.row.branch_approval_status === '1' ? 'Approved' : "Rejected"}
         </Label>
       </TableCell>,
     },
@@ -453,8 +452,9 @@ function CspList({ csp, document, miller, cspt, docu }) {
       flex: 0.5,
       minWidth: 250,
       renderCell: (params) =><>
-        <TableCell sx={{ px: 0,marginRight:2 }}>
+        <TableCell sx={{ px: 0,marginRight:2 }} >
           <Button
+            disabled={params.row.branch_approval_status === "1" || params.row.branch_approval_status==="0"}
             variant="contained"
             onClick={() => {
               setCurrentData(params.row);
@@ -468,6 +468,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
         </TableCell>
         <TableCell sx={{ px: 0 }}>
           <Button
+            disabled={params.row.branch_approval_status === "1" || params.row.branch_approval_status==="0"}
             onClick={() => {
               setCurrentData(params.row);
               setApprove(false);
@@ -518,7 +519,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
         maxWidth={'xl'}
 
       >
-        <DocumentQuickEditForm currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={b}/>
+        <DocumentQuickEditForm getAllDocument={getAllDocument} currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={b}/>
         <CustomBreadcrumbs
           heading={'CSP Documents'}
           links={[

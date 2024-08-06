@@ -35,10 +35,17 @@ export default function BranchTableToolbar({
                                              branchOptions,
                                                 }) {
 const {vendor} = useAuthContext()
-
+  const [startDateOpen, setStartDateOpen] = useState(false);
+  const [endDateOpen, setEndDateOpen] = useState(false);
   const handleFilterStartDate = useCallback(
     (newValue) => {
-      onFilters('startDate', newValue);
+
+      // console.log(newValue);
+      // console.log(newValue.toString() !== "Invalid Date");
+      // if (newValue.toString() !== "Invalid Date"){
+      // onFilters('startDate', newValue);
+      // }
+      (newValue.toString() !== "Invalid Date") ? onFilters('startDate', newValue) : onFilters('startDate', newValue)
     },
     [onFilters]
   );
@@ -86,7 +93,6 @@ const {vendor} = useAuthContext()
     },
     [onFilters],
   );
-
   return (
     <>
       <Stack
@@ -107,9 +113,13 @@ const {vendor} = useAuthContext()
           <DatePicker
             label="Start date"
             value={filters.startDate}
+            open={startDateOpen}
+            onClose={() => setStartDateOpen(false)}
             onChange={handleFilterStartDate}
             slotProps={{
               textField: {
+
+            onClick:() => setStartDateOpen(true),
                 fullWidth: true,
               },
             }}
@@ -122,8 +132,10 @@ const {vendor} = useAuthContext()
             label="End date"
             value={filters.endDate}
             onChange={handleFilterEndDate}
+            open={endDateOpen}
             slotProps={{
               textField: {
+            onClick:() => setEndDateOpen(true),
                 fullWidth: true,
                 error: dateError,
                 helperText: dateError && 'End date must be later than start date',

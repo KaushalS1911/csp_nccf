@@ -44,6 +44,10 @@ import axios from 'axios';
 import { useAuthContext } from '../../../auth/hooks';
 import moment from 'moment';
 import { isAfter, isBetween } from '../../../utils/format-time';
+import VerifiedIcon from '@mui/icons-material/Verified';
+import CancelIcon from '@mui/icons-material/Cancel';
+import DocumentQuickEditForm from '../../upload/document-quick-edit-form';
+import BranchQuickEditForm from '../branch-order-quick-edit-form';
 // import ProductTableFiltersResult from '../product-table-filters-result';
 // import {
 //   RenderCellStock,
@@ -90,17 +94,22 @@ const {vendor} = useAuthContext()
   const [filters, setFilters] = useState(defaultFilters);
 
   const [selectedRowIds, setSelectedRowIds] = useState([]);
-
+  const [open, setOpen] = useState(false);
+  const [currentData, setCurrentData] = useState({});
+  const [approve, setApprove] = useState(false);
   // const { order, orderLoading } = useGetBranchOrder();
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
   const [dataCSP, setDataCSP] = useState([]);
   const [branch, setBranch] = useState([]);
   const [b, setB] = useState([]);
   const dateError = isAfter(filters.startDate, filters.endDate);
-  useEffect(() => {
+  const getAllOrders = () => {
     const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/orders`;
 
     axios.get(URL).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
+  }
+  useEffect(() => {
+getAllOrders()
     // if (order.length) {
     //   setTableData(order);
     // }
@@ -152,10 +161,10 @@ const {vendor} = useAuthContext()
     },
     [enqueueSnackbar, tableData],
   );
-  const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: 'accepted', label: 'Accepted' }, {
+  const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: '1', label: 'Accepted' }, {
     value: 'placed',
     label: 'Placed',
-  }, { value: 'declined', label: 'Declined' }];
+  }, { value: '0', label: 'Declined' }];
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
 
@@ -315,7 +324,7 @@ let i =0
     },
     {
       field: 'nccf_order_status',
-      headerName: 'Status',
+      headerName: 'Order Status',
       minWidth: 100,
       flex: 1, // This makes the column flexible
       renderCell: (params) => (
@@ -323,16 +332,52 @@ let i =0
           <Label
             variant="soft"
             color={
-              (params.row.nccf_order_status === 'accepted' && 'success') ||
+              (params.row.nccf_order_status === '1' && 'success') ||
               (params.row.nccf_order_status === 'placed' && 'warning') ||
-              (params.row.nccf_order_status === 'declined' && 'error') ||
+              (params.row.nccf_order_status === '0' && 'error') ||
               'default'
             }
           >
-            {params.row.nccf_order_status}
+            {params.row.nccf_order_status  === "1" ? "Approved" : params.row.nccf_order_status === "0" ? "Rejected" : "Placed" }
           </Label>
         </TableCell>
       ),
+    },
+    {
+      field: 'vendor1',
+      headerName: 'Action',
+      flex: 0.5,
+      minWidth: 250,
+      renderCell: (params) =><>
+        <TableCell sx={{ px: 0,marginRight:2 }} >
+          <Button
+            disabled={params.row.nccf_order_status === "1" || params.row.nccf_order_status==="0"}
+            variant="contained"
+            onClick={() => {
+              setCurrentData(params.row);
+              setApprove(true);
+              setOpen(true);
+            }}
+            sx={{ backgroundColor: 'green' ,width:90}}
+          >
+            <VerifiedIcon/> Approve
+          </Button>
+        </TableCell>
+        <TableCell sx={{ px: 0 }}>
+          <Button
+            disabled={params.row.nccf_order_status === "1" || params.row.nccf_order_status==="0"}
+            onClick={() => {
+              setCurrentData(params.row);
+              setApprove(false);
+              setOpen(true);
+            }}
+            variant="contained"
+            sx={{ backgroundColor: 'red',width:80 }}
+          >
+            <CancelIcon/> Reject
+          </Button>
+        </TableCell>
+      </>
     },
     {
       type: 'actions',
@@ -410,7 +455,7 @@ let i =0
             },
           }}
         />
-
+        <BranchQuickEditForm getAllDocument={getAllOrders} currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={b}/>
         <Card
           sx={{
             height: dataFiltered?.length > 0 ? "unset" : 700,
@@ -439,13 +484,13 @@ let i =0
                       ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'accepted' && 'success') ||
+                      (tab.value === '1' && 'success') ||
                       (tab.value === 'placed' && 'warning') ||
-                      (tab.value === 'declined' && 'error') ||
+                      (tab.value === '0' && 'error') ||
                       'default'
                     }
                   >
-                    {['accepted', 'declined', 'placed'].includes(tab.value)
+                    {['1', '0', 'placed'].includes(tab.value)
                       ? tableData.filter((user) => user.nccf_order_status === tab.value).length
                       : tableData.length}
                   </Label>

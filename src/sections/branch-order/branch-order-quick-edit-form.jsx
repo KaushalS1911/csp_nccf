@@ -19,7 +19,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentQuickEditForm({ currentUser, open, onClose, setOpen, approve,cspCode ,getAllDocument}) {
+export default function BranchQuickEditForm({ currentUser, open, onClose, setOpen, approve,cspCode ,getAllDocument}) {
   const { enqueueSnackbar } = useSnackbar();
   const [remark,setRemark] = useState("")
   const NewUserSchema = Yup.object().shape({
@@ -72,42 +72,27 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
   });
   const handelSubmit = () => {
     setOpen(false);
-    if (approve){
-    const payload = {
-      document_id: currentUser?.id,
+    // if (approve){
+    const payload = approve ?  {
+      order_id: currentUser?.id,
       status: '1',
       branch_approval_status:"1"
+    } :{
+      order_id: currentUser?.id,
+      status: '1',
+      branch_approval_status:"0"
     };
-      axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/csp/document/validate', payload).then((res) => {
+    console.log(payload);
+      axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/order/validate', payload).then((res) => {
         if (res) {
           getAllDocument(cspCode)
-          enqueueSnackbar('Document approved successfully');
+          approve ? enqueueSnackbar('Document approved successfully') : enqueueSnackbar('Document rejected successfully');
         } else {
 
           enqueueSnackbar('Something want wrong', { variant: 'error' });
         }
       }).catch((err) => console.log(err))
-    }
-    else {
-      {
-        const payload = {
-          document_id: currentUser?.id,
-          status: '0',
-          branch_approval_status:"0"
-          // remark:remark
-        };
-        axios.post("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/document/remark",{csp_code:cspCode,remark:remark,mode:"test",document_id:currentUser?.id})
-        axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/document/validate', payload).then((res) => {
-          if (res) {
-            setRemark("")
-            enqueueSnackbar('Document rejected successfully');
-          } else {
 
-            enqueueSnackbar('Something want wrong', { variant: 'error' });
-          }
-        }).catch((err) => console.log(err))
-      }
-    }
   };
   const object_url = currentUser?.object_url;
   const secondSlashIndex = object_url?.indexOf('/', 8);
@@ -133,13 +118,8 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
 
         <DialogContent>
 
+          {approve ? <Box sx={{fontSize:"20px",fontWeight:700}}>Are you sure you want to approve this order ?</Box> : <Box sx={{fontSize:"20px",fontWeight:700}}>Are you sure you want to reject this order ? </Box>}
 
-          <Box py={1} sx={{ mr: 2, mb: 2, height: "100%", cursor: 'pointer' }}>
-
-            <img src={url} alt={url} style={{ width: '100%',height:"100%"}}/>
-
-          </Box>
-          {!approve && <TextField name="Remark" label="Remark" value={remark} multiline={true} rows={4} fullWidth={true} onChange={(e) => setRemark(e.target.value)}/>}
         </DialogContent>
 
         <DialogActions>
@@ -150,7 +130,7 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting} onClick={handelSubmit} disabled={!approve && remark == ""}>
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting} onClick={handelSubmit} >
             {approve ? 'Approve' : 'Reject'}
           </LoadingButton>
         </DialogActions>
@@ -159,7 +139,7 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
   );
 }
 
-DocumentQuickEditForm.propTypes = {
+BranchQuickEditForm.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   currentUser: PropTypes.object,
