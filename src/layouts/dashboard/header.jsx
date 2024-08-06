@@ -23,12 +23,14 @@ import { RouterLink } from '../../routes/components';
 import { PATH_AFTER_LOGIN } from '../../config-global';
 import { useRouter } from '../../routes/hooks';
 import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../../auth/hooks';
 
 // ----------------------------------------------------------------------
 
 export default function Header({ onOpenNav }) {
   const theme = useTheme();
 const navigate= useNavigate()
+  const {vendor} = useAuthContext()
   const router = useRouter()
 
   const settings = useSettingsContext();
@@ -42,11 +44,11 @@ const navigate= useNavigate()
   const offset = useOffSetTop(HEADER.H_DESKTOP);
 
   const offsetTop = offset && !isNavHorizontal;
-
+const rout = vendor?.category === "branch"  ? "/admin" : "/"
   function handleLogout() {
     sessionStorage.clear();
     localStorage.clear()
-    router.push('/')
+    router.push(rout)
     router.reload()
   }
 
