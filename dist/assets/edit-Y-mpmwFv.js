@@ -1,0 +1,1 @@
+import{j as t,H as a,dW as d}from"./index-YxnBokvY.js";import{u as e}from"./use-params-9Uu99sPZ.js";function n(){const r=e(),{id:s}=r;return t.jsxs(t.Fragment,{children:[t.jsx(a,{children:t.jsx("title",{children:" Dashboard: Product Edit"})}),t.jsx(d,{id:`${s}`})]})}export{n as default};
