@@ -76,6 +76,7 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
     const payload = {
       document_id: currentUser?.id,
       status: '1',
+      branch_approval_status:"1"
     };
       axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/csp/document/validate', payload).then((res) => {
         if (res) {
@@ -91,6 +92,7 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
         const payload = {
           document_id: currentUser?.id,
           status: '0',
+          branch_approval_status:"0"
           // remark:remark
         };
         axios.post("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/document/remark",{csp_code:cspCode,remark:remark,mode:"test",document_id:currentUser?.id})
