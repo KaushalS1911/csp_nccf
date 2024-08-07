@@ -17,11 +17,7 @@ import {
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
-import { RouterLink } from 'src/routes/components';
-
 import { useBoolean } from 'src/hooks/use-boolean';
-
-import { useGetProducts } from 'src/api/product';
 import { _roles, PRODUCT_STOCK_OPTIONS } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
@@ -30,13 +26,10 @@ import EmptyContent from 'src/components/empty-content';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
-import { useGetBranchOrder } from '../../../api/branch-order';
-import BranchTableToolbar from '../branch-table-toolbar';
 import Tabs from '@mui/material/Tabs';
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import Label from '../../../components/label';
-import BranchTableFiltersResult from '../branch-table-filters-result';
 import TableCell from '@mui/material/TableCell';
 import { Box } from '@mui/system';
 import { FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
@@ -44,18 +37,10 @@ import axios from 'axios';
 import { useAuthContext } from '../../../auth/hooks';
 import moment from 'moment';
 import { isAfter, isBetween } from '../../../utils/format-time';
-import VerifiedIcon from '@mui/icons-material/Verified';
-import CancelIcon from '@mui/icons-material/Cancel';
-import DocumentQuickEditForm from '../../upload/document-quick-edit-form';
-import BranchQuickEditForm from '../branch-order-quick-edit-form';
-// import ProductTableFiltersResult from '../product-table-filters-result';
-// import {
-//   RenderCellStock,
-//   RenderCellPrice,
-//   RenderCellPublish,
-//   RenderCellProduct,
-//   RenderCellCreatedAt,
-// } from '../product-table-row';
+import HeadQuickEditForm from '../head-order-quick-edit-form';
+import HeadTableFiltersResult from '../head-table-filters-result';
+import HeadTableToolbar from '../head-table-toolbar';
+
 const PUBLISH_OPTIONS = [
   { value: 'published', label: 'Published' },
   { value: 'draft', label: 'Draft' },
@@ -99,7 +84,6 @@ const {vendor} = useAuthContext()
   const [open, setOpen] = useState(false);
   const [currentData, setCurrentData] = useState({});
   const [approve, setApprove] = useState(false);
-  // const { order, orderLoading } = useGetBranchOrder();
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
   const [dataCSP, setDataCSP] = useState([]);
   const [branch, setBranch] = useState([]);
@@ -113,9 +97,7 @@ const {vendor} = useAuthContext()
   }
   useEffect(() => {
 getAllOrders()
-    // if (order.length) {
-    //   setTableData(order);
-    // }
+
   }, [branch]);
   useEffect(() => {
     if (vendor) {
@@ -133,11 +115,7 @@ getAllOrders()
       setB(event.target.value);
 
       setBranch(event.target.value);
-      // getAllDocument(event.target.value.at(0))
-      // onFilters(
-      //   'type',
-      //   typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
-      // );
+
     },
     [branch],
   );
@@ -183,122 +161,7 @@ getAllOrders()
     [router],
   );
 
-  const handleViewRow = useCallback(
-    (id) => {
-      // router.push(paths.dashboard.product.details(id));
-    },
-    [router],
-  );
-let i =0
-  // const columns = [
-  //   // {
-  //   //   field: 'category',
-  //   //   headerName: 'Category',
-  //   //   filterable: false,
-  //   // },
-  //   {
-  //     field: 'id',
-  //     headerName: '#',
-  //     width: 142,
-  //     renderCell: (params) => <Box>{i+=1}</Box>,
-  //   },
-  //   {
-  //     field: 'name',
-  //     headerName: 'Name',
-  //     flex: 1,
-  //     minWidth: 250,
-  //     hideable: false,
-  //     // renderCell: (params) => <RenderCellProduct params={params} />,
-  //   },
-  //   {
-  //     field: 'commodity',
-  //     headerName: 'Commodity',
-  //     width: 300,
-  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
-  //   },
-  //
-  //   {
-  //     field: 'quantity',
-  //     headerName: 'Quantity',
-  //     width: 200,
-  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
-  //   },
-  //   {
-  //     field: 'branch',
-  //     headerName: 'Branch',
-  //     width: 300,
-  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
-  //   }, {
-  //     field: 'nccf_order_status',
-  //     headerName: 'Status',
-  //     width: 160,
-  //     renderCell: (params) => <TableCell>
-  //       <Label
-  //         variant="soft"
-  //         color={
-  //           (params.row.nccf_order_status === 'accepted' && 'success') ||
-  //           (params.row.nccf_order_status === 'placed' && 'warning') ||
-  //           (params.row.nccf_order_status === 'declined' && 'error') ||
-  //           'default'
-  //         }
-  //       >
-  //         {params.row.nccf_order_status}
-  //       </Label></TableCell>,
-  //   },
-  //   // {
-  //   //   field: 'inventoryType',
-  //   //   headerName: 'Stock',
-  //   //   width: 160,
-  //   //   type: 'singleSelect',
-  //   //   valueOptions: PRODUCT_STOCK_OPTIONS,
-  //   //   renderCell: (params) => <RenderCellStock params={params} />,
-  //   // },
-  //   // {
-  //   //   field: 'price',
-  //   //   headerName: 'Price',
-  //   //   width: 140,
-  //   //   editable: true,
-  //   //   renderCell: (params) => <RenderCellPrice params={params} />,
-  //   // },
-  //   // {
-  //   //   field: 'publish',
-  //   //   headerName: 'Publish',
-  //   //   width: 110,
-  //   //   type: 'singleSelect',
-  //   //   editable: true,
-  //   //   valueOptions: PUBLISH_OPTIONS,
-  //   //   renderCell: (params) => <RenderCellPublish params={params} />,
-  //   // },
-  //   {
-  //     type: 'actions',
-  //     field: 'actions',
-  //     headerName: ' ',
-  //     align: 'right',
-  //     headerAlign: 'right',
-  //     width: 80,
-  //     sortable: false,
-  //     filterable: false,
-  //     disableColumnMenu: true,
-  //     getActions: (params) => [
-  //
-  //       <GridActionsCellItem
-  //         showInMenu
-  //         icon={<Iconify icon="solar:pen-bold"/>}
-  //         label="Edit"
-  //         // onClick={() => handleEditRow(params.row.id)}
-  //       />,
-  //       <GridActionsCellItem
-  //         showInMenu
-  //         icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
-  //         label="Delete"
-  //         // onClick={() => {
-  //         //   handleDeleteRow(params.row.id);
-  //         // }}
-  //         sx={{ color: 'error.main' }}
-  //       />,
-  //     ],
-  //   },
-  // ];
+
   const columns = [
     {
       field: 'id',
@@ -346,42 +209,7 @@ let i =0
         </TableCell>
       ),
     },
-    // {
-    //   field: 'vendor1',
-    //   headerName: 'Action',
-    //   flex: 0.5,
-    //   minWidth: 250,
-    //   renderCell: (params) =><>
-    //     <TableCell sx={{ px: 0,marginRight:2 }} >
-    //       <Button
-    //         disabled={params.row.nccf_order_status === "1" || params.row.nccf_order_status==="0"}
-    //         variant="contained"
-    //         onClick={() => {
-    //           setCurrentData(params.row);
-    //           setApprove(true);
-    //           setOpen(true);
-    //         }}
-    //         sx={{ backgroundColor: 'green' ,width:90}}
-    //       >
-    //         <VerifiedIcon/> Approve
-    //       </Button>
-    //     </TableCell>
-    //     <TableCell sx={{ px: 0 }}>
-    //       <Button
-    //         disabled={params.row.nccf_order_status === "1" || params.row.nccf_order_status==="0"}
-    //         onClick={() => {
-    //           setCurrentData(params.row);
-    //           setApprove(false);
-    //           setOpen(true);
-    //         }}
-    //         variant="contained"
-    //         sx={{ backgroundColor: 'red',width:80 }}
-    //       >
-    //         <CancelIcon/> Reject
-    //       </Button>
-    //     </TableCell>
-    //   </>
-    // },
+
     {
       type: 'actions',
       field: 'actions',
@@ -425,11 +253,7 @@ let i =0
     <>
       <Container
         maxWidth={settings.themeStretch ? false : 'xl'}
-        // sx={{
-        //   flexGrow: 1,
-        //   display: 'flex',
-        //   flexDirection: 'column',
-        // }}
+
       >
         <CustomBreadcrumbs
           heading="Order List"
@@ -441,16 +265,7 @@ let i =0
             },
             { name: 'List' },
           ]}
-          // action={
-          //   <Button
-          //     component={RouterLink}
-          //     href={paths.dashboard.product.new}
-          //     variant="contained"
-          //     startIcon={<Iconify icon="mingcute:add-line" />}
-          //   >
-          //     New Product
-          //   </Button>
-          // }
+
           sx={{
             mb: {
               xs: 3,
@@ -458,7 +273,7 @@ let i =0
             },
           }}
         />
-        <BranchQuickEditForm getAllDocument={getAllOrders} currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={b}/>
+        <HeadQuickEditForm getAllDocument={getAllOrders} currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={b}/>
         <Card
           sx={{
             height: dataFiltered?.length > 0 ? "unset" : 700,
@@ -523,12 +338,7 @@ let i =0
               toolbar: () => (
                 <>
                   <GridToolbarContainer>
-                    {/*<ProductTableToolbar*/}
-                    {/*  filters={filters}*/}
-                    {/*  onFilters={handleFilters}*/}
-                    {/*  stockOptions={PRODUCT_STOCK_OPTIONS}*/}
-                    {/*  publishOptions={PUBLISH_OPTIONS}*/}
-                    {/*/>*/}
+
                     <FormControl
                       sx={{
                         flexShrink: 0,
@@ -546,22 +356,18 @@ let i =0
                             sx: { maxHeight: 240 },
                           },
                         }}
-                        // renderValue={(selected) => selected.join(', ')}
+
                       >
                         {dataCSP.map((option) => (
                           <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.order_count === 0}>
-                            {/*<Checkbox*/}
-                            {/*  disableRipple*/}
-                            {/*  size="small"*/}
-                            {/*  checked={branch.includes(option.csp_code)}*/}
-                            {/*/>*/}
+
                             {option.name}
                           </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
                     {canReset && (
-                      <BranchTableFiltersResult
+                      <HeadTableFiltersResult
                         filters={filters}
                         onFilters={handleFilters}
                         onResetFilters={handleResetFilters}
@@ -569,8 +375,7 @@ let i =0
                         sx={{ p: 2.5, pt: 0 }}
                       />
                     )}
-                    {/*<GridToolbarQuickFilter />*/}
-                    {/**/}
+
                     <Stack
                       spacing={1}
                       flexGrow={1}
@@ -593,19 +398,11 @@ let i =0
                       <GridToolbarFilterButton/>
                       <GridToolbarExport/>
                     </Stack>
-                    <BranchTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
+                    <HeadTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
                                         branchOptions={['hello']} dateError={dateError} dayError={dayError}/>
                   </GridToolbarContainer>
 
-                  {/*{canReset && (*/}
-                  {/*  <ProductTableFiltersResult*/}
-                  {/*    filters={filters}*/}
-                  {/*    onFilters={handleFilters}*/}
-                  {/*    onResetFilters={handleResetFilters}*/}
-                  {/*    results={dataFiltered.length}*/}
-                  {/*    sx={{ p: 2.5, pt: 0 }}*/}
-                  {/*  />*/}
-                  {/*)}*/}
+
                 </>
               ),
               noRowsOverlay: () => <EmptyContent title="No Data"/>,
@@ -645,8 +442,7 @@ let i =0
     </>
   );
 }
-// function applyFilter({ inputData, comparator, filters,dateError }) {
-//   const { name, status, type_of_firm, state, branch, district, category, startDate, endDate  } = filters;
+
 function applyFilter({ inputData, filters,dateError,dayError }) {
   const { stock, publish, status, commodity, name, branch , startDate, endDate,startDay,endDay} = filters;
 

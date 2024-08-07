@@ -460,8 +460,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
         maxWidth={'xl'}
 
       >
-        <Button
-          onClick={() => handleViewDialog('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file/HFVG3435487_Uttar Pradesh/Registration_Certificate/Registration_Certificate_2024-07-27_08-34-39.jpg')}>submit</Button>
+
         <DocumentQuickEditForm currentUser={currentData} open={open} setOpen={setOpen}/>
         <CustomBreadcrumbs
           heading={miller ? 'Miller Documents' : cspt ? 'CSP Documents' : docu ? 'Documents' : `Distributor Documents`}

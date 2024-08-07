@@ -27,7 +27,7 @@ import { useAuthContext } from '../../auth/hooks';
 
 // ----------------------------------------------------------------------
 
-export default function BranchTableToolbar({
+export default function HeadTableToolbar({
                                              filters,
                                              onFilters,
                                              //
@@ -455,7 +455,7 @@ useEffect(() => {
   );
 }
 
-BranchTableToolbar.propTypes = {
+HeadTableToolbar.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
   roleOptions: PropTypes.array,

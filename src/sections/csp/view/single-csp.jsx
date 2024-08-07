@@ -11,6 +11,7 @@ import CspNewEditForm from '../csp-new-edit-form';
 import CspDocumentView from './csp-document-view';
 import Orders from '../Orders';
 import List from '../../branch-order/view/list';
+import FieldReport from '../field-report';
   const TABS = [
     {
       value: 'basic',
@@ -27,15 +28,15 @@ import List from '../../branch-order/view/list';
       label: 'Orders',
       icon: <Iconify icon="solar:bell-bing-bold" width={24} />,
     },
-    // {
-    //   value: 'social',
-    //   label: 'Social links',
-    //   icon: <Iconify icon="solar:share-bold" width={24} />,
-    // },
+    {
+      value: 'fieldReport',
+      label: 'Field report',
+      icon: <Iconify icon="tdesign:verify" width={24} />,
+    },
     // {
     //   value: 'security',
     //   label: 'Security',
-    //   icon: <Iconify icon="ic:round-vpn-key" width={24} />,
+    //   icon: <Iconify icon="solar:share-bold" width={24} />,
     // },
   ];
 function SingleCsp(props) {
@@ -88,6 +89,7 @@ const {id} = useParams()
 
         {currentTab === 'document' && <CspDocumentView  />}
         {currentTab === 'orders' && <Orders singleCode={id}/>}
+        {currentTab === 'fieldReport' && <FieldReport singleCode={id}/>}
 
         {/*{currentTab === 'social' && <AccountSocialLinks socialLinks={_userAbout.socialLinks} />}*/}
 

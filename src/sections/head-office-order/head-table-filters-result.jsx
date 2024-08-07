@@ -13,7 +13,7 @@ import { shortDateLabel } from '../../components/custom-date-range-picker';
 
 // ----------------------------------------------------------------------
 
-export default function BranchTableFiltersResult({
+export default function HeadTableFiltersResult({
   filters,
   onFilters,
   //
@@ -133,7 +133,7 @@ export default function BranchTableFiltersResult({
   );
 }
 
-BranchTableFiltersResult.propTypes = {
+HeadTableFiltersResult.propTypes = {
   filters: PropTypes.object,
   onFilters: PropTypes.func,
   onResetFilters: PropTypes.func,

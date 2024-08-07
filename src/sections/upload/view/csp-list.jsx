@@ -130,13 +130,13 @@ function CspList({ csp, document, miller, cspt, docu }) {
   );
   const cspCode = csp || vendor?.csp_code;
   useEffect(() => {
-    if (docu) {
+    if (docu && b !== []) {
       setTableData([]);
       setDataId([]);
       dataFiltered = [];
       getAllDocument(b);
     } else {
-      getAllDocument(cspCode);
+      getAllDocument(vendor?.csp_code);
     }
   }, [b]);
 
