@@ -392,7 +392,7 @@ const RegistrationForm = ({ vendor_category }) => {
                label="District"
                placeholder="Choose Your District"
                fullWidth
-               options={districtOptions.map((option) => option?.district)}
+               options={districtOptions.map((option) => option?.district_name)}
                getOptionLabel={(option) => option}
                disabled={!data1}
              />
