@@ -31,7 +31,7 @@ export default function FieldReport({singleCode}) {
     axios.put("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr/validate",payload)
       .then((res) => {
         remarkData();
-        enqueueSnackbar("")
+        enqueueSnackbar(res.data.message)
       }).catch((err) => console.log(err))
   }
   const handelSubmit2 = () => {
@@ -40,7 +40,11 @@ export default function FieldReport({singleCode}) {
       field_report:remark,
       nccf_branch_status:"0"
     }
-    axios.put("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr/validate",payload).then((res) => remarkData()).catch((err) => console.log(err))
+    axios.put("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr/validate",payload)
+      .then((res) => {
+        remarkData();
+        enqueueSnackbar(res.data.message)
+      }).catch((err) => console.log(err))
   }
 
 
