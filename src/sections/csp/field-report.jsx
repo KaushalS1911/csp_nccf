@@ -11,17 +11,17 @@ import axios from 'axios';
 import { enqueueSnackbar } from 'notistack';
 
 
-export default function FieldReport({singleCode}) {
-  const [remark,setRemark] = useState("")
-  const [data,setData] = useState("")
+export default function FieldReport({singleCode,data,setData,remark,setRemark,remarkData}) {
+  // const [remark,setRemark] = useState("")
+  // const [data,setData] = useState("")
   const {vendor} = useAuthContext()
-  const remarkData = () => {
-    axios.post("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr",{csp_code:singleCode})
-      .then((res) => {
-        setRemark(res?.data?.data?.remark);
-        setData(res?.data?.data?.remark)
-      }).catch((err) => console.log(err))
-  }
+  // const remarkData = () => {
+  //   axios.post("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr",{csp_code:singleCode})
+  //     .then((res) => {
+  //       setRemark(res?.data?.data?.remark);
+  //       setData(res?.data?.data?.remark)
+  //     }).catch((err) => console.log(err))
+  // }
   const handelSubmit = () => {
     const payload = {
       csp_code:singleCode,
@@ -48,10 +48,10 @@ export default function FieldReport({singleCode}) {
   }
 
 
-  useEffect(() => {
-    setRemark("")
-    remarkData()
-  },[])
+  // useEffect(() => {
+  //   setRemark("")
+  //   remarkData()
+  // },[])
 
   return (
     <>

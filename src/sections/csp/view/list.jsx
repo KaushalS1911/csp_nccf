@@ -560,7 +560,7 @@ const {vendor} = useAuthContext()
                         </Button>
                       )}
 
-                      {/*<GridToolbarColumnsButton />*/}
+                      <GridToolbarColumnsButton />
                       {/*<GridToolbarFilterButton />*/}
                       <GridToolbarExport />
                     </Stack>

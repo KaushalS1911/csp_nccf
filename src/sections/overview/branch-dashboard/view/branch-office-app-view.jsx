@@ -84,8 +84,8 @@ export default function BranchDashboardView({ vendorCode }) {
               // percent={0.2}
               total={data?.count}
               chart={{
-                colors: color[ind-1],
-                series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+                // colors: color[ind-1],
+                // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
               }}
             />
           </Grid>

@@ -17,10 +17,10 @@ function BranchBasicInfo(props) {
 const {vendor} = useAuthContext()
   const password = Yup.object().shape({
     confirm_password: Yup.string().min(6,"Minimum 6 character should be required")
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .oneOf([Yup.ref('password'), null], 'Password does not match')
       .required('Confirm password is required'),
     password: Yup.string().min(6,"Minimum 6 character should be required")
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .oneOf([Yup.ref('password'), null], "Password does not match")
       .required('Confirm password is required'),
   })
   const defaultValues ={
@@ -112,7 +112,7 @@ const {vendor} = useAuthContext()
                   fontSize: '18px',
                 }}
               >
-                Password Information
+               Update Password
                 <Typography sx={{ fontSize: '13px', color: '#637381' }}>
                  Password , Confirm Password
                 </Typography>

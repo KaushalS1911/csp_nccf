@@ -49,6 +49,9 @@ import { usePopover } from '../../../components/custom-popover';
 import DocumentQuickEditForm from '../document-quick-edit-form';
 import { Checkbox, Fab, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import Tabs from '@mui/material/Tabs';
+import { alpha } from '@mui/material/styles';
+import Tab from '@mui/material/Tab';
 // import BranchTableFiltersResult from '../branch-table-filters-result';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
@@ -63,7 +66,10 @@ const PUBLISH_OPTIONS = [
   { value: 'published', label: 'Published' },
   { value: 'draft', label: 'Draft' },
 ];
-
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: '', label: 'Approval Pending' }, {
+  value: '1',
+  label: 'Approved',
+}, { value: '0', label: 'Rejected' }];
 const defaultFilters = {
   name: '',
   role: [],
@@ -109,11 +115,36 @@ function CspList({ csp, document, miller, cspt, docu }) {
     // comparator: getComparator(table.order, table.orderBy),
     filters,
   });
+  const cspCode = csp || vendor?.branch;
+  console.log(csp,"heer");
+  useEffect(() => {
+    if(branch === "All"){
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/document`)
+        .then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+    }
+    else {
+      getAllDocument(branch);
+
+    }
+
+  }, [branch]);
   useEffect(() => {
     if (vendor) {
-      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`).then((res) => setDataCSP(res?.data?.data)).catch((err) => console.log(err));
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`)
+        .then((res) => {
+          const fetchedData = res?.data?.data || [];
+          const updatedData = [{ name: "All", csp_code: "All" }, ...fetchedData];
+          setDataCSP(updatedData);
+        }).catch((err) => console.log(err));
+csp ? axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${csp}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err)) :
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
     }
+
   }, []);
+  // useEffect(() => {
+  //
+  //   axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+  // }, [branch === 'All']);
 
   const handleFilterCSP = useCallback(
     (event) => {
@@ -128,17 +159,14 @@ function CspList({ csp, document, miller, cspt, docu }) {
     },
     [branch],
   );
-  const cspCode = csp || vendor?.csp_code;
-  useEffect(() => {
-    if (docu && b !== []) {
-      setTableData([]);
-      setDataId([]);
-      dataFiltered = [];
-      getAllDocument(b);
-    } else {
-      getAllDocument(vendor?.csp_code);
-    }
-  }, [b]);
+  // useEffect(() => {
+  //   if (b !== []) {
+  //
+  //     getAllDocument(b);
+  //   } else {
+  //     getAllDocument(cspCode);
+  //   }
+  // }, [b]);
 
 
   // useEffect(() => {
@@ -543,14 +571,47 @@ function CspList({ csp, document, miller, cspt, docu }) {
 
         <Card
           sx={{
-            height: dataId?.length > 0 ? 'unset' : 700,
+            // height: dataId?.length > 0 ? 'unset' : 700,
             // flexGrow: { md: 1 },
             // display: { md: 'flex' },
             // flexDirection: { md: 'column' },
           }}
         >
 
-
+          <Tabs
+            value={filters.status}
+            onChange={handleFilterStatus}
+            sx={{
+              px: 2.5,
+              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
+            }}
+          >
+            {STATUS_OPTIONS.map((tab) => (
+              <Tab
+                key={tab.value}
+                iconPosition="end"
+                value={tab.value}
+                label={tab.label}
+                icon={
+                  <Label
+                    variant={
+                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
+                    }
+                    color={
+                      (tab.value === '1' && 'success') ||
+                      (tab.value === '' && 'warning') ||
+                      (tab.value === '0' && 'error') ||
+                      'default'
+                    }
+                  >
+                    {['1', '0', ''].includes(tab.value)
+                      ? tableData.filter((user) => user.branch_approval_status === tab.value).length
+                      : tableData.length}
+                  </Label>
+                }
+              />
+            ))}
+          </Tabs>
           <DataGrid
             // checkboxSelection
             disableRowSelectionOnClick
@@ -631,7 +692,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
 
 
                       <Box>
-                        {/*<GridToolbarColumnsButton/>*/}
+                        <GridToolbarColumnsButton/>
                         {/*<GridToolbarFilterButton/>*/}
                         <GridToolbarExport/>
                       </Box>
@@ -725,7 +786,7 @@ function applyFilter(
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((user) => user.doc_type === status);
+    inputData = inputData.filter((user) => user.branch_approval_status === status);
   }
 
   if (role?.length) {

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Iconify from '../../../components/iconify';
 import { useSettingsContext } from '../../../components/settings';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
@@ -12,6 +12,7 @@ import CspDocumentView from './csp-document-view';
 import Orders from '../Orders';
 import List from '../../branch-order/view/list';
 import FieldReport from '../field-report';
+import axios from 'axios';
   const TABS = [
     {
       value: 'basic',
@@ -41,6 +42,8 @@ import FieldReport from '../field-report';
   ];
 function SingleCsp(props) {
 const {id} = useParams()
+  const [remark,setRemark] = useState("")
+  const [data,setData] = useState("")
   const settings = useSettingsContext();
   const { csp } = useGetCSP();
   const distributor = csp?.find((data) => data.csp_code === id )
@@ -49,6 +52,17 @@ const {id} = useParams()
   const handleChangeTab = useCallback((event, newValue) => {
     setCurrentTab(newValue);
   }, []);
+  const remarkData = () => {
+    axios.post("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr",{csp_code:id})
+      .then((res) => {
+        setRemark(res?.data?.data?.remark);
+        setData(res?.data?.data?.remark)
+      }).catch((err) => console.log(err))
+  }
+  useEffect(() => {
+    setRemark("")
+    remarkData()
+  },[])
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
@@ -89,7 +103,7 @@ const {id} = useParams()
 
         {currentTab === 'document' && <CspDocumentView  />}
         {currentTab === 'orders' && <Orders singleCode={id}/>}
-        {currentTab === 'fieldReport' && <FieldReport singleCode={id}/>}
+        {currentTab === 'fieldReport' && <FieldReport singleCode={id} remark={remark} setRemark={setRemark} data={data} setData={setData} remarkData={remarkData}/> }
 
         {/*{currentTab === 'social' && <AccountSocialLinks socialLinks={_userAbout.socialLinks} />}*/}
 

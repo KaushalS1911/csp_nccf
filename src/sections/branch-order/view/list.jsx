@@ -70,8 +70,8 @@ const defaultFilters = {
   name: '',
   startDate: null,
   endDate: null,
-  startDay:null,
-  endDay:null
+  startDay: null,
+  endDay: null,
 
 };
 
@@ -81,7 +81,7 @@ const HIDE_COLUMNS = {
 
 const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
-function List({singleCode}) {
+function List({ singleCode }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const confirmRows = useBoolean();
@@ -89,7 +89,7 @@ function List({singleCode}) {
   const router = useRouter();
 
   const settings = useSettingsContext();
-const {vendor} = useAuthContext()
+  const { vendor } = useAuthContext();
 
   const [tableData, setTableData] = useState([]);
 
@@ -106,22 +106,42 @@ const {vendor} = useAuthContext()
   const [b, setB] = useState([]);
   const dateError = isAfter(filters.startDate, filters.endDate);
   const dayError = isAfter(filters.startDay, filters.endDay);
-  const getAllOrders = () => {
-    const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/orders`;
+  const getAllOrders = (dat) => {
+    const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${dat}/orders`;
 
-    axios.get(URL).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
-  }
-  useEffect(() => {
-getAllOrders()
-    // if (order.length) {
-    //   setTableData(order);
-    // }
-  }, [branch]);
+    axios.get(URL).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+  };
+
+
   useEffect(() => {
     if (vendor) {
-      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`).then((res) => setDataCSP(res?.data?.data)).catch((err) => console.log(err));
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`)
+        .then((res) => {
+          const fetchedData = res?.data?.data || [];
+          const updatedData = [{ name: 'All', csp_code: 'All' }, ...fetchedData];
+          setDataCSP(updatedData);
+        }).catch((err) => console.log(err));
+
+      axios.get('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/noida/order').then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
     }
+
   }, []);
+
+  useEffect(() => {
+    if (branch === "All"){
+    const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/order`;
+
+    axios.get(URL).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+
+    }else {
+    getAllOrders(branch);
+
+    }
+
+  }, [branch]);
+
+
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     filters,
@@ -183,127 +203,12 @@ getAllOrders()
     [router],
   );
 
-  const handleViewRow = useCallback(
-    (id) => {
-      // router.push(paths.dashboard.product.details(id));
-    },
-    [router],
-  );
-let i =0
-  // const columns = [
-  //   // {
-  //   //   field: 'category',
-  //   //   headerName: 'Category',
-  //   //   filterable: false,
-  //   // },
-  //   {
-  //     field: 'id',
-  //     headerName: '#',
-  //     width: 142,
-  //     renderCell: (params) => <Box>{i+=1}</Box>,
-  //   },
-  //   {
-  //     field: 'name',
-  //     headerName: 'Name',
-  //     flex: 1,
-  //     minWidth: 250,
-  //     hideable: false,
-  //     // renderCell: (params) => <RenderCellProduct params={params} />,
-  //   },
-  //   {
-  //     field: 'commodity',
-  //     headerName: 'Commodity',
-  //     width: 300,
-  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
-  //   },
-  //
-  //   {
-  //     field: 'quantity',
-  //     headerName: 'Quantity',
-  //     width: 200,
-  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
-  //   },
-  //   {
-  //     field: 'branch',
-  //     headerName: 'Branch',
-  //     width: 300,
-  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
-  //   }, {
-  //     field: 'nccf_order_status',
-  //     headerName: 'Status',
-  //     width: 160,
-  //     renderCell: (params) => <TableCell>
-  //       <Label
-  //         variant="soft"
-  //         color={
-  //           (params.row.nccf_order_status === 'accepted' && 'success') ||
-  //           (params.row.nccf_order_status === 'placed' && 'warning') ||
-  //           (params.row.nccf_order_status === 'declined' && 'error') ||
-  //           'default'
-  //         }
-  //       >
-  //         {params.row.nccf_order_status}
-  //       </Label></TableCell>,
-  //   },
-  //   // {
-  //   //   field: 'inventoryType',
-  //   //   headerName: 'Stock',
-  //   //   width: 160,
-  //   //   type: 'singleSelect',
-  //   //   valueOptions: PRODUCT_STOCK_OPTIONS,
-  //   //   renderCell: (params) => <RenderCellStock params={params} />,
-  //   // },
-  //   // {
-  //   //   field: 'price',
-  //   //   headerName: 'Price',
-  //   //   width: 140,
-  //   //   editable: true,
-  //   //   renderCell: (params) => <RenderCellPrice params={params} />,
-  //   // },
-  //   // {
-  //   //   field: 'publish',
-  //   //   headerName: 'Publish',
-  //   //   width: 110,
-  //   //   type: 'singleSelect',
-  //   //   editable: true,
-  //   //   valueOptions: PUBLISH_OPTIONS,
-  //   //   renderCell: (params) => <RenderCellPublish params={params} />,
-  //   // },
-  //   {
-  //     type: 'actions',
-  //     field: 'actions',
-  //     headerName: ' ',
-  //     align: 'right',
-  //     headerAlign: 'right',
-  //     width: 80,
-  //     sortable: false,
-  //     filterable: false,
-  //     disableColumnMenu: true,
-  //     getActions: (params) => [
-  //
-  //       <GridActionsCellItem
-  //         showInMenu
-  //         icon={<Iconify icon="solar:pen-bold"/>}
-  //         label="Edit"
-  //         // onClick={() => handleEditRow(params.row.id)}
-  //       />,
-  //       <GridActionsCellItem
-  //         showInMenu
-  //         icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
-  //         label="Delete"
-  //         // onClick={() => {
-  //         //   handleDeleteRow(params.row.id);
-  //         // }}
-  //         sx={{ color: 'error.main' }}
-  //       />,
-  //     ],
-  //   },
-  // ];
+
   const columns = [
     {
       field: 'id',
       headerName: '#',
-      minWidth: 100,
+      minWidth: 200,
       renderCell: (params) => <Box>{params.row.id}</Box>, // You can use params.row.id directly
     },
     {
@@ -323,7 +228,7 @@ let i =0
       headerName: 'Date',
       minWidth: 150,
       flex: 1, // This makes the column flexible
-      renderCell: (params) => moment(params.row.created_at).format("DD/MM/YYYY"),
+      renderCell: (params) => moment(params.row.created_at).format('DD/MM/YYYY'),
     },
     {
       field: 'nccf_order_status',
@@ -341,7 +246,7 @@ let i =0
               'default'
             }
           >
-            {params.row.nccf_order_status  === "1" ? "Approved" : params.row.nccf_order_status === "0" ? "Rejected" : "Placed" }
+            {params.row.nccf_order_status === '1' ? 'Approved' : params.row.nccf_order_status === '0' ? 'Rejected' : 'Placed'}
           </Label>
         </TableCell>
       ),
@@ -382,32 +287,32 @@ let i =0
     //     </TableCell>
     //   </>
     // },
-    {
-      type: 'actions',
-      field: 'actions',
-      headerName: ' ',
-      align: 'right',
-      headerAlign: 'right',
-      width: 80,
-      sortable: false,
-      filterable: false,
-      disableColumnMenu: true,
-      getActions: (params) => [
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:pen-bold" />}
-          label="Edit"
-          onClick={() => handleEditRow(params.row.id)} // Implement this function as needed
-        />,
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:trash-bin-trash-bold" />}
-          label="Delete"
-          onClick={() => handleDeleteRow(params.row.id)} // Implement this function as needed
-          sx={{ color: 'error.main' }}
-        />,
-      ],
-    },
+    // {
+    //   type: 'actions',
+    //   field: 'actions',
+    //   headerName: ' ',
+    //   align: 'right',
+    //   headerAlign: 'right',
+    //   width: 80,
+    //   sortable: false,
+    //   filterable: false,
+    //   disableColumnMenu: true,
+    //   getActions: (params) => [
+    //     <GridActionsCellItem
+    //       showInMenu
+    //       icon={<Iconify icon="solar:pen-bold"/>}
+    //       label="Edit"
+    //       onClick={() => handleEditRow(params.row.id)} // Implement this function as needed
+    //     />,
+    //     <GridActionsCellItem
+    //       showInMenu
+    //       icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
+    //       label="Delete"
+    //       onClick={() => handleDeleteRow(params.row.id)} // Implement this function as needed
+    //       sx={{ color: 'error.main' }}
+    //     />,
+    //   ],
+    // },
   ];
 
   const handleFilterStatus = useCallback(
@@ -458,10 +363,11 @@ let i =0
             },
           }}
         />
-        <BranchQuickEditForm getAllDocument={getAllOrders} currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={b}/>
+        <BranchQuickEditForm getAllDocument={getAllOrders} currentUser={currentData} open={open} setOpen={setOpen}
+                             approve={approve} cspCode={b}/>
         <Card
           sx={{
-            height: dataFiltered?.length > 0 ? "unset" : 700,
+            height: dataFiltered?.length > 0 ? 'unset' : 700,
             flexGrow: { md: 1 },
             display: { md: 'flex' },
             flexDirection: { md: 'column' },
@@ -590,7 +496,7 @@ let i =0
                       )}
 
                       <GridToolbarColumnsButton/>
-                      <GridToolbarFilterButton/>
+                      {/*<GridToolbarFilterButton/>*/}
                       <GridToolbarExport/>
                     </Stack>
                     <BranchTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
@@ -645,10 +551,11 @@ let i =0
     </>
   );
 }
+
 // function applyFilter({ inputData, comparator, filters,dateError }) {
 //   const { name, status, type_of_firm, state, branch, district, category, startDate, endDate  } = filters;
-function applyFilter({ inputData, filters,dateError,dayError }) {
-  const { stock, publish, status, commodity, name, branch , startDate, endDate,startDay,endDay} = filters;
+function applyFilter({ inputData, filters, dateError, dayError }) {
+  const { stock, publish, status, commodity, name, branch, startDate, endDate, startDay, endDay } = filters;
 
   if (stock.length) {
     inputData = inputData.filter((product) => stock.includes(product.inventoryType));
