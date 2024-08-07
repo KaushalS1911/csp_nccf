@@ -1,1 +1,0 @@
-import{j as t,H as o}from"./index-jYciaZj8.js";import{S as r}from"./typography-view-hht9mPlT.js";import"./component-hero-MrJ3aTgT.js";import"./component-block-3jQJTZE0.js";import"./text-max-line-iM5PTv6E.js";function n(){return t.jsxs(t.Fragment,{children:[t.jsx(o,{children:t.jsx("title",{children:" Foundations: Shadows"})}),t.jsx(r,{})]})}export{n as default};

@@ -1,1 +1,0 @@
-import{u as e,j as t,cD as o,cE as r}from"./index-jYciaZj8.js";const n=()=>{const{vendor:s}=e();return t.jsx(t.Fragment,{children:s.category==="branch"?t.jsx(o,{docu:!0}):t.jsx(r,{})})};export{n as default};
