@@ -209,6 +209,8 @@ import CspListView from '../../sections/csp/view/list';
 import DistributorListView from '../../sections/add-distributor/view/list';
 import MillerListView from '../../sections/add-miller/view/list';
 import SingleCsp from '../../sections/csp/view/single-csp';
+import BranchBasicInfo from '../../pages/dashboard/branch-basic-info';
+import MainBasicInfo from '../../pages/dashboard/main-basic-info';
 
 // ----------------------------------------------------------------------
 
@@ -292,7 +294,8 @@ export const dashboardRoutes = [
     ),
     children: [
       { element: <IndexPage />, index: true },
-      { path: 'basic-info', element: <BasicInfoPage /> },
+      // { path: 'basic-info', element: <BasicInfoPage /> },
+      { path: 'basic-info', element: <MainBasicInfo /> },
       { path: 'distributor-info', element: <DistributorInfo /> },
       // { path: 'upload-document', element: <UploadDocument /> },
       // { path: 'document', element: <UploadListView /> },

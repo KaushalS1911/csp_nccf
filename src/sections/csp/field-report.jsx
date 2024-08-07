@@ -8,6 +8,7 @@ import { Button, Card, TextField } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import { Box } from '@mui/system';
 import axios from 'axios';
+import { enqueueSnackbar } from 'notistack';
 
 
 export default function FieldReport({singleCode}) {
@@ -27,7 +28,11 @@ export default function FieldReport({singleCode}) {
       field_report:remark,
       nccf_branch_status:"1"
     }
-    axios.put("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr/validate",payload).then((res) => remarkData()).catch((err) => console.log(err))
+    axios.put("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr/validate",payload)
+      .then((res) => {
+        remarkData();
+        enqueueSnackbar("")
+      }).catch((err) => console.log(err))
   }
   const handelSubmit2 = () => {
     const payload ={
