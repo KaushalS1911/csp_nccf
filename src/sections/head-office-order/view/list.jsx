@@ -173,7 +173,7 @@ setBanchVal(event.target.value)
     [enqueueSnackbar, tableData],
   );
   const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: '1', label: 'Accepted' }, {
-    value: '',
+    value: 'placed',
     label: 'Placed',
   }, { value: '0', label: 'Declined' }];
   const handleDeleteRows = useCallback(() => {
@@ -183,6 +183,8 @@ setBanchVal(event.target.value)
 
     setTableData(deleteRows);
   }, [enqueueSnackbar, selectedRowIds, tableData]);
+
+  console.log(tableData);
 
   const handleEditRow = useCallback(
     (id) => {
@@ -235,7 +237,7 @@ setBanchVal(event.target.value)
             variant="soft"
             color={
               (params.row.nccf_order_status === '1' && 'success') ||
-              (params.row.nccf_order_status === '' && 'warning') ||
+              (params.row.nccf_order_status === 'placed' && 'warning') ||
               (params.row.nccf_order_status === '0' && 'error') ||
               'default'
             }
@@ -376,7 +378,7 @@ setBanchVal(event.target.value)
                     }
                     color={
                       (tab.value === '1' && 'success') ||
-                      (tab.value === '' && 'warning') ||
+                      (tab.value === 'placed' && 'warning') ||
                       (tab.value === '0' && 'error') ||
                       'default'
                     }

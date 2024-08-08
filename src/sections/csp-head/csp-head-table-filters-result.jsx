@@ -62,14 +62,15 @@ export default function CspTableFiltersResult({
       onFilters('branch', newValue);
     },
     [filters.branch, onFilters]
-  );const handleRemoveDistrict = useCallback(
-    (inputValue) => {
-      const newValue = filters.district.filter((item) => item !== inputValue);
-
-      onFilters('district', newValue);
-    },
-    [filters.district, onFilters]
   );
+  // const handleRemoveDistrict = useCallback(
+  //   (inputValue) => {
+  //     const newValue = filters.district.filter((item) => item !== inputValue);
+  //
+  //     onFilters('district', newValue);
+  //   },
+  //   [filters.district, onFilters]
+  // );
 
   return (
     <Stack spacing={1.5} {...other}>
@@ -114,13 +115,13 @@ export default function CspTableFiltersResult({
             ))}
           </Block>
         )}
-        {!!filters.district.length && (
-          <Block label="District:">
-            {filters.district.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveDistrict(item)} />
-            ))}
-          </Block>
-        )}
+        {/*{!!filters.district.length && (*/}
+        {/*  <Block label="District:">*/}
+        {/*    {filters.district.map((item) => (*/}
+        {/*      <Chip key={item} label={item} size="small" onDelete={() => handleRemoveDistrict(item)} />*/}
+        {/*    ))}*/}
+        {/*  </Block>*/}
+        {/*)}*/}
 
         {!!filters.name && (
           <Block label="Keyword:">

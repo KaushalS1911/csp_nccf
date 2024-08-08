@@ -235,34 +235,34 @@ const {vendor} = useAuthContext()
         {/*    ))}*/}
         {/*  </Select>*/}
         {/*</FormControl>*/}
-        <FormControl
-          sx={{
-            flexShrink: 0,
-            width: { xs: 1, md: 200 },
-          }}
-        >
-          <InputLabel>District</InputLabel>
+        {/*<FormControl*/}
+        {/*  sx={{*/}
+        {/*    flexShrink: 0,*/}
+        {/*    width: { xs: 1, md: 200 },*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <InputLabel>District</InputLabel>*/}
 
-          <Select
-            multiple
-            value={filters.district}
-            onChange={handleFilterDistrict}
-            input={<OutlinedInput label="District"/>}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
-            MenuProps={{
-              PaperProps: {
-                sx: { maxHeight: 240 },
-              },
-            }}
-          >
-            {districtOptions?.map((option) => (
-              <MenuItem key={option} value={option}>
-                <Checkbox disableRipple size="small" checked={filters.district.includes(option)}/>
-                {option}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {/*  <Select*/}
+        {/*    multiple*/}
+        {/*    value={filters.district}*/}
+        {/*    onChange={handleFilterDistrict}*/}
+        {/*    input={<OutlinedInput label="District"/>}*/}
+        {/*    renderValue={(selected) => selected.map((value) => value).join(', ')}*/}
+        {/*    MenuProps={{*/}
+        {/*      PaperProps: {*/}
+        {/*        sx: { maxHeight: 240 },*/}
+        {/*      },*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    {districtOptions?.map((option) => (*/}
+        {/*      <MenuItem key={option} value={option}>*/}
+        {/*        <Checkbox disableRipple size="small" checked={filters.district.includes(option)}/>*/}
+        {/*        {option}*/}
+        {/*      </MenuItem>*/}
+        {/*    ))}*/}
+        {/*  </Select>*/}
+        {/*</FormControl>*/}
 
 
       </Stack>
