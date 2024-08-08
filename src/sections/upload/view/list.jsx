@@ -51,6 +51,7 @@ import { Checkbox, FormControl, InputLabel, MenuItem, OutlinedInput, Select } fr
 import Tabs from '@mui/material/Tabs';
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
+import { isAfter, isBetween } from '../../../utils/format-time';
 // import BranchTableFiltersResult from '../branch-table-filters-result';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
@@ -71,6 +72,8 @@ const defaultFilters = {
   role: [],
   type: [],
   status: 'all',
+  startDay: null,
+  endDay: null,
 
 };
 
@@ -82,7 +85,6 @@ const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
 function DocumentList({ csp, document, miller, cspt, docu }) {
   const { enqueueSnackbar } = useSnackbar();
-
   const confirmRows = useBoolean();
   const { vendor } = useAuthContext();
   const router = useRouter();
@@ -115,6 +117,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
       axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`).then((res) => setDataCSP(res?.data?.data)).catch((err) => console.log(err));
     }
   }, []);
+  const dayError = isAfter(filters.startDay, filters.endDay);
 
   const handleFilterCSP = useCallback(
     (event) => {
@@ -159,7 +162,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   }
 
 
-  const canReset = !isEqual(defaultFilters, filters);
+  const canReset = !isEqual(defaultFilters, filters)|| (!!filters.startDay && !!filters.endDay);
 
   const handleFilters = useCallback((name, value) => {
     setFilters((prevState) => ({
@@ -594,7 +597,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                     <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
                                           getAllDocument={getAllDocument}
                                           vendorData={vendor?.category === 'branch' ? true : false} setB={setB}
-                                          document={document}/>
+                                          document={document} dayError={dayError}/>
                     {canReset && (
                       <DocumentTableFiltersResult
                         filters={filters}
@@ -666,10 +669,10 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
 
 function applyFilter(
   {
-    inputData, filters,
+    inputData, filters,dayError
   },
 ) {
-  const { name, status, role, type } = filters;
+  const { name, status, role, type, startDay, endDay } = filters;
 
 
   if (name) {
@@ -681,7 +684,11 @@ function applyFilter(
   if (status !== 'all') {
     inputData = inputData.filter((user) => user.branch_approval_status === status);
   }
-
+  if (!dayError) {
+    if (startDay && endDay) {
+      inputData = inputData.filter((product) => isBetween(product.uploaded_on, startDay, endDay));
+    }
+  }
   if (role?.length) {
     inputData = inputData.filter((user) => role.includes(user.role));
   }
