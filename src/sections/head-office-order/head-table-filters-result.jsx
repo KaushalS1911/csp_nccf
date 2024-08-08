@@ -107,11 +107,11 @@ export default function HeadTableFiltersResult({
         {/*    ))}*/}
         {/*  </Block>*/}
         {/*)}*/}
-        {!!filters.branch.length && (
+        {!!filters.branch && (
           <Block label="Branch:">
-            {filters.branch.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveBranch(item)} />
-            ))}
+            {/*{filters.branch.map((item) => (*/}
+              <Chip key={filters.branch[0]} label={filters.branch[0]} size="small" onDelete={() => handleRemoveBranch(branch)} />
+            {/*)}*/}
           </Block>
         )}
 

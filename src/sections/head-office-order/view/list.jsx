@@ -87,6 +87,8 @@ function HOList({ singleCode }) {
   const [currentData, setCurrentData] = useState({});
   const [approve, setApprove] = useState(false);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
+  const [banch,setBanch] = useState([])
+  const [banchVal,setBanchVal] = useState("")
   const [dataCSP, setDataCSP] = useState([]);
   const [branch, setBranch] = useState('All');
   const [b, setB] = useState([]);
@@ -113,6 +115,8 @@ function HOList({ singleCode }) {
       .then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
   };
   useEffect(() => {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/branch`)
+      .then((res) => setBanch(res?.data?.data)).catch((err) => console.log(err));
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/list`)
       .then((res) => {
         const fetchedData = res?.data?.data || [];
@@ -135,6 +139,13 @@ function HOList({ singleCode }) {
 
       setBranch(event.target.value);
 
+    },
+    [branch],
+  );
+  const handleFilterBranch = useCallback(
+    (event) => {
+setBanchVal(event.target.value)
+      handleFilters('branch', event.target.value)
     },
     [branch],
   );
@@ -411,8 +422,8 @@ function HOList({ singleCode }) {
                       <InputLabel>Branch</InputLabel>
 
                       <Select
-                        value={branch}
-                        onChange={handleFilterCSP}
+                        value={banchVal}
+                        onChange={handleFilterBranch}
                         input={<OutlinedInput label="Type"/>}
                         MenuProps={{
                           PaperProps: {
@@ -421,12 +432,12 @@ function HOList({ singleCode }) {
                         }}
 
                       >
-                        {/*{dataCSP.map((option) => (*/}
-                        {/*  <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.order_count === 0}>*/}
+                        {banch.map((option) => (
+                          <MenuItem key={option.branch_name} value={option.branch_name} >
 
-                        {/*    {option.name}*/}
-                        {/*  </MenuItem>*/}
-                        {/*))}*/}
+                            {option.branch_name}
+                          </MenuItem>
+                        ))}
                       </Select>
                     </FormControl>
                     <FormControl
