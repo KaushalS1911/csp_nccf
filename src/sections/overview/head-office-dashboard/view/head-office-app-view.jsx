@@ -16,7 +16,8 @@ import HeadManagerPanel from '../head-manager-panel';
 import { paths } from '../../../../routes/paths';
 import scrollbar from '../../../../components/scrollbar';
 import { Stack } from '@mui/system';
-import { _folders } from '../../../../_mock';
+import { _folders, handleCategoryTypes } from '../../../../_mock';
+import BranchWidgetSummary from '../../branch-dashboard/branch-widget-summary';
 
 // ----------------------------------------------------------------------
 
@@ -27,8 +28,8 @@ export default function HeadviewAppView({ vendorCode }) {
 
 
   const [orderList, setOrderList] = useState([]);
-  const [stats, setStats] = useState({});
-
+  const [stats, setStats] = useState([]);
+const [orderCount,setOrderCount] = useState([])
 
   const TIME_LABELS = {
     week: ['Mon', 'Tue', 'Web', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -38,13 +39,18 @@ export default function HeadviewAppView({ vendorCode }) {
   useEffect(() => {
     if (vendor.csp_code) {
       fetchAllOrders();
-      getStats();
     }
-  }, [vendor]);
-
+      getStats();
+    getOrder()
+  }, []);
   function getStats() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor.csp_code}/orders_stats`).then((res) => {
-      setStats(res.data?.data[0]);
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/category-stats`).then((res) => {
+      setStats(res.data.data);
+    });
+  }
+  function getOrder() {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/orders/stats`).then((res) => {
+      setOrderCount(res.data.data);
     });
   }
 
@@ -53,63 +59,82 @@ export default function HeadviewAppView({ vendorCode }) {
       setOrderList(res.data?.data);
     });
   }
+  const statusesToKeep = ["placed", "accepted", "declined"];
+
+  const filteredData = orderCount.filter(item => statusesToKeep.includes(item.nccf_order_status));
 
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
-        <Grid xs={12} md={3}>
-          <HeadWidgetSummary
-            title="Miller"
-            // percent={0.2}
-            total={4876}
-            chart={{
-              // colors: [theme.palette.warning.light, theme.palette.warning.main],
-              series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-            }}
-          />
-        </Grid>
-        <Grid xs={12} md={3}>
-          <HeadWidgetSummary
-            title="Distributor"
-            // percent={-0.1}
-            total={678}
-            chart={{
-              colors: [theme.palette.warning.light, theme.palette.warning.main],
-              series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-            }}
+        {stats && stats.map((data, ind) => (
+          data?.category !== "Distributor" && <Grid xs={12} md={3}>
+            <HeadWidgetSummary
+              title={handleCategoryTypes(data?.category)}
+              // percent={0.2}
+              total={data?.count}
+              chart={{
+                // colors: color[ind-1],
+                // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+              }}
+            />
+          </Grid>
+        ))}
+        {orderCount && filteredData.map((data, ind) => (
+          data?.category !== "Distributor" && <Grid xs={12} md={4}>
+            <HeadWidgetSummary
+              title={data?.nccf_order_status}
+              // percent={0.2}
+              total={data?.['COUNT(id)']}
+              chart={{
+                // colors: color[ind-1],
+                // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+              }}
+            />
+          </Grid>
+        ))}
+        {/*</Grid>*/}
+        {/*<Grid xs={12} md={3}>*/}
+        {/*  <HeadWidgetSummary*/}
+        {/*    title="Distributor"*/}
+        {/*    // percent={-0.1}*/}
+        {/*    total={678}*/}
+        {/*    chart={{*/}
+        {/*      colors: [theme.palette.warning.light, theme.palette.warning.main],*/}
+        {/*      series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],*/}
+        {/*    }}*/}
 
-          />
-        </Grid>
+        {/*  />*/}
+        {/*</Grid>*/}
 
-        <Grid xs={12} md={3}>
-          <HeadWidgetSummary
-            title="Miller & Distributor"
-            // percent={0.2}
-            total={4876}
-            chart={{
-              colors: [theme.palette.info.light, theme.palette.info.main],
-              series: [20, 41, 63, 33, 28, 35, 50, 46, 11, 26],
-            }}
+        {/*<Grid xs={12} md={3}>*/}
+        {/*  <HeadWidgetSummary*/}
+        {/*    title="Miller & Distributor"*/}
+        {/*    // percent={0.2}*/}
+        {/*    total={4876}*/}
+        {/*    chart={{*/}
+        {/*      colors: [theme.palette.info.light, theme.palette.info.main],*/}
+        {/*      series: [20, 41, 63, 33, 28, 35, 50, 46, 11, 26],*/}
+        {/*    }}*/}
 
-          />
-        </Grid>
+        {/*  />*/}
+        {/*</Grid>*/}
 
-        <Grid xs={12} md={3}>
-          <HeadWidgetSummary
-            title="Society/Co-operative"
-            // percent={-0.1}
-            total={678}
-            chart={{
-              colors: [theme.palette.secondary.light, theme.palette.secondary.main],
-              series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-            }}
+        {/*<Grid xs={12} md={3}>*/}
+        {/*  <HeadWidgetSummary*/}
+        {/*    title="Society/Co-operative"*/}
+        {/*    // percent={-0.1}*/}
+        {/*    total={678}*/}
+        {/*    chart={{*/}
+        {/*      colors: [theme.palette.secondary.light, theme.palette.secondary.main],*/}
+        {/*      series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],*/}
+        {/*    }}*/}
 
-          />
-        </Grid>
+        {/*  />*/}
+        {/*</Grid>*/}
 
         <Grid xs={12} md={6} lg={4}>
           <HeadCurrentDownload
-            title="Current Orders"
+            title="Categories"
             chart={{
               colors: [
                 "#5DD095",

@@ -42,13 +42,9 @@ export default function HeadTableToolbar({
   const [day, setDay] = useState('');
   const handleFilterStartDate = useCallback(
     (newValue) => {
-console.log(newValue)
-      // console.log(newValue);
-      // console.log(newValue.toString() !== "Invalid Date");
-      // if (newValue.toString() !== "Invalid Date"){
-      // onFilters('startDate', newValue);
-      // }
-      (newValue.toString() !== 'Invalid Date') ? onFilters('startDate', newValue) : onFilters('startDate', newValue);
+
+
+      onFilters('startDate', newValue)
     },
     [onFilters],
   );
@@ -328,7 +324,7 @@ useEffect(() => {
             width: { xs: 1, md: 200 },
           }}
         >
-          <InputLabel>Day</InputLabel>
+          <InputLabel>Filter by Day</InputLabel>
 
           <Select
             value={day}

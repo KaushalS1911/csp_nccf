@@ -30,13 +30,13 @@ export default function BasicInfo() {
   const [branchOptions, setBranchOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const [selectedState, setSelectedState] = useState('');
+  const { profile } = useGetProfile();
 
   const data1 = stateOptions.find((data) => data?.state_name === selectedState);
   const handleStateChange = (event, newValue) => {
     setSelectedState(newValue);
     methods.setValue('state', newValue);
   };
-  const { profile } = useGetProfile();
   useEffect(() => {
     fetchStates();
   }, []);

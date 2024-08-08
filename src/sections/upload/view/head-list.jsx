@@ -1,6 +1,6 @@
-import isEqual from 'lodash/isEqual';
+import CancelIcon from '@mui/icons-material/Cancel';
 import React, { useState, useEffect, useCallback } from 'react';
-import VerifiedIcon from '@mui/icons-material/Verified';
+import isEqual from 'lodash/isEqual';
 
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
@@ -47,7 +47,8 @@ import Lightbox from '../../../components/lightbox';
 import useLightBox from '../../../components/lightbox/use-light-box';
 import { usePopover } from '../../../components/custom-popover';
 import DocumentQuickEditForm from '../document-quick-edit-form';
-import { Checkbox, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { Checkbox, Fab, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import Tabs from '@mui/material/Tabs';
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
@@ -66,7 +67,10 @@ const PUBLISH_OPTIONS = [
   { value: 'published', label: 'Published' },
   { value: 'draft', label: 'Draft' },
 ];
-
+const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: '', label: 'Approval Pending' }, {
+  value: '1',
+  label: 'Approved',
+}, { value: '0', label: 'Rejected' }];
 const defaultFilters = {
   name: '',
   role: [],
@@ -83,7 +87,7 @@ const HIDE_COLUMNS = {
 
 const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
-function DocumentList({ csp, document, miller, cspt, docu }) {
+function HeadList({ csp, document, miller, cspt, docu }) {
   const { enqueueSnackbar } = useSnackbar();
   const confirmRows = useBoolean();
   const { vendor } = useAuthContext();
@@ -103,21 +107,49 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   const [open, setOpen] = useState(false);
   const [currentData, setCurrentData] = useState({});
   const [dataCSP, setDataCSP] = useState([]);
-  const [branch, setBranch] = useState([]);
-  const [images, setImages] = useState([]);
+  const [branch, setBranch] = useState('');
   const [b, setB] = useState([]);
+  const [images, setImages] = useState([]);
+  const [approve, setApprove] = useState(false);
   const popover = usePopover();
   let dataFiltered = applyFilter({
     inputData: tableData,
     // comparator: getComparator(table.order, table.orderBy),
     filters,
   });
+  const dayError = isAfter(filters.startDay, filters.endDay);
+  const cspCode = csp || vendor?.branch;
+  useEffect(() => {
+    if(branch === "All"){
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/document`)
+        .then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+    }
+    else {
+      getAllDocument(branch);
+
+    }
+
+  }, [branch]);
+  const getDocuments = () =>{
+    csp ? axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${csp}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err)) :
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
+  }
   useEffect(() => {
     if (vendor) {
-      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`).then((res) => setDataCSP(res?.data?.data)).catch((err) => console.log(err));
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/list`)
+        .then((res) => {
+          const fetchedData = res?.data?.data || [];
+          const updatedData = [{ name: "All", csp_code: "All" }, ...fetchedData];
+          setDataCSP(updatedData);
+        }).catch((err) => console.log(err));
+        getDocuments()
     }
+
   }, []);
-  const dayError = isAfter(filters.startDay, filters.endDay);
+  // useEffect(() => {
+  //
+  //   axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+  // }, [branch === 'All']);
 
   const handleFilterCSP = useCallback(
     (event) => {
@@ -132,13 +164,14 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
     },
     [branch],
   );
-  const cspCode = csp || vendor?.csp_code;
-  useEffect(() => {
-    if (cspCode) {
-      getAllDocument(cspCode);
-
-    }
-  }, [cspCode]);
+  // useEffect(() => {
+  //   if (b !== []) {
+  //
+  //     getAllDocument(b);
+  //   } else {
+  //     getAllDocument(cspCode);
+  //   }
+  // }, [b]);
 
 
   // useEffect(() => {
@@ -162,7 +195,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   }
 
 
-  const canReset = !isEqual(defaultFilters, filters)|| (!!filters.startDay && !!filters.endDay);
+  const canReset = !isEqual(defaultFilters, filters) || (!!filters.startDay && !!filters.endDay);
 
   const handleFilters = useCallback((name, value) => {
     setFilters((prevState) => ({
@@ -185,10 +218,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
     },
     [enqueueSnackbar, tableData],
   );
-  const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: '', label: 'Approval Pending' }, {
-    value: '1',
-    label: 'Approved',
-  }, { value: '0', label: 'Rejected' }];
+
   const slides = images.map((img) => ({
     src: img,
   }));
@@ -255,19 +285,17 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   //       const secondSlashIndex = object_url?.indexOf('/', 8);
   //       const secondPart = object_url?.substring(secondSlashIndex);
   //       const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
+  //
   //       return (
-  //       <>
-  //
-  //         <Box py={1} onClick={() => handleViewDialog(url)}>
-  //
+  //         <Box py={1}>
   //           <Avatar
   //             alt={object_url}
   //             src={url}
   //             sx={{ mr: 2, height: 46, width: 46, cursor: 'pointer' }}
   //             variant="rounded"
+  //             onClick={() => handleViewDialog(url)}
   //           />
   //         </Box>
-  //       </>
   //       );
   //     },
   //   },
@@ -286,24 +314,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   //       {moment(params.row.uploaded_on).format('DD/MM/YYYY')}
   //     </Box>,
   //   },
-  //   // {
-  //   //   field: 'status',
-  //   //   headerName: 'Status',
-  //   //   width: 160,
-  //   //   renderCell: (params) => <Box>
-  //   //     <Label
-  //   //       variant="soft"
-  //   //       color={'success'
-  //   //         // (params.row.nccf_order_status === 'accepted' && 'success') ||
-  //   //         // (params.row.nccf_order_status === 'placed' && 'warning') ||
-  //   //         // (params.row.nccf_order_status === 'declined' && 'error') ||
-  //   //         // 'default'
-  //   //       }
-  //   //     >
-  //   //       {/*{params.row.nccf_order_status}*/}
-  //   //       Completed
-  //   //     </Label></Box>,
-  //   // },
+  //
   //   {
   //     field: 'branch_approval_status',
   //     headerName: 'Status',
@@ -319,49 +330,96 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   //       >
   //         {params.row.branch_approval_status === '0' ? 'Approval Pending' : 'Approved'}
   //       </Label></TableCell>,
-  //     width: 250,
+  //     width: 265,
   //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
   //   },
-  //
   //   {
-  //     type: 'actions',
-  //     field: 'actions',
-  //     headerName: ' ',
-  //     align: 'right',
-  //     headerAlign: 'right',
-  //     width: 80,
-  //     sortable: false,
-  //     filterable: false,
-  //     disableColumnMenu: true,
-  //     getActions: (params) => [
+  //     field: 'vendor1',
+  //     headerName: 'Approve',
+  //     renderCell: (params) => <TableCell sx={{ px: 0 }}>
+  //       <Button
   //
-  //       <GridActionsCellItem
-  //         showInMenu
-  //         icon={<Iconify icon="solar:pen-bold"/>}
-  //         label="Edit"
+  //         // role={undefined}
+  //         variant="contained"
   //         onClick={() => {
-  //           setOpen(true);
   //           setCurrentData(params.row);
+  //           setApprove(true);
+  //           setOpen(true);
   //         }}
-  //       />,
-  //       <GridActionsCellItem
-  //         showInMenu
-  //         icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
-  //         label="Delete"
-  //         // onClick={() => {
-  //         //   handleDeleteRow(params.row.id);
-  //         // }}
-  //         sx={{ color: 'error.main' }}
-  //       />,
-  //     ],
+  //         sx={{ backgroundColor: 'green' }}
+  //
+  //       >
+  //         <VerifiedIcon/> Approve
+  //         {/*<VisuallyHiddenInput type="file" />*/}
+  //       </Button>
+  //
+  //     </TableCell>,
+  //     width: 120,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
   //   },
+  //   {
+  //     field: 'vendor',
+  //     headerName: 'Reject',
+  //     renderCell: (params) => <TableCell sx={{ px: 0 }}>
+  //
+  //       <Button
+  //         onClick={() => {
+  //           setCurrentData(params.row);
+  //           setApprove(false);
+  //           setOpen(true);
+  //         }}
+  //
+  //         // role={undefined}
+  //         variant="contained"
+  //
+  //         sx={{ backgroundColor: 'red' }}
+  //
+  //       >
+  //         <CancelIcon/> Reject
+  //         {/*<VisuallyHiddenInput type="file" />*/}
+  //       </Button>
+  //     </TableCell>,
+  //     width: 120,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //   // {
+  //   //   type: 'actions',
+  //   //   field: 'actions',
+  //   //   headerName: ' ',
+  //   //   align: 'right',
+  //   //   headerAlign: 'right',
+  //   //   width: 80,
+  //   //   sortable: false,
+  //   //   filterable: false,
+  //   //   disableColumnMenu: true,
+  //   //   getActions: (params) => [
+  //   //
+  //   //     <GridActionsCellItem
+  //   //       showInMenu
+  //   //       icon={<Iconify icon="solar:pen-bold"/>}
+  //   //       label="Edit"
+  //   //       onClick={() => {
+  //   //         setOpen(true);
+  //   //         setCurrentData(params.row);
+  //   //       }}
+  //   //     />,
+  //   //     <GridActionsCellItem
+  //   //       showInMenu
+  //   //       icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
+  //   //       label="Delete"
+  //   //       // onClick={() => {
+  //   //       //   handleDeleteRow(params.row.id);
+  //   //       // }}
+  //   //       sx={{ color: 'error.main' }}
+  //   //     />,
+  //   //   ],
+  //   // },
   // ];
   const columns = [
     {
       field: 'id',
       headerName: '#',
       width: 120,
-      minWidth: 80,
     },
     {
       field: 'object_url',
@@ -373,13 +431,15 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
         const secondSlashIndex = object_url?.indexOf('/', 8);
         const secondPart = object_url?.substring(secondSlashIndex);
         const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
+
         return (
-          <Box py={1} onClick={() => handleViewDialog(url)}>
+          <Box py={1}>
             <Avatar
               alt={object_url}
               src={url}
-              sx={{ mr: 2, height: { xs: 36, sm: 46 }, width: { xs: 36, sm: 46 }, cursor: 'pointer' }}
+              sx={{ mr: 2, height: 46, width: 46, cursor: 'pointer' }}
               variant="rounded"
+              onClick={() => handleViewDialog(url)}
             />
           </Box>
         );
@@ -396,7 +456,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
       field: 'uploaded_on',
       headerName: 'Date',
       flex: 1,
-      minWidth: 200,
+      minWidth: 150,
       renderCell: (params) => <Box sx={{ whiteSpace: 'nowrap' }}>
         {moment(params.row.uploaded_on).format('DD/MM/YYYY')}
       </Box>,
@@ -420,34 +480,60 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
       </TableCell>,
     },
     {
-      type: 'actions',
-      field: 'actions',
-      headerName: ' ',
-      align: 'right',
-      headerAlign: 'right',
-      width: 100,
-      minWidth: 80,
-      sortable: false,
-      filterable: false,
-      disableColumnMenu: true,
-      getActions: (params) => [
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:pen-bold" />}
-          label="Edit"
-          onClick={() => {
-            setOpen(true);
-            setCurrentData(params.row);
-          }}
-        />,
-        <GridActionsCellItem
-          showInMenu
-          icon={<Iconify icon="solar:trash-bin-trash-bold" />}
-          label="Delete"
-          sx={{ color: 'error.main' }}
-        />,
-      ],
+      field: 'vendor1',
+      headerName: 'Action',
+      flex: 0.5,
+      minWidth: 250,
+      renderCell: (params) =><>
+        <TableCell sx={{ px: 0,marginRight:2 }} >
+          <Button
+            disabled={params.row.branch_approval_status === "1" || params.row.branch_approval_status==="0"}
+            variant="contained"
+            onClick={() => {
+              setCurrentData(params.row);
+              setApprove(true);
+              setOpen(true);
+            }}
+            sx={{ backgroundColor: 'green' ,width:90}}
+          >
+            <VerifiedIcon/> Approve
+          </Button>
+        </TableCell>
+        <TableCell sx={{ px: 0 }}>
+          <Button
+            disabled={params.row.branch_approval_status === "1" || params.row.branch_approval_status==="0"}
+            onClick={() => {
+              setCurrentData(params.row);
+              setApprove(false);
+              setOpen(true);
+            }}
+            variant="contained"
+            sx={{ backgroundColor: 'red',width:80 }}
+          >
+            <CancelIcon/> Reject
+          </Button>
+        </TableCell>
+      </>
     },
+    // {
+    //   field: 'vendor',
+    //   headerName: 'Reject',
+    //   flex: 0.5,
+    //   minWidth: 100,
+    //   renderCell: (params) => <TableCell sx={{ px: 0 }}>
+    //     <Button
+    //       onClick={() => {
+    //         setCurrentData(params.row);
+    //         setApprove(false);
+    //         setOpen(true);
+    //       }}
+    //       variant="contained"
+    //       sx={{ backgroundColor: 'red',width:80 }}
+    //     >
+    //       <CancelIcon/> Reject
+    //     </Button>
+    //   </TableCell>,
+    // },
   ];
 
   const handleFilterStatus = useCallback(
@@ -457,7 +543,6 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
     [handleFilters],
   );
   const getTogglableColumns = () =>
-
     columns
       .filter((column) => !HIDE_COLUMNS_TOGGLABLE.includes(column.field))
       .map((column) => column.field);
@@ -467,37 +552,27 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
         maxWidth={'xl'}
 
       >
-
-        <DocumentQuickEditForm currentUser={currentData} open={open} setOpen={setOpen}/>
+        <DocumentQuickEditForm getAllDocument={getAllDocument} getDocuments={getDocuments} currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={b}/>
         <CustomBreadcrumbs
-          heading={miller ? 'Miller Documents' : cspt ? 'CSP Documents' : document ? `Distributor Documents` : 'Documents'}
+          heading={'Documents'}
           links={[
             {
               name: 'Dashboard',
               href: paths.dashboard.root,
             },
             {
-              name: miller ? 'Miller List' : cspt ? 'CSP List' : document ? 'Distributor List' :'Document List',
-              href: miller ? paths.dashboard.miller.miller_list : cspt ? paths.dashboard.csp.csp_list : document ? paths.dashboard.distributor.distributor_list : paths.dashboard.document.document_list,
+              name: 'List',
+              href: paths.dashboard.headCsp.csp_list,
             },
 
             {
-              name: miller ? `Miller Documents` : cspt ? 'CSP Document' : document ?  `Distributor Documents` : 'List'           },
+              name: 'Document',
+            },
           ]}
           sx={{ mb: { xs: 3, md: 5 } }}
-          action={
-            (vendor?.category !== 'branch' && !cspt) &&
-            <Button
-              component={RouterLink}
-              href={miller ? paths.dashboard.miller.document_upload : document ? paths.dashboard.distributor.document_upload : paths.dashboard.document.document_upload}
-              variant="contained"
-              startIcon={<Iconify icon="mingcute:add-line"/>}
 
-            >
-              Upload Document
-            </Button>
-          }
         />
+
 
         <Card
           sx={{
@@ -507,6 +582,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
             // flexDirection: { md: 'column' },
           }}
         >
+
           <Tabs
             value={filters.status}
             onChange={handleFilterStatus}
@@ -541,7 +617,6 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
               />
             ))}
           </Tabs>
-
           <DataGrid
             // checkboxSelection
             disableRowSelectionOnClick
@@ -573,9 +648,9 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                     <Stack
                       spacing={1}
                       flexGrow={1}
-                      direction={'row'}
+                      direction={{ xs: 'column', md: 'row' }}
                       // alignItems="center"
-                      justifyContent={'flex-end'}
+                      justifyContent={csp ? 'flex-end' : 'space-between'}
                     >
                       {/*{!!selectedRowIds.length && (*/}
                       {/*  <Button*/}
@@ -588,10 +663,44 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
                       {/*  </Button>*/}
                       {/*)}*/}
 
+                      {!cspt && <FormControl
+                        sx={{
+                          flexShrink: 0,
+                          width: { xs: 1, md: 200 },
+                        }}
+                      >
+                        <InputLabel>CSP</InputLabel>
 
-                      <Box> <GridToolbarColumnsButton/>
+                        <Select
+                          value={branch}
+                          onChange={handleFilterCSP}
+                          input={<OutlinedInput label="Type"/>}
+                          MenuProps={{
+                            PaperProps: {
+                              sx: { maxHeight: 240 },
+                            },
+                          }}
+                          // renderValue={(selected) => selected.join(', ')}
+                        >
+                          {dataCSP.map((option) => (
+                            <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.document_count == 0}>
+                              {/*<Checkbox*/}
+                              {/*  disableRipple*/}
+                              {/*  size="small"*/}
+                              {/*  checked={branch.includes(option.csp_code)}*/}
+                              {/*/>*/}
+                              {option.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>}
+
+
+                      <Box>
+                        <GridToolbarColumnsButton/>
                         {/*<GridToolbarFilterButton/>*/}
-                        <GridToolbarExport/></Box>
+                        <GridToolbarExport/>
+                      </Box>
                     </Stack>
                     <DocumentTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
                                           getAllDocument={getAllDocument}
@@ -631,6 +740,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
               },
             }}
           />
+
         </Card>
       </Container>
       <Lightbox
@@ -639,7 +749,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
         open={lightbox.open}
         close={lightbox.onClose}
         onGetCurrentIndex={(index) => lightbox.setSelected(index)}
-      />
+      />;
       <ConfirmDialog
         open={confirmRows.value}
         onClose={confirmRows.onFalse}
@@ -698,4 +808,4 @@ function applyFilter(
   return inputData;
 }
 
-export default DocumentList;
+export default HeadList;

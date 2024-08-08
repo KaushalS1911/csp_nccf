@@ -188,6 +188,7 @@ import { DocumentListView } from 'src/sections/upload/view';
 import DocumentList from '../../sections/upload/view/list';
 import { useAuthContext } from '../../auth/hooks';
 import CspList from '../../sections/upload/view/csp-list';
+import HeadList from '../../sections/upload/view/head-list';
 const UploadListView = () => {
   const {vendor} = useAuthContext()
   return (
@@ -195,7 +196,7 @@ const UploadListView = () => {
       {/* <OverviewDocumentView /> */}
       {/*<DocumentListView />*/}
       {vendor.category === "branch" ?
-      <CspList docu={true}/> :
+      <CspList docu={true}/> : vendor.category === "head_office" ? <HeadList /> :
       <DocumentList  />
       }
     </>

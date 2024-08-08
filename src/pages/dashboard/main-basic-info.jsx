@@ -7,7 +7,7 @@ function MainBasicInfo() {
   const {vendor} = useAuthContext()
   return (
     <>
-      {vendor?.category === "branch" ? <BranchBasicInfo /> : <BasicInfo />}
+      {(vendor?.category === "branch" || vendor?.category === "head_office") ? <BranchBasicInfo /> : <BasicInfo />}
     </>
   );
 }

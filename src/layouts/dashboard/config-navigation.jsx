@@ -423,11 +423,7 @@ export function useNavData() {
         // { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
       ],
     },
-    // {
-    //   title: t('Head Office'),
-    //   path: paths.dashboard.headOffice.root,
-    //   icon: ICONS.user,
-    // },
+
   ];
   const distributeItems = [
     {
@@ -528,10 +524,21 @@ export function useNavData() {
       icon: ICONS.user,
     },
     {
-      title: t('Add Miller'),
-      path: paths.dashboard.addMiller,
-      icon: ICONS.file,
+      title: t('CSP'),
+      path: paths.dashboard.headCsp.csp_list,
+      icon: <Iconify icon="ooui:user-group-rtl" sx={{ width: 1, height: 1 }}></Iconify>,
     },
+    {
+      title: t('Orders'),
+      path: paths.dashboard.orders,
+      icon: ICONS.order,
+    },
+
+    // {
+    //   title: t('Add Miller'),
+    //   path: paths.dashboard.addMiller,
+    //   icon: ICONS.file,
+    // },
     {
       title: t('Document'),
       path: paths.dashboard.document.root,

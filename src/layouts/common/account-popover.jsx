@@ -82,9 +82,15 @@ export default function AccountPopover() {
       case 'miller': {
         return 'Miller';
         break;
+      } case 'branch': {
+        return 'Branch';
+        break;
+      } case 'head_office': {
+        return 'Head Office ';
+        break;
       }
       default: {
-        return '';
+        return data;
       }
     }
   }
@@ -104,7 +110,7 @@ export default function AccountPopover() {
       }
 
       default: {
-        return '';
+        return data;
       }
     }
   }
@@ -163,7 +169,7 @@ export default function AccountPopover() {
             </MenuItem>
           ))}
         </Stack> */}
-        {/* 
+        {/*
         <Divider sx={{ borderStyle: 'dashed' }} />
 
         <MenuItem

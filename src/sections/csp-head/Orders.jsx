@@ -17,7 +17,11 @@ import {
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
+import { RouterLink } from 'src/routes/components';
+
 import { useBoolean } from 'src/hooks/use-boolean';
+
+import { useGetProducts } from 'src/api/product';
 import { _roles, PRODUCT_STOCK_OPTIONS } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
@@ -26,23 +30,37 @@ import EmptyContent from 'src/components/empty-content';
 import { ConfirmDialog } from 'src/components/custom-dialog';
 import { useSettingsContext } from 'src/components/settings';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs';
+// import BranchTableToolbar from '../branch-table-toolbar';
 import Tabs from '@mui/material/Tabs';
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
-import Label from '../../../components/label';
+// import Label from '../../../components/label';
+// import BranchTableFiltersResult from '../branch-table-filters-result';
 import TableCell from '@mui/material/TableCell';
 import { Box } from '@mui/system';
 import { FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import axios from 'axios';
-import { useAuthContext } from '../../../auth/hooks';
 import moment from 'moment';
-import { isAfter, isBetween } from '../../../utils/format-time';
-import HeadQuickEditForm from '../head-order-quick-edit-form';
-import HeadTableFiltersResult from '../head-table-filters-result';
-import HeadTableToolbar from '../head-table-toolbar';
+import BranchTableFiltersResult from '../branch/branch-table-filters-result';
+// import BranchTableToolbar from '../branch/branch-table-toolbar';
+import Label from '../../components/label';
+import { useAuthContext } from '../../auth/hooks';
+import BranchTableToolbar from '../branch-order/branch-table-toolbar';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import CancelIcon from '@mui/icons-material/Cancel';
+import HeadQuickEditForm from '../head-office-order/head-order-quick-edit-form';
+import HeadTableToolbar from '../head-office-order/head-table-toolbar';
+import { isAfter, isBetween } from '../../utils/format-time';
+import HeadTableFiltersResult from '../head-office-order/head-table-filters-result';
 
+// import ProductTableFiltersResult from '../product-table-filters-result';
+// import {
+//   RenderCellStock,
+//   RenderCellPrice,
+//   RenderCellPublish,
+//   RenderCellProduct,
+//   RenderCellCreatedAt,
+// } from '../product-table-row';
 const PUBLISH_OPTIONS = [
   { value: 'published', label: 'Published' },
   { value: 'draft', label: 'Draft' },
@@ -55,10 +73,10 @@ const defaultFilters = {
   status: 'all',
   branch: [],
   name: '',
-  startDate: null,
-  endDate: null,
   startDay: null,
   endDay: null,
+  startDate: null,
+  endDate: null,
 
 };
 
@@ -68,7 +86,7 @@ const HIDE_COLUMNS = {
 
 const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
-function HOList({ singleCode }) {
+function Orders({singleCode}) {
   const { enqueueSnackbar } = useSnackbar();
 
   const confirmRows = useBoolean();
@@ -76,65 +94,55 @@ function HOList({ singleCode }) {
   const router = useRouter();
 
   const settings = useSettingsContext();
-  const { vendor } = useAuthContext();
+  const {vendor} = useAuthContext()
 
   const [tableData, setTableData] = useState([]);
 
   const [filters, setFilters] = useState(defaultFilters);
 
   const [selectedRowIds, setSelectedRowIds] = useState([]);
+
+  // const { order, orderLoading } = useGetBranchOrder();
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
+  const [dataCSP, setDataCSP] = useState([]);
+  const [branch, setBranch] = useState([]);
+  const [b, setB] = useState([]);
   const [open, setOpen] = useState(false);
   const [currentData, setCurrentData] = useState({});
   const [approve, setApprove] = useState(false);
-  const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
-  const [dataCSP, setDataCSP] = useState([]);
-  const [branch, setBranch] = useState('All');
-  const [b, setB] = useState([]);
-  const dateError = isAfter(filters.startDate, filters.endDate);
-  const dayError = isAfter(filters.startDay, filters.endDay);
-  const getAllOrders = () => {
-    const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/orders`;
+  const getOrders =() => {
+    const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${singleCode}/orders`;
 
-    axios.get(URL).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
-  };
+    axios.get(URL).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
+  }
+
   useEffect(() => {
-    if (branch === 'All') {
-      getOrders();
-    } else {
-      getAllOrders();
-
-    }
-
-  }, [branch]);
-
-  const getOrders = () => {
-
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/order`)
-      .then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
-  };
-  useEffect(() => {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/list`)
-      .then((res) => {
-        const fetchedData = res?.data?.data || [];
-        const updatedData = [{ name: 'All', csp_code: 'All' }, ...fetchedData];
-        setDataCSP(updatedData);
-      }).catch((err) => console.log(err));
-    // if (vendor) {
-      // getOrders();
+   getOrders()
+    // if (order.length) {
+    //   setTableData(order);
     // }
+  }, [singleCode,]);
+  useEffect(() => {
+    if (vendor) {
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`).then((res) => setDataCSP(res?.data?.data)).catch((err) => console.log(err));
+    }
   }, []);
   const dataFiltered = applyFilter({
     inputData: tableData,
     filters,
-    dateError,
   });
-
+  const dateError = isAfter(filters.startDate, filters.endDate);
+  const dayError = isAfter(filters.startDay, filters.endDay);
   const handleFilterCSP = useCallback(
     (event) => {
       setB(event.target.value);
 
       setBranch(event.target.value);
-
+      // getAllDocument(event.target.value.at(0))
+      // onFilters(
+      //   'type',
+      //   typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
+      // );
     },
     [branch],
   );
@@ -180,7 +188,123 @@ function HOList({ singleCode }) {
     [router],
   );
 
+  const handleViewRow = useCallback(
+    (id) => {
+      // router.push(paths.dashboard.product.details(id));
+    },
+    [router],
+  );
 
+
+  // const columns = [
+  //   // {
+  //   //   field: 'category',
+  //   //   headerName: 'Category',
+  //   //   filterable: false,
+  //   // },
+  //   {
+  //     field: 'id',
+  //     headerName: '#',
+  //     width: 142,
+  //     renderCell: (params) => <Box>{i+=1}</Box>,
+  //   },
+  //   {
+  //     field: 'name',
+  //     headerName: 'Name',
+  //     flex: 1,
+  //     minWidth: 250,
+  //     hideable: false,
+  //     // renderCell: (params) => <RenderCellProduct params={params} />,
+  //   },
+  //   {
+  //     field: 'commodity',
+  //     headerName: 'Commodity',
+  //     width: 300,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //
+  //   {
+  //     field: 'quantity',
+  //     headerName: 'Quantity',
+  //     width: 200,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   },
+  //   {
+  //     field: 'branch',
+  //     headerName: 'Branch',
+  //     width: 300,
+  //     // renderCell: (params) => <RenderCellCreatedAt params={params} />,
+  //   }, {
+  //     field: 'nccf_order_status',
+  //     headerName: 'Status',
+  //     width: 160,
+  //     renderCell: (params) => <TableCell>
+  //       <Label
+  //         variant="soft"
+  //         color={
+  //           (params.row.nccf_order_status === 'accepted' && 'success') ||
+  //           (params.row.nccf_order_status === 'placed' && 'warning') ||
+  //           (params.row.nccf_order_status === 'declined' && 'error') ||
+  //           'default'
+  //         }
+  //       >
+  //         {params.row.nccf_order_status}
+  //       </Label></TableCell>,
+  //   },
+  //   // {
+  //   //   field: 'inventoryType',
+  //   //   headerName: 'Stock',
+  //   //   width: 160,
+  //   //   type: 'singleSelect',
+  //   //   valueOptions: PRODUCT_STOCK_OPTIONS,
+  //   //   renderCell: (params) => <RenderCellStock params={params} />,
+  //   // },
+  //   // {
+  //   //   field: 'price',
+  //   //   headerName: 'Price',
+  //   //   width: 140,
+  //   //   editable: true,
+  //   //   renderCell: (params) => <RenderCellPrice params={params} />,
+  //   // },
+  //   // {
+  //   //   field: 'publish',
+  //   //   headerName: 'Publish',
+  //   //   width: 110,
+  //   //   type: 'singleSelect',
+  //   //   editable: true,
+  //   //   valueOptions: PUBLISH_OPTIONS,
+  //   //   renderCell: (params) => <RenderCellPublish params={params} />,
+  //   // },
+  //   {
+  //     type: 'actions',
+  //     field: 'actions',
+  //     headerName: ' ',
+  //     align: 'right',
+  //     headerAlign: 'right',
+  //     width: 80,
+  //     sortable: false,
+  //     filterable: false,
+  //     disableColumnMenu: true,
+  //     getActions: (params) => [
+  //
+  //       <GridActionsCellItem
+  //         showInMenu
+  //         icon={<Iconify icon="solar:pen-bold"/>}
+  //         label="Edit"
+  //         // onClick={() => handleEditRow(params.row.id)}
+  //       />,
+  //       <GridActionsCellItem
+  //         showInMenu
+  //         icon={<Iconify icon="solar:trash-bin-trash-bold"/>}
+  //         label="Delete"
+  //         // onClick={() => {
+  //         //   handleDeleteRow(params.row.id);
+  //         // }}
+  //         sx={{ color: 'error.main' }}
+  //       />,
+  //     ],
+  //   },
+  // ];
   const columns = [
     {
       field: 'id',
@@ -201,17 +325,11 @@ function HOList({ singleCode }) {
       flex: 1, // This makes the column flexible
     },
     {
-      field: 'branch',
-      headerName: 'Branch',
-      minWidth: 100,
-      flex: 1, // This makes the column flexible
-    },
-    {
       field: 'created_at',
       headerName: 'Date',
       minWidth: 150,
       flex: 1, // This makes the column flexible
-      renderCell: (params) => moment(params.row.created_at).format('DD/MM/YYYY'),
+      renderCell: (params) => moment(params.row.created_at).format("DD/MM/YYYY"),
     },
     {
       field: 'nccf_order_status',
@@ -270,7 +388,6 @@ function HOList({ singleCode }) {
         </TableCell>
       </>,
     },
-
     // {
     //   type: 'actions',
     //   field: 'actions',
@@ -314,7 +431,11 @@ function HOList({ singleCode }) {
     <>
       <Container
         maxWidth={settings.themeStretch ? false : 'xl'}
-
+        // sx={{
+        //   flexGrow: 1,
+        //   display: 'flex',
+        //   flexDirection: 'column',
+        // }}
       >
         <CustomBreadcrumbs
           heading="Order List"
@@ -326,7 +447,16 @@ function HOList({ singleCode }) {
             },
             { name: 'List' },
           ]}
-
+          // action={
+          //   <Button
+          //     component={RouterLink}
+          //     href={paths.dashboard.product.new}
+          //     variant="contained"
+          //     startIcon={<Iconify icon="mingcute:add-line" />}
+          //   >
+          //     New Product
+          //   </Button>
+          // }
           sx={{
             mb: {
               xs: 3,
@@ -338,7 +468,7 @@ function HOList({ singleCode }) {
                            approve={approve} cspCode={b}/>
         <Card
           sx={{
-            height: dataFiltered?.length > 0 ? 'unset' : 700,
+            height: dataFiltered?.length > 0 ? "unset" : 700,
             flexGrow: { md: 1 },
             display: { md: 'flex' },
             flexDirection: { md: 'column' },
@@ -378,8 +508,6 @@ function HOList({ singleCode }) {
               />
             ))}
           </Tabs>
-
-
           <DataGrid
             // checkboxSelection
             disableRowSelectionOnClick
@@ -402,34 +530,13 @@ function HOList({ singleCode }) {
               toolbar: () => (
                 <>
                   <GridToolbarContainer>
-                    <FormControl
-                      sx={{
-                        flexShrink: 0,
-                        width: { xs: 1, md: 200 },
-                      }}
-                    >
-                      <InputLabel>Branch</InputLabel>
-
-                      <Select
-                        value={branch}
-                        onChange={handleFilterCSP}
-                        input={<OutlinedInput label="Type"/>}
-                        MenuProps={{
-                          PaperProps: {
-                            sx: { maxHeight: 240 },
-                          },
-                        }}
-
-                      >
-                        {/*{dataCSP.map((option) => (*/}
-                        {/*  <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.order_count === 0}>*/}
-
-                        {/*    {option.name}*/}
-                        {/*  </MenuItem>*/}
-                        {/*))}*/}
-                      </Select>
-                    </FormControl>
-                    <FormControl
+                    {/*<ProductTableToolbar*/}
+                    {/*  filters={filters}*/}
+                    {/*  onFilters={handleFilters}*/}
+                    {/*  stockOptions={PRODUCT_STOCK_OPTIONS}*/}
+                    {/*  publishOptions={PUBLISH_OPTIONS}*/}
+                    {/*/>*/}
+                    {!singleCode && <FormControl
                       sx={{
                         flexShrink: 0,
                         width: { xs: 1, md: 200 },
@@ -446,17 +553,20 @@ function HOList({ singleCode }) {
                             sx: { maxHeight: 240 },
                           },
                         }}
-
+                        // renderValue={(selected) => selected.join(', ')}
                       >
                         {dataCSP.map((option) => (
-                          <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.order_count === 0}>
-
+                          <MenuItem key={option.csp_code} value={option.csp_code}>
+                            {/*<Checkbox*/}
+                            {/*  disableRipple*/}
+                            {/*  size="small"*/}
+                            {/*  checked={branch.includes(option.csp_code)}*/}
+                            {/*/>*/}
                             {option.name}
                           </MenuItem>
                         ))}
                       </Select>
-                    </FormControl>
-
+                    </FormControl>}
                     {canReset && (
                       <HeadTableFiltersResult
                         filters={filters}
@@ -466,7 +576,8 @@ function HOList({ singleCode }) {
                         sx={{ p: 2.5, pt: 0 }}
                       />
                     )}
-
+                    {/*<GridToolbarQuickFilter />*/}
+                    {/**/}
                     <Stack
                       spacing={1}
                       flexGrow={1}
@@ -493,6 +604,15 @@ function HOList({ singleCode }) {
                                       branchOptions={['hello']} dateError={dateError} dayError={dayError}/>
                   </GridToolbarContainer>
 
+                  {/*{canReset && (*/}
+                  {/*  <ProductTableFiltersResult*/}
+                  {/*    filters={filters}*/}
+                  {/*    onFilters={handleFilters}*/}
+                  {/*    onResetFilters={handleResetFilters}*/}
+                  {/*    results={dataFiltered.length}*/}
+                  {/*    sx={{ p: 2.5, pt: 0 }}*/}
+                  {/*  />*/}
+                  {/*)}*/}
 
                 </>
               ),
@@ -572,5 +692,4 @@ function applyFilter({ inputData, filters, dateError, dayError }) {
   }
   return inputData;
 }
-
-export default HOList;
+export default Orders;

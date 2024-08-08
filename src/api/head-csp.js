@@ -3,14 +3,14 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { useAuthContext } from '../auth/hooks/index.js';
 
-export function useGetCSP() {
+export function useGetHeadCSP() {
   const {vendor} = useAuthContext()
-  const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor.branch}/csp`;
+  const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp`;
 
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
   const memoizedValue = useMemo(
     () => ({
-      csp: data?.data ,
+      headCsp: data?.data ,
       cspLoading: isLoading,
       cspError: error,
       cspValidating: isValidating,

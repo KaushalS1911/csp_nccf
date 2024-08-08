@@ -211,6 +211,9 @@ import MillerListView from '../../sections/add-miller/view/list';
 import SingleCsp from '../../sections/csp/view/single-csp';
 import BranchBasicInfo from '../../pages/dashboard/branch-basic-info';
 import MainBasicInfo from '../../pages/dashboard/main-basic-info';
+import CspHeadListView from '../../sections/csp-head/view/list';
+import CspHeadDocumentView from '../../sections/csp-head/view/csp-head-document-view';
+import SingleCspHead from '../../sections/csp-head/view/single-head-csp';
 
 // ----------------------------------------------------------------------
 
@@ -300,7 +303,7 @@ export const dashboardRoutes = [
       // { path: 'upload-document', element: <UploadDocument /> },
       // { path: 'document', element: <UploadListView /> },
       // { path: 'orders', element: <BranchOrderListView /> },
-      { path: 'orders', element: <List /> },
+      { path: 'orders', element: <OrderListPage /> },
       { path: 'add-miller', element: <MillerCreatePage /> },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },
@@ -374,6 +377,18 @@ export const dashboardRoutes = [
           // { path: 'csp-view/:id', element: <SingleCspView /> },
           { path: 'csp-view/:id', element: <SingleCsp /> },
           { path: 'csp-document-view/:id', element: <CspDocumentView /> },
+        ],
+      },
+      {
+        path: 'head-csp',
+        children: [
+          { element: <UploadListView />, index: true },
+          // { path: 'csp-list', element: <CspListView  /> },
+          { path: 'csp-list', element: <CspHeadListView  /> },
+          // { path: '/nccf/branch/${tital}/csp/list', element: <CspListView  /> },
+          // { path: 'csp-view/:id', element: <SingleCspView /> },
+          { path: 'csp-view/:id', element: <SingleCspHead /> },
+          { path: 'csp-document-view/:id', element: <CspHeadDocumentView /> },
         ],
       },
       {

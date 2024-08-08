@@ -19,7 +19,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentQuickEditForm({ currentUser, open, onClose, setOpen, approve,cspCode ,getAllDocument}) {
+export default function DocumentQuickEditForm({ currentUser, open, onClose, setOpen, approve,cspCode ,getAllDocument,getDocuments}) {
   const { enqueueSnackbar } = useSnackbar();
   const [remark,setRemark] = useState("")
   const NewUserSchema = Yup.object().shape({
@@ -81,6 +81,7 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
       axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/csp/document/validate', payload).then((res) => {
         if (res) {
           getAllDocument(cspCode)
+          getDocuments()
           enqueueSnackbar('Document approved successfully');
         } else {
 

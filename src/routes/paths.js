@@ -400,6 +400,14 @@ export const paths = {
      csp_document_view :(title) =>  `${ROOTS.DASHBOARD}/csp/csp-document-view/${title}`,
 
           },
+    headCsp:{
+      root: `${ROOTS.DASHBOARD}/head-csp`,
+      csp_list: `${ROOTS.DASHBOARD}/head-csp/csp-list`,
+      // csp_list:(tital) =>  `${ROOTS.DASHBOARD}/nccf/branch/${tital}/csp/list`,
+     csp_view :(title) =>  `${ROOTS.DASHBOARD}/head-csp/csp-view/${title}`,
+     csp_document_view :(title) =>  `${ROOTS.DASHBOARD}/head-csp/csp-document-view/${title}`,
+
+          },
 
     statsOverview: {
       root : `${ROOTS.DASHBOARD}/states-overview`,
