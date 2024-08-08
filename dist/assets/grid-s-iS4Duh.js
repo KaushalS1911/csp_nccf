@@ -1,1 +1,0 @@
-import{j as r,H as i}from"./index-OxY4Mg7q.js";import{G as t}from"./typography-view-jX-YlZZl.js";import"./component-hero--MBQSZoK.js";import"./component-block-G4-lLnq5.js";import"./text-max-line-Jb-vfx_s.js";function a(){return r.jsxs(r.Fragment,{children:[r.jsx(i,{children:r.jsx("title",{children:" Foundations: Grid"})}),r.jsx(t,{})]})}export{a as default};
