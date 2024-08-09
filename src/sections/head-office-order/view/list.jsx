@@ -167,7 +167,6 @@ setBanchVal(event.target.value)
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
-    setBanchVal("")
   }, []);
 
   const handleDeleteRow = useCallback(
