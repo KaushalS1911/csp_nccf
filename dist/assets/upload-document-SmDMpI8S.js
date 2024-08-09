@@ -1,0 +1,1 @@
+import{u as e,j as s,cD as a,cE as o,cF as r}from"./index-FW-_aVVE.js";const n=()=>{const{vendor:t}=e();return s.jsx(s.Fragment,{children:t.category==="branch"?s.jsx(a,{docu:!0}):t.category==="head_office"?s.jsx(o,{}):s.jsx(r,{})})};export{n as default};
