@@ -436,6 +436,10 @@ function HeadList({ csp, document, miller, cspt, docu }) {
       field: 'id',
       headerName: '#',
       width: 120,
+    },   {
+      field: 'name',
+      headerName: 'Name',
+      width: 250,
     },
     {
       field: 'object_url',

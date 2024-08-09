@@ -642,7 +642,7 @@ export function handleCategoryTypes(type) {
       return 'Society/Co-operative';
     case 'miller':
       return 'Miller';
-    case 'disributor':
+    case 'distributor':
       return 'Distributor';
       case 'miller_distributor':
       return 'Miller & Distributor';

@@ -74,7 +74,6 @@ export default function HeadviewAppView({ vendorCode }) {
   //     setOrderList(res.data?.data);
   //   });
   // }
-
   const statusesToKeep = ['placed', 'accepted', 'declined'];
 
   const filteredData = orderCount.filter(item => statusesToKeep.includes(item.nccf_order_status));
@@ -84,7 +83,7 @@ const chartOrder = []
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
         {stats && stats.map((data, ind) => (
-          data?.category !== 'Distributor' && <Grid xs={12} md={3}>
+           <Grid xs={12} md={3}>
             <HeadWidgetSummary
               title={handleCategoryTypes(data?.category)}
               // percent={0.2}
@@ -97,7 +96,7 @@ const chartOrder = []
           </Grid>
         ))}
         {orderCount && filteredData.map((data, ind) => (
-          data?.category !== 'Distributor' && <Grid xs={12} md={4}>
+           <Grid xs={12} md={4}>
             <HeadWidgetSummary
               title={handleOrderTypes(data?.nccf_order_status)}
               // percent={0.2}

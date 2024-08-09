@@ -209,6 +209,11 @@ setBanchVal(event.target.value)
       renderCell: (params) => <Box>{params.row.id}</Box>, // You can use params.row.id directly
     },
     {
+      field: 'name',
+      headerName: 'Name',
+      width: 250,
+    },
+    {
       field: 'commodity',
       headerName: 'Commodity',
       minWidth: 150,
