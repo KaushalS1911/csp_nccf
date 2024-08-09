@@ -9,12 +9,13 @@ import Stack from '@mui/material/Stack';
 import { Box } from '@mui/system';
 import axios from 'axios';
 import { enqueueSnackbar } from 'notistack';
+import { Text } from '@react-pdf/renderer';
 
 
-export default function FieldReport({singleCode,data,setData,remark,setRemark,remarkData}) {
+export default function FieldReport({ singleCode, data, setData, remark, setRemark, remarkData }) {
   // const [remark,setRemark] = useState("")
   // const [data,setData] = useState("")
-  const {vendor} = useAuthContext()
+  const { vendor } = useAuthContext();
   // const remarkData = () => {
   //   axios.post("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr",{csp_code:singleCode})
   //     .then((res) => {
@@ -24,28 +25,28 @@ export default function FieldReport({singleCode,data,setData,remark,setRemark,re
   // }
   const handelSubmit = () => {
     const payload = {
-      csp_code:singleCode,
-      field_report:remark,
-      nccf_branch_status:"1"
-    }
-    axios.put("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr/validate",payload)
+      csp_code: singleCode,
+      field_report: remark,
+      nccf_branch_status: '1',
+    };
+    axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr/validate', payload)
       .then((res) => {
         remarkData();
-        enqueueSnackbar(res.data.message)
-      }).catch((err) => console.log(err))
-  }
+        enqueueSnackbar(res.data.message);
+      }).catch((err) => console.log(err));
+  };
   const handelSubmit2 = () => {
-    const payload ={
-      csp_code:singleCode,
-      field_report:remark,
-      nccf_branch_status:"0"
-    }
-    axios.put("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr/validate",payload)
+    const payload = {
+      csp_code: singleCode,
+      field_report: remark,
+      nccf_branch_status: '0',
+    };
+    axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr/validate', payload)
       .then((res) => {
         remarkData();
-        enqueueSnackbar(res.data.message)
-      }).catch((err) => console.log(err))
-  }
+        enqueueSnackbar(res.data.message);
+      }).catch((err) => console.log(err));
+  };
 
 
   // useEffect(() => {
@@ -56,75 +57,75 @@ export default function FieldReport({singleCode,data,setData,remark,setRemark,re
   return (
     <>
 
-        <Container
-          maxWidth={'xl'}
+      <Container
+        maxWidth={'xl'}
 
-        >
+      >
 
-          <CustomBreadcrumbs
-            heading={'Field Report'}
-            links={[
-              {
-                name: 'Dashboard',
-                href: paths.dashboard.root,
-              },
-              {
-                name: 'CSP List',
-                href: paths.dashboard.csp.csp_list ,
-              },
+        <CustomBreadcrumbs
+          heading={'Field Report'}
+          links={[
+            {
+              name: 'Dashboard',
+              href: paths.dashboard.root,
+            },
+            {
+              name: 'CSP List',
+              href: paths.dashboard.csp.csp_list,
+            },
 
-              {
-                name: 'Field Report',
-              },
-            ]}
-            sx={{ mb: { xs: 3, md: 5 } }}
-            // action={
-            //   (vendor?.category !== 'branch' && !cspt) &&
-            //   <Button
-            //     component={RouterLink}
-            //     href={miller ? paths.dashboard.miller.document_upload : docu ? paths.dashboard.distributor.document_upload : paths.dashboard.distributor.document_upload}
-            //     variant="contained"
-            //     startIcon={<Iconify icon="mingcute:add-line"/>}
-            //
-            //   >
-            //     Upload Document
-            //   </Button>
-            // }
-          />
-          <Card>
-            <Stack spacing={3} sx={{ p: 4 }}>
-              <Stack>
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                    md:  'repeat(2, 1fr)',
-                  }}
-                >
-          <TextField name="Remark" label="Remark" disabled={data !== ""} value={remark} multiline={true} rows={4}  onChange={(e) => setRemark(e.target.value)}/>
-                </Box>
-              </Stack>
-              {data === "" && <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: '20px' }}>
-                <Button sx={{ cursor: 'pointer', maxWidth: '200px' }} variant="contained" onClick={() => {
-
-                  handelSubmit();
-                }}>
-                  Approve
-                </Button>
-                <Button sx={{ cursor: 'pointer', maxWidth: '200px', mx: 2 }} variant="contained" onClick={() => {
-                  handelSubmit2();
-                }}>
-                  Reject
-                </Button>
-              </Box>}
+            {
+              name: 'Field Report',
+            },
+          ]}
+          sx={{ mb: { xs: 3, md: 5 } }}
+          // action={
+          //   (vendor?.category !== 'branch' && !cspt) &&
+          //   <Button
+          //     component={RouterLink}
+          //     href={miller ? paths.dashboard.miller.document_upload : docu ? paths.dashboard.distributor.document_upload : paths.dashboard.distributor.document_upload}
+          //     variant="contained"
+          //     startIcon={<Iconify icon="mingcute:add-line"/>}
+          //
+          //   >
+          //     Upload Document
+          //   </Button>
+          // }
+        />
+        <Card>
+          <Stack spacing={3} sx={{ p: 4 }}>
+            <Stack>
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                  md: 'repeat(2, 1fr)',
+                }}
+              >
+                <Text>{remark ? remark : "Field report Not found"}</Text>
+              </Box>
             </Stack>
-          </Card>
+            {/*{data === '' && <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: '20px' }}>*/}
+            {/*  <Button sx={{ cursor: 'pointer', maxWidth: '200px' }} variant="contained" onClick={() => {*/}
+
+            {/*    handelSubmit();*/}
+            {/*  }}>*/}
+            {/*    Approve*/}
+            {/*  </Button>*/}
+            {/*  <Button sx={{ cursor: 'pointer', maxWidth: '200px', mx: 2 }} variant="contained" onClick={() => {*/}
+            {/*    handelSubmit2();*/}
+            {/*  }}>*/}
+            {/*    Reject*/}
+            {/*  </Button>*/}
+            {/*</Box>}*/}
+          </Stack>
+        </Card>
 
 
-        </Container>
+      </Container>
 
     </>
   );

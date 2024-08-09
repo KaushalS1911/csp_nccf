@@ -16,20 +16,21 @@ import HeadManagerPanel from '../head-manager-panel';
 import { paths } from '../../../../routes/paths';
 import scrollbar from '../../../../components/scrollbar';
 import { Stack } from '@mui/system';
-import { _folders, handleCategoryTypes } from '../../../../_mock';
+import { _folders, handleCategoryTypes, handleOrderTypes } from '../../../../_mock';
 import BranchWidgetSummary from '../../branch-dashboard/branch-widget-summary';
 
 // ----------------------------------------------------------------------
 
 export default function HeadviewAppView({ vendorCode }) {
-  const {vendor} = useAuthContext()
+  const { vendor } = useAuthContext();
   const settings = useSettingsContext();
   const theme = useTheme();
 
 
   const [orderList, setOrderList] = useState([]);
   const [stats, setStats] = useState([]);
-const [orderCount,setOrderCount] = useState([])
+  const [orderCount, setOrderCount] = useState([]);
+  const [labelCount, setLabelCount] = useState([])
 
   const TIME_LABELS = {
     week: ['Mon', 'Tue', 'Web', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -40,14 +41,28 @@ const [orderCount,setOrderCount] = useState([])
     if (vendor.csp_code) {
       fetchAllOrders();
     }
-      getStats();
-    getOrder()
+    getStats();
+    getOrder();
   }, []);
+
+  useEffect(() => {
+    const count = stats?.map((data, ind) => {
+      if (data?.category !== "Distributor") {
+        return { label: handleCategoryTypes(data?.category), value: data?.count };
+      }
+      return null;
+    }).filter(item => item !== null);
+
+    setLabelCount(count);
+  }, [stats]);
+
+
   function getStats() {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/category-stats`).then((res) => {
       setStats(res.data.data);
     });
   }
+
   function getOrder() {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/orders/stats`).then((res) => {
       setOrderCount(res.data.data);
@@ -59,7 +74,8 @@ const [orderCount,setOrderCount] = useState([])
       setOrderList(res.data?.data);
     });
   }
-  const statusesToKeep = ["placed", "accepted", "declined"];
+
+  const statusesToKeep = ['placed', 'accepted', 'declined'];
 
   const filteredData = orderCount.filter(item => statusesToKeep.includes(item.nccf_order_status));
 
@@ -67,7 +83,7 @@ const [orderCount,setOrderCount] = useState([])
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
         {stats && stats.map((data, ind) => (
-          data?.category !== "Distributor" && <Grid xs={12} md={3}>
+          data?.category !== 'Distributor' && <Grid xs={12} md={3}>
             <HeadWidgetSummary
               title={handleCategoryTypes(data?.category)}
               // percent={0.2}
@@ -80,9 +96,9 @@ const [orderCount,setOrderCount] = useState([])
           </Grid>
         ))}
         {orderCount && filteredData.map((data, ind) => (
-          data?.category !== "Distributor" && <Grid xs={12} md={4}>
+          data?.category !== 'Distributor' && <Grid xs={12} md={4}>
             <HeadWidgetSummary
-              title={data?.nccf_order_status}
+              title={handleOrderTypes(data?.nccf_order_status)}
               // percent={0.2}
               total={data?.['COUNT(id)']}
               chart={{
@@ -133,23 +149,18 @@ const [orderCount,setOrderCount] = useState([])
         {/*</Grid>*/}
 
         <Grid xs={12} md={6} lg={4}>
-          <HeadCurrentDownload
-            title="Categories"
+          {labelCount !== [] && <HeadCurrentDownload
+            title="CSP distribution"
             chart={{
               colors: [
-                "#5DD095",
-               "#0D7566",
-                "#004B50",
-                "#C8FAD6",
+                '#5DD095',
+                '#0D7566',
+                '#004B50',
+                '#C8FAD6',
               ],
-              series: [
-                { label: 'Miller', value: 12244 },
-                { label: 'Distributor', value: 53345 },
-                { label: 'Miller + Distributor', value: 44313 },
-                { label: 'Society/Co-operative', value: 78343 },
-              ],
+              series: labelCount,
             }}
-          />
+          />}
         </Grid>
         <Grid xs={12} md={6} lg={8}>
           <HeadDataActivity

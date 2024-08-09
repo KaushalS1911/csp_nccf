@@ -189,12 +189,12 @@ export default function DocumentTableToolbar({
             width: { xs: 1, md: 200 },
           }}
         >
-          <InputLabel>Filter by day</InputLabel>
+          <InputLabel>Filter By Day</InputLabel>
 
           <Select
             value={day}
             onChange={handleFilterDays}
-            input={<OutlinedInput label="Day"/>}
+            input={<OutlinedInput label="Filter by Day"/>}
             MenuProps={{
               PaperProps: {
                 sx: { maxHeight: 240 },

@@ -649,4 +649,15 @@ export function handleCategoryTypes(type) {
     default:
       return type;
   }
+}export function handleOrderTypes(type) {
+  switch (type) {
+    case 'placed':
+      return 'Orders Placed';
+    case 'accepted':
+      return 'Orders Accepted';
+    case 'declined':
+      return 'Orders Declined';
+    default:
+      return type;
+  }
 }

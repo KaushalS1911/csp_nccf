@@ -540,18 +540,9 @@ export function useNavData() {
     //   icon: ICONS.file,
     // },
     {
-      title: t('Document'),
-      path: paths.dashboard.document.root,
-      icon: ICONS.chat,
-      children: [
-        // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
-        { title: t('Document List'), path: paths.dashboard.document.document_list },
-        { title: t('Upload Document'), path: paths.dashboard.document.document_upload },
-        {
-          title: t('Upload Evidence'),
-          path: paths.dashboard.document.upload_evidence,
-        },
-      ],
+      title: t('Documents'),
+      path: paths.dashboard.document.document_list,
+      icon: ICONS.chat
     },
     // INVOICE
     {

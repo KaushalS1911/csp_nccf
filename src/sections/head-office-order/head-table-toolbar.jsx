@@ -329,7 +329,7 @@ useEffect(() => {
           <Select
             value={day}
             onChange={handleFilterDays}
-            input={<OutlinedInput label="Day"/>}
+            input={<OutlinedInput label="Filter By Day"/>}
             MenuProps={{
               PaperProps: {
                 sx: { maxHeight: 240 },
