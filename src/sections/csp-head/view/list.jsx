@@ -57,6 +57,7 @@ const defaultFilters = {
   district: [],
   category: [],
   status: 'all',
+  csp:[]
 
 };
 
@@ -437,12 +438,13 @@ function CspHeadListView(props) {
           <Label
             variant="soft"
             color={
-              (params.row.csp_status === '0' && 'success') ||
-              (params.row.csp_status === '1' && 'warning') ||
+              (params.row.csp_status === '1' && 'success') ||
+              (params.row.csp_status === '' && 'warning') ||
+              (params.row.csp_status === '0' && 'error') ||
               'default'
             }
           >
-            {params.row.csp_status === '0' ? 'Approved' : 'Approval Pending'}
+            {params.row.csp_status === '1' ? 'Approved':params.row.csp_status === '0' ? 'Declined' : 'Approval Pending'}
           </Label>
         </TableCell>
       ),
@@ -707,7 +709,7 @@ function CspHeadListView(props) {
 }
 
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, type_of_firm, state, branch, district, category } = filters;
+  const { name, status, type_of_firm, state, branch, district, category,csp } = filters;
 
   // const stabilizedThis = inputData?.map((el, index) => [el, index]);
   // stabilizedThis.sort((a, b) => {
@@ -730,6 +732,9 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (type_of_firm.length) {
     inputData = inputData.filter((user) => type_of_firm.includes(user.type_of_firm));
+  }
+  if (csp.length) {
+    inputData = inputData.filter((user) => csp.includes(user.csp_status === "0" ? "Declined": user.csp_status === "1" ? "Approved" : "Approval Pending"));
   }
   if (state.length) {
     inputData = inputData.filter((user) => state.includes(user.state));

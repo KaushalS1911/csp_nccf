@@ -37,6 +37,14 @@ export default function CspTableFiltersResult({
     },
     [filters.type_of_firm, onFilters]
   );
+  const handleRemoveCSP = useCallback(
+    (inputValue) => {
+      const newValue = filters.csp.filter((item) => item !== inputValue);
+
+      onFilters('csp', newValue);
+    },
+    [filters.csp, onFilters]
+  );
 
   const handleRemoveState = useCallback(
     (inputValue) => {
@@ -94,7 +102,16 @@ export default function CspTableFiltersResult({
               <Chip key={item} label={item} size="small" onDelete={() => handleRemoveTypeoffirm(item)} />
             ))}
           </Block>
-        )} {!!filters.category.length && (
+        )}
+        {!!filters.csp.length && (
+          <Block label="CSP:">
+            {filters.csp.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveCSP(item)} />
+            ))}
+          </Block>
+        )}
+
+        {!!filters.category.length && (
           <Block label="Category:">
             {filters.category.map((item) => (
               <Chip key={item} label={item} size="small" onDelete={() => handleRemoveCategory(item)} />

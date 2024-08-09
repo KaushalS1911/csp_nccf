@@ -49,6 +49,14 @@ const {vendor} = useAuthContext()
       );
     },
     [onFilters],
+  ); const handleFilterCSP = useCallback(
+    (event) => {
+      onFilters(
+        'csp',
+        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value,
+      );
+    },
+    [onFilters],
   );
   const handleFilterState = useCallback(
     (event) => {
@@ -146,6 +154,35 @@ const {vendor} = useAuthContext()
               <MenuItem key={option} value={option}>
                 <Checkbox disableRipple size="small" checked={filters.type_of_firm.includes(option)}/>
                 {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl
+          sx={{
+            flexShrink: 0,
+            width: { xs: 1, md: 200 },
+          }}
+        >
+          <InputLabel>CSP Status</InputLabel>
+
+          <Select
+            multiple
+            value={filters.csp}
+            onChange={handleFilterCSP}
+            input={<OutlinedInput label="CSP"/>}
+            renderValue={(selected) => selected.map((value) => value).join(', ')}
+            MenuProps={{
+              PaperProps: {
+                sx: { maxHeight: 240 },
+              },
+            }}
+          >
+            {[{name:"Approved",value: "1"},{name:"Declined",value: '0' },{name:"Approval Pending",value: ""}].map((option) => (
+              <MenuItem key={option} value={option.name}>
+                <Checkbox disableRipple size="small" checked={filters.csp.includes(option.name)}/>
+                {option.name}
               </MenuItem>
             ))}
           </Select>

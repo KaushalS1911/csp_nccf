@@ -195,8 +195,8 @@ const UploadListView = () => {
     <>
       {/* <OverviewDocumentView /> */}
       {/*<DocumentListView />*/}
-      {vendor.category === "branch" ?
-      <CspList docu={true}/> : vendor.category === "head_office" ? <HeadList /> :
+      {vendor?.category === "branch" ?
+      <CspList docu={true}/> : vendor?.category === "head_office" ? <HeadList /> :
       <DocumentList  />
       }
     </>

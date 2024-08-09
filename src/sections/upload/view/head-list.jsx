@@ -107,7 +107,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   const [open, setOpen] = useState(false);
   const [currentData, setCurrentData] = useState({});
   const [dataCSP, setDataCSP] = useState([]);
-  const [branch, setBranch] = useState('');
+  const [branch, setBranch] = useState('All');
   const [b, setB] = useState([]);
   const [images, setImages] = useState([]);
   const [approve, setApprove] = useState(false);
@@ -126,6 +126,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
       getDocuments()
     }
     else {
+      fetchData();
       getAllDocument(banchVal);
 
     }
@@ -135,6 +136,31 @@ function HeadList({ csp, document, miller, cspt, docu }) {
     csp ? axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${csp}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err)) :
       axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
   }
+  // useEffect(() => {
+    const fetchData = async () => {
+      if (banchVal !== "All") {
+        setDataCSP([]);
+
+        try {
+          const res = await axios.get(
+            `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/csp`
+          );
+
+          let mapCsp = res.data.data.map((data) => ({
+            name: data.name,
+            csp_code: data.csp_code,
+          }));
+
+          const default1 = [{ name: 'All', csp_code: 'All' }, ...mapCsp];
+          setDataCSP(default1);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+
+
+  // }, [banchVal]);
 
   useEffect(() => {
     // if (vendor) {
@@ -154,24 +180,33 @@ function HeadList({ csp, document, miller, cspt, docu }) {
       }).catch((err) => console.log(err));
 
   }, []);
+
+  useEffect(() =>{
+    if(branch === "All"){
+      getAllDocument(banchVal);
+    }else {
+
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
+    }
+  },[branch])
   // useEffect(() => {
   //
   //   axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
   // }, [branch === 'All']);
 
-  // const handleFilterCSP = useCallback(
-  //   (event) => {
-  //     setB(event.target.value);
-  //
-  //     setBranch(event.target.value);
+  const handleFilterCSP = useCallback(
+    (event) => {
+      setB(event.target.value);
+
+      setBranch(event.target.value);
       // getAllDocument(event.target.value.at(0))
       // onFilters(
       //   'type',
       //   typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
       // );
-  //   },
-  //   [branch],
-  // );
+    },
+    [branch],
+  );
   // useEffect(() => {
   //   if (b !== []) {
   //
@@ -266,6 +301,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   const handleFilterBranch = useCallback(
     (event) => {
       setBanchVal(event.target.value)
+      setBranch("All")
       // handleFilters('branch', event.target.value)
     },
     [branch],
@@ -684,34 +720,63 @@ function HeadList({ csp, document, miller, cspt, docu }) {
                       {/*  </Button>*/}
                       {/*)}*/}
 
-                      {!cspt &&  <FormControl
-                        sx={{
-                          flexShrink: 0,
-                          width: { xs: 1, md: 200 },
-                        }}
-                      >
-                        <InputLabel>Branch</InputLabel>
-
-                        <Select
-                          value={banchVal}
-                          onChange={handleFilterBranch}
-                          input={<OutlinedInput label="Type"/>}
-                          MenuProps={{
-                            PaperProps: {
-                              sx: { maxHeight: 240 },
-                            },
+                      <Box>
+                        {!cspt &&  <FormControl
+                          sx={{
+                            flexShrink: 0,
+                            width: { xs: 1, md: 200 },
                           }}
-
                         >
-                          {banch.map((option) => (
-                            <MenuItem key={option.branch_name} value={option.branch_name} >
+                          <InputLabel>Branch</InputLabel>
 
-                              {option.branch_name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>}
+                          <Select
+                            value={banchVal}
+                            onChange={handleFilterBranch}
+                            input={<OutlinedInput label="Type"/>}
+                            MenuProps={{
+                              PaperProps: {
+                                sx: { maxHeight: 240 },
+                              },
+                            }}
 
+                          >
+                            {banch.map((option) => (
+                              <MenuItem key={option.branch_name} value={option.branch_name} >
+
+                                {option.branch_name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>}
+                        { banchVal !== "All" && <FormControl
+                          sx={{
+                            flexShrink: 0,
+                            width: { xs: 1, md: 200 },
+                            marginLeft:1
+                          }}
+                        >
+                          <InputLabel>CSP</InputLabel>
+
+                          <Select
+                            value={branch}
+                            onChange={handleFilterCSP}
+                            input={<OutlinedInput label="Type"/>}
+                            MenuProps={{
+                              PaperProps: {
+                                sx: { maxHeight: 240 },
+                              },
+                            }}
+
+                          >
+                            {dataCSP.map((option) => (
+                              <MenuItem key={option.csp_code} value={option.csp_code} >
+
+                                {option.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>}
+                      </Box>
 
                       <Box>
                         <GridToolbarColumnsButton/>

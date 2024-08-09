@@ -103,14 +103,15 @@ function HOList({ singleCode }) {
     if (banchVal === 'All') {
       getOrders();
     } else {
+      fetchData();
       getAllOrders();
 
     }
 
   }, [banchVal]);
 
-  const getOrders = () => {
 
+  const getOrders = () => {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/order`)
       .then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
   };
@@ -131,27 +132,66 @@ function HOList({ singleCode }) {
     //     setDataCSP(updatedData);
     //   }).catch((err) => console.log(err));
     // if (vendor) {
-      // getOrders();
+      getOrders();
     // }
   }, []);
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     filters,
     dateError,
   });
 
-  // const handleFilterCSP = useCallback(
-  //   (event) => {
-  //     setB(event.target.value);
-  //
-  //     setBranch(event.target.value);
-  //
-  //   },
-  //   [branch],
-  // );
+  // useEffect(() => {
+    const fetchData = async () => {
+      if (banchVal !== "All") {
+        setDataCSP([]);
+
+        try {
+          const res = await axios.get(
+            `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/csp`
+          );
+
+          let mapCsp = res.data.data.map((data) => ({
+            name: data.name,
+            csp_code: data.csp_code,
+          }));
+
+          const default1 = [{ name: 'All', csp_code: 'All' }, ...mapCsp];
+          setDataCSP(default1);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+
+
+  // }, [banchVal]);
+
+
+useEffect(() =>{
+  if(branch === "All"){
+    getAllOrders();
+      }else {
+
+  axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/orders`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
+  }
+},[branch])
+
+
+  const handleFilterCSP = useCallback(
+    (event) => {
+      setB(event.target.value);
+
+      setBranch(event.target.value);
+
+    },
+    [branch],
+  );
   const handleFilterBranch = useCallback(
     (event) => {
 setBanchVal(event.target.value)
+      setBranch("All")
       // handleFilters('branch', event.target.value)
     },
     [branch],
@@ -183,6 +223,7 @@ setBanchVal(event.target.value)
     value: 'placed',
     label: 'Placed',
   }, { value: 'declined', label: 'Declined' }];
+
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
 
@@ -191,7 +232,6 @@ setBanchVal(event.target.value)
     setTableData(deleteRows);
   }, [enqueueSnackbar, selectedRowIds, tableData]);
 
-  console.log(tableData);
 
   const handleEditRow = useCallback(
     (id) => {
@@ -454,33 +494,34 @@ setBanchVal(event.target.value)
                         ))}
                       </Select>
                     </FormControl>
-                    {/*<FormControl*/}
-                    {/*  sx={{*/}
-                    {/*    flexShrink: 0,*/}
-                    {/*    width: { xs: 1, md: 200 },*/}
-                    {/*  }}*/}
-                    {/*>*/}
-                    {/*  <InputLabel>CSP</InputLabel>*/}
 
-                    {/*  <Select*/}
-                    {/*    value={branch}*/}
-                    {/*    onChange={handleFilterCSP}*/}
-                    {/*    input={<OutlinedInput label="Type"/>}*/}
-                    {/*    MenuProps={{*/}
-                    {/*      PaperProps: {*/}
-                    {/*        sx: { maxHeight: 240 },*/}
-                    {/*      },*/}
-                    {/*    }}*/}
+                    { banchVal !== "All" && <FormControl
+                      sx={{
+                        flexShrink: 0,
+                        width: { xs: 1, md: 200 },
+                      }}
+                    >
+                      <InputLabel>CSP</InputLabel>
 
-                    {/*  >*/}
-                    {/*    {dataCSP.map((option) => (*/}
-                    {/*      <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.order_count === 0}>*/}
+                      <Select
+                        value={branch}
+                        onChange={handleFilterCSP}
+                        input={<OutlinedInput label="Type"/>}
+                        MenuProps={{
+                          PaperProps: {
+                            sx: { maxHeight: 240 },
+                          },
+                        }}
 
-                    {/*        {option.name}*/}
-                    {/*      </MenuItem>*/}
-                    {/*    ))}*/}
-                    {/*  </Select>*/}
-                    {/*</FormControl>*/}
+                      >
+                        {dataCSP.map((option) => (
+                          <MenuItem key={option.csp_code} value={option.csp_code} >
+
+                            {option.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>}
 
                     {canReset && (
                       <HeadTableFiltersResult
