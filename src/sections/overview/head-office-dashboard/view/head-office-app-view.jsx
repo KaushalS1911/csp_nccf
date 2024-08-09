@@ -18,6 +18,7 @@ import scrollbar from '../../../../components/scrollbar';
 import { Stack } from '@mui/system';
 import { _folders, handleCategoryTypes, handleOrderTypes } from '../../../../_mock';
 import BranchWidgetSummary from '../../branch-dashboard/branch-widget-summary';
+import AnalyticsWidgetSummary from '../../analytics/analytics-widget-summary';
 
 // ----------------------------------------------------------------------
 
@@ -75,7 +76,7 @@ export default function HeadviewAppView({ vendorCode }) {
   //   });
   // }
   const statusesToKeep = ['placed', 'accepted', 'declined'];
-
+const color = ["primary","info","warning","error"]
   const filteredData = orderCount.filter(item => statusesToKeep.includes(item.nccf_order_status));
 const chartOrder = []
   filteredData.map((data) => chartOrder.push({label:handleOrderTypes(data?.nccf_order_status),value:data?.['COUNT(id)'] || 0}))
@@ -84,14 +85,16 @@ const chartOrder = []
       <Grid container spacing={3}>
         {stats && stats.map((data, ind) => (
            <Grid xs={12} md={3}>
-            <HeadWidgetSummary
+            <AnalyticsWidgetSummary
               title={handleCategoryTypes(data?.category)}
               // percent={0.2}
               total={data?.count || 0}
-              chart={{
+              color={color[ind]}
+              // icon={}
+              // chart={{
                 // colors: color[ind-1],
                 // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-              }}
+              /*}}*/
             />
           </Grid>
         ))}

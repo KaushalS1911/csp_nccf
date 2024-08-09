@@ -64,7 +64,7 @@ export default function DocumentTableFiltersResult({
       <Stack flexGrow={1} spacing={1} direction="row" flexWrap="wrap" alignItems="center">
         {filters.status !== 'all' && (
           <Block label="Status:">
-            <Chip size="small" label={handleFilterTypes(filters.status)} onDelete={handleRemoveStatus} />
+            <Chip size="small" label={filters.status ===  "1" ? "Approved" : filters.status ===  "0" ? "Rejected" : "Approval Pending" } onDelete={handleRemoveStatus} />
           </Block>
         )}
         {filters.startDay && filters.endDay && (

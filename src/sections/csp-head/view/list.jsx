@@ -43,6 +43,7 @@ import CspTableToolbar from '../csp-head-table-toolbar';
 import CspTableFiltersResult from '../csp-head-table-filters-result';
 import { FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
 import { Box } from '@mui/system';
+import { isAfter, isBetween } from '../../../utils/format-time';
 
 const PUBLISH_OPTIONS = [
   { value: 'published', label: 'Published' },
@@ -57,7 +58,9 @@ const defaultFilters = {
   district: [],
   category: [],
   status: 'all',
-  csp:[]
+  csp:[],
+  startDay: null,
+  endDay: null,
 
 };
 
@@ -87,7 +90,7 @@ function CspHeadListView(props) {
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
   const [banch, setBanch] = useState([]);
   const [banchVal, setBanchVal] = useState('All');
-
+  const dayError = isAfter(filters.startDay, filters.endDay);
   useEffect(() => {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/branch`)
       .then((res) => {
@@ -176,7 +179,7 @@ function CspHeadListView(props) {
     });
   }
 
-  const canReset = !isEqual(defaultFilters, filters);
+  const canReset = !isEqual(defaultFilters, filters)  || (!!filters.startDay && !!filters.endDay);
 
   const handleFilters = useCallback((name, value) => {
     setFilters((prevState) => ({
@@ -708,8 +711,8 @@ function CspHeadListView(props) {
   );
 }
 
-function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, type_of_firm, state, branch, district, category,csp } = filters;
+function applyFilter({ inputData, comparator, filters,dayError }) {
+  const { name, status, type_of_firm, state, branch, district, category,csp, startDay, endDay } = filters;
 
   // const stabilizedThis = inputData?.map((el, index) => [el, index]);
   // stabilizedThis.sort((a, b) => {
@@ -735,6 +738,11 @@ function applyFilter({ inputData, comparator, filters }) {
   }
   if (csp.length) {
     inputData = inputData.filter((user) => csp.includes(user.csp_status === "0" ? "Declined": user.csp_status === "1" ? "Approved" : "Approval Pending"));
+  }
+  if (!dayError) {
+    if (startDay && endDay) {
+      inputData = inputData.filter((product) => isBetween(product.created_at, startDay, endDay));
+    }
   }
   if (state.length) {
     inputData = inputData.filter((user) => state.includes(user.state));

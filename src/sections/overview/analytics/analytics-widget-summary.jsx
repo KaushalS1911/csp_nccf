@@ -23,7 +23,8 @@ export default function AnalyticsWidgetSummary({
 
   return (
     <Stack
-      alignItems="center"
+      // display={"flex"}
+      // alignItems="center"
       sx={{
         ...bgGradient({
           direction: '135deg',
@@ -39,13 +40,15 @@ export default function AnalyticsWidgetSummary({
       }}
       {...other}
     >
-      {icon && <Box sx={{ width: 64, height: 64, mb: 1 }}>{icon}</Box>}
+      {/*{icon && <Box sx={{ width: 64, height: 64, mb: 1 }}>{icon}</Box>}*/}
+<Box sx={{display:"flex",justifyContent:"space-between",alignItems:"center",px:3}}>
 
-      <Typography variant="h3">{fShortenNumber(total)}</Typography>
 
-      <Typography variant="subtitle2" sx={{ opacity: 0.64 }}>
+      <Typography variant="subtitle2" sx={{ opacity: 0.64,fontSize:'1.2rem',fontWeight:500 }}>
         {title}
       </Typography>
+      <Typography sx={{fontSize:'38px',fontWeight:700}}>{fShortenNumber(total)}</Typography>
+</Box>
     </Stack>
   );
 }

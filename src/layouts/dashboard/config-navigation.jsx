@@ -507,17 +507,17 @@ export function useNavData() {
       icon: ICONS.dashboard,
     },
 
-    {
-      title: t('Stats Overview'),
-      path: paths.dashboard.statsOverview.root,
-      icon: ICONS.mail,
-      children: [
-        // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
-        { title: t('Branch'), path: paths.dashboard.statsOverview.branch },
-        { title: t('Vendor Type'), path: paths.dashboard.statsOverview.vendor_type },
-
-      ],
-    },
+    // {
+    //   title: t('Stats Overview'),
+    //   path: paths.dashboard.statsOverview.root,
+    //   icon: ICONS.mail,
+    //   children: [
+    //     // { title: t('Document Overview'), path: paths.dashboard.document.document_overview },
+    //     { title: t('Branch'), path: paths.dashboard.statsOverview.branch },
+    //     { title: t('Vendor Type'), path: paths.dashboard.statsOverview.vendor_type },
+    //
+    //   ],
+    // },
     {
       title: t('Basic Info'),
       path: paths.dashboard.basic_info,

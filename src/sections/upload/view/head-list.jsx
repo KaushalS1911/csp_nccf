@@ -471,15 +471,16 @@ function HeadList({ csp, document, miller, cspt, docu }) {
     {
       field: 'id',
       headerName: '#',
-      width: 120,
-    },   {
+      width: 90,
+    },
+    {
       field: 'name',
       headerName: 'Name',
-      width: 250,
+      minWidth: 220,
     },
     {
       field: 'object_url',
-      headerName: 'Document Image',
+      headerName: 'Image',
       flex: 1,
       minWidth: 180,
       renderCell: (params) => {
@@ -503,18 +504,18 @@ function HeadList({ csp, document, miller, cspt, docu }) {
     },
     {
       field: 'doc_type',
-      headerName: 'Document Type',
+      headerName: 'Type',
       flex: 1,
       minWidth: 200,
       renderCell: (params) => <Box sx={{ whiteSpace: 'nowrap' }}>{handleDoctypeLabel(params.row.doc_type)}</Box>,
     },
     {
-      field: 'uploaded_on',
+      field: 'created_at',
       headerName: 'Date',
       flex: 1,
       minWidth: 150,
       renderCell: (params) => <Box sx={{ whiteSpace: 'nowrap' }}>
-        {moment(params.row.uploaded_on).format('DD/MM/YYYY')}
+        {moment(params.row.created_at).format('DD/MM/YYYY')}
       </Box>,
     },
     {
@@ -831,7 +832,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
         open={lightbox.open}
         close={lightbox.onClose}
         onGetCurrentIndex={(index) => lightbox.setSelected(index)}
-      />;
+      />
       <ConfirmDialog
         open={confirmRows.value}
         onClose={confirmRows.onFalse}
@@ -877,7 +878,7 @@ function applyFilter(
   }
   if (!dayError) {
     if (startDay && endDay) {
-      inputData = inputData.filter((product) => isBetween(product.uploaded_on, startDay, endDay));
+      inputData = inputData.filter((product) => isBetween(product.created_at, startDay, endDay));
     }
   }
   if (role?.length) {

@@ -59,8 +59,8 @@ export default function HeadWidgetSummary({ title, percent, total, chart, sx, ..
 
   return (
     <Card sx={{ display: 'flex', alignItems: 'center', p: 3, ...sx }} {...other}>
-      <Box sx={{ flexGrow: 1,mt: 1, mb: 1,display:"flex",justifyContent:"space-between",alignItems:"center" }}>
-        <Typography variant="subtitle2">{title}</Typography>
+      <Box sx={{ mt: 1, mb: 1,display:"flex",justifyContent:"space-between",alignItems:"center" ,width:"100%"}}>
+        <Typography sx={{fontSize:'1.2rem',fontWeight:500}}>{title}</Typography>
 
         {/*<Stack direction="row" alignItems="center" sx={{ mt: 2, mb: 1 }}>*/}
           {/*<Iconify*/}
@@ -89,14 +89,14 @@ export default function HeadWidgetSummary({ title, percent, total, chart, sx, ..
         <Typography sx={{fontSize:'38px',fontWeight:700}}>{fNumber(total)}</Typography>
       </Box>
 
-      <Chart
-        dir="ltr"
-        type="bar"
-        series={[{ data: series }]}
-        options={chartOptions}
-        width={60}
-        height={36}
-      />
+      {/*<Chart*/}
+      {/*  dir="ltr"*/}
+      {/*  type="bar"*/}
+      {/*  series={[{ data: series }]}*/}
+      {/*  options={chartOptions}*/}
+      {/*  width={60}*/}
+      {/*  height={36}*/}
+      {/*/>*/}
     </Card>
   );
 }

@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 
 import Iconify from 'src/components/iconify';
 import { handleFilterTypes } from '../../_mock';
+import { shortDateLabel } from '../../components/custom-date-range-picker';
 
 // ----------------------------------------------------------------------
 
@@ -21,10 +22,15 @@ export default function CspTableFiltersResult({
   results,
   ...other
 }) {
+
+  const shortDayLabel = shortDateLabel(filters.startDay, filters.endDay);
   const handleRemoveKeyword = useCallback(() => {
     onFilters('name', '');
   }, [onFilters]);
-
+  const handleRemoveDay = useCallback(() => {
+    onFilters('startDay', null);
+    onFilters('endDay', null);
+  }, [onFilters]);
   const handleRemoveStatus = useCallback(() => {
     onFilters('status', 'all');
   }, [onFilters]);
@@ -95,7 +101,11 @@ export default function CspTableFiltersResult({
             <Chip size="small" label={handleFilterTypes(filters.status)} onDelete={handleRemoveStatus} />
           </Block>
         )}
-
+        {filters.startDay && filters.endDay && (
+          <Block label="Day:">
+            <Chip size="small" label={shortDayLabel} onDelete={handleRemoveDay} />
+          </Block>
+        )}
         {!!filters.type_of_firm.length && (
           <Block label="Type of firm:">
             {filters.type_of_firm.map((item) => (
