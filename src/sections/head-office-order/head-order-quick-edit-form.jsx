@@ -76,17 +76,17 @@ export default function HeadQuickEditForm({ currentUser, open, onClose, setOpen,
     const payload = approve ?  {
       order_id: currentUser?.id,
       status: '1',
-      branch_approval_status:"1"
+      branch_approval_status:"accepted"
     } :{
       order_id: currentUser?.id,
       status: '1',
-      branch_approval_status:"0"
+      branch_approval_status:"declined"
     };
     console.log(payload);
       axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/order/validate', payload).then((res) => {
         if (res) {
           getAllDocument(cspCode)
-          approve ? enqueueSnackbar('Document approved successfully') : enqueueSnackbar('Document rejected successfully');
+           enqueueSnackbar(res?.data.message)
         } else {
 
           enqueueSnackbar('Something want wrong', { variant: 'error' });

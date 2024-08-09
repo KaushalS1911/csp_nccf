@@ -179,10 +179,10 @@ setBanchVal(event.target.value)
     },
     [enqueueSnackbar, tableData],
   );
-  const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: '1', label: 'Accepted' }, {
+  const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: 'accepted', label: 'Accepted' }, {
     value: 'placed',
     label: 'Placed',
-  }, { value: '0', label: 'Declined' }];
+  }, { value: 'declined', label: 'Declined' }];
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
 
@@ -243,13 +243,13 @@ setBanchVal(event.target.value)
           <Label
             variant="soft"
             color={
-              (params.row.nccf_order_status === '1' && 'success') ||
+              (params.row.nccf_order_status === 'accepted' && 'success') ||
               (params.row.nccf_order_status === 'placed' && 'warning') ||
-              (params.row.nccf_order_status === '0' && 'error') ||
+              (params.row.nccf_order_status === 'declined' && 'error') ||
               'default'
             }
           >
-            {params.row.nccf_order_status === '1' ? 'Accepted' : params.row.nccf_order_status === '0' ? 'Declined' : 'Placed'}
+            {params.row.nccf_order_status === 'accepted' ? 'Accepted' : params.row.nccf_order_status === 'declined' ? 'Declined' : 'Placed'}
           </Label>
         </TableCell>
       ),
@@ -262,7 +262,7 @@ setBanchVal(event.target.value)
       renderCell: (params) => <>
         <TableCell sx={{ px: 0, marginRight: 2 }}>
           <Button
-            disabled={params.row.nccf_order_status === '1' || params.row.nccf_order_status === '0'}
+            disabled={params.row.nccf_order_status === 'accepted' || params.row.nccf_order_status === 'declined'}
             variant="contained"
             onClick={() => {
               setCurrentData(params.row);
@@ -276,7 +276,7 @@ setBanchVal(event.target.value)
         </TableCell>
         <TableCell sx={{ px: 0 }}>
           <Button
-            disabled={params.row.nccf_order_status === '1' || params.row.nccf_order_status === '0'}
+            disabled={params.row.nccf_order_status === 'accepted' || params.row.nccf_order_status === 'declined'}
             onClick={() => {
               setCurrentData(params.row);
               setApprove(false);
@@ -384,13 +384,13 @@ setBanchVal(event.target.value)
                       ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === '1' && 'success') ||
+                      (tab.value === 'accepted' && 'success') ||
                       (tab.value === 'placed' && 'warning') ||
-                      (tab.value === '0' && 'error') ||
+                      (tab.value === 'declined' && 'error') ||
                       'default'
                     }
                   >
-                    {['1', '0', ''].includes(tab.value)
+                    {['accepted', 'declined', 'placed'].includes(tab.value)
                       ? tableData.filter((user) => user.nccf_order_status === tab.value).length
                       : tableData.length}
                   </Label>
