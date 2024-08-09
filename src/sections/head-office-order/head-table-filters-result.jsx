@@ -14,14 +14,14 @@ import { shortDateLabel } from '../../components/custom-date-range-picker';
 // ----------------------------------------------------------------------
 
 export default function HeadTableFiltersResult({
-  filters,
-  onFilters,
-  //
-  onResetFilters,
-  //
-  results,
-  ...other
-}) {
+                                                 filters,
+                                                 onFilters,
+                                                 //
+                                                 onResetFilters,
+                                                 //
+                                                 results,
+                                                 ...other
+                                               }) {
 
   const shortLabel = shortDateLabel(filters.startDate, filters.endDate);
   const shortDayLabel = shortDateLabel(filters.startDay, filters.endDay);
@@ -107,10 +107,10 @@ export default function HeadTableFiltersResult({
         {/*    ))}*/}
         {/*  </Block>*/}
         {/*)}*/}
-        {!!filters.branch && (
+        {!!filters.branch.length && (
           <Block label="Branch:">
             {/*{filters.branch.map((item) => (*/}
-              <Chip key={filters.branch[0]} label={filters.branch[0]} size="small" onDelete={() => handleRemoveBranch(branch)} />
+            <Chip key={filters.branch} label={filters.branch} size="small" onDelete={() => handleRemoveBranch(branch)} />
             {/*)}*/}
           </Block>
         )}
@@ -139,9 +139,6 @@ HeadTableFiltersResult.propTypes = {
   onResetFilters: PropTypes.func,
   results: PropTypes.number,
 };
-
-// ----------------------------------------------------------------------
-
 function Block({ label, children, sx, ...other }) {
   return (
     <Stack

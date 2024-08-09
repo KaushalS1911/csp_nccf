@@ -88,41 +88,48 @@ function HOList({ singleCode }) {
   const [approve, setApprove] = useState(false);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
   const [banch,setBanch] = useState([])
-  const [banchVal,setBanchVal] = useState("")
+  const [banchVal,setBanchVal] = useState("All")
   const [dataCSP, setDataCSP] = useState([]);
   const [branch, setBranch] = useState('All');
   const [b, setB] = useState([]);
   const dateError = isAfter(filters.startDate, filters.endDate);
   const dayError = isAfter(filters.startDay, filters.endDay);
   const getAllOrders = () => {
-    const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/orders`;
+    const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/order`;
 
     axios.get(URL).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
   };
   useEffect(() => {
-    if (branch === 'All') {
+    if (banchVal === 'All') {
       getOrders();
     } else {
       getAllOrders();
 
     }
 
-  }, [branch]);
+  }, [banchVal]);
 
   const getOrders = () => {
 
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/order`)
       .then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
   };
+
   useEffect(() => {
+
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/branch`)
-      .then((res) => setBanch(res?.data?.data)).catch((err) => console.log(err));
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/list`)
       .then((res) => {
         const fetchedData = res?.data?.data || [];
-        const updatedData = [{ name: 'All', csp_code: 'All' }, ...fetchedData];
-        setDataCSP(updatedData);
+        const updatedData = [{ branch_name :"All" }, ...fetchedData];
+        setBanch(updatedData);
       }).catch((err) => console.log(err));
+
+    // axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/list`)
+    //   .then((res) => {
+    //     const fetchedData = res?.data?.data || [];
+    //     const updatedData = [{ name: 'All', csp_code: 'All' }, ...fetchedData];
+    //     setDataCSP(updatedData);
+    //   }).catch((err) => console.log(err));
     // if (vendor) {
       // getOrders();
     // }
@@ -133,19 +140,19 @@ function HOList({ singleCode }) {
     dateError,
   });
 
-  const handleFilterCSP = useCallback(
-    (event) => {
-      setB(event.target.value);
-
-      setBranch(event.target.value);
-
-    },
-    [branch],
-  );
+  // const handleFilterCSP = useCallback(
+  //   (event) => {
+  //     setB(event.target.value);
+  //
+  //     setBranch(event.target.value);
+  //
+  //   },
+  //   [branch],
+  // );
   const handleFilterBranch = useCallback(
     (event) => {
 setBanchVal(event.target.value)
-      handleFilters('branch', event.target.value)
+      // handleFilters('branch', event.target.value)
     },
     [branch],
   );
@@ -160,6 +167,7 @@ setBanchVal(event.target.value)
 
   const handleResetFilters = useCallback(() => {
     setFilters(defaultFilters);
+    setBanchVal("")
   }, []);
 
   const handleDeleteRow = useCallback(
@@ -442,33 +450,33 @@ setBanchVal(event.target.value)
                         ))}
                       </Select>
                     </FormControl>
-                    <FormControl
-                      sx={{
-                        flexShrink: 0,
-                        width: { xs: 1, md: 200 },
-                      }}
-                    >
-                      <InputLabel>CSP</InputLabel>
+                    {/*<FormControl*/}
+                    {/*  sx={{*/}
+                    {/*    flexShrink: 0,*/}
+                    {/*    width: { xs: 1, md: 200 },*/}
+                    {/*  }}*/}
+                    {/*>*/}
+                    {/*  <InputLabel>CSP</InputLabel>*/}
 
-                      <Select
-                        value={branch}
-                        onChange={handleFilterCSP}
-                        input={<OutlinedInput label="Type"/>}
-                        MenuProps={{
-                          PaperProps: {
-                            sx: { maxHeight: 240 },
-                          },
-                        }}
+                    {/*  <Select*/}
+                    {/*    value={branch}*/}
+                    {/*    onChange={handleFilterCSP}*/}
+                    {/*    input={<OutlinedInput label="Type"/>}*/}
+                    {/*    MenuProps={{*/}
+                    {/*      PaperProps: {*/}
+                    {/*        sx: { maxHeight: 240 },*/}
+                    {/*      },*/}
+                    {/*    }}*/}
 
-                      >
-                        {dataCSP.map((option) => (
-                          <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.order_count === 0}>
+                    {/*  >*/}
+                    {/*    {dataCSP.map((option) => (*/}
+                    {/*      <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.order_count === 0}>*/}
 
-                            {option.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
+                    {/*        {option.name}*/}
+                    {/*      </MenuItem>*/}
+                    {/*    ))}*/}
+                    {/*  </Select>*/}
+                    {/*</FormControl>*/}
 
                     {canReset && (
                       <HeadTableFiltersResult

@@ -38,9 +38,9 @@ export default function HeadviewAppView({ vendorCode }) {
     year: ['2018', '2019', '2020', '2021', '2022'],
   };
   useEffect(() => {
-    if (vendor.csp_code) {
-      fetchAllOrders();
-    }
+    // if (vendor.csp_code) {
+    //   fetchAllOrders();
+    // }
     getStats();
     getOrder();
   }, []);
@@ -69,16 +69,17 @@ export default function HeadviewAppView({ vendorCode }) {
     });
   }
 
-  function fetchAllOrders() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor.csp_code}/orders`).then((res) => {
-      setOrderList(res.data?.data);
-    });
-  }
+  // function fetchAllOrders() {
+  //   axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor.csp_code}/orders`).then((res) => {
+  //     setOrderList(res.data?.data);
+  //   });
+  // }
 
   const statusesToKeep = ['placed', 'accepted', 'declined'];
 
   const filteredData = orderCount.filter(item => statusesToKeep.includes(item.nccf_order_status));
-
+const chartOrder = []
+  filteredData.map((data) => chartOrder.push({label:handleOrderTypes(data?.nccf_order_status),value:data?.['COUNT(id)'] || 0}))
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
@@ -87,7 +88,7 @@ export default function HeadviewAppView({ vendorCode }) {
             <HeadWidgetSummary
               title={handleCategoryTypes(data?.category)}
               // percent={0.2}
-              total={data?.count}
+              total={data?.count || 0}
               chart={{
                 // colors: color[ind-1],
                 // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
@@ -100,7 +101,7 @@ export default function HeadviewAppView({ vendorCode }) {
             <HeadWidgetSummary
               title={handleOrderTypes(data?.nccf_order_status)}
               // percent={0.2}
-              total={data?.['COUNT(id)']}
+              total={data?.['COUNT(id)'] || 0}
               chart={{
                 // colors: color[ind-1],
                 // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
@@ -254,7 +255,20 @@ export default function HeadviewAppView({ vendorCode }) {
           {/*  </Stack>*/}
           {/*</div>*/}
         </Grid>
+        {/*<Grid xs={12} md={6} lg={4}>*/}
+        {/*  <HeadAnalyticsCurrentVisits*/}
+        {/*    title="Current Orders"*/}
 
+        {/*    chart={{*/}
+        {/*      colors: [*/}
+        {/*        theme.palette.warning.main,*/}
+        {/*        theme.palette.primary.main,*/}
+        {/*        theme.palette.error.main,*/}
+        {/*      ],*/}
+        {/*      series:chartOrder,*/}
+        {/*    }}*/}
+        {/*  />*/}
+        {/*</Grid>*/}
         {/*<Grid xs={12} lg={12}>*/}
         {/*  <UserListView tableData={orderList}/>*/}
         {/*</Grid>*/}

@@ -111,6 +111,8 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   const [b, setB] = useState([]);
   const [images, setImages] = useState([]);
   const [approve, setApprove] = useState(false);
+  const [banch,setBanch] = useState([])
+  const [banchVal,setBanchVal] = useState("All")
   const popover = usePopover();
   let dataFiltered = applyFilter({
     inputData: tableData,
@@ -119,31 +121,37 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   });
   const dayError = isAfter(filters.startDay, filters.endDay);
   const cspCode = csp || vendor?.branch;
-  useEffect(() => {
-    if(branch === "All"){
-      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/document`)
-        .then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+ useEffect(() => {
+    if(banchVal === "All"){
+      getDocuments()
     }
     else {
-      getAllDocument(branch);
+      getAllDocument(banchVal);
 
     }
 
-  }, [branch]);
+  }, [banchVal]);
   const getDocuments = () =>{
     csp ? axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${csp}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err)) :
       axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
   }
+
   useEffect(() => {
-    if (vendor) {
-      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/list`)
-        .then((res) => {
+    // if (vendor) {
+    //   axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/list`)
+    //     .then((res) => {
+    //       const fetchedData = res?.data?.data || [];
+    //       const updatedData = [{ name: "All", csp_code: "All" }, ...fetchedData];
+    //       setDataCSP(updatedData);
+    //     }).catch((err) => console.log(err));
+    //     getDocuments()
+    // }
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/branch`)
+      .then((res) => {
           const fetchedData = res?.data?.data || [];
-          const updatedData = [{ name: "All", csp_code: "All" }, ...fetchedData];
-          setDataCSP(updatedData);
-        }).catch((err) => console.log(err));
-        getDocuments()
-    }
+          const updatedData = [{ branch_name :"All" }, ...fetchedData];
+        setBanch(updatedData);
+      }).catch((err) => console.log(err));
 
   }, []);
   // useEffect(() => {
@@ -151,19 +159,19 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   //   axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
   // }, [branch === 'All']);
 
-  const handleFilterCSP = useCallback(
-    (event) => {
-      setB(event.target.value);
-
-      setBranch(event.target.value);
+  // const handleFilterCSP = useCallback(
+  //   (event) => {
+  //     setB(event.target.value);
+  //
+  //     setBranch(event.target.value);
       // getAllDocument(event.target.value.at(0))
       // onFilters(
       //   'type',
       //   typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
       // );
-    },
-    [branch],
-  );
+  //   },
+  //   [branch],
+  // );
   // useEffect(() => {
   //   if (b !== []) {
   //
@@ -185,7 +193,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
 
     axios
       .get(
-        `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${code}/documents`,
+        `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${code}/document`,
       )
       .then((res) => {
         setTableData(res?.data?.data);
@@ -254,6 +262,14 @@ function HeadList({ csp, document, miller, cspt, docu }) {
     router.push(paths.dashboard.distributor.distributor_view(code));
 
   };
+
+  const handleFilterBranch = useCallback(
+    (event) => {
+      setBanchVal(event.target.value)
+      // handleFilters('branch', event.target.value)
+    },
+    [branch],
+  );
   // const handleViewRow = useCallback(
   //   (id) => {
   //     // router.push(paths.dashboard.product.details(id));
@@ -576,6 +592,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
 
         <Card
           sx={{
+            height: dataFiltered?.length > 0 ? "unset" : 700,
             // height: dataId?.length > 0 ? 'unset' : 700,
             // flexGrow: { md: 1 },
             // display: { md: 'flex' },
@@ -663,33 +680,29 @@ function HeadList({ csp, document, miller, cspt, docu }) {
                       {/*  </Button>*/}
                       {/*)}*/}
 
-                      {!cspt && <FormControl
+                      {!cspt &&  <FormControl
                         sx={{
                           flexShrink: 0,
                           width: { xs: 1, md: 200 },
                         }}
                       >
-                        <InputLabel>CSP</InputLabel>
+                        <InputLabel>Branch</InputLabel>
 
                         <Select
-                          value={branch}
-                          onChange={handleFilterCSP}
+                          value={banchVal}
+                          onChange={handleFilterBranch}
                           input={<OutlinedInput label="Type"/>}
                           MenuProps={{
                             PaperProps: {
                               sx: { maxHeight: 240 },
                             },
                           }}
-                          // renderValue={(selected) => selected.join(', ')}
+
                         >
-                          {dataCSP.map((option) => (
-                            <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.document_count == 0}>
-                              {/*<Checkbox*/}
-                              {/*  disableRipple*/}
-                              {/*  size="small"*/}
-                              {/*  checked={branch.includes(option.csp_code)}*/}
-                              {/*/>*/}
-                              {option.name}
+                          {banch.map((option) => (
+                            <MenuItem key={option.branch_name} value={option.branch_name} >
+
+                              {option.branch_name}
                             </MenuItem>
                           ))}
                         </Select>

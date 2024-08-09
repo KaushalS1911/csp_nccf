@@ -60,7 +60,7 @@ export default function BranchDashboardView({ vendorCode }) {
   }
 
   function getBranch() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/noida/csp/stats`).then((res) => {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor.branch}/csp/stats`).then((res) => {
       setBranch(res?.data?.data);
     });
   }
@@ -82,7 +82,7 @@ export default function BranchDashboardView({ vendorCode }) {
             <BranchWidgetSummary
               title={handleCategoryTypes(data?.category)}
               // percent={0.2}
-              total={data?.count}
+              total={data?.count || 0}
               chart={{
                 // colors: color[ind-1],
                 // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],

@@ -24,13 +24,14 @@ import { PATH_AFTER_LOGIN } from '../../config-global';
 import { useRouter } from '../../routes/hooks';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../auth/hooks';
+import { enqueueSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
 
 export default function Header({ onOpenNav }) {
   const theme = useTheme();
-const navigate= useNavigate()
-  const {vendor} = useAuthContext()
+  const navigate= useNavigate()
+  const {vendor,logout} = useAuthContext()
   const router = useRouter()
 
   const settings = useSettingsContext();
@@ -44,14 +45,23 @@ const navigate= useNavigate()
   const offset = useOffSetTop(HEADER.H_DESKTOP);
 
   const offsetTop = offset && !isNavHorizontal;
-const rout = vendor?.category === "branch"  ? "/admin" : "/"
-  function handleLogout() {
-    sessionStorage.clear();
-    localStorage.clear()
-    router.push(rout)
-    router.reload()
-  }
-
+// const rout = vendor?.category === "branch"  ? "/admin" : "/"
+  // function handleLogout() {
+  //   sessionStorage.clear();
+  //   localStorage.clear()
+  //   router.push(rout)
+  //   router.reload()
+  // }
+  const rout = vendor?.category === "branch"  ? "/admin" :vendor?.category === "head_office" ? "/ho-login" : "/"
+  const handleLogout = async () => {
+    try {
+      await logout();
+      router.push(rout);
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Unable to logout!', { variant: 'error' });
+    }
+  };
   const renderContent = (
     <>
       {lgUp && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
@@ -134,4 +144,3 @@ const rout = vendor?.category === "branch"  ? "/admin" : "/"
 Header.propTypes = {
   onOpenNav: PropTypes.func,
 };
-

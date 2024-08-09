@@ -41,6 +41,8 @@ import { useAuthContext } from '../../../auth/hooks';
 import axios from 'axios';
 import CspTableToolbar from '../csp-head-table-toolbar';
 import CspTableFiltersResult from '../csp-head-table-filters-result';
+import { FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { Box } from '@mui/system';
 
 const PUBLISH_OPTIONS = [
   { value: 'published', label: 'Published' },
@@ -66,7 +68,7 @@ const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
 function CspHeadListView(props) {
   const { enqueueSnackbar } = useSnackbar();
-const {vendor} = useAuthContext()
+  const { vendor } = useAuthContext();
   const confirmRows = useBoolean();
 
   const router = useRouter();
@@ -82,21 +84,66 @@ const {vendor} = useAuthContext()
   const [branchOptions, setBranchOptions] = useState([]);
   const [districtOptions, setDistrictOptions] = useState([]);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
+  const [banch, setBanch] = useState([]);
+  const [banchVal, setBanchVal] = useState('All');
 
   useEffect(() => {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/branch`)
+      .then((res) => {
+        const fetchedData = res?.data?.data || [];
+        const updatedData = [{ branch_name: 'All' }, ...fetchedData];
+        setBanch(updatedData);
+      }).catch((err) => console.log(err));
     // if (csp?.length) {
-axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
-  .then((res) => (res.data.data).map((data,index) => setTableData((pdata) => [...pdata ,{...data,id:index+1}])))
-  .catch((err) => console.log(err))
+// axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
+//   .then((res) => (res.data.data).map((data,index) => setTableData((pdata) => [...pdata ,{...data,id:index+1}])))
+//   .catch((err) => console.log(err))
 
 
     // }
   }, []);
   useEffect(() => {
+    if (banchVal === 'All') {
+      setTableData([]);
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp`)
+        .then((res) => (res.data.data).map((data, index) => setTableData((pdata) => [...pdata, {
+          ...data,
+          id: index + 1,
+        }])))
+        .catch((err) => console.log(err));
+    } else {
+      getAllCSP(banchVal);
+
+    }
+
+  }, [banchVal]);
+
+  function getAllCSP(code) {
+    // setLoading(true)
+    setTableData([]);
+    axios
+      .get(
+        `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${code}/csp`,
+      )
+      .then((res) => (res.data.data).map((data, index) => setTableData((pdata) => [...pdata, {
+        ...data,
+        id: index + 1,
+      }])))
+      .catch((err) => console.error(err));
+  }
+
+
+  useEffect(() => {
     fetchStates();
   }, [tableData]);
 
-
+  const handleFilterBranch = useCallback(
+    (event) => {
+      setBanchVal(event.target.value);
+      // handleFilters('branch', event.target.value)
+    },
+    [banch],
+  );
   const dataFiltered = applyFilter({
     inputData: tableData,
     filters,
@@ -149,9 +196,15 @@ axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
 
       setTableData(deleteRow);
     },
-    [enqueueSnackbar, tableData]
+    [enqueueSnackbar, tableData],
   );
-  const STATUS_OPTIONS = [{ value: 'all', label: 'All' },{value:'miller',label: 'Miller'},{value:"distributor",label:"Distributor"},{value: "society_cooperative",label: "Society"},{value: "miller_distributor",label: "Miller & Distributor"}]
+  const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: 'miller', label: 'Miller' }, {
+    value: 'distributor',
+    label: 'Distributor',
+  }, { value: 'society_cooperative', label: 'Society' }, {
+    value: 'miller_distributor',
+    label: 'Miller & Distributor',
+  }];
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
 
@@ -164,7 +217,7 @@ axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
     (id) => {
       // router.push(paths.dashboard.product.edit(id));
     },
-    [router]
+    [router],
   );
   const handleViewRow = useCallback(
     (code) => {
@@ -336,7 +389,8 @@ axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
       minWidth: 150,
       hideable: false,
       renderCell: (params) => (
-        <TableCell sx={{ fontWeight: "bold", cursor: "pointer", px: "0" }} onClick={() => handleDistributor(params.row.csp_code)}>
+        <TableCell sx={{ fontWeight: 'bold', cursor: 'pointer', px: '0' }}
+                   onClick={() => handleDistributor(params.row.csp_code)}>
           {params.row.name}
         </TableCell>
       ),
@@ -406,7 +460,7 @@ axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
       renderCell: (params) => (
         <Button
           variant="contained"
-          sx={{ backgroundColor: params.row.document_count === 0 ? "gray" : "green" }}
+          sx={{ backgroundColor: params.row.document_count === 0 ? 'gray' : 'green' }}
           onClick={() => handleViewRow(params.row.csp_code)}
           disabled={params.row.document_count === 0}
         >
@@ -420,7 +474,7 @@ axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
     (event, newValue) => {
       handleFilters('status', newValue);
     },
-    [handleFilters]
+    [handleFilters],
   );
   const getTogglableColumns = () =>
     columns
@@ -430,7 +484,7 @@ axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
   return (
     <>
       <Container
-         maxWidth={'xl'}
+        maxWidth={'xl'}
 
       >
         <CustomBreadcrumbs
@@ -464,7 +518,7 @@ axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
         <Card
           sx={{
             // height: canReset ? 740 : 650 ,
-            height: dataFiltered?.length > 0 ? "unset" : 700,
+            height: dataFiltered?.length > 0 ? 'unset' : 700,
             flexGrow: { md: 1 },
             display: { md: 'flex' },
             flexDirection: { md: 'column' },
@@ -526,7 +580,7 @@ axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
             slots={{
               toolbar: () => (
                 <>
-                  <GridToolbarContainer >
+                  <GridToolbarContainer>
                     {/*<ProductTableToolbar*/}
                     {/*  filters={filters}*/}
                     {/*  onFilters={handleFilters}*/}
@@ -539,26 +593,56 @@ axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
                       flexGrow={1}
                       direction="row"
                       alignItems="center"
-                      justifyContent="flex-end"
+                      justifyContent="space-between"
                     >
+                      <FormControl
+                        sx={{
+                          flexShrink: 0,
+                          width: { xs: 1, md: 200 },
+                        }}
+                      >
+                        <InputLabel>Branch</InputLabel>
+
+                        <Select
+                          value={banchVal}
+                          onChange={handleFilterBranch}
+                          input={<OutlinedInput label="Type"/>}
+                          MenuProps={{
+                            PaperProps: {
+                              sx: { maxHeight: 240 },
+                            },
+                          }}
+
+                        >
+                          {banch.map((option) => (
+                            <MenuItem key={option.branch_name} value={option.branch_name}>
+
+                              {option.branch_name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+
                       {!!selectedRowIds.length && (
                         <Button
                           size="small"
                           color="error"
-                          startIcon={<Iconify icon="solar:trash-bin-trash-bold" />}
+                          startIcon={<Iconify icon="solar:trash-bin-trash-bold"/>}
                           onClick={confirmRows.onTrue}
                         >
                           Delete ({selectedRowIds.length})
                         </Button>
                       )}
+                      <Box>
 
-                      <GridToolbarColumnsButton />
-                      {/*<GridToolbarFilterButton />*/}
-                      <GridToolbarExport />
+                        <GridToolbarColumnsButton/>
+                        {/*<GridToolbarFilterButton />*/}
+                        <GridToolbarExport/>
+                      </Box>
                     </Stack>
-                    <CspTableToolbar  filters={filters} onFilters={handleFilters} roleOptions={_roles}
-                                      stateOptions={stateOptions} branchOptions={branchOptions}
-                                      districtOptions={districtOptions} />
+                    <CspTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
+                                     stateOptions={stateOptions} branchOptions={branchOptions}
+                                     districtOptions={districtOptions}/>
                     {canReset && (
                       <CspTableFiltersResult
                         filters={filters}
@@ -584,8 +668,8 @@ axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
                   {/*)}*/}
                 </>
               ),
-              noRowsOverlay: () => <EmptyContent title="No Data" />,
-              noResultsOverlay: () => <EmptyContent title="No results found" />,
+              noRowsOverlay: () => <EmptyContent title="No Data"/>,
+              noResultsOverlay: () => <EmptyContent title="No results found"/>,
             }}
             slotProps={{
               columnsPanel: {
@@ -621,6 +705,7 @@ axios.get("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp")
     </>
   );
 }
+
 function applyFilter({ inputData, comparator, filters }) {
   const { name, status, type_of_firm, state, branch, district, category } = filters;
 
@@ -661,4 +746,5 @@ function applyFilter({ inputData, comparator, filters }) {
 
   return inputData;
 }
-export default CspHeadListView ;
+
+export default CspHeadListView;

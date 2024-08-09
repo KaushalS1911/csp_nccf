@@ -574,6 +574,7 @@ csp ? axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/
 
         <Card
           sx={{
+            height: dataFiltered?.length > 0 ? "unset" : 700,
             // height: dataId?.length > 0 ? 'unset' : 700,
             // flexGrow: { md: 1 },
             // display: { md: 'flex' },

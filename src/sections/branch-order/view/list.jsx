@@ -122,7 +122,7 @@ function List({ singleCode }) {
           setDataCSP(updatedData);
         }).catch((err) => console.log(err));
 
-      axios.get('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/noida/order').then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/order`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
     }
 
   }, []);
