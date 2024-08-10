@@ -41,28 +41,65 @@ export default function HeadTableToolbar({
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
   const [day, setDay] = useState('');
+
   const handleFilterStartDate = useCallback(
     (newValue) => {
+      // Check if newValue is null or undefined
+      if (newValue === null || newValue === undefined) {
+        onFilters('startDate', null);
+        return;
+      }
 
+      // Convert newValue to moment object
+      const date = moment(newValue);
 
-      const d = newValue.toString()
-      if(d !== "Invalid Date") {
-
-      onFilters('startDate', newValue)
+      // Check if the date is valid
+      if (date.isValid()) {
+        // Use the format you want to store or send
+        onFilters('startDate', date.toDate());
+      } else {
+        // Handle invalid date if necessary
+        console.warn('Invalid date selected');
+        // Optionally reset to null or handle it differently
+        onFilters('startDate', null);
       }
     },
     [onFilters],
   );
   const handleFilterEndDate = useCallback(
     (newValue) => {
-      const d = newValue.toString()
-      if(d !== "Invalid Date") {
-        onFilters('endDate', newValue);
+      // Check if newValue is null or undefined
+      if (newValue === null || newValue === undefined) {
+        onFilters('endDate', null);
+        return;
       }
 
+      // Convert newValue to moment object
+      const date = moment(newValue);
+
+      // Check if the date is valid
+      if (date.isValid()) {
+        // Use the format you want to store or send
+        onFilters('endDate', date.toDate());
+      } else {
+        // Handle invalid date if necessary
+        console.warn('Invalid date selected');
+        // Optionally reset to null or handle it differently
+        onFilters('endDate', null);
+      }
     },
     [onFilters],
   );
+  // const handleFilterEndDate = useCallback(
+  //   (newValue) => {
+  //     const d = newValue.toString()
+  //     if(d !== "Invalid Date") {
+  //       onFilters('endDate', newValue);
+  //     }
+  //
+  //   },
+  //   [onFilters],
+  // );
 
   const popover = usePopover();
 
@@ -239,15 +276,31 @@ useEffect(() => {
       >
         <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
 
+          {/*<DatePicker*/}
+          {/*  label="Start date"*/}
+          {/*  value={filters.startDate}*/}
+          {/*  open={startDateOpen}*/}
+          {/*  onClose={() => setStartDateOpen(false)}*/}
+          {/*  onChange={handleFilterStartDate}*/}
+          {/*  slotProps={{*/}
+          {/*    textField: {*/}
+
+          {/*      onClick: () => setStartDateOpen(true),*/}
+          {/*      fullWidth: true,*/}
+          {/*    },*/}
+          {/*  }}*/}
+          {/*  sx={{*/}
+          {/*    maxWidth: { md: 200 },*/}
+          {/*  }}*/}
+          {/*/>*/}
           <DatePicker
             label="Start date"
-            value={filters.startDate}
+            value={filters.startDate ? moment(filters.startDate).toDate() : null}
             open={startDateOpen}
             onClose={() => setStartDateOpen(false)}
             onChange={handleFilterStartDate}
             slotProps={{
               textField: {
-
                 onClick: () => setStartDateOpen(true),
                 fullWidth: true,
               },
@@ -256,7 +309,6 @@ useEffect(() => {
               maxWidth: { md: 200 },
             }}
           />
-
           <DatePicker
             label="End date"
             value={filters.endDate}
