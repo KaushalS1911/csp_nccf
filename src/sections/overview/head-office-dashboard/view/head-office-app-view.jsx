@@ -77,6 +77,7 @@ export default function HeadviewAppView({ vendorCode }) {
   // }
   const statusesToKeep = ['placed', 'accepted', 'declined'];
 const color = ["primary","info","warning","error"]
+const color2 = ["secondary","brown1","brown","brown"]
   const filteredData = orderCount.filter(item => statusesToKeep.includes(item.nccf_order_status));
 const chartOrder = []
   filteredData.map((data) => chartOrder.push({label:handleOrderTypes(data?.nccf_order_status),value:data?.['COUNT(id)'] || 0}))
@@ -100,10 +101,11 @@ const chartOrder = []
         ))}
         {orderCount && filteredData.map((data, ind) => (
            <Grid xs={12} md={4}>
-            <HeadWidgetSummary
+            <AnalyticsWidgetSummary
               title={handleOrderTypes(data?.nccf_order_status)}
               // percent={0.2}
               total={data?.['COUNT(id)'] || 0}
+              color={color2[ind]}
               chart={{
                 // colors: color[ind-1],
                 // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
@@ -165,54 +167,68 @@ const chartOrder = []
             }}
           />}
         </Grid>
-        <Grid xs={12} md={6} lg={8}>
-          <HeadDataActivity
-            title="Orders"
+        <Grid xs={12} md={6} lg={4}>
+          {labelCount !== [] && <HeadCurrentDownload
+            title="Total Orders"
             chart={{
-              labels: TIME_LABELS,
               colors: [
-                theme.palette.primary.main,
-                theme.palette.error.main,
-                theme.palette.warning.main,
+                '#6F4E37',
+                '#A67B5B',
+                '#FED8B1',
+                '#ECB176',
               ],
-              series: [
-                {
-                  type: 'Week',
-                  data: [
-                    { name: 'Bharat Daal', data: [20, 34, 48, 65, 37, 48, 9] },
-                    { name: 'Bharat Aata', data: [10, 34, 13, 26, 27, 28, 18] },
-                    { name: 'Bharat Rice', data: [10, 14, 13, 16, 17, 18, 28] },
-                  ],
-                },
-                {
-                  type: 'Month',
-                  data: [
-                    {
-                      name: 'Bharat Daal',
-                      data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],
-                    },
-                    {
-                      name: 'Bharat Aata',
-                      data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],
-                    },
-                    {
-                      name: 'Bharat Rice',
-                      data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],
-                    },
-
-                  ],
-                },
-                {
-                  type: 'Year',
-                  data: [
-                    { name: 'Bharat Daal', data: [10, 34, 13, 56, 77] },
-                    { name: 'Bharat Aata', data: [10, 34, 13, 56, 77] },
-                    { name: 'Bharat Rice', data: [10, 34, 13, 56, 77] },
-                  ],
-                },
-              ],
+              series: chartOrder,
             }}
-          />
+          />}
+        </Grid>
+        {/*<Grid xs={12} md={6} lg={8}>*/}
+        {/*  <HeadDataActivity*/}
+        {/*    title="Orders"*/}
+        {/*    chart={{*/}
+        {/*      labels: TIME_LABELS,*/}
+        {/*      colors: [*/}
+        {/*        theme.palette.primary.main,*/}
+        {/*        theme.palette.error.main,*/}
+        {/*        theme.palette.warning.main,*/}
+        {/*      ],*/}
+        {/*      series: [*/}
+        {/*        {*/}
+        {/*          type: 'Week',*/}
+        {/*          data: [*/}
+        {/*            { name: 'Bharat Daal', data: [20, 34, 48, 65, 37, 48, 9] },*/}
+        {/*            { name: 'Bharat Aata', data: [10, 34, 13, 26, 27, 28, 18] },*/}
+        {/*            { name: 'Bharat Rice', data: [10, 14, 13, 16, 17, 18, 28] },*/}
+        {/*          ],*/}
+        {/*        },*/}
+        {/*        {*/}
+        {/*          type: 'Month',*/}
+        {/*          data: [*/}
+        {/*            {*/}
+        {/*              name: 'Bharat Daal',*/}
+        {/*              data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],*/}
+        {/*            },*/}
+        {/*            {*/}
+        {/*              name: 'Bharat Aata',*/}
+        {/*              data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],*/}
+        {/*            },*/}
+        {/*            {*/}
+        {/*              name: 'Bharat Rice',*/}
+        {/*              data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],*/}
+        {/*            },*/}
+
+        {/*          ],*/}
+        {/*        },*/}
+        {/*        {*/}
+        {/*          type: 'Year',*/}
+        {/*          data: [*/}
+        {/*            { name: 'Bharat Daal', data: [10, 34, 13, 56, 77] },*/}
+        {/*            { name: 'Bharat Aata', data: [10, 34, 13, 56, 77] },*/}
+        {/*            { name: 'Bharat Rice', data: [10, 34, 13, 56, 77] },*/}
+        {/*          ],*/}
+        {/*        },*/}
+        {/*      ],*/}
+        {/*    }}*/}
+        {/*  />*/}
 
           {/*<div>*/}
           {/*  <HeadManagerPanel*/}
@@ -256,7 +272,7 @@ const chartOrder = []
           {/*    ))}*/}
           {/*  </Stack>*/}
           {/*</div>*/}
-        </Grid>
+        {/*</Grid>*/}
         {/*<Grid xs={12} md={6} lg={4}>*/}
         {/*  <HeadAnalyticsCurrentVisits*/}
         {/*    title="Current Orders"*/}

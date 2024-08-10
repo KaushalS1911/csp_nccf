@@ -95,7 +95,7 @@ function CspHeadListView(props) {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/branch`)
       .then((res) => {
         const fetchedData = res?.data?.data || [];
-        const updatedData = [{ branch_name: 'All' }, ...fetchedData];
+        const updatedData = [{ branch_name: 'All',csp_count:1 }, ...fetchedData];
         setBanch(updatedData);
       }).catch((err) => console.log(err));
     // if (csp?.length) {
@@ -611,7 +611,7 @@ function CspHeadListView(props) {
                         <Select
                           value={banchVal}
                           onChange={handleFilterBranch}
-                          input={<OutlinedInput label="Type"/>}
+                          input={<OutlinedInput label="Branch"/>}
                           MenuProps={{
                             PaperProps: {
                               sx: { maxHeight: 240 },
@@ -620,7 +620,7 @@ function CspHeadListView(props) {
 
                         >
                           {banch.map((option) => (
-                            <MenuItem key={option.branch_name} value={option.branch_name}>
+                            <MenuItem key={option.branch_name} value={option.branch_name} disabled={option.csp_count == 0}>
 
                               {option.branch_name}
                             </MenuItem>

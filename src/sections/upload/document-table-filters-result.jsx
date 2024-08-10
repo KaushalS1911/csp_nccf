@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
 import Iconify from 'src/components/iconify';
-import { handleFilterTypes } from '../../_mock';
+import { handleDoctypeLabel, handleFilterTypes } from '../../_mock';
 import { shortDateLabel } from '../../components/custom-date-range-picker';
 
 // ----------------------------------------------------------------------
@@ -63,8 +63,8 @@ export default function DocumentTableFiltersResult({
 
       <Stack flexGrow={1} spacing={1} direction="row" flexWrap="wrap" alignItems="center">
         {filters.status !== 'all' && (
-          <Block label="Status:">
-            <Chip size="small" label={filters.status ===  "1" ? "Approved" : filters.status ===  "0" ? "Rejected" : "Approval Pending" } onDelete={handleRemoveStatus} />
+          <Block label="Type:">
+            <Chip size="small" label={handleDoctypeLabel(filters.status)} onDelete={handleRemoveStatus} />
           </Block>
         )}
         {filters.startDay && filters.endDay && (

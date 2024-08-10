@@ -155,7 +155,7 @@ export default function DocumentTableToolbar({
             {/*</IconButton>*/}
           </Stack>
         }
-         <FormControl
+        {vendor?.category !== "head_office" && <FormControl
           sx={{
             flexShrink: 0,
             width: { xs: 1, md: 200 },
@@ -182,7 +182,7 @@ export default function DocumentTableToolbar({
               </MenuItem>
             ))}
           </Select>
-        </FormControl>
+        </FormControl>}
         <FormControl
           sx={{
             flexShrink: 0,

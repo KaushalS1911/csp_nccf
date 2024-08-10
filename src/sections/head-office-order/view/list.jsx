@@ -18,7 +18,7 @@ import {
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 import { useBoolean } from 'src/hooks/use-boolean';
-import { _roles, PRODUCT_STOCK_OPTIONS } from 'src/_mock';
+import { _roles, handleOrderTypes, PRODUCT_STOCK_OPTIONS } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
@@ -42,6 +42,8 @@ import HeadTableFiltersResult from '../head-table-filters-result';
 import HeadTableToolbar from '../head-table-toolbar';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import CancelIcon from '@mui/icons-material/Cancel';
+import Grid from '@mui/material/Unstable_Grid2';
+import AnalyticsWidgetSummary from '../../overview/analytics/analytics-widget-summary';
 
 const PUBLISH_OPTIONS = [
   { value: 'published', label: 'Published' },
@@ -81,8 +83,7 @@ function HOList({ singleCode }) {
   const [tableData, setTableData] = useState([]);
 
   const [filters, setFilters] = useState(defaultFilters);
-
-  const [selectedRowIds, setSelectedRowIds] = useState([]);
+  const commodityCount = {};  const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [open, setOpen] = useState(false);
   const [currentData, setCurrentData] = useState({});
   const [approve, setApprove] = useState(false);
@@ -94,6 +95,7 @@ function HOList({ singleCode }) {
   const [b, setB] = useState([]);
   const dateError = isAfter(filters.startDate, filters.endDate);
   const dayError = isAfter(filters.startDay, filters.endDay);
+  const [count,setCount] = useState([])
   const getAllOrders = () => {
     const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/order`;
 
@@ -121,7 +123,7 @@ function HOList({ singleCode }) {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/branch`)
       .then((res) => {
         const fetchedData = res?.data?.data || [];
-        const updatedData = [{ branch_name :"All" }, ...fetchedData];
+        const updatedData = [{ branch_name :"All",csp_count:1 }, ...fetchedData];
         setBanch(updatedData);
       }).catch((err) => console.log(err));
 
@@ -155,9 +157,10 @@ function HOList({ singleCode }) {
           let mapCsp = res.data.data.map((data) => ({
             name: data.name,
             csp_code: data.csp_code,
+            order_count:data.order_count
           }));
 
-          const default1 = [{ name: 'All', csp_code: 'All' }, ...mapCsp];
+          const default1 = [{ name: 'All', csp_code: 'All',order_count:1 }, ...mapCsp];
           setDataCSP(default1);
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -219,10 +222,21 @@ setBanchVal(event.target.value)
     },
     [enqueueSnackbar, tableData],
   );
-  const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: 'accepted', label: 'Accepted' }, {
-    value: 'placed',
-    label: 'Placed',
-  }, { value: 'declined', label: 'Declined' }];
+  const countsArray = [
+    { label: "accepted", count: 0 },
+    { label: "declined", count: 0 },
+    { label: "placed", count: 0 }
+  ];
+
+  countsArray.forEach(commodity => {
+    commodity.count = dataFiltered.filter(item => item.nccf_order_status === commodity.label).length;
+  });
+
+
+  const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: 'Bharat Aata', label: 'Bharat Aata' }, {
+    value: 'Bharat Daal',
+    label: 'Bharat Daal',
+  }, { value: 'Bharat Rice', label: 'Bharat Rice' }];
 
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
@@ -363,7 +377,7 @@ setBanchVal(event.target.value)
     //   ],
     // },
   ];
-
+  const color = ["primary","error","warning","error"]
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
@@ -381,6 +395,24 @@ setBanchVal(event.target.value)
         maxWidth={settings.themeStretch ? false : 'xl'}
 
       >
+        <Grid container spacing={3}>
+
+        {countsArray.map((data,ind) => (
+
+        <Grid item xs={12} md={4} mb={5}>
+          <AnalyticsWidgetSummary
+            title={handleOrderTypes(data?.label)}
+            // percent={0.2}
+            total={data?.count == 0 ? '0' : data.count}
+            color={color[ind]}
+            chart={{
+              // colors: color[ind-1],
+              // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+            }}
+          />
+        </Grid>
+        ))}
+        </Grid>
         <CustomBreadcrumbs
           heading="Order List"
           links={[
@@ -429,14 +461,14 @@ setBanchVal(event.target.value)
                       ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'accepted' && 'success') ||
-                      (tab.value === 'placed' && 'warning') ||
-                      (tab.value === 'declined' && 'error') ||
+                      (tab.value === 'Bharat Aata' && 'success') ||
+                      (tab.value === 'Bharat Daal' && 'warning') ||
+                      (tab.value === 'Bharat Rice' && 'error') ||
                       'default'
                     }
                   >
-                    {['accepted', 'declined', 'placed'].includes(tab.value)
-                      ? tableData.filter((user) => user.nccf_order_status === tab.value).length
+                    {['Bharat Aata', 'Bharat Rice', 'Bharat Daal'].includes(tab.value)
+                      ? tableData.filter((user) => user.commodity === tab.value).length
                       : tableData.length}
                   </Label>
                 }
@@ -478,7 +510,7 @@ setBanchVal(event.target.value)
                       <Select
                         value={banchVal}
                         onChange={handleFilterBranch}
-                        input={<OutlinedInput label="Type"/>}
+                        input={<OutlinedInput label="Branch"/>}
                         MenuProps={{
                           PaperProps: {
                             sx: { maxHeight: 240 },
@@ -487,7 +519,7 @@ setBanchVal(event.target.value)
 
                       >
                         {banch.map((option) => (
-                          <MenuItem key={option.branch_name} value={option.branch_name} >
+                          <MenuItem key={option.branch_name} value={option.branch_name} disabled={option.csp_count == 0}>
 
                             {option.branch_name}
                           </MenuItem>
@@ -506,7 +538,7 @@ setBanchVal(event.target.value)
                       <Select
                         value={branch}
                         onChange={handleFilterCSP}
-                        input={<OutlinedInput label="Type"/>}
+                        input={<OutlinedInput label="CSP"/>}
                         MenuProps={{
                           PaperProps: {
                             sx: { maxHeight: 240 },
@@ -515,7 +547,7 @@ setBanchVal(event.target.value)
 
                       >
                         {dataCSP.map((option) => (
-                          <MenuItem key={option.csp_code} value={option.csp_code} >
+                          <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.order_count == 0}>
 
                             {option.name}
                           </MenuItem>
@@ -627,7 +659,7 @@ function applyFilter({ inputData, filters, dateError, dayError }) {
 
 
   if (status !== 'all') {
-    inputData = inputData.filter((user) => user.nccf_order_status === status);
+    inputData = inputData.filter((user) => user.commodity === status);
   }
 
   if (commodity.length) {

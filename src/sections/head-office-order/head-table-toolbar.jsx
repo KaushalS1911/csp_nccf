@@ -24,6 +24,7 @@ import {
   GridToolbarQuickFilter,
 } from '@mui/x-data-grid';
 import { useAuthContext } from '../../auth/hooks';
+import moment from 'moment';
 
 // ----------------------------------------------------------------------
 
@@ -44,13 +45,21 @@ export default function HeadTableToolbar({
     (newValue) => {
 
 
+      const d = newValue.toString()
+      if(d !== "Invalid Date") {
+
       onFilters('startDate', newValue)
+      }
     },
     [onFilters],
   );
   const handleFilterEndDate = useCallback(
     (newValue) => {
-      onFilters('endDate', newValue);
+      const d = newValue.toString()
+      if(d !== "Invalid Date") {
+        onFilters('endDate', newValue);
+      }
+
     },
     [onFilters],
   );

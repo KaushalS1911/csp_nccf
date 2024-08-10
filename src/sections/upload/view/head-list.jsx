@@ -23,7 +23,7 @@ import { RouterLink } from 'src/routes/components';
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { useGetProducts } from 'src/api/product';
-import { _roles, handleDoctypeLabel, PRODUCT_STOCK_OPTIONS } from 'src/_mock';
+import { _roles, handleDoctypeLabel, handleOrderTypes, PRODUCT_STOCK_OPTIONS } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
@@ -53,6 +53,8 @@ import Tabs from '@mui/material/Tabs';
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import { isAfter, isBetween } from '../../../utils/format-time';
+import Grid from '@mui/material/Unstable_Grid2';
+import AnalyticsWidgetSummary from '../../overview/analytics/analytics-widget-summary';
 // import BranchTableFiltersResult from '../branch-table-filters-result';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
@@ -67,10 +69,22 @@ const PUBLISH_OPTIONS = [
   { value: 'published', label: 'Published' },
   { value: 'draft', label: 'Draft' },
 ];
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: '', label: 'Approval Pending' }, {
-  value: '1',
-  label: 'Approved',
-}, { value: '0', label: 'Rejected' }];
+const STATUS_OPTIONS = [
+  { label:"All",value:'all'},
+  { label: 'Registration Certificate', value: 'registration_certificate' },
+  { label: 'Undertaking', value: 'undertaking' },
+  { label: 'Audited Accounts', value: 'audited_accounts' },
+  { label: 'Income Tax', value: 'income_tax' },
+  { label: 'PAN', value: 'pan' },
+  { label: 'GST', value: 'gst' },
+  { label: 'Sale Registration', value: 'sale_registration' },
+  { label: 'Industrial Licence', value: 'industrial_licence' },
+  { label: 'Power Bills', value: 'power_bills' },
+  { label: 'Pollution Certificates', value: 'pollution_certificates' },
+  { label: 'Municipal Property Tax', value: 'municipal_property_tax' },
+  { label: 'FSSAI License', value: 'FSSAI_license' },
+  { label: 'Photographs of Unit', value: 'photographs_of_unit' }
+];
 const defaultFilters = {
   name: '',
   role: [],
@@ -113,6 +127,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   const [approve, setApprove] = useState(false);
   const [banch,setBanch] = useState([])
   const [banchVal,setBanchVal] = useState("All")
+  const color = ["primary","error","warning","error"]
   const popover = usePopover();
   let dataFiltered = applyFilter({
     inputData: tableData,
@@ -149,9 +164,10 @@ function HeadList({ csp, document, miller, cspt, docu }) {
           let mapCsp = res.data.data.map((data) => ({
             name: data.name,
             csp_code: data.csp_code,
+            document_count:data.document_count
           }));
 
-          const default1 = [{ name: 'All', csp_code: 'All' }, ...mapCsp];
+          const default1 = [{ name: 'All', csp_code: 'All',document_count:1 }, ...mapCsp];
           setDataCSP(default1);
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -175,7 +191,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/branch`)
       .then((res) => {
           const fetchedData = res?.data?.data || [];
-          const updatedData = [{ branch_name :"All" }, ...fetchedData];
+          const updatedData = [{ branch_name :"All",csp_count:1 }, ...fetchedData];
         setBanch(updatedData);
       }).catch((err) => console.log(err));
 
@@ -297,7 +313,14 @@ function HeadList({ csp, document, miller, cspt, docu }) {
     router.push(paths.dashboard.distributor.distributor_view(code));
 
   };
-
+  const countsArray = [
+    { label: "1", count: 0 },
+    { label: "0", count: 0 },
+    { label: "", count: 0 }
+  ];
+  countsArray.forEach(commodity => {
+    commodity.count = dataFiltered.filter(item => item.branch_approval_status === commodity.label).length;
+  });
   const handleFilterBranch = useCallback(
     (event) => {
       setBanchVal(event.target.value)
@@ -609,6 +632,24 @@ function HeadList({ csp, document, miller, cspt, docu }) {
         maxWidth={'xl'}
 
       >
+        <Grid container spacing={3}>
+
+          {countsArray.map((data,ind) => (
+
+            <Grid item xs={12} md={4} mb={5}>
+              <AnalyticsWidgetSummary
+                title={data.label === '' ? 'Approval Pending' :data.label === '1' ? 'Approved' : "Rejected"}
+                // percent={0.2}
+                total={data?.count == 0 ? '0' : data.count}
+                color={color[ind]}
+                chart={{
+                  // colors: color[ind-1],
+                  // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+                }}
+              />
+            </Grid>
+          ))}
+        </Grid>
         <DocumentQuickEditForm getAllDocument={getAllDocument} getDocuments={getDocuments} currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={b}/>
         <CustomBreadcrumbs
           heading={'Documents'}
@@ -661,14 +702,24 @@ function HeadList({ csp, document, miller, cspt, docu }) {
                       ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === '1' && 'success') ||
-                      (tab.value === '' && 'warning') ||
-                      (tab.value === '0' && 'error') ||
+                      (tab.value === 'registration_certificate' && 'success') ||
+                      (tab.value === 'undertaking' && 'warning') ||
+                      (tab.value === 'audited_accounts' && 'error') ||
+                      (tab.value === 'income_tax' && 'info') ||
+                      (tab.value === 'pan' && 'primary') ||
+                      (tab.value === 'gst' && 'secondary') ||
+                      (tab.value === 'sale_registration' && 'success') ||
+                      (tab.value === 'industrial_licence' && 'warning') ||
+                      (tab.value === 'power_bills' && 'error') ||
+                      (tab.value === 'pollution_certificates' && 'info') ||
+                      (tab.value === 'municipal_property_tax' && 'primary') ||
+                      (tab.value === 'FSSAI_license' && 'secondary') ||
+                      (tab.value === 'photographs_of_unit' && 'secondary') ||
                       'default'
                     }
                   >
-                    {['1', '0', ''].includes(tab.value)
-                      ? tableData.filter((user) => user.branch_approval_status === tab.value).length
+                    {['registration_certificate', 'undertaking', 'audited_accounts', 'income_tax', 'pan', 'gst', 'sale_registration', 'industrial_licence', 'power_bills', 'pollution_certificates', 'municipal_property_tax', 'FSSAI_license', 'photographs_of_unit', ].includes(tab.value)
+                      ? tableData.filter((user) => user.doc_type === tab.value).length
                       : tableData.length}
                   </Label>
                 }
@@ -733,7 +784,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
                           <Select
                             value={banchVal}
                             onChange={handleFilterBranch}
-                            input={<OutlinedInput label="Type"/>}
+                            input={<OutlinedInput label="Branch"/>}
                             MenuProps={{
                               PaperProps: {
                                 sx: { maxHeight: 240 },
@@ -742,7 +793,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
 
                           >
                             {banch.map((option) => (
-                              <MenuItem key={option.branch_name} value={option.branch_name} >
+                              <MenuItem key={option.branch_name} value={option.branch_name} disabled={option.csp_count==0}>
 
                                 {option.branch_name}
                               </MenuItem>
@@ -761,7 +812,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
                           <Select
                             value={branch}
                             onChange={handleFilterCSP}
-                            input={<OutlinedInput label="Type"/>}
+                            input={<OutlinedInput label="CSP"/>}
                             MenuProps={{
                               PaperProps: {
                                 sx: { maxHeight: 240 },
@@ -770,7 +821,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
 
                           >
                             {dataCSP.map((option) => (
-                              <MenuItem key={option.csp_code} value={option.csp_code} >
+                              <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.document_count == 0}>
 
                                 {option.name}
                               </MenuItem>
@@ -874,7 +925,7 @@ function applyFilter(
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((user) => user.branch_approval_status === status);
+    inputData = inputData.filter((user) => user.doc_type === status);
   }
   if (!dayError) {
     if (startDay && endDay) {

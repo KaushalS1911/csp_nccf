@@ -222,7 +222,7 @@ const {vendor} = useAuthContext()
             multiple
             value={filters.csp}
             onChange={handleFilterCSP}
-            input={<OutlinedInput label="CSP"/>}
+            input={<OutlinedInput label="CSP Status"/>}
             renderValue={(selected) => selected.map((value) => value).join(', ')}
             MenuProps={{
               PaperProps: {
@@ -249,7 +249,7 @@ const {vendor} = useAuthContext()
           <Select
             value={day}
             onChange={handleFilterDays}
-            input={<OutlinedInput label="Filter By Day"/>}
+            input={<OutlinedInput label="Filter by Day"/>}
             MenuProps={{
               PaperProps: {
                 sx: { maxHeight: 240 },

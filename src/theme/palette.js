@@ -52,6 +52,30 @@ export const success = {
   darker: '#065E49',
   contrastText: '#ffffff',
 };
+export const brown = {
+  lighter: '#914F1E',
+  light: '#DEAC80',
+  main: '#F7DCB9',
+  dark: '#118D57',
+  darker: '#914F1E',
+  contrastText: '#ffffff',
+};
+export const brown2 = {
+  lighter: '#6A9C89',
+  light: '#000',
+  main: '#EEEEEE',
+  dark: '#118D57',
+  darker: '#686D76',
+  contrastText: '#ffffff',
+};
+export const brown1= {
+  lighter: '#6A9C89',
+  light: '#2e5b9d',
+  main: '#7FA1C3',
+  dark: '#7FA1C3',
+  darker: '#2e5b9d',
+  contrastText: '#ffffff',
+};
 
 export const warning = {
   lighter: '#FFF5CC',
@@ -94,6 +118,9 @@ const base = {
   warning,
   error,
   grey,
+  brown,
+  brown1,
+  brown2,
   common,
   divider: alpha(grey[500], 0.2),
   action,
