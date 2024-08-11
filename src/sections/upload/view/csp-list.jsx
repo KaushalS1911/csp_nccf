@@ -53,6 +53,8 @@ import Tabs from '@mui/material/Tabs';
 import { alpha } from '@mui/material/styles';
 import Tab from '@mui/material/Tab';
 import { isAfter, isBetween } from '../../../utils/format-time';
+import Grid from '@mui/material/Unstable_Grid2';
+import AnalyticsWidgetSummary from '../../overview/analytics/analytics-widget-summary';
 // import BranchTableFiltersResult from '../branch-table-filters-result';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
@@ -67,10 +69,22 @@ const PUBLISH_OPTIONS = [
   { value: 'published', label: 'Published' },
   { value: 'draft', label: 'Draft' },
 ];
-const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: '', label: 'Approval Pending' }, {
-  value: '1',
-  label: 'Approved',
-}, { value: '0', label: 'Rejected' }];
+const STATUS_OPTIONS = [
+  { label:"All",value:'all'},
+  { label: 'Registration Certificate', value: 'registration_certificate' },
+  { label: 'Undertaking', value: 'undertaking' },
+  { label: 'Audited Accounts', value: 'audited_accounts' },
+  { label: 'Income Tax', value: 'income_tax' },
+  { label: 'PAN', value: 'pan' },
+  { label: 'GST', value: 'gst' },
+  { label: 'Sale Registration', value: 'sale_registration' },
+  { label: 'Industrial Licence', value: 'industrial_licence' },
+  { label: 'Power Bills', value: 'power_bills' },
+  { label: 'Pollution Certificates', value: 'pollution_certificates' },
+  { label: 'Municipal Property Tax', value: 'municipal_property_tax' },
+  { label: 'FSSAI License', value: 'FSSAI_license' },
+  { label: 'Photographs of Unit', value: 'photographs_of_unit' }
+];
 const defaultFilters = {
   name: '',
   role: [],
@@ -78,6 +92,7 @@ const defaultFilters = {
   status: 'all',
   startDay: null,
   endDay: null,
+  document:[]
 
 };
 
@@ -148,7 +163,15 @@ csp ? axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/
   //
   //   axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
   // }, [branch === 'All']);
-
+  const color = ["primary","error","warning","error"]
+  const countsArray = [
+    { label: "1", count: 0 },
+    { label: "0", count: 0 },
+    { label: "", count: 0 }
+  ];
+  countsArray.forEach(commodity => {
+    commodity.count = dataFiltered.filter(item => item.branch_approval_status === commodity.label).length;
+  });
   const handleFilterCSP = useCallback(
     (event) => {
       setB(event.target.value);
@@ -550,6 +573,24 @@ csp ? axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/
         maxWidth={'xl'}
 
       >
+        <Grid container spacing={3}>
+
+          {countsArray.map((data,ind) => (
+
+            <Grid item xs={12} md={4} mb={5}>
+              <AnalyticsWidgetSummary
+                title={data.label === '' ? 'Approval Pending' :data.label === '1' ? 'Approved' : "Rejected"}
+                // percent={0.2}
+                total={data?.count == 0 ? '0' : data.count}
+                color={color[ind]}
+                chart={{
+                  // colors: color[ind-1],
+                  // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+                }}
+              />
+            </Grid>
+          ))}
+          </Grid>
         <DocumentQuickEditForm getAllDocument={getAllDocument} currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={b}/>
         <CustomBreadcrumbs
           heading={'CSP Documents'}
@@ -582,6 +623,7 @@ csp ? axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/
           }}
         >
 
+
           <Tabs
             value={filters.status}
             onChange={handleFilterStatus}
@@ -602,14 +644,24 @@ csp ? axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/
                       ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === '1' && 'success') ||
-                      (tab.value === '' && 'warning') ||
-                      (tab.value === '0' && 'error') ||
+                      (tab.value === 'registration_certificate' && 'success') ||
+                      (tab.value === 'undertaking' && 'warning') ||
+                      (tab.value === 'audited_accounts' && 'error') ||
+                      (tab.value === 'income_tax' && 'info') ||
+                      (tab.value === 'pan' && 'primary') ||
+                      (tab.value === 'gst' && 'secondary') ||
+                      (tab.value === 'sale_registration' && 'success') ||
+                      (tab.value === 'industrial_licence' && 'warning') ||
+                      (tab.value === 'power_bills' && 'error') ||
+                      (tab.value === 'pollution_certificates' && 'info') ||
+                      (tab.value === 'municipal_property_tax' && 'primary') ||
+                      (tab.value === 'FSSAI_license' && 'secondary') ||
+                      (tab.value === 'photographs_of_unit' && 'secondary') ||
                       'default'
                     }
                   >
-                    {['1', '0', ''].includes(tab.value)
-                      ? tableData.filter((user) => user.branch_approval_status === tab.value).length
+                    {['registration_certificate', 'undertaking', 'audited_accounts', 'income_tax', 'pan', 'gst', 'sale_registration', 'industrial_licence', 'power_bills', 'pollution_certificates', 'municipal_property_tax', 'FSSAI_license', 'photographs_of_unit', ].includes(tab.value)
+                      ? tableData.filter((user) => user.doc_type === tab.value).length
                       : tableData.length}
                   </Label>
                 }
@@ -780,7 +832,7 @@ function applyFilter(
     inputData, filters,dayError
   },
 ) {
-  const { name, status, role, type, startDay, endDay } = filters;
+  const { name, status, role, type, startDay, endDay,document } = filters;
 
 
   if (name) {
@@ -790,7 +842,7 @@ function applyFilter(
   }
 
   if (status !== 'all') {
-    inputData = inputData.filter((user) => user.branch_approval_status === status);
+    inputData = inputData.filter((user) => user.doc_type === status);
   }
   if (!dayError) {
     if (startDay && endDay) {
@@ -802,6 +854,9 @@ function applyFilter(
   }
   if (type.length) {
     inputData = inputData.filter((user) => type.includes(user.doc_type));
+  }
+  if (document?.length) {
+    inputData = inputData.filter((user) => document.includes(user.branch_approval_status));
   }
 
   return inputData;
