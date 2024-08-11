@@ -433,7 +433,7 @@ function CspHeadListView(props) {
       minWidth: 50,
     },
     {
-      field: 'csp_status',
+      field: 'branch_approval_status',
       headerName: 'Status',
       renderCell: (params) => (
         <TableCell sx={{ px: 0 }}>

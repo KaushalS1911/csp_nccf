@@ -556,7 +556,38 @@ function CspList({ csp, document, miller, cspt, docu }) {
     // },
   ];
   const handelDownload = () => {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/zip-file`).then((res) => console.log(res)).catch((err) => console.log(err));
+    fetch('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/DS3423432_Uttar%20Pradesh/zip-file', {
+      method: 'GET',
+
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      })
+      .then(blob => {
+        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = 'downloaded.zip';
+
+        if (contentDisposition) {
+          const matches = /filename="([^"]*)"/.exec(contentDisposition);
+          if (matches != null && matches[1]) {
+            filename = matches[1];
+          }
+        }
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filename);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(error => console.error('Error downloading the file:', error));
   };
   const handleFilterStatus = useCallback(
     (event, newValue) => {
@@ -605,7 +636,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
         </Grid>
         <DocumentQuickEditForm getAllDocument={getAllDocument} currentUser={currentData} open={open} setOpen={setOpen}
                                approve={approve} cspCode={b}/>
-        <CustomBreadcrumbs
+        {!cspt && <CustomBreadcrumbs
           heading={'CSP Documents'}
           links={[
             {
@@ -625,7 +656,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
           sx={{ mb: { xs: 3, md: 5 } }}
 
         />
-
+        }
 
         <Card
           sx={{

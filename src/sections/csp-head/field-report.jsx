@@ -62,36 +62,36 @@ export default function FieldReport({ singleCode, data, setData, remark, setRema
 
       >
 
-        <CustomBreadcrumbs
-          heading={'Field Report'}
-          links={[
-            {
-              name: 'Dashboard',
-              href: paths.dashboard.root,
-            },
-            {
-              name: 'CSP List',
-              href: paths.dashboard.csp.csp_list,
-            },
+        {/*<CustomBreadcrumbs*/}
+        {/*  heading={'Field Report'}*/}
+        {/*  links={[*/}
+        {/*    {*/}
+        {/*      name: 'Dashboard',*/}
+        {/*      href: paths.dashboard.root,*/}
+        {/*    },*/}
+        {/*    {*/}
+        {/*      name: 'CSP List',*/}
+        {/*      href: paths.dashboard.csp.csp_list,*/}
+        {/*    },*/}
 
-            {
-              name: 'Field Report',
-            },
-          ]}
-          sx={{ mb: { xs: 3, md: 5 } }}
-          // action={
-          //   (vendor?.category !== 'branch' && !cspt) &&
-          //   <Button
-          //     component={RouterLink}
-          //     href={miller ? paths.dashboard.miller.document_upload : docu ? paths.dashboard.distributor.document_upload : paths.dashboard.distributor.document_upload}
-          //     variant="contained"
-          //     startIcon={<Iconify icon="mingcute:add-line"/>}
-          //
-          //   >
-          //     Upload Document
-          //   </Button>
-          // }
-        />
+        {/*    {*/}
+        {/*      name: 'Field Report',*/}
+        {/*    },*/}
+        {/*  ]}*/}
+        {/*  sx={{ mb: { xs: 3, md: 5 } }}*/}
+        {/*  // action={*/}
+        {/*  //   (vendor?.category !== 'branch' && !cspt) &&*/}
+        {/*  //   <Button*/}
+        {/*  //     component={RouterLink}*/}
+        {/*  //     href={miller ? paths.dashboard.miller.document_upload : docu ? paths.dashboard.distributor.document_upload : paths.dashboard.distributor.document_upload}*/}
+        {/*  //     variant="contained"*/}
+        {/*  //     startIcon={<Iconify icon="mingcute:add-line"/>}*/}
+        {/*  //*/}
+        {/*  //   >*/}
+        {/*  //     Upload Document*/}
+        {/*  //   </Button>*/}
+        {/*  // }*/}
+        {/*/>*/}
         <Card sx={{background:!remark && "#FFE2DA",color:!remark && "#93313A"}}>
           <Stack spacing={3} sx={{ p: 4 }}>
             <Stack>

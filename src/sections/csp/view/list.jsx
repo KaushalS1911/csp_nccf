@@ -64,6 +64,7 @@ const defaultFilters = {
   district: [],
   category: [],
   status: 'all',
+  csp:[]
 
 };
 
@@ -159,7 +160,7 @@ const {vendor} = useAuthContext()
     },
     [enqueueSnackbar, tableData]
   );
-  const STATUS_OPTIONS = [{ value: 'all', label: 'All' },{value:'miller',label: 'Miller'},{value:"disributor",label:"Distributor"},{value: "society_cooperative",label: "Society"},{value: "miller_distributor",label: "Miller & Distributor"}]
+  const STATUS_OPTIONS = [{ value: 'all', label: 'All' },{value:'miller',label: 'Miller'},{value:"distributor",label:"Distributor"},{value: "society_cooperative",label: "Society"},{value: "miller_distributor",label: "Miller & Distributor"}]
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
 
@@ -352,12 +353,14 @@ const {vendor} = useAuthContext()
     {
       field: 'type_of_firm',
       headerName: 'Type Of Firm',
-      width: 150,
+      // width: 150,
+      minWidth: 240,
     },
     {
       field: 'contact_person',
       headerName: 'Contact Person',
-      width: 120,
+      // width: 120,
+      minWidth: 240,
     },
     {
       field: 'phone_number',
@@ -369,13 +372,13 @@ const {vendor} = useAuthContext()
       headerName: 'Email',
       width: 160,
     },
-    {
-      field: 'address',
-      headerName: 'Address',
-      width: 240,
-      flex: 1,
-      minWidth: 240,
-    },
+    // {
+    //   field: 'address',
+    //   headerName: 'Address',
+    //   width: 240,
+    //   flex: 1,
+    //   minWidth: 240,
+    // },
     {
       field: 'order_count',
       headerName: 'Orders',
@@ -630,7 +633,7 @@ const {vendor} = useAuthContext()
   );
 }
 function applyFilter({ inputData, comparator, filters }) {
-  const { name, status, type_of_firm, state, branch, district, category } = filters;
+  const { name, status, type_of_firm, state, branch, district, category,csp } = filters;
 
   // const stabilizedThis = inputData?.map((el, index) => [el, index]);
   // stabilizedThis.sort((a, b) => {
@@ -646,7 +649,9 @@ function applyFilter({ inputData, comparator, filters }) {
       (user) => user.name.toLowerCase().indexOf(name.toLowerCase()) !== -1,
     );
   }
-
+  if (csp.length) {
+    inputData = inputData.filter((user) => csp.includes(user.branch_approval_status === "0" ? "Declined": user.branch_approval_status === "1" ? "Approved" : "Approval Pending"));
+  }
   if (status !== 'all') {
     inputData = inputData.filter((user) => user.category === status);
   }

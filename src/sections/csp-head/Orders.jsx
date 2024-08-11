@@ -467,33 +467,33 @@ function Orders({singleCode}) {
           </Grid>
         ))}
       </Grid>
-        <CustomBreadcrumbs
-          heading="Order List"
-          links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            {
-              name: 'Order',
-              href: paths.dashboard.orders,
-            },
-            { name: 'List' },
-          ]}
-          // action={
-          //   <Button
-          //     component={RouterLink}
-          //     href={paths.dashboard.product.new}
-          //     variant="contained"
-          //     startIcon={<Iconify icon="mingcute:add-line" />}
-          //   >
-          //     New Product
-          //   </Button>
-          // }
-          sx={{
-            mb: {
-              xs: 3,
-              md: 5,
-            },
-          }}
-        />
+        {/*<CustomBreadcrumbs*/}
+        {/*  heading="Order List"*/}
+        {/*  links={[*/}
+        {/*    { name: 'Dashboard', href: paths.dashboard.root },*/}
+        {/*    {*/}
+        {/*      name: 'Order',*/}
+        {/*      href: paths.dashboard.orders,*/}
+        {/*    },*/}
+        {/*    { name: 'List' },*/}
+        {/*  ]}*/}
+        {/*  // action={*/}
+        {/*  //   <Button*/}
+        {/*  //     component={RouterLink}*/}
+        {/*  //     href={paths.dashboard.product.new}*/}
+        {/*  //     variant="contained"*/}
+        {/*  //     startIcon={<Iconify icon="mingcute:add-line" />}*/}
+        {/*  //   >*/}
+        {/*  //     New Product*/}
+        {/*  //   </Button>*/}
+        {/*  // }*/}
+        {/*  sx={{*/}
+        {/*    mb: {*/}
+        {/*      xs: 3,*/}
+        {/*      md: 5,*/}
+        {/*    },*/}
+        {/*  }}*/}
+        {/*/>*/}
         <HeadQuickEditForm getAllDocument={getOrders} currentUser={currentData} open={open} setOpen={setOpen}
                            approve={approve} cspCode={b}/>
         <Card

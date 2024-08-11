@@ -672,7 +672,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
           ))}
         </Grid>
         <DocumentQuickEditForm getAllDocument={getAllDocument} getDocuments={getDocuments} currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={b}/>
-        <CustomBreadcrumbs
+        {!cspt && <CustomBreadcrumbs
           heading={'Documents'}
           links={[
             {
@@ -691,7 +691,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
           sx={{ mb: { xs: 3, md: 5 } }}
 
         />
-
+        }
 
         <Card
           sx={{

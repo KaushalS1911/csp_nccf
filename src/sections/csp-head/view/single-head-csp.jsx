@@ -70,7 +70,7 @@ const {id} = useParams()
           heading="CSP"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
-            { name: 'CSP', href: paths.dashboard.csp.csp_view(id) },
+            { name: 'CSP', href: paths.dashboard.csp.csp_list },
             { name: 'Account' },
           ]}
           sx={{
