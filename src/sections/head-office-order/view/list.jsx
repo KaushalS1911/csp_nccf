@@ -663,7 +663,7 @@ function applyFilter({ inputData, filters, dateError, dayError }) {
   }
 
   if (commodity.length) {
-    inputData = inputData.filter((user) => commodity.includes(user.commodity));
+    inputData = inputData.filter((user) => commodity.includes(user.nccf_order_status));
   }
   if (branch.length) {
     inputData = inputData.filter((user) => branch.includes(user.branch));

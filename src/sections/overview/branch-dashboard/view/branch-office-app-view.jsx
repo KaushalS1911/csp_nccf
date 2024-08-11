@@ -12,6 +12,7 @@ import BranchWidgetSummary from '../branch-widget-summary';
 import BranchCurrentDownload from '../branch-current-download';
 import BranchDataActivity from '../branch-data-activity';
 import { handleCategoryTypes } from '../../../../_mock';
+import AnalyticsWidgetSummary from '../../analytics/analytics-widget-summary';
 
 
 // ----------------------------------------------------------------------
@@ -73,15 +74,17 @@ export default function BranchDashboardView({ vendorCode }) {
     });
   }
 
-  const color = [[theme.palette.success.light, theme.palette.success.main], [theme.palette.warning.light, theme.palette.warning.main], [theme.palette.info.light, theme.palette.info.main], [theme.palette.secondary.light, theme.palette.secondary.main]];
+  // const color = [[theme.palette.success.light, theme.palette.success.main], [theme.palette.warning.light, theme.palette.warning.main], [theme.palette.info.light, theme.palette.info.main], [theme.palette.secondary.light, theme.palette.secondary.main]];
+  const color = ["primary","info","warning","error"]
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
         {branch && branch.map((data, ind) => (
           data?.category !== "Distributor" && <Grid xs={12} md={3}>
-            <BranchWidgetSummary
+            <AnalyticsWidgetSummary
               title={handleCategoryTypes(data?.category)}
               // percent={0.2}
+              color={color[ind]}
               total={data?.count || 0}
               chart={{
                 // colors: color[ind-1],

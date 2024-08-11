@@ -67,6 +67,15 @@ export default function DocumentTableToolbar({
     },
     [onFilters]
   );
+  const handleFilterStatus = useCallback(
+    (event) => {
+      onFilters(
+        'document',
+        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value
+      );
+    },
+    [onFilters]
+  );
 
 
   const dayManage = (day) => {
@@ -179,6 +188,37 @@ export default function DocumentTableToolbar({
               <MenuItem key={option} value={option.key}>
                 <Checkbox disableRipple size="small" checked={filters.type.includes(option.key)}/>
                 {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>}
+        {vendor?.category === "head_office" && <FormControl
+          sx={{
+            flexShrink: 0,
+            width: { xs: 1, md: 200 },
+          }}
+        >
+          <InputLabel>Status</InputLabel>
+
+          <Select
+            multiple
+            value={
+              filters.document
+              // filters.document
+              }
+            onChange={handleFilterStatus}
+            input={<OutlinedInput label="Status"/>}
+            renderValue={(selected) => selected.map((value) => value).join(', ')}
+            MenuProps={{
+              PaperProps: {
+                sx: { maxHeight: 240 },
+              },
+            }}
+          >
+            {["","0","1"].map((option) => (
+              <MenuItem key={option} value={option}>
+                <Checkbox disableRipple size="small" checked={filters.document.includes(option)}/>
+                {option == '1' ? 'Approved' : option == '0' ? 'Rejected' : 'Approval Pending'}
               </MenuItem>
             ))}
           </Select>

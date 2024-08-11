@@ -356,13 +356,13 @@ useEffect(() => {
             width: { xs: 1, md: 200 },
           }}
         >
-          <InputLabel>Commodity</InputLabel>
+          <InputLabel>Status</InputLabel>
 
           <Select
             multiple
             value={filters.commodity}
             onChange={handleFilterCommodity}
-            input={<OutlinedInput label="Commodity"/>}
+            input={<OutlinedInput label="Status"/>}
             renderValue={(selected) => selected.map((value) => value).join(', ')}
             MenuProps={{
               PaperProps: {
@@ -370,10 +370,10 @@ useEffect(() => {
               },
             }}
           >
-            {['Bharat Daal', 'Bharat Aata', 'Bharat Rice'].map((option) => (
+            {['accepted', 'declined', 'placed'].map((option) => (
               <MenuItem key={option} value={option}>
                 <Checkbox disableRipple size="small" checked={filters.commodity.includes(option)}/>
-                {option}
+                {option === 'accepted' ? 'Accepted' : option === 'declined' ? 'Declined' : 'Placed'}
               </MenuItem>
             ))}
           </Select>

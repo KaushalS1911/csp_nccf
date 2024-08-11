@@ -51,6 +51,14 @@ export default function DocumentTableFiltersResult({
     },
     [filters.type, onFilters]
   );
+  const handleRemoveDocument = useCallback(
+    (inputValue) => {
+      const newValue = filters.document.filter((item) => item !== inputValue);
+
+      onFilters('document', newValue);
+    },
+    [filters.document, onFilters]
+  );
 
   return (
     <Stack spacing={1.5} {...other}>
@@ -67,6 +75,13 @@ export default function DocumentTableFiltersResult({
             <Chip size="small" label={handleDoctypeLabel(filters.status)} onDelete={handleRemoveStatus} />
           </Block>
         )}
+        {!!filters.document.length && (
+          <Block label="Status:">
+            {filters.document.map((option) => (
+              <Chip key={option} label={option == '1' ? 'Approved' : option == '0' ? 'Rejected' : 'Approval Pending'} size="small" onDelete={() => handleRemoveDocument(option)} />
+            ))}
+          </Block>
+        )}
         {filters.startDay && filters.endDay && (
           <Block label="Day:">
             <Chip size="small" label={shortDayLabel} onDelete={handleRemoveDay} />
@@ -78,7 +93,8 @@ export default function DocumentTableFiltersResult({
               <Chip key={item} label={item} size="small" onDelete={() => handleRemoveRole(item)} />
             ))}
           </Block>
-        )}  {!!filters.type.length && (
+        )}
+        {!!filters.type.length && (
           <Block label="Type:">
             {filters.type.map((item) => (
               <Chip key={item} label={item} size="small" onDelete={() => handleRemoveType(item)} />

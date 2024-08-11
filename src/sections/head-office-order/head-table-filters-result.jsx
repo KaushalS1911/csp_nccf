@@ -79,7 +79,7 @@ export default function HeadTableFiltersResult({
 
       <Stack flexGrow={1} spacing={1} direction="row" flexWrap="wrap" alignItems="center">
         {filters.status !== 'all' && (
-          <Block label="Status:">
+          <Block label="Commodity:">
             <Chip size="small" label={filters.status} onDelete={handleRemoveStatus} />
           </Block>
         )}
@@ -94,9 +94,9 @@ export default function HeadTableFiltersResult({
           </Block>
         )}
         {!!filters.commodity.length && (
-          <Block label="commodity:">
+          <Block label="Status:">
             {filters.commodity.map((item) => (
-              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveCommodity(item)} />
+              <Chip key={item} label={item === 'accepted' ? 'Accepted' : item === 'declined' ? 'Declined' : 'Placed'} size="small" onDelete={() => handleRemoveCommodity(item)} />
             ))}
           </Block>
         )}

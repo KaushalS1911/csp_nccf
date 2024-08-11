@@ -92,6 +92,7 @@ const defaultFilters = {
   status: 'all',
   startDay: null,
   endDay: null,
+  document:[],
 
 };
 
@@ -915,7 +916,7 @@ function applyFilter(
     inputData, filters,dayError
   },
 ) {
-  const { name, status, role, type, startDay, endDay } = filters;
+  const { name, status, role, type, startDay, endDay,document } = filters;
 
 
   if (name) {
@@ -934,6 +935,9 @@ function applyFilter(
   }
   if (role?.length) {
     inputData = inputData.filter((user) => role.includes(user.role));
+  }
+  if (document?.length) {
+    inputData = inputData.filter((user) => document.includes(user.branch_approval_status));
   }
   if (type.length) {
     inputData = inputData.filter((user) => type.includes(user.doc_type));
