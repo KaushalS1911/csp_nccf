@@ -56,6 +56,7 @@ const defaultFilters = {
   commodity: [],
   status: 'all',
   branch: [],
+  category:[],
   name: '',
   startDate: null,
   endDate: null,
@@ -633,7 +634,7 @@ setBanchVal(event.target.value)
 }
 
 function applyFilter({ inputData, filters, dateError, dayError }) {
-  const { stock, publish, status, commodity, name, branch, startDate, endDate, startDay, endDay } = filters;
+  const { stock, publish, status, commodity, name, branch, startDate, endDate, startDay, endDay ,category} = filters;
 
   if (stock.length) {
     inputData = inputData.filter((product) => stock.includes(product.inventoryType));
@@ -657,7 +658,9 @@ function applyFilter({ inputData, filters, dateError, dayError }) {
     );
   }
 
-
+  if (category.length) {
+    inputData = inputData.filter((user) => category.includes(user.category));
+  }
   if (status !== 'all') {
     inputData = inputData.filter((user) => user.commodity === status);
   }

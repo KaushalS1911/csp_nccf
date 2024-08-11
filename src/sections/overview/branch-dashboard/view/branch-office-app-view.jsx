@@ -11,8 +11,9 @@ import { useAuthContext } from '../../../../auth/hooks';
 import BranchWidgetSummary from '../branch-widget-summary';
 import BranchCurrentDownload from '../branch-current-download';
 import BranchDataActivity from '../branch-data-activity';
-import { handleCategoryTypes } from '../../../../_mock';
+import { handleCategoryTypes, handleOrderTypes } from '../../../../_mock';
 import AnalyticsWidgetSummary from '../../analytics/analytics-widget-summary';
+import HeadCurrentDownload from '../../head-office-dashboard/head-current-download';
 
 
 // ----------------------------------------------------------------------
@@ -28,7 +29,7 @@ export default function BranchDashboardView({ vendorCode }) {
   const [branch, setBranch] = useState([]);
   const [labelCount, setLabelCount] = useState([]);
 
-
+  const [orderCount, setOrderCount] = useState([]);
   const TIME_LABELS = {
     week: ['Mon', 'Tue', 'Web', 'Thu', 'Fri', 'Sat', 'Sun'],
     month: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -39,10 +40,14 @@ export default function BranchDashboardView({ vendorCode }) {
       fetchAllOrders();
       getStats();
     }
-
+    getOrder();
     getBranch();
   }, [vendor]);
-
+  function getOrder() {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/orders/stats`).then((res) => {
+      setOrderCount(res.data.data);
+    });
+  }
   useEffect(() => {
     const count = branch?.map((data, ind) => {
       if (data?.category !== "Distributor") {
@@ -73,7 +78,11 @@ export default function BranchDashboardView({ vendorCode }) {
       setOrderList(res?.data?.data);
     });
   }
-
+  const color2 = ["secondary","brown1","brown","brown"]
+  const statusesToKeep = ['placed', 'accepted', 'declined'];
+  const chartOrder = []
+  const filteredData = orderCount.filter(item => statusesToKeep.includes(item.nccf_order_status));
+  filteredData.map((data) => chartOrder.push({label:handleOrderTypes(data?.nccf_order_status),value:data?.['COUNT(id)'] || 0}))
   // const color = [[theme.palette.success.light, theme.palette.success.main], [theme.palette.warning.light, theme.palette.warning.main], [theme.palette.info.light, theme.palette.info.main], [theme.palette.secondary.light, theme.palette.secondary.main]];
   const color = ["primary","info","warning","error"]
   return (
@@ -86,6 +95,20 @@ export default function BranchDashboardView({ vendorCode }) {
               // percent={0.2}
               color={color[ind]}
               total={data?.count || 0}
+              chart={{
+                // colors: color[ind-1],
+                // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+              }}
+            />
+          </Grid>
+        ))}
+        {orderCount && filteredData.map((data, ind) => (
+          <Grid xs={12} md={4}>
+            <AnalyticsWidgetSummary
+              title={handleOrderTypes(data?.nccf_order_status)}
+              // percent={0.2}
+              total={data?.['COUNT(id)'] || 0}
+              color={color2[ind]}
               chart={{
                 // colors: color[ind-1],
                 // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
@@ -146,54 +169,68 @@ export default function BranchDashboardView({ vendorCode }) {
             }}
           />}
         </Grid>
-        <Grid xs={12} md={6} lg={8}>
-          <BranchDataActivity
-            title="Orders"
+        <Grid xs={12} md={6} lg={4}>
+          {labelCount !== [] && <HeadCurrentDownload
+            title="Total Orders"
             chart={{
-              labels: TIME_LABELS,
               colors: [
-                theme.palette.primary.main,
-                theme.palette.error.main,
-                theme.palette.warning.main,
+                '#6F4E37',
+                '#A67B5B',
+                '#FED8B1',
+                '#ECB176',
               ],
-              series: [
-                {
-                  type: 'Week',
-                  data: [
-                    { name: 'Bharat Daal', data: [20, 34, 48, 65, 37, 48, 9] },
-                    { name: 'Bharat Aata', data: [10, 34, 13, 26, 27, 28, 18] },
-                    { name: 'Bharat Rice', data: [10, 14, 13, 16, 17, 18, 28] },
-                  ],
-                },
-                {
-                  type: 'Month',
-                  data: [
-                    {
-                      name: 'Bharat Daal',
-                      data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],
-                    },
-                    {
-                      name: 'Bharat Aata',
-                      data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],
-                    },
-                    {
-                      name: 'Bharat Rice',
-                      data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],
-                    },
-
-                  ],
-                },
-                {
-                  type: 'Year',
-                  data: [
-                    { name: 'Bharat Daal', data: [10, 34, 13, 56, 77] },
-                    { name: 'Bharat Aata', data: [10, 34, 13, 56, 77] },
-                    { name: 'Bharat Rice', data: [10, 34, 13, 56, 77] },
-                  ],
-                },
-              ],
+              series: chartOrder,
             }}
-          />
+          />}
+        </Grid>
+        {/*<Grid xs={12} md={6} lg={8}>*/}
+        {/*  <BranchDataActivity*/}
+        {/*    title="Orders"*/}
+        {/*    chart={{*/}
+        {/*      labels: TIME_LABELS,*/}
+        {/*      colors: [*/}
+        {/*        theme.palette.primary.main,*/}
+        {/*        theme.palette.error.main,*/}
+        {/*        theme.palette.warning.main,*/}
+        {/*      ],*/}
+        {/*      series: [*/}
+        {/*        {*/}
+        {/*          type: 'Week',*/}
+        {/*          data: [*/}
+        {/*            { name: 'Bharat Daal', data: [20, 34, 48, 65, 37, 48, 9] },*/}
+        {/*            { name: 'Bharat Aata', data: [10, 34, 13, 26, 27, 28, 18] },*/}
+        {/*            { name: 'Bharat Rice', data: [10, 14, 13, 16, 17, 18, 28] },*/}
+        {/*          ],*/}
+        {/*        },*/}
+        {/*        {*/}
+        {/*          type: 'Month',*/}
+        {/*          data: [*/}
+        {/*            {*/}
+        {/*              name: 'Bharat Daal',*/}
+        {/*              data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],*/}
+        {/*            },*/}
+        {/*            {*/}
+        {/*              name: 'Bharat Aata',*/}
+        {/*              data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],*/}
+        {/*            },*/}
+        {/*            {*/}
+        {/*              name: 'Bharat Rice',*/}
+        {/*              data: [10, 34, 13, 56, 77, 88, 99, 77, 45, 12, 43, 34],*/}
+        {/*            },*/}
+
+        {/*          ],*/}
+        {/*        },*/}
+        {/*        {*/}
+        {/*          type: 'Year',*/}
+        {/*          data: [*/}
+        {/*            { name: 'Bharat Daal', data: [10, 34, 13, 56, 77] },*/}
+        {/*            { name: 'Bharat Aata', data: [10, 34, 13, 56, 77] },*/}
+        {/*            { name: 'Bharat Rice', data: [10, 34, 13, 56, 77] },*/}
+        {/*          ],*/}
+        {/*        },*/}
+        {/*      ],*/}
+        {/*    }}*/}
+        {/*  />*/}
 
           {/*<div>*/}
           {/*  <HeadManagerPanel*/}
@@ -237,7 +274,7 @@ export default function BranchDashboardView({ vendorCode }) {
           {/*    ))}*/}
           {/*  </Stack>*/}
           {/*</div>*/}
-        </Grid>
+        {/*</Grid>*/}
         <Grid xs={12}>
           {/*<BranchNewInvoice*/}
           {/*  title="Orders"*/}

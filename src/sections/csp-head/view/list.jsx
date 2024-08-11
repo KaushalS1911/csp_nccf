@@ -129,10 +129,7 @@ function CspHeadListView(props) {
       .get(
         `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${code}/csp`,
       )
-      .then((res) => (res.data.data).map((data, index) => setTableData((pdata) => [...pdata, {
-        ...data,
-        id: index + 1,
-      }])))
+      .then((res) =>  setTableData(res.data.data))
       .catch((err) => console.error(err));
   }
 
@@ -379,8 +376,8 @@ function CspHeadListView(props) {
 
   const columns = [
     {
-      field: 'id',
-      headerName: '#',
+      field: 'seq_number',
+      headerName: 'Sr No.',
       align: 'center',
       headerAlign: 'center',
       width: 70,
@@ -402,12 +399,14 @@ function CspHeadListView(props) {
     {
       field: 'type_of_firm',
       headerName: 'Type Of Firm',
-      width: 150,
+      minWidth: 240,
+      // width: 150,
     },
     {
       field: 'contact_person',
       headerName: 'Contact Person',
-      width: 120,
+      // width: 120,
+      minWidth: 240,
     },
     {
       field: 'phone_number',
@@ -419,13 +418,13 @@ function CspHeadListView(props) {
       headerName: 'Email',
       width: 160,
     },
-    {
-      field: 'address',
-      headerName: 'Address',
-      width: 240,
-      flex: 1,
-      minWidth: 240,
-    },
+    // {
+    //   field: 'address',
+    //   headerName: 'Address',
+    //   width: 240,
+    //   flex: 1,
+    //   minWidth: 240,
+    // },
     {
       field: 'order_count',
       headerName: 'Orders',
@@ -441,13 +440,13 @@ function CspHeadListView(props) {
           <Label
             variant="soft"
             color={
-              (params.row.csp_status === '1' && 'success') ||
-              (params.row.csp_status === '' && 'warning') ||
-              (params.row.csp_status === '0' && 'error') ||
+              (params.row.branch_approval_status === '1' && 'success') ||
+              (params.row.branch_approval_status === '' && 'warning') ||
+              (params.row.branch_approval_status === '0' && 'error') ||
               'default'
             }
           >
-            {params.row.csp_status === '1' ? 'Approved':params.row.csp_status === '0' ? 'Declined' : 'Approval Pending'}
+            {params.row.branch_approval_status === '1' ? 'Approved':params.row.branch_approval_status === '0' ? 'Declined' : 'Approval Pending'}
           </Label>
         </TableCell>
       ),
@@ -737,7 +736,7 @@ function applyFilter({ inputData, comparator, filters,dayError }) {
     inputData = inputData.filter((user) => type_of_firm.includes(user.type_of_firm));
   }
   if (csp.length) {
-    inputData = inputData.filter((user) => csp.includes(user.csp_status === "0" ? "Declined": user.csp_status === "1" ? "Approved" : "Approval Pending"));
+    inputData = inputData.filter((user) => csp.includes(user.branch_approval_status === "0" ? "Declined": user.branch_approval_status === "1" ? "Approved" : "Approval Pending"));
   }
   if (!dayError) {
     if (startDay && endDay) {

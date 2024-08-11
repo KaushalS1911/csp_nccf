@@ -17,6 +17,7 @@ import CustomPopover, { usePopover } from 'src/components/custom-popover';
 import { useAuthContext } from '../../auth/hooks';
 import axios from 'axios';
 import { GridToolbarQuickFilter } from '@mui/x-data-grid';
+import { handleCategoryTypes } from '../../_mock';
 
 // ----------------------------------------------------------------------
 
@@ -78,7 +79,15 @@ export default function DocumentTableToolbar({
     [onFilters]
   );
 
-
+  const handleFilterCategory = useCallback(
+    (event) => {
+      onFilters(
+        'category',
+        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value,
+      );
+    },
+    [onFilters],
+  );
   const dayManage = (day) => {
     const currentDate = new Date();
     const sevenDaysAgo = new Date(new Date().setDate(new Date().getDate() - 6));
@@ -165,6 +174,34 @@ export default function DocumentTableToolbar({
             {/*</IconButton>*/}
           </Stack>
         }
+        {vendor.category == "branch" && <FormControl
+          sx={{
+            flexShrink: 0,
+            width: { xs: 1, md: 200 },
+          }}
+        >
+          <InputLabel>Category</InputLabel>
+
+          <Select
+            multiple
+            value={filters.category}
+            onChange={handleFilterCategory}
+            input={<OutlinedInput label="Category"/>}
+            renderValue={(selected) => selected.map((value) =>handleCategoryTypes(value) ).join(', ')}
+            MenuProps={{
+              PaperProps: {
+                sx: { maxHeight: 240 },
+              },
+            }}
+          >
+            {['distributor', 'miller', 'miller_distributor',"society_cooperative"].map((option) => (
+              <MenuItem key={option} value={option}>
+                <Checkbox disableRipple size="small" checked={filters.category.includes(option)}/>
+                {handleCategoryTypes(option)}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>}
         {/*{(vendor?.category !== "head_office" || vendor?.category !== "branch") && <FormControl*/}
         {/*  sx={{*/}
         {/*    flexShrink: 0,*/}

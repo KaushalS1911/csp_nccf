@@ -92,7 +92,7 @@ export default function FieldReport({ singleCode, data, setData, remark, setRema
           //   </Button>
           // }
         />
-        <Card>
+        <Card sx={{background:!remark && "#FFE2DA",color:!remark && "#93313A"}}>
           <Stack spacing={3} sx={{ p: 4 }}>
             <Stack>
               <Box
@@ -105,7 +105,7 @@ export default function FieldReport({ singleCode, data, setData, remark, setRema
                   md: 'repeat(2, 1fr)',
                 }}
               >
-                <Text>{remark ? remark : "Field report Not found"}</Text>
+                <Text>{remark ? remark : "Field report not found"}</Text>
               </Box>
             </Stack>
             {/*{data === '' && <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: '20px' }}>*/}

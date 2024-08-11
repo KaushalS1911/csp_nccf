@@ -22,7 +22,7 @@ import { RouterLink } from 'src/routes/components';
 import { useBoolean } from 'src/hooks/use-boolean';
 
 import { useGetProducts } from 'src/api/product';
-import { _roles, PRODUCT_STOCK_OPTIONS } from 'src/_mock';
+import { _roles, handleOrderTypes, PRODUCT_STOCK_OPTIONS } from 'src/_mock';
 
 import Iconify from 'src/components/iconify';
 import { useSnackbar } from 'src/components/snackbar';
@@ -52,6 +52,8 @@ import HeadQuickEditForm from '../head-office-order/head-order-quick-edit-form';
 import HeadTableToolbar from '../head-office-order/head-table-toolbar';
 import { isAfter, isBetween } from '../../utils/format-time';
 import HeadTableFiltersResult from '../head-office-order/head-table-filters-result';
+import Grid from '@mui/material/Unstable_Grid2';
+import AnalyticsWidgetSummary from '../overview/analytics/analytics-widget-summary';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
 // import {
@@ -72,6 +74,7 @@ const defaultFilters = {
   commodity: [],
   status: 'all',
   branch: [],
+  category:[],
   name: '',
   startDay: null,
   endDay: null,
@@ -169,10 +172,10 @@ function Orders({singleCode}) {
     },
     [enqueueSnackbar, tableData],
   );
-  const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: 'accepted', label: 'Accepted' }, {
-    value: 'placed',
-    label: 'Placed',
-  }, { value: 'declined', label: 'Declined' }];
+  const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, { value: 'Bharat Aata', label: 'Bharat Aata' }, {
+    value: 'Bharat Daal',
+    label: 'Bharat Daal',
+  }, { value: 'Bharat Rice', label: 'Bharat Rice' }];
   const handleDeleteRows = useCallback(() => {
     const deleteRows = tableData.filter((row) => !selectedRowIds.includes(row.id));
 
@@ -415,7 +418,16 @@ function Orders({singleCode}) {
     //   ],
     // },
   ];
+  const countsArray = [
+    { label: "accepted", count: 0 },
+    { label: "declined", count: 0 },
+    { label: "placed", count: 0 }
+  ];
 
+  countsArray.forEach(commodity => {
+    commodity.count = dataFiltered.filter(item => item.nccf_order_status === commodity.label).length;
+  });
+  const color = ["primary","error","warning","error"]
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
@@ -437,6 +449,24 @@ function Orders({singleCode}) {
         //   flexDirection: 'column',
         // }}
       >
+      <Grid container spacing={3}>
+
+        {countsArray.map((data,ind) => (
+
+          <Grid item xs={12} md={4} mb={5}>
+            <AnalyticsWidgetSummary
+              title={handleOrderTypes(data?.label)}
+              // percent={0.2}
+              total={data?.count == 0 ? '0' : data.count}
+              color={color[ind]}
+              chart={{
+                // colors: color[ind-1],
+                // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+              }}
+            />
+          </Grid>
+        ))}
+      </Grid>
         <CustomBreadcrumbs
           heading="Order List"
           links={[
@@ -494,14 +524,14 @@ function Orders({singleCode}) {
                       ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'accepted' && 'success') ||
-                      (tab.value === 'placed' && 'warning') ||
-                      (tab.value === 'declined' && 'error') ||
+                      (tab.value === 'Bharat Aata' && 'success') ||
+                      (tab.value === 'Bharat Daal' && 'warning') ||
+                      (tab.value === 'Bharat Rice' && 'error') ||
                       'default'
                     }
                   >
-                    {['accepted', 'declined', 'placed'].includes(tab.value)
-                      ? tableData.filter((user) => user.nccf_order_status === tab.value).length
+                    {['Bharat Aata', 'Bharat Rice', 'Bharat Daal'].includes(tab.value)
+                      ? tableData.filter((user) => user.commodity === tab.value).length
                       : tableData.length}
                   </Label>
                 }
@@ -655,7 +685,7 @@ function Orders({singleCode}) {
 }
 
 function applyFilter({ inputData, filters, dateError, dayError }) {
-  const { stock, publish, status, commodity, name, branch, startDate, endDate, startDay, endDay } = filters;
+  const { stock, publish, status, commodity, name, branch, startDate, endDate, startDay, endDay,category } = filters;
 
   if (stock.length) {
     inputData = inputData.filter((product) => stock.includes(product.inventoryType));
@@ -681,14 +711,17 @@ function applyFilter({ inputData, filters, dateError, dayError }) {
 
 
   if (status !== 'all') {
-    inputData = inputData.filter((user) => user.nccf_order_status === status);
+    inputData = inputData.filter((user) => user.commodity === status);
   }
 
   if (commodity.length) {
-    inputData = inputData.filter((user) => commodity.includes(user.commodity));
+    inputData = inputData.filter((user) => commodity.includes(user.nccf_order_status));
   }
   if (branch.length) {
     inputData = inputData.filter((user) => branch.includes(user.branch));
+  }
+  if (category.length) {
+    inputData = inputData.filter((user) => category.includes(user.category));
   }
   return inputData;
 }

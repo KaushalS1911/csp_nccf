@@ -5,7 +5,7 @@ import { useAuthContext } from '../auth/hooks/index.js';
 
 export function useGetCSP() {
   const {vendor} = useAuthContext()
-  const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor.branch}/csp`;
+  const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/csp`;
 
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
   const memoizedValue = useMemo(

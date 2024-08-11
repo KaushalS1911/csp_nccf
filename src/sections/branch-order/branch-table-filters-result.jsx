@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
 import Iconify from 'src/components/iconify';
-import { handleFilterTypes } from '../../_mock';
+import { handleCategoryTypes, handleFilterTypes } from '../../_mock';
 import { shortDateLabel } from '../../components/custom-date-range-picker';
 
 // ----------------------------------------------------------------------
@@ -46,6 +46,14 @@ export default function BranchTableFiltersResult({
       onFilters('commodity', newValue);
     },
     [filters.commodity, onFilters]
+  );
+  const handleRemoveCategory = useCallback(
+    (inputValue) => {
+      const newValue = filters.category.filter((item) => item !== inputValue);
+
+      onFilters('category', newValue);
+    },
+    [filters.category, onFilters]
   );
   const handleRemoveBranch = useCallback(
     (inputValue) => {
@@ -97,6 +105,13 @@ export default function BranchTableFiltersResult({
           <Block label="commodity:">
             {filters.commodity.map((item) => (
               <Chip key={item} label={item} size="small" onDelete={() => handleRemoveCommodity(item)} />
+            ))}
+          </Block>
+        )}
+        {!!filters.category.length && (
+          <Block label="Category:">
+            {filters.category.map((item) => (
+              <Chip key={item} label={handleCategoryTypes(item)} size="small" onDelete={() => handleRemoveCategory(item)} />
             ))}
           </Block>
         )}

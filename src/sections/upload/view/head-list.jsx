@@ -93,6 +93,7 @@ const defaultFilters = {
   startDay: null,
   endDay: null,
   document:[],
+  category: [],
 
 };
 
@@ -138,6 +139,8 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   const dayError = isAfter(filters.startDay, filters.endDay);
   const cspCode = csp || vendor?.branch;
  useEffect(() => {
+   if(!cspt){
+
     if(banchVal === "All"){
       getDocuments()
     }
@@ -146,6 +149,9 @@ function HeadList({ csp, document, miller, cspt, docu }) {
       getAllDocument(banchVal);
 
     }
+   }else {
+     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${csp}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
+   }
 
   }, [banchVal]);
   const getDocuments = () =>{
@@ -199,11 +205,13 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   }, []);
 
   useEffect(() =>{
-    if(branch === "All"){
-      getAllDocument(banchVal);
-    }else {
+    if(!cspt) {
+      if (branch === "All") {
+        getAllDocument(banchVal);
+      } else {
 
-      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
+        axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
+      }
     }
   },[branch])
   // useEffect(() => {
@@ -493,8 +501,8 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   // ];
   const columns = [
     {
-      field: 'id',
-      headerName: '#',
+      field: 'seq_number',
+      headerName: 'Sr No.',
       width: 90,
     },
     {
@@ -616,7 +624,19 @@ function HeadList({ csp, document, miller, cspt, docu }) {
     //   </TableCell>,
     // },
   ];
+  const handelDownload = () => {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/zip-file`).then((res) => console.log(res)).catch((err) => console.log(err));
+  };
 
+  const action = typeof branch === 'object' ? '' : <Button
+    onClick={handelDownload}
+    // component={RouterLink}
+    // href={miller ? paths.dashboard.miller.document_upload : document ? paths.dashboard.distributor.document_upload : paths.dashboard.document.document_upload}
+    variant="contained"
+    startIcon={<Iconify icon="material-symbols:download-sharp"/>}
+  >
+    Download Documents
+  </Button>;
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
@@ -829,6 +849,9 @@ function HeadList({ csp, document, miller, cspt, docu }) {
                             ))}
                           </Select>
                         </FormControl>}
+                        <Box sx={{marginLeft:2}}>
+                          {action}
+                        </Box>
                       </Box>
 
                       <Box>
@@ -916,7 +939,7 @@ function applyFilter(
     inputData, filters,dayError
   },
 ) {
-  const { name, status, role, type, startDay, endDay,document } = filters;
+  const { name, status, role, type, startDay, endDay,document,category } = filters;
 
 
   if (name) {
@@ -942,6 +965,10 @@ function applyFilter(
   if (type.length) {
     inputData = inputData.filter((user) => type.includes(user.doc_type));
   }
+  if (category.length) {
+    inputData = inputData.filter((user) => category.includes(user.category));
+  }
+
 
   return inputData;
 }

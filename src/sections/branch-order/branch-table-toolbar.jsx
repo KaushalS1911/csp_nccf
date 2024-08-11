@@ -25,6 +25,7 @@ import {
 } from '@mui/x-data-grid';
 import { useAuthContext } from '../../auth/hooks';
 import moment from 'moment';
+import { handleCategoryTypes } from '../../_mock';
 
 // ----------------------------------------------------------------------
 
@@ -114,6 +115,15 @@ export default function BranchTableToolbar({
     (event) => {
       onFilters(
         'commodity',
+        typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value,
+      );
+    },
+    [onFilters],
+  );
+  const handleFilterCategory = useCallback(
+    (event) => {
+      onFilters(
+        'category',
         typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value,
       );
     },
@@ -286,6 +296,34 @@ useEffect(() => {
               <MenuItem key={option} value={option}>
                 <Checkbox disableRipple size="small" checked={filters.commodity.includes(option)}/>
                 {option === 'accepted' ? 'Accepted' : option === 'declined' ? 'Declined' : 'Placed'}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl
+          sx={{
+            flexShrink: 0,
+            width: { xs: 1, md: 200 },
+          }}
+        >
+          <InputLabel>Category</InputLabel>
+
+          <Select
+            multiple
+            value={filters.category}
+            onChange={handleFilterCategory}
+            input={<OutlinedInput label="Category"/>}
+            renderValue={(selected) => selected.map((value) =>handleCategoryTypes(value) ).join(', ')}
+            MenuProps={{
+              PaperProps: {
+                sx: { maxHeight: 240 },
+              },
+            }}
+          >
+            {['distributor', 'miller', 'miller_distributor',"society_cooperative"].map((option) => (
+              <MenuItem key={option} value={option}>
+                <Checkbox disableRipple size="small" checked={filters.category.includes(option)}/>
+                {handleCategoryTypes(option)}
               </MenuItem>
             ))}
           </Select>

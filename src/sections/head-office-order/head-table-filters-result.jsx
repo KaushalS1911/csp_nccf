@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
 import Iconify from 'src/components/iconify';
-import { handleFilterTypes } from '../../_mock';
+import { handleCategoryTypes, handleFilterTypes } from '../../_mock';
 import { shortDateLabel } from '../../components/custom-date-range-picker';
 
 // ----------------------------------------------------------------------
@@ -38,7 +38,14 @@ export default function HeadTableFiltersResult({
     onFilters('startDay', null);
     onFilters('endDay', null);
   }, [onFilters]);
+  const handleRemoveCategory = useCallback(
+    (inputValue) => {
+      const newValue = filters.category.filter((item) => item !== inputValue);
 
+      onFilters('category', newValue);
+    },
+    [filters.category, onFilters]
+  );
   const handleRemoveCommodity = useCallback(
     (inputValue) => {
       const newValue = filters.commodity.filter((item) => item !== inputValue);
@@ -91,6 +98,13 @@ export default function HeadTableFiltersResult({
         {filters.startDay && filters.endDay && (
           <Block label="Day:">
             <Chip size="small" label={shortDayLabel} onDelete={handleRemoveDay} />
+          </Block>
+        )}
+        {!!filters.category.length && (
+          <Block label="Category:">
+            {filters.category.map((item) => (
+              <Chip key={item} label={handleCategoryTypes(item)} size="small" onDelete={() => handleRemoveCategory(item)} />
+            ))}
           </Block>
         )}
         {!!filters.commodity.length && (

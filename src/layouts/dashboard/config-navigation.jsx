@@ -529,6 +529,11 @@ export function useNavData() {
       icon: <Iconify icon="ooui:user-group-rtl" sx={{ width: 1, height: 1 }}></Iconify>,
     },
     {
+      title: t('Documents'),
+      path: paths.dashboard.document.document_list,
+      icon: ICONS.chat
+    },
+    {
       title: t('Orders'),
       path: paths.dashboard.orders,
       icon: ICONS.order,
@@ -539,11 +544,6 @@ export function useNavData() {
     //   path: paths.dashboard.addMiller,
     //   icon: ICONS.file,
     // },
-    {
-      title: t('Documents'),
-      path: paths.dashboard.document.document_list,
-      icon: ICONS.chat
-    },
     // INVOICE
     {
       title: t('payment'),

@@ -74,6 +74,7 @@ const defaultFilters = {
   endDate: null,
   startDay: null,
   endDay: null,
+  category:[]
 
 };
 
@@ -587,7 +588,7 @@ function List({ singleCode }) {
 // function applyFilter({ inputData, comparator, filters,dateError }) {
 //   const { name, status, type_of_firm, state, branch, district, category, startDate, endDate  } = filters;
 function applyFilter({ inputData, filters, dateError, dayError }) {
-  const { stock, publish, status, commodity, name, branch, startDate, endDate, startDay, endDay } = filters;
+  const { stock, publish, status, commodity, name, branch, startDate, endDate, startDay, endDay,category } = filters;
 
   if (stock.length) {
     inputData = inputData.filter((product) => stock.includes(product.inventoryType));
@@ -613,11 +614,14 @@ function applyFilter({ inputData, filters, dateError, dayError }) {
 
 
   if (status !== 'all') {
-    inputData = inputData.filter((user) => user.nccf_order_status === status);
+    inputData = inputData.filter((user) => user.commodity === status);
   }
 
   if (commodity.length) {
     inputData = inputData.filter((user) => commodity.includes(user.nccf_order_status));
+  }
+  if (category.length) {
+    inputData = inputData.filter((user) => category.includes(user.category));
   }
   if (branch.length) {
     inputData = inputData.filter((user) => branch.includes(user.branch));

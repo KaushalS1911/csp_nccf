@@ -201,7 +201,7 @@ const {vendor} = useAuthContext()
               },
             }}
           >
-            {['Partnership', 'Property', 'LLP', 'Public Limited', 'Other'].map((option) => (
+            {['Partnership', 'Proprietary ', 'LLP', 'Public Limited', 'Other'].map((option) => (
               <MenuItem key={option} value={option}>
                 <Checkbox disableRipple size="small" checked={filters.type_of_firm.includes(option)}/>
                 {option}
@@ -216,13 +216,13 @@ const {vendor} = useAuthContext()
             width: { xs: 1, md: 200 },
           }}
         >
-          <InputLabel>CSP Status</InputLabel>
+          <InputLabel>Approval Status</InputLabel>
 
           <Select
             multiple
             value={filters.csp}
             onChange={handleFilterCSP}
-            input={<OutlinedInput label="CSP Status"/>}
+            input={<OutlinedInput label="Approval Status"/>}
             renderValue={(selected) => selected.map((value) => value).join(', ')}
             MenuProps={{
               PaperProps: {
