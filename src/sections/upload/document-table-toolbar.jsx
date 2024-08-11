@@ -33,6 +33,7 @@ export default function DocumentTableToolbar({
   const {vendor} = useAuthContext()
   const [day, setDay] = useState('');
   const days = ['Today', 'Last 7 Day', 'Last Week', 'Last 15 Day', 'Last Month', 'Last Year'];
+  const [fil,setfil] = useState(filters)
 
   const typeOptions =[
     { label: 'Registration Certificate', key: 'registration_certificate' },
@@ -202,13 +203,14 @@ export default function DocumentTableToolbar({
 
           <Select
             multiple
-            value={
-              filters.document
-              // filters.document
-              }
+            value={filters.document}
             onChange={handleFilterStatus}
             input={<OutlinedInput label="Status"/>}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
+            renderValue={(selected) =>
+              selected
+                .map((value) => value == '1' ? 'Approved' : value == '0' ? 'Rejected' : 'Approval Pending')
+                .join(', ')
+            }
             MenuProps={{
               PaperProps: {
                 sx: { maxHeight: 240 },
