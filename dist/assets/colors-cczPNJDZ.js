@@ -1,1 +1,0 @@
-import{j as o,H as r}from"./index-LKPMTLXK.js";import{C as t}from"./typography-view-T6Qtn6Hs.js";import"./component-hero-7T-aQCNx.js";import"./component-block-XJ8vHNBj.js";import"./text-max-line-LICEVJFV.js";function l(){return o.jsxs(o.Fragment,{children:[o.jsx(r,{children:o.jsx("title",{children:" Foundations: Colors"})}),o.jsx(t,{})]})}export{l as default};
