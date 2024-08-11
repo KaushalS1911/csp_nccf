@@ -1,1 +1,0 @@
-import{j as s,H as t}from"./index-hOlpMCd1.js";import{u as r}from"./use-params-6IYHdfGI.js";import{d as a}from"./invoice-details-view-oVyq7Fu-.js";import"./address-list-dialog-9RFaWo-U.js";function l(){const e=r(),{id:i}=e;return s.jsxs(s.Fragment,{children:[s.jsx(t,{children:s.jsx("title",{children:" Dashboard: Invoice Details"})}),s.jsx(a,{id:`${i}`})]})}export{l as default};
