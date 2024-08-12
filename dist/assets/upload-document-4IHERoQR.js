@@ -1,1 +1,0 @@
-import{u as a,j as t,cD as e,cE as c,cF as o}from"./index-kourVlqX.js";const r=()=>{const{vendor:s}=a();return t.jsx(t.Fragment,{children:(s==null?void 0:s.category)==="branch"?t.jsx(e,{docu:!0}):(s==null?void 0:s.category)==="head_office"?t.jsx(c,{}):t.jsx(o,{})})};export{r as default};

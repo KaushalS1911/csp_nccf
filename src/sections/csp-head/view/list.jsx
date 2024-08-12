@@ -399,14 +399,14 @@ function CspHeadListView(props) {
     {
       field: 'type_of_firm',
       headerName: 'Type Of Firm',
-      minWidth: 240,
+      minWidth: 220,
       // width: 150,
     },
     {
       field: 'contact_person',
       headerName: 'Contact Person',
       // width: 120,
-      minWidth: 240,
+      minWidth: 220,
     },
     {
       field: 'phone_number',
@@ -416,7 +416,8 @@ function CspHeadListView(props) {
     {
       field: 'email',
       headerName: 'Email',
-      width: 160,
+      // width: 160,
+      minWidth: 200,
     },
     // {
     //   field: 'address',
@@ -430,11 +431,12 @@ function CspHeadListView(props) {
       headerName: 'Orders',
       // width: 40,
       // flex: 1,
-      minWidth: 50,
+      minWidth: 100,
     },
     {
       field: 'branch_approval_status',
       headerName: 'Status',
+      minWidth: 180,
       renderCell: (params) => (
         <TableCell sx={{ px: 0 }}>
           <Label
