@@ -201,7 +201,7 @@ const {vendor} = useAuthContext()
               },
             }}
           >
-            {['Partnership', 'Proprietary', 'LLP', 'Public Limited', 'Other'].map((option) => (
+            {['Partnership', 'Proprietary ', 'LLP', 'Public Limited', 'Other'].map((option) => (
               <MenuItem key={option} value={option}>
                 <Checkbox disableRipple size="small" checked={filters.type_of_firm.includes(option)}/>
                 {option}
