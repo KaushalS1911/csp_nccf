@@ -1,0 +1,1 @@
+import{j as r,H as t}from"./index-v20qjeWF.js";import{T as o}from"./typography-view-Bh7fDVn-.js";import"./component-hero-TjFctth2.js";import"./component-block-ln2XC3Gv.js";import"./text-max-line-pnQJ5vsD.js";function m(){return r.jsxs(r.Fragment,{children:[r.jsx(t,{children:r.jsx("title",{children:" Foundations: Typography"})}),r.jsx(o,{})]})}export{m as default};
