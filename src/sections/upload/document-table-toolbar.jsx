@@ -174,7 +174,7 @@ export default function DocumentTableToolbar({
             {/*</IconButton>*/}
           </Stack>
         }
-        {vendor.category == "branch" && <FormControl
+        {(vendor.category == "branch" || vendor.category == "head_office") && <FormControl
           sx={{
             flexShrink: 0,
             width: { xs: 1, md: 200 },
@@ -202,34 +202,34 @@ export default function DocumentTableToolbar({
             ))}
           </Select>
         </FormControl>}
-        {/*{(vendor?.category !== "head_office" || vendor?.category !== "branch") && <FormControl*/}
-        {/*  sx={{*/}
-        {/*    flexShrink: 0,*/}
-        {/*    width: { xs: 1, md: 200 },*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  <InputLabel>Type</InputLabel>*/}
+        {(vendor?.category == "head_office" || vendor?.category == "branch") ? "" : <FormControl
+          sx={{
+            flexShrink: 0,
+            width: { xs: 1, md: 200 },
+          }}
+        >
+          <InputLabel>Type</InputLabel>
 
-        {/*  <Select*/}
-        {/*    multiple*/}
-        {/*    value={filters.type}*/}
-        {/*    onChange={handleFilterType}*/}
-        {/*    input={<OutlinedInput label="Type"/>}*/}
-        {/*    renderValue={(selected) => selected.map((value) => value).join(', ')}*/}
-        {/*    MenuProps={{*/}
-        {/*      PaperProps: {*/}
-        {/*        sx: { maxHeight: 240 },*/}
-        {/*      },*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    {typeOptions.map((option) => (*/}
-        {/*      <MenuItem key={option} value={option.key}>*/}
-        {/*        <Checkbox disableRipple size="small" checked={filters.type.includes(option.key)}/>*/}
-        {/*        {option.label}*/}
-        {/*      </MenuItem>*/}
-        {/*    ))}*/}
-        {/*  </Select>*/}
-        {/*</FormControl>}*/}
+          <Select
+            multiple
+            value={filters.type}
+            onChange={handleFilterType}
+            input={<OutlinedInput label="Type"/>}
+            renderValue={(selected) => selected.map((value) => value).join(', ')}
+            MenuProps={{
+              PaperProps: {
+                sx: { maxHeight: 240 },
+              },
+            }}
+          >
+            {typeOptions.map((option) => (
+              <MenuItem key={option} value={option.key}>
+                <Checkbox disableRipple size="small" checked={filters.type.includes(option.key)}/>
+                {option.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>}
         {(vendor?.category === "head_office" || vendor?.category === "branch") && <FormControl
           sx={{
             flexShrink: 0,

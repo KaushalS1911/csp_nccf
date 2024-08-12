@@ -52,6 +52,22 @@ export const success = {
   darker: '#065E49',
   contrastText: '#ffffff',
 };
+export const success1 = {
+  lighter: '#D3FCD2',
+  light: '#77B0AA',
+  main: '#003C43',
+  dark: '#118D57',
+  darker: '#135D66',
+  contrastText: '#ffffff',
+};
+export const success2 = {
+  lighter: '#D3FCD2',
+  light: '#FF8911',
+  main: '#FFA447',
+  dark: '#118D57',
+  darker: '#F3B95F',
+  contrastText: '#ffffff',
+};
 export const brown = {
   lighter: '#914F1E',
   light: '#DEAC80',
@@ -115,6 +131,8 @@ const base = {
   secondary,
   info,
   success,
+  success1,
+  success2,
   warning,
   error,
   grey,

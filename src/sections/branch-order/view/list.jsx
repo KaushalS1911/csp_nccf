@@ -115,7 +115,6 @@ function List({ singleCode }) {
     axios.get(URL).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
   };
 
-
   useEffect(() => {
     if (vendor) {
       axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/${vendor?.branch}/csp/list`)
@@ -220,10 +219,10 @@ function List({ singleCode }) {
 
   const columns = [
     {
-      field: 'id',
-      headerName: '#',
+      field: 'seq_number',
+      headerName: 'SR No.',
       minWidth: 200,
-      renderCell: (params) => <Box>{params.row.id}</Box>, // You can use params.row.id directly
+      renderCell: (params) => <Box>{params.row.seq_number}</Box>,
     },
     {
       field: 'commodity',
@@ -328,7 +327,6 @@ function List({ singleCode }) {
     //   ],
     // },
   ];
-
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);

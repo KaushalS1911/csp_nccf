@@ -71,7 +71,7 @@ const PUBLISH_OPTIONS = [
 ];
 const STATUS_OPTIONS = [
   { label:"All",value:'all'},
-  { label: 'Registration Certificate', value: 'registration_certificate' },
+  { label: 'Registration Certificate', value: 'Registration_Certificate' },
   { label: 'Undertaking', value: 'undertaking' },
   { label: 'Audited Accounts', value: 'audited_accounts' },
   { label: 'Income Tax', value: 'income_tax' },
@@ -723,7 +723,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
                       ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'registration_certificate' && 'success') ||
+                      (tab.value === 'Registration_Certificate' && 'success') ||
                       (tab.value === 'undertaking' && 'warning') ||
                       (tab.value === 'audited_accounts' && 'error') ||
                       (tab.value === 'income_tax' && 'info') ||
@@ -739,7 +739,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
                       'default'
                     }
                   >
-                    {['registration_certificate', 'undertaking', 'audited_accounts', 'income_tax', 'pan', 'gst', 'sale_registration', 'industrial_licence', 'power_bills', 'pollution_certificates', 'municipal_property_tax', 'FSSAI_license', 'photographs_of_unit', ].includes(tab.value)
+                    {['Registration_Certificate', 'undertaking', 'audited_accounts', 'income_tax', 'pan', 'gst', 'sale_registration', 'industrial_licence', 'power_bills', 'pollution_certificates', 'municipal_property_tax', 'FSSAI_license', 'photographs_of_unit', ].includes(tab.value)
                       ? tableData.filter((user) => user.doc_type === tab.value).length
                       : tableData.length}
                   </Label>

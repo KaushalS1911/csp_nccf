@@ -497,7 +497,7 @@ function CspHeadListView(props) {
             { name: 'Dashboard', href: paths.dashboard.root },
             {
               name: 'CSP',
-              href: paths.dashboard.csp.csp_list,
+              href: paths.dashboard.headCsp.csp_list,
             },
             { name: 'List' },
           ]}

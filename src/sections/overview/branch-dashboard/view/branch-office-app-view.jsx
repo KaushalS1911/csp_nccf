@@ -14,6 +14,7 @@ import BranchDataActivity from '../branch-data-activity';
 import { handleCategoryTypes, handleOrderTypes } from '../../../../_mock';
 import AnalyticsWidgetSummary from '../../analytics/analytics-widget-summary';
 import HeadCurrentDownload from '../../head-office-dashboard/head-current-download';
+import { success1 } from '../../../../theme/palette';
 
 
 // ----------------------------------------------------------------------
@@ -38,15 +39,32 @@ export default function BranchDashboardView({ vendorCode }) {
   useEffect(() => {
     if (vendor.csp_code) {
       fetchAllOrders();
-      getStats();
     }
-    getOrder();
+      getStats();
+    // getOrder();
     getBranch();
   }, [vendor]);
-  function getOrder() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/orders/stats`).then((res) => {
-      setOrderCount(res.data.data);
-    });
+  // function getOrder() {
+  //   axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/orders/stats`).then((res) => {
+  //     setOrderCount(res.data.data);
+  //   });
+  // }
+  const orderLabel = (d) => {
+    switch (d){
+      case "accepted_orders" :
+        return "Accepted Order"
+      // break;
+      case "completed_orders" :
+        return "Completed Orders"
+      case "declined_orders" :
+        return "Declined Orders"
+      case "placed_orders" :
+        return "Placed Orders"
+      case "total_orders" :
+        return "Total Orders"
+      default:
+        return d
+    }
   }
   useEffect(() => {
     const count = branch?.map((data, ind) => {
@@ -60,11 +78,14 @@ export default function BranchDashboardView({ vendorCode }) {
   }, [branch]);
 
   function getStats() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor.csp_code}/orders_stats`).then((res) => {
-      setStats(res?.data?.data[0]);
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor.branch}/order/stats`).then((res) => {
+      setOrderCount(res?.data?.data[0]);
     });
   }
-
+  const result = Object.entries(orderCount).map(([key, value]) => {
+    return { label: orderLabel(key), value: value };
+  });
+const d = result.filter((val) => val.label !== "Total Orders")
   function getBranch() {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor.branch}/csp/stats`).then((res) => {
       setBranch(res?.data?.data);
@@ -78,11 +99,11 @@ export default function BranchDashboardView({ vendorCode }) {
       setOrderList(res?.data?.data);
     });
   }
-  const color2 = ["secondary","brown1","brown","brown"]
-  const statusesToKeep = ['placed', 'accepted', 'declined'];
-  const chartOrder = []
-  const filteredData = orderCount.filter(item => statusesToKeep.includes(item.nccf_order_status));
-  filteredData.map((data) => chartOrder.push({label:handleOrderTypes(data?.nccf_order_status),value:data?.['COUNT(id)'] || 0}))
+  const color2 = ["secondary","success2","brown1","brown","success1"]
+  // const statusesToKeep = ['placed', 'accepted', 'declined'];
+  // const chartOrder = []
+  // const filteredData = orderCount.filter(item => statusesToKeep.includes(item.nccf_order_status));
+  // filteredData.map((data) => chartOrder.push({label:handleOrderTypes(data?.nccf_order_status),value:data?.order_count || 0}))
   // const color = [[theme.palette.success.light, theme.palette.success.main], [theme.palette.warning.light, theme.palette.warning.main], [theme.palette.info.light, theme.palette.info.main], [theme.palette.secondary.light, theme.palette.secondary.main]];
   const color = ["primary","info","warning","error"]
   return (
@@ -94,7 +115,7 @@ export default function BranchDashboardView({ vendorCode }) {
               title={handleCategoryTypes(data?.category)}
               // percent={0.2}
               color={color[ind]}
-              total={data?.count || 0}
+              total={data?.count || '0'}
               chart={{
                 // colors: color[ind-1],
                 // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
@@ -102,12 +123,12 @@ export default function BranchDashboardView({ vendorCode }) {
             />
           </Grid>
         ))}
-        {orderCount && filteredData.map((data, ind) => (
-          <Grid xs={12} md={4}>
+        {orderCount && result.map((data, ind) => (
+          <Grid xs={6} md={2.4}>
             <AnalyticsWidgetSummary
-              title={handleOrderTypes(data?.nccf_order_status)}
+              title={orderLabel(data?.label)}
               // percent={0.2}
-              total={data?.['COUNT(id)'] || 0}
+              total={data?.value || '0'}
               color={color2[ind]}
               chart={{
                 // colors: color[ind-1],
@@ -175,11 +196,11 @@ export default function BranchDashboardView({ vendorCode }) {
             chart={{
               colors: [
                 '#6F4E37',
-                '#A67B5B',
-                '#FED8B1',
                 '#ECB176',
+                '#FED8B1',
+                '#A67B5B',
               ],
-              series: chartOrder,
+              series: d,
             }}
           />}
         </Grid>

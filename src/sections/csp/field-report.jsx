@@ -98,11 +98,11 @@ export default function FieldReport({singleCode,data,setData,remark,setRemark,re
                   rowGap={3}
                   columnGap={2}
                   display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                    md:  'repeat(2, 1fr)',
-                  }}
+                  // gridTemplateColumns={{
+                  //   xs: 'repeat(1, 1fr)',
+                  //   sm: 'repeat(2, 1fr)',
+                  //   md:  'repeat(2, 1fr)',
+                  // }}
                 >
           <TextField name="Remark" label="Remark" disabled={data !== ""} value={remark} multiline={true} rows={4}  onChange={(e) => setRemark(e.target.value)}/>
                 </Box>

@@ -80,7 +80,7 @@ const color = ["primary","info","warning","error"]
 const color2 = ["secondary","brown1","brown","brown"]
   const filteredData = orderCount.filter(item => statusesToKeep.includes(item.nccf_order_status));
 const chartOrder = []
-  filteredData.map((data) => chartOrder.push({label:handleOrderTypes(data?.nccf_order_status),value:data?.['COUNT(id)'] || 0}))
+  filteredData.map((data) => chartOrder.push({label:handleOrderTypes(data?.nccf_order_status),value:data?.order_count || 0}))
   return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
@@ -104,7 +104,7 @@ const chartOrder = []
             <AnalyticsWidgetSummary
               title={handleOrderTypes(data?.nccf_order_status)}
               // percent={0.2}
-              total={data?.['COUNT(id)'] || 0}
+              total={data?.order_count || 0}
               color={color2[ind]}
               chart={{
                 // colors: color[ind-1],

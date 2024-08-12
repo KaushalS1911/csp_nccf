@@ -71,7 +71,7 @@ const PUBLISH_OPTIONS = [
 ];
 const STATUS_OPTIONS = [
   { label: 'All', value: 'all' },
-  { label: 'Registration Certificate', value: 'registration_certificate' },
+  { label: 'Registration Certificate', value: 'Registration_Certificate' },
   { label: 'Undertaking', value: 'undertaking' },
   { label: 'Audited Accounts', value: 'audited_accounts' },
   { label: 'Income Tax', value: 'income_tax' },
@@ -473,12 +473,12 @@ function CspList({ csp, document, miller, cspt, docu }) {
       renderCell: (params) => <Box sx={{ whiteSpace: 'nowrap' }}>{handleDoctypeLabel(params.row.doc_type)}</Box>,
     },
     {
-      field: 'uploaded_on',
+      field: 'created_at',
       headerName: 'Date',
       flex: 1,
       minWidth: 150,
       renderCell: (params) => <Box sx={{ whiteSpace: 'nowrap' }}>
-        {moment(params.row.uploaded_on).format('DD/MM/YYYY')}
+        {moment(params.row.created_at).format('DD/MM/YYYY')}
       </Box>,
     },
     {
@@ -689,7 +689,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
                       ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
                     }
                     color={
-                      (tab.value === 'registration_certificate' && 'success') ||
+                      (tab.value === 'Registration_Certificate' && 'success') ||
                       (tab.value === 'undertaking' && 'warning') ||
                       (tab.value === 'audited_accounts' && 'error') ||
                       (tab.value === 'income_tax' && 'info') ||
@@ -705,7 +705,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
                       'default'
                     }
                   >
-                    {['registration_certificate', 'undertaking', 'audited_accounts', 'income_tax', 'pan', 'gst', 'sale_registration', 'industrial_licence', 'power_bills', 'pollution_certificates', 'municipal_property_tax', 'FSSAI_license', 'photographs_of_unit'].includes(tab.value)
+                    {['Registration_Certificate', 'undertaking', 'audited_accounts', 'income_tax', 'pan', 'gst', 'sale_registration', 'industrial_licence', 'power_bills', 'pollution_certificates', 'municipal_property_tax', 'FSSAI_license', 'photographs_of_unit'].includes(tab.value)
                       ? tableData.filter((user) => user.doc_type === tab.value).length
                       : tableData.length}
                   </Label>
@@ -898,7 +898,7 @@ function applyFilter(
   }
   if (!dayError) {
     if (startDay && endDay) {
-      inputData = inputData.filter((product) => isBetween(product.uploaded_on, startDay, endDay));
+      inputData = inputData.filter((product) => isBetween(product.created_at, startDay, endDay));
     }
   }
   if (role?.length) {
