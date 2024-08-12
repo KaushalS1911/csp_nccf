@@ -78,7 +78,7 @@ useEffect(() => {
 
   function fetchCommodities() {
     axios
-      .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity/${vendor.category}`)
+      .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity/${vendor?.category}`)
       .then((res) => {
         setCommodities(res.data?.data);
       });
