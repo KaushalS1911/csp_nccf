@@ -225,6 +225,11 @@ function List({ singleCode }) {
       // renderCell: (params) => <Box>{params.row.seq_number}</Box>,
     },
     {
+      field: 'name',
+      headerName: 'Name',
+      width: 250,
+    },
+    {
       field: 'commodity',
       headerName: 'Commodity',
       minWidth: 150,

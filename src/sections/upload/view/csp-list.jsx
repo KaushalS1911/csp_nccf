@@ -443,7 +443,12 @@ function CspList({ csp, document, miller, cspt, docu }) {
     {
       field: 'seq_number',
       headerName: 'Sr No.',
-      width: 120,
+      width: 90,
+    },
+    {
+      field: 'name',
+      headerName: 'CSP Name',
+      width: 170,
     },
     {
       field: 'object_url',
@@ -487,7 +492,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
     },
     {
       field: 'branch_approval_status',
-      headerName: 'Branch Status',
+      headerName: 'Status',
       flex: 1,
       minWidth: 120,
       renderCell: (params) => <TableCell sx={{ px: 0 }}>

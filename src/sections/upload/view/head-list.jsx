@@ -552,7 +552,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
     },
     {
       field: 'branch_approval_status',
-      headerName: 'Branch Status',
+      headerName: 'Status',
       flex: 1,
       minWidth: 120,
       renderCell: (params) => <TableCell sx={{ px: 0 }}>
