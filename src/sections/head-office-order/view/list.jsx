@@ -263,10 +263,10 @@ function HOList({ singleCode }) {
 
   const columns = [
     {
-      field: 'id',
-      headerName: '#',
+      field: 'seq_number',
+      headerName: 'Sr No.',
       minWidth: 100,
-      renderCell: (params) => <Box>{params.row.id}</Box>, // You can use params.row.id directly
+      // renderCell: (params) => <Box>{params.row.id}</Box>, // You can use params.row.id directly
     },
     {
       field: 'name',

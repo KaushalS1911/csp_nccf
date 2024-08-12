@@ -77,14 +77,14 @@ export default function CspTableFiltersResult({
     },
     [filters.branch, onFilters]
   );
-  // const handleRemoveDistrict = useCallback(
-  //   (inputValue) => {
-  //     const newValue = filters.district.filter((item) => item !== inputValue);
-  //
-  //     onFilters('district', newValue);
-  //   },
-  //   [filters.district, onFilters]
-  // );
+  const handleRemoveDistrict = useCallback(
+    (inputValue) => {
+      const newValue = filters.district.filter((item) => item !== inputValue);
+
+      onFilters('district', newValue);
+    },
+    [filters.district, onFilters]
+  );
 
   return (
     <Stack spacing={1.5} {...other}>

@@ -161,26 +161,26 @@ const {vendor} = useAuthContext()
           width:"100%"
         }}
       >
-        {vendor?.category === "branch" ? <GridToolbarQuickFilter sx={{ width: "100% !important" }}/> :
-        <Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>
-          <TextField
-            fullWidth
-            value={filters.name}
-            onChange={handleFilterName}
-            placeholder="Search..."
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }}/>
-                </InputAdornment>
-              ),
-            }}
-          />
+         <GridToolbarQuickFilter sx={{ width: "100% !important" }}/>
+        {/*<Stack direction="row" alignItems="center" spacing={2} flexGrow={1} sx={{ width: 1 }}>*/}
+        {/*  <TextField*/}
+        {/*    fullWidth*/}
+        {/*    value={filters.name}*/}
+        {/*    onChange={handleFilterName}*/}
+        {/*    placeholder="Search..."*/}
+        {/*    InputProps={{*/}
+        {/*      startAdornment: (*/}
+        {/*        <InputAdornment position="start">*/}
+        {/*          <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }}/>*/}
+        {/*        </InputAdornment>*/}
+        {/*      ),*/}
+        {/*    }}*/}
+        {/*  />*/}
 
-          {/*<IconButton onClick={popover.onOpen}>*/}
-          {/*  <Iconify icon="eva:more-vertical-fill" />*/}
-          {/*</IconButton>*/}
-        </Stack>}
+        {/*  /!*<IconButton onClick={popover.onOpen}>*!/*/}
+        {/*  /!*  <Iconify icon="eva:more-vertical-fill" />*!/*/}
+        {/*  /!*</IconButton>*!/*/}
+        {/*</Stack>}*/}
         <FormControl
           sx={{
             flexShrink: 0,
@@ -201,7 +201,7 @@ const {vendor} = useAuthContext()
               },
             }}
           >
-            {['Partnership', 'Proprietary ', 'LLP', 'Public Limited', 'Other'].map((option) => (
+            {['Partnership', 'Proprietary', 'LLP', 'Public Limited', 'Other'].map((option) => (
               <MenuItem key={option} value={option}>
                 <Checkbox disableRipple size="small" checked={filters.type_of_firm.includes(option)}/>
                 {option}

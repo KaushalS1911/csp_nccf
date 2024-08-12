@@ -222,7 +222,7 @@ function List({ singleCode }) {
       field: 'seq_number',
       headerName: 'SR No.',
       minWidth: 200,
-      renderCell: (params) => <Box>{params.row.seq_number}</Box>,
+      // renderCell: (params) => <Box>{params.row.seq_number}</Box>,
     },
     {
       field: 'commodity',

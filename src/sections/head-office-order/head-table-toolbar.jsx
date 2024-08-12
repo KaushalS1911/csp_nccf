@@ -339,21 +339,21 @@ useEffect(() => {
               },
             }}
           />
-          {vendor?.category === 'branch' ? <GridToolbarQuickFilter sx={{ width: '100% !important' }}/> :
-            <TextField
-              fullWidth
-              value={filters.name}
-              onChange={handleFilterName}
-              placeholder="Search..."
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }}/>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          }
+           <GridToolbarQuickFilter sx={{ width: '100% !important' }}/>
+          {/*  <TextField*/}
+          {/*    fullWidth*/}
+          {/*    value={filters.name}*/}
+          {/*    onChange={handleFilterName}*/}
+          {/*    placeholder="Search..."*/}
+          {/*    InputProps={{*/}
+          {/*      startAdornment: (*/}
+          {/*        <InputAdornment position="start">*/}
+          {/*          <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }}/>*/}
+          {/*        </InputAdornment>*/}
+          {/*      ),*/}
+          {/*    }}*/}
+          {/*  />*/}
+          {/*}*/}
 
           {/*<IconButton onClick={popover.onOpen}>*/}
           {/*  <Iconify icon="eva:more-vertical-fill" />*/}

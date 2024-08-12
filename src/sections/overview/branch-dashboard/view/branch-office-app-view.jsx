@@ -99,7 +99,7 @@ const d = result.filter((val) => val.label !== "Total Orders")
       setOrderList(res?.data?.data);
     });
   }
-  const color2 = ["secondary","success2","brown1","brown","success1"]
+  const color2 = ["secondary","brown1","brown","success1"]
   // const statusesToKeep = ['placed', 'accepted', 'declined'];
   // const chartOrder = []
   // const filteredData = orderCount.filter(item => statusesToKeep.includes(item.nccf_order_status));
@@ -123,8 +123,8 @@ const d = result.filter((val) => val.label !== "Total Orders")
             />
           </Grid>
         ))}
-        {orderCount && result.map((data, ind) => (
-          <Grid xs={6} md={2.4}>
+        {orderCount && d.map((data, ind) => (
+          <Grid xs={6} md={3}>
             <AnalyticsWidgetSummary
               title={orderLabel(data?.label)}
               // percent={0.2}
