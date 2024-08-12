@@ -70,7 +70,7 @@ const PUBLISH_OPTIONS = [
   { value: 'draft', label: 'Draft' },
 ];
 const STATUS_OPTIONS = [
-  { label:"All",value:'all'},
+  { label: 'All', value: 'all' },
   { label: 'Registration Certificate', value: 'Registration_Certificate' },
   { label: 'Undertaking', value: 'undertaking' },
   { label: 'Audited Accounts', value: 'audited_accounts' },
@@ -83,7 +83,7 @@ const STATUS_OPTIONS = [
   { label: 'Pollution Certificates', value: 'pollution_certificates' },
   { label: 'Municipal Property Tax', value: 'municipal_property_tax' },
   { label: 'FSSAI License', value: 'FSSAI_license' },
-  { label: 'Photographs of Unit', value: 'photographs_of_unit' }
+  { label: 'Photographs of Unit', value: 'photographs_of_unit' },
 ];
 const defaultFilters = {
   name: '',
@@ -92,7 +92,7 @@ const defaultFilters = {
   status: 'all',
   startDay: null,
   endDay: null,
-  document:[],
+  document: [],
   category: [],
 
 };
@@ -127,9 +127,9 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   const [b, setB] = useState([]);
   const [images, setImages] = useState([]);
   const [approve, setApprove] = useState(false);
-  const [banch,setBanch] = useState([])
-  const [banchVal,setBanchVal] = useState("All")
-  const color = ["primary","error","warning","error"]
+  const [banch, setBanch] = useState([]);
+  const [banchVal, setBanchVal] = useState('All');
+  const color = ['primary', 'error', 'warning', 'error'];
   const popover = usePopover();
   let dataFiltered = applyFilter({
     inputData: tableData,
@@ -138,53 +138,52 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   });
   const dayError = isAfter(filters.startDay, filters.endDay);
   const cspCode = csp || vendor?.branch;
-const getCspDocument = (branch) => {
-        axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
+  const getCspDocument = (branch) => {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
 
-}
- useEffect(() => {
-   if(!cspt){
+  };
+  useEffect(() => {
+    if (!cspt) {
 
-    if(banchVal === "All"){
-      getDocuments()
+      if (banchVal === 'All') {
+        getDocuments();
+      } else {
+        fetchData();
+        getAllDocument(banchVal);
+
+      }
+    } else {
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${csp}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
     }
-    else {
-      fetchData();
-      getAllDocument(banchVal);
-
-    }
-   }else {
-     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${csp}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
-   }
 
   }, [banchVal]);
-  const getDocuments = () =>{
+  const getDocuments = () => {
     csp ? getCspDocument(csp) :
-      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
-  }
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+  };
   // useEffect(() => {
-    const fetchData = async () => {
-      if (banchVal !== "All") {
-        setDataCSP([]);
+  const fetchData = async () => {
+    if (banchVal !== 'All') {
+      setDataCSP([]);
 
-        try {
-          const res = await axios.get(
-            `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/csp`
-          );
+      try {
+        const res = await axios.get(
+          `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/csp`,
+        );
 
-          let mapCsp = res.data.data.map((data) => ({
-            name: data.name,
-            csp_code: data.csp_code,
-            document_count:data.document_count
-          }));
+        let mapCsp = res.data.data.map((data) => ({
+          name: data.name,
+          csp_code: data.csp_code,
+          document_count: data.document_count,
+        }));
 
-          const default1 = [{ name: 'All', csp_code: 'All',document_count:1 }, ...mapCsp];
-          setDataCSP(default1);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
+        const default1 = [{ name: 'All', csp_code: 'All', document_count: 1 }, ...mapCsp];
+        setDataCSP(default1);
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-    };
+    }
+  };
 
 
   // }, [banchVal]);
@@ -201,21 +200,21 @@ const getCspDocument = (branch) => {
     // }
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/branch`)
       .then((res) => {
-          const fetchedData = res?.data?.data || [];
-          const updatedData = [{ branch_name :"All",csp_count:1 }, ...fetchedData];
+        const fetchedData = res?.data?.data || [];
+        const updatedData = [{ branch_name: 'All', csp_count: 1 }, ...fetchedData];
         setBanch(updatedData);
       }).catch((err) => console.log(err));
 
   }, []);
-  useEffect(() =>{
-    if(!cspt) {
-      if (branch === "All") {
+  useEffect(() => {
+    if (!cspt) {
+      if (branch === 'All') {
         getAllDocument(banchVal);
       } else {
-getCspDocument(branch)
+        getCspDocument(branch);
       }
     }
-  },[branch])
+  }, [branch]);
   // useEffect(() => {
   //
   //   axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
@@ -324,17 +323,17 @@ getCspDocument(branch)
 
   };
   const countsArray = [
-    { label: "1", count: 0 },
-    { label: "0", count: 0 },
-    { label: "", count: 0 }
+    { label: '1', count: 0 },
+    { label: '0', count: 0 },
+    { label: '', count: 0 },
   ];
   countsArray.forEach(commodity => {
     commodity.count = dataFiltered.filter(item => item.branch_approval_status === commodity.label).length;
   });
   const handleFilterBranch = useCallback(
     (event) => {
-      setBanchVal(event.target.value)
-      setBranch("All")
+      setBanchVal(event.target.value);
+      setBranch('All');
       // handleFilters('branch', event.target.value)
     },
     [branch],
@@ -565,7 +564,7 @@ getCspDocument(branch)
             'error'
           }
         >
-          {params.row.branch_approval_status === '' ? 'Approval Pending' :params.row.branch_approval_status === '1' ? 'Approved' : "Rejected"}
+          {params.row.branch_approval_status === '' ? 'Approval Pending' : params.row.branch_approval_status === '1' ? 'Approved' : 'Rejected'}
         </Label>
       </TableCell>,
     },
@@ -574,36 +573,36 @@ getCspDocument(branch)
       headerName: 'Action',
       flex: 0.5,
       minWidth: 250,
-      renderCell: (params) =><>
-        <TableCell sx={{ px: 0,marginRight:2 }} >
+      renderCell: (params) => <>
+        <TableCell sx={{ px: 0, marginRight: 2 }}>
           <Button
-            disabled={params.row.branch_approval_status === "1" || params.row.branch_approval_status==="0"}
+            disabled={params.row.branch_approval_status === '1' || params.row.branch_approval_status === '0'}
             variant="contained"
             onClick={() => {
               setCurrentData(params.row);
               setApprove(true);
               setOpen(true);
             }}
-            sx={{ backgroundColor: 'green' ,width:90}}
+            sx={{ backgroundColor: 'green', width: 90 }}
           >
             <VerifiedIcon/> Approve
           </Button>
         </TableCell>
         <TableCell sx={{ px: 0 }}>
           <Button
-            disabled={params.row.branch_approval_status === "1" || params.row.branch_approval_status==="0"}
+            disabled={params.row.branch_approval_status === '1' || params.row.branch_approval_status === '0'}
             onClick={() => {
               setCurrentData(params.row);
               setApprove(false);
               setOpen(true);
             }}
             variant="contained"
-            sx={{ backgroundColor: 'red',width:80 }}
+            sx={{ backgroundColor: 'red', width: 80 }}
           >
             <CancelIcon/> Reject
           </Button>
         </TableCell>
-      </>
+      </>,
     },
     // {
     //   field: 'vendor',
@@ -629,15 +628,17 @@ getCspDocument(branch)
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/zip-file`).then((res) => console.log(res)).catch((err) => console.log(err));
   };
 
-  const action = branch === 'All' ? '' : <Button
-    onClick={handelDownload}
-    // component={RouterLink}
-    // href={miller ? paths.dashboard.miller.document_upload : document ? paths.dashboard.distributor.document_upload : paths.dashboard.document.document_upload}
-    variant="contained"
-    startIcon={<Iconify icon="material-symbols:download-sharp"/>}
-  >
-    Download Documents
-  </Button>;
+  const action = branch === 'All' ? '' :
+    <a href={`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/zip-file`}>
+      <Button
+        // onClick={handelDownload}
+        // component={RouterLink}
+        // href={miller ? paths.dashboard.miller.document_upload : document ? paths.dashboard.distributor.document_upload : paths.dashboard.document.document_upload}
+        variant="contained"
+        startIcon={<Iconify icon="material-symbols:download-sharp"/>}
+      >
+        Download Documents
+      </Button></a>;
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
@@ -656,11 +657,11 @@ getCspDocument(branch)
       >
         <Grid container spacing={3}>
 
-          {countsArray.map((data,ind) => (
+          {countsArray.map((data, ind) => (
 
             <Grid item xs={12} md={4} mb={5}>
               <AnalyticsWidgetSummary
-                title={data.label === '' ? 'Approval Pending' :data.label === '1' ? 'Approved' : "Rejected"}
+                title={data.label === '' ? 'Approval Pending' : data.label === '1' ? 'Approved' : 'Rejected'}
                 // percent={0.2}
                 total={data?.count == 0 ? '0' : data.count}
                 color={color[ind]}
@@ -672,7 +673,9 @@ getCspDocument(branch)
             </Grid>
           ))}
         </Grid>
-        <DocumentQuickEditForm getAllDocument={getCspDocument} getDocuments={getDocuments} getBtanchDocument={getAllDocument} branch={banchVal} currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={branch}/>
+        <DocumentQuickEditForm getAllDocument={getCspDocument} getDocuments={getDocuments}
+                               getBtanchDocument={getAllDocument} branch={banchVal} currentUser={currentData}
+                               open={open} setOpen={setOpen} approve={approve} cspCode={branch}/>
         {!cspt && <CustomBreadcrumbs
           heading={'Documents'}
           links={[
@@ -696,7 +699,7 @@ getCspDocument(branch)
 
         <Card
           sx={{
-            height: dataFiltered?.length > 0 ? "unset" : 700,
+            height: dataFiltered?.length > 0 ? 'unset' : 700,
             // height: dataId?.length > 0 ? 'unset' : 700,
             // flexGrow: { md: 1 },
             // display: { md: 'flex' },
@@ -740,7 +743,7 @@ getCspDocument(branch)
                       'default'
                     }
                   >
-                    {['Registration_Certificate', 'undertaking', 'audited_accounts', 'income_tax', 'pan', 'gst', 'sale_registration', 'industrial_licence', 'power_bills', 'pollution_certificates', 'municipal_property_tax', 'FSSAI_license', 'photographs_of_unit', ].includes(tab.value)
+                    {['Registration_Certificate', 'undertaking', 'audited_accounts', 'income_tax', 'pan', 'gst', 'sale_registration', 'industrial_licence', 'power_bills', 'pollution_certificates', 'municipal_property_tax', 'FSSAI_license', 'photographs_of_unit'].includes(tab.value)
                       ? tableData.filter((user) => user.doc_type === tab.value).length
                       : tableData.length}
                   </Label>
@@ -794,8 +797,8 @@ getCspDocument(branch)
                       {/*  </Button>*/}
                       {/*)}*/}
 
-                      <Box sx={{display:"flex",alignItems:"center"}}>
-                        {!cspt &&  <FormControl
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        {!cspt && <FormControl
                           sx={{
                             flexShrink: 0,
                             width: { xs: 1, md: 200 },
@@ -815,18 +818,19 @@ getCspDocument(branch)
 
                           >
                             {banch.map((option) => (
-                              <MenuItem key={option.branch_name} value={option.branch_name} disabled={option.csp_count==0}>
+                              <MenuItem key={option.branch_name} value={option.branch_name}
+                                        disabled={option.csp_count == 0}>
 
                                 {option.branch_name}
                               </MenuItem>
                             ))}
                           </Select>
                         </FormControl>}
-                        { banchVal !== "All" && <FormControl
+                        {banchVal !== 'All' && <FormControl
                           sx={{
                             flexShrink: 0,
                             width: { xs: 1, md: 200 },
-                            marginLeft:1
+                            marginLeft: 1,
                           }}
                         >
                           <InputLabel>CSP</InputLabel>
@@ -843,14 +847,15 @@ getCspDocument(branch)
 
                           >
                             {dataCSP.map((option) => (
-                              <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.document_count == 0}>
+                              <MenuItem key={option.csp_code} value={option.csp_code}
+                                        disabled={option.document_count == 0}>
 
                                 {option.name}
                               </MenuItem>
                             ))}
                           </Select>
                         </FormControl>}
-                        <Box sx={{marginLeft:2}}>
+                        <Box sx={{ marginLeft: 2 }}>
                           {action}
                         </Box>
                       </Box>
@@ -937,10 +942,10 @@ getCspDocument(branch)
 
 function applyFilter(
   {
-    inputData, filters,dayError
+    inputData, filters, dayError,
   },
 ) {
-  const { name, status, role, type, startDay, endDay,document,category } = filters;
+  const { name, status, role, type, startDay, endDay, document, category } = filters;
 
 
   if (name) {

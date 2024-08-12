@@ -599,15 +599,17 @@ function CspList({ csp, document, miller, cspt, docu }) {
     },
     [handleFilters],
   );
-  const action = typeof branch === 'object' ? '' : <Button
-    onClick={handelDownload}
+  const action = typeof branch === 'object' ? '' :
+    <a href={`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/zip-file`}>
+    <Button
+    // onClick={handelDownload}
     // component={RouterLink}
     // href={miller ? paths.dashboard.miller.document_upload : document ? paths.dashboard.distributor.document_upload : paths.dashboard.document.document_upload}
     variant="contained"
     startIcon={<Iconify icon="material-symbols:download-sharp"/>}
   >
     Download Documents
-  </Button>;
+    </Button></a>
 
 
   const getTogglableColumns = () =>
