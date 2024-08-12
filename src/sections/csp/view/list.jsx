@@ -128,7 +128,7 @@ const {vendor} = useAuthContext()
         }
       });
       setDistrictOptions((item) => {
-        if (!item.includes(data.district)) {
+        if (data.district !== "" && !item.includes(data.district)) {
           return [...item, data.district];
         } else {
           return item;
@@ -360,17 +360,17 @@ const {vendor} = useAuthContext()
       field: 'contact_person',
       headerName: 'Contact Person',
       // width: 120,
-      minWidth: 240,
+      minWidth: 200,
     },
     {
       field: 'phone_number',
       headerName: 'Contact',
-      width: 150,
+      minWidth: 150,
     },
     {
       field: 'email',
       headerName: 'Email',
-      width: 160,
+      minWidth: 200,
     },
     // {
     //   field: 'address',
@@ -384,7 +384,7 @@ const {vendor} = useAuthContext()
       headerName: 'Orders',
       // width: 40,
       // flex: 1,
-      minWidth: 50,
+      minWidth: 100,
     },
     {
       field: 'csp_status',

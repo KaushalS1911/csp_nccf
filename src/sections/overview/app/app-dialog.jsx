@@ -24,8 +24,8 @@ const validationSchema = yup.object().shape({
   quantity: yup.string().required('Quantity is required'),
 });
 
-export default function AppDialog({ dialogOpen, setDialogOpen, editId,fetchAllOrdersDemo }) {
-  const [commodities, setCommodities] = useState([]);
+export default function AppDialog({ dialogOpen, setDialogOpen, editId,fetchAllOrdersDemo,commodities }) {
+  // const [commodities, setCommodities] = useState([]);
   const [orderList, setOrderList] = useState([]);
   const { vendor } = useAuthContext();
   const router = useRouter();
@@ -37,17 +37,17 @@ export default function AppDialog({ dialogOpen, setDialogOpen, editId,fetchAllOr
   }
 
   useEffect(() => {
-    fetchCommodities();
+    // fetchCommodities();
     fetchAllOrders();
   }, []);
-
-  function fetchCommodities() {
-    axios
-      .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity`)
-      .then((res) => {
-        setCommodities(res.data?.data);
-      });
-  }
+  //
+  // function fetchCommodities() {
+  //   axios
+  //     .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity/${vendor.category}`)
+  //     .then((res) => {
+  //       setCommodities(res.data?.data);
+  //     });
+  // }
 
   const defaultValues = {
     csp_code: vendor.csp_code,

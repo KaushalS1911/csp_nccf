@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import { paths } from 'src/routes/paths';
 
@@ -237,12 +237,19 @@ export function useNavData() {
       title: t('Basic Info'),
       path: paths.dashboard.basic_info,
       icon: ICONS.user,
-    },   {
+    },
+
+    {
       title: t('Distributor Info'),
       path: paths.dashboard.distributor_info,
       icon: ICONS.user,
     },
 
+    {
+      title: t('Field Report'),
+      path: paths.dashboard.field_report,
+      icon: <Iconify icon="tdesign:verify"  />,
+    },
     {
       title: t('Document'),
       path: paths.dashboard.document.root,
@@ -257,7 +264,11 @@ export function useNavData() {
         },
       ],
     },
-
+    {
+      title: t('Orders'),
+      path: paths.dashboard.orders,
+      icon: ICONS.order,
+    },
     // INVOICE
     {
       title: t('payment'),
@@ -362,6 +373,16 @@ export function useNavData() {
       icon: ICONS.dashboard,
     },
     {
+      title: t('Basic Info'),
+      path: paths.dashboard.basic_info,
+      icon: ICONS.user,
+    },
+    {
+      title: t('Field Report'),
+      path: paths.dashboard.field_report,
+      icon: <Iconify icon="tdesign:verify"  />,
+    },
+    {
       title: t('Distributor'),
       path: paths.dashboard.distributor.root,
       icon: ICONS.file,
@@ -389,11 +410,6 @@ export function useNavData() {
     //   ],
     // },
     {
-      title: t('Basic Info'),
-      path: paths.dashboard.basic_info,
-      icon: ICONS.user,
-    },
-    {
       title: t('Document'),
       path: paths.dashboard.document.root,
       icon: ICONS.chat,
@@ -407,7 +423,11 @@ export function useNavData() {
         },
       ],
     },
-
+    {
+      title: t('Orders'),
+      path: paths.dashboard.orders,
+      icon: ICONS.order,
+    },
     // INVOICE
     {
       title: t('payment'),
@@ -430,6 +450,17 @@ export function useNavData() {
       title: t('Dashboard'),
       path: paths.dashboard.root,
       icon: ICONS.dashboard,
+    },
+
+    {
+      title: t('Basic Info'),
+      path: paths.dashboard.basic_info,
+      icon: ICONS.user,
+    },
+    {
+      title: t('Field Report'),
+      path: paths.dashboard.field_report,
+      icon: <Iconify icon="tdesign:verify"  />,
     },
     {
       title: t('Miller'),
@@ -459,11 +490,6 @@ export function useNavData() {
     //   ],
     // },
     {
-      title: t('Basic Info'),
-      path: paths.dashboard.basic_info,
-      icon: ICONS.user,
-    },
-    {
       title: t('Document'),
       path: paths.dashboard.document.root,
       icon: ICONS.chat,
@@ -476,6 +502,11 @@ export function useNavData() {
           path: paths.dashboard.document.upload_evidence,
         },
       ],
+    },
+    {
+      title: t('Orders'),
+      path: paths.dashboard.orders,
+      icon: ICONS.order,
     },
 
     // INVOICE
@@ -566,7 +597,9 @@ export function useNavData() {
       {
         // subheader: t('management'),
         // items: vendor?.category === 'society_cooperative' ? societyItems : otherItems,
-        items: vendor?.category === "cooperative_rent_mill" || vendor?.category === "own_distribution_rent_mill" || vendor?.category === "own_distribution_own_mill" ? societyItems : vendor?.category === 'branch' ? branchItem : vendor?.category === 'head_office' ? headItems : vendor?.category === "miller" ? millerItems : vendor?.category === "distributor" ? distributeItems :vendor.category === "miller_distributor" ? Miller_DistributorItems : otherItems,
+        items: vendor?.category === "cooperative_rent_mill" || vendor?.category === "own_distribution_rent_mill" || vendor?.category === "own_distribution_own_mill" ?
+          societyItems : vendor?.category === 'branch' ? branchItem : vendor?.category === 'head_office' ? headItems : vendor?.category === "miller" ?
+            millerItems : vendor?.category === "distributor" ? distributeItems :vendor.category === "miller_distributor" ? Miller_DistributorItems : otherItems,
       },
     ],
     [t],

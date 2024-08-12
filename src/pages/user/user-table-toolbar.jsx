@@ -87,9 +87,9 @@ export default function UserTableToolbar({ filters, onFilters, commodityOptions,
               }}
             >
               {commodityOptions.map((option) => (
-                <MenuItem key={option} value={option}>
-                  <Checkbox disableRipple size="small" checked={filters.commodity.includes(option)} />
-                  {option}
+                <MenuItem key={option.commodity_name} value={option.commodity_name}>
+                  <Checkbox disableRipple size="small" checked={filters.commodity.includes(option.commodity_name)} />
+                  {option.commodity_name}
                 </MenuItem>
               ))}
             </Select>

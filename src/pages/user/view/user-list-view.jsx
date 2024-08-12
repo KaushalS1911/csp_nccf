@@ -36,6 +36,8 @@ import { _commodities, _orderStatus, _roles, USER_STATUS_OPTIONS } from 'src/_mo
 import isEqual from 'lodash/isEqual';
 import AppDialog from 'src/sections/overview/app/app-dialog';
 import EditOrderDialog from '../../../sections/overview/app/edit-order-dialog';
+import { useAuthContext } from '../../../auth/hooks';
+import axios from 'axios';
 // ----------------------------------------------------------------------
 const STATUS_OPTIONS = [{ value: 'all', label: 'All' }, ...USER_STATUS_OPTIONS];
 const TABLE_HEAD = [
@@ -61,15 +63,26 @@ export default function UserListView({ tableData ,fetchAllOrdersDemo}) {
   const table = useTable();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(0);
+  const [commodities, setCommodities] = useState([]);
   const [filters, setFilters] = useState(defaultFilters);
   const [edit,setEdit] = useState({});
-
+  const {vendor} = useAuthContext()
+useEffect(() => {
+  fetchCommodities()
+},[])
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(table.order, table.orderBy),
     filters,
   });
 
+  function fetchCommodities() {
+    axios
+      .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity/${vendor.category}`)
+      .then((res) => {
+        setCommodities(res.data?.data);
+      });
+  }
   const dataInPage = dataFiltered.slice(
     table.page * table.rowsPerPage,
     table.page * table.rowsPerPage + table.rowsPerPage
@@ -135,15 +148,19 @@ export default function UserListView({ tableData ,fetchAllOrdersDemo}) {
     },
     [enqueueSnackbar]
   );
-
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xxl'}>
+        {vendor?.nccf_branch_status !== "1" && <Card sx={{ mb: 2, p: 1.5, color: '#b71d18', backgroundColor: '#FFE4DE' }}>Account approval is pending from the
+          Branch,
+          You can place the orders after account approval
+        </Card>}
         <CustomBreadcrumbs
           heading="Orders"
           links={[{ name: '' }]}
           action={
             <Button
+              disabled={vendor?.nccf_branch_status == "1" ? false : true}
               component={RouterLink}
               // href={paths.dashboard.orders}
               variant="contained"
@@ -158,7 +175,7 @@ export default function UserListView({ tableData ,fetchAllOrdersDemo}) {
           sx={{ mb: { xs: 3, md: 5 } }}
         />
         <Card>
-          <UserTableToolbar filters={filters} onFilters={handleFilters} commodityOptions={_commodities} orderStatusOptions={_orderStatus}/>
+          <UserTableToolbar filters={filters} onFilters={handleFilters} commodityOptions={commodities} orderStatusOptions={_orderStatus}/>
           {canReset && (
             <UserTableFiltersResult
               filters={filters}
@@ -258,8 +275,8 @@ export default function UserListView({ tableData ,fetchAllOrdersDemo}) {
         }
       />
 
-      <AppDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} editId={edit} fetchAllOrdersDemo={fetchAllOrdersDemo}/>
-      <EditOrderDialog editDialogOpen={editDialogOpen} setEditDialogOpen={setEditDialogOpen} editData={edit} dataFiltered={dataFiltered} fetchAllOrdersDemo={fetchAllOrdersDemo}/>
+      <AppDialog dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} editId={edit} fetchAllOrdersDemo={fetchAllOrdersDemo} commodities={commodities}/>
+      <EditOrderDialog editDialogOpen={editDialogOpen} setEditDialogOpen={setEditDialogOpen} editData={edit} dataFiltered={dataFiltered} commodities={commodities} fetchAllOrdersDemo={fetchAllOrdersDemo}/>
     </>
   );
 }

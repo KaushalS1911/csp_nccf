@@ -439,7 +439,127 @@ function CspList({ csp, document, miller, cspt, docu }) {
   //   //   ],
   //   // },
   // ];
-  const columns = [
+
+  const columns =cspt ? [
+    {
+      field: 'seq_number',
+      headerName: 'Sr No.',
+      width: 90,
+    },
+    {
+      field: 'object_url',
+      headerName: 'Document Image',
+      flex: 1,
+      minWidth: 180,
+      renderCell: (params) => {
+        const object_url = params?.row?.object_url;
+        const secondSlashIndex = object_url?.indexOf('/', 8);
+        const secondPart = object_url?.substring(secondSlashIndex);
+        const url = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/file${secondPart}`;
+
+        return (
+          <Box py={1}>
+            <Avatar
+              alt={object_url}
+              src={url}
+              sx={{ mr: 2, height: 46, width: 46, cursor: 'pointer' }}
+              variant="rounded"
+              onClick={() => handleViewDialog(url)}
+            />
+          </Box>
+        );
+      },
+    },
+    {
+      field: 'doc_type',
+      headerName: 'Document Type',
+      flex: 1,
+      minWidth: 200,
+      renderCell: (params) => <Box sx={{ whiteSpace: 'nowrap' }}>{handleDoctypeLabel(params.row.doc_type)}</Box>,
+    },
+    {
+      field: 'created_at',
+      headerName: 'Date',
+      flex: 1,
+      minWidth: 150,
+      renderCell: (params) => <Box sx={{ whiteSpace: 'nowrap' }}>
+        {moment(params.row.created_at).format('DD/MM/YYYY')}
+      </Box>,
+    },
+    {
+      field: 'branch_approval_status',
+      headerName: 'Status',
+      flex: 1,
+      minWidth: 120,
+      renderCell: (params) => <TableCell sx={{ px: 0 }}>
+        <Label
+          variant="soft"
+          color={
+            (params.row.branch_approval_status === '1' && 'success') ||
+            (params.row.branch_approval_status === '' && 'warning') ||
+            'error'
+          }
+        >
+          {params.row.branch_approval_status === '' ? 'Approval Pending' : params.row.branch_approval_status === '1' ? 'Approved' : 'Rejected'}
+        </Label>
+      </TableCell>,
+    },
+    {
+      field: 'vendor1',
+      headerName: 'Action',
+      flex: 0.5,
+      minWidth: 250,
+      renderCell: (params) => <>
+        <TableCell sx={{ px: 0, marginRight: 2 }}>
+          <Button
+            disabled={params.row.branch_approval_status === '1' || params.row.branch_approval_status === '0'}
+            variant="contained"
+            onClick={() => {
+              setCurrentData(params.row);
+              setApprove(true);
+              setOpen(true);
+            }}
+            sx={{ backgroundColor: 'green', width: 90 }}
+          >
+            <VerifiedIcon/> Approve
+          </Button>
+        </TableCell>
+        <TableCell sx={{ px: 0 }}>
+          <Button
+            disabled={params.row.branch_approval_status === '1' || params.row.branch_approval_status === '0'}
+            onClick={() => {
+              setCurrentData(params.row);
+              setApprove(false);
+              setOpen(true);
+            }}
+            variant="contained"
+            sx={{ backgroundColor: 'red', width: 80 }}
+          >
+            <CancelIcon/> Reject
+          </Button>
+        </TableCell>
+      </>,
+    },
+    // {
+    //   field: 'vendor',
+    //   headerName: 'Reject',
+    //   flex: 0.5,
+    //   minWidth: 100,
+    //   renderCell: (params) => <TableCell sx={{ px: 0 }}>
+    //     <Button
+    //       onClick={() => {
+    //         setCurrentData(params.row);
+    //         setApprove(false);
+    //         setOpen(true);
+    //       }}
+    //       variant="contained"
+    //       sx={{ backgroundColor: 'red',width:80 }}
+    //     >
+    //       <CancelIcon/> Reject
+    //     </Button>
+    //   </TableCell>,
+    // },
+  ] : [
     {
       field: 'seq_number',
       headerName: 'Sr No.',
@@ -447,7 +567,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
     },
     {
       field: 'name',
-      headerName: 'CSP Name',
+      headerName: 'Name',
       width: 170,
     },
     {

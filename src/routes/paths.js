@@ -294,6 +294,7 @@ export const paths = {
   dashboard: {
     root: ROOTS.DASHBOARD,
     basic_info: `${ROOTS.DASHBOARD}/basic-info`,
+    field_report:`${ROOTS.DASHBOARD}/field-report`,
     distributor_info: `${ROOTS.DASHBOARD}/distributor-info`,
     // upload_document: `${ROOTS.DASHBOARD}/upload-document`,
     // document_list: `${ROOTS.DASHBOARD}/document-list`,

@@ -214,6 +214,7 @@ import MainBasicInfo from '../../pages/dashboard/main-basic-info';
 import CspHeadListView from '../../sections/csp-head/view/list';
 import CspHeadDocumentView from '../../sections/csp-head/view/csp-head-document-view';
 import SingleCspHead from '../../sections/csp-head/view/single-head-csp';
+import FieldReport from '../../pages/dashboard/field-report';
 
 // ----------------------------------------------------------------------
 
@@ -299,6 +300,7 @@ export const dashboardRoutes = [
       { element: <IndexPage />, index: true },
       // { path: 'basic-info', element: <BasicInfoPage /> },
       { path: 'basic-info', element: <MainBasicInfo /> },
+      { path: 'field-report', element: <FieldReport /> },
       { path: 'distributor-info', element: <DistributorInfo /> },
       // { path: 'upload-document', element: <UploadDocument /> },
       // { path: 'document', element: <UploadListView /> },

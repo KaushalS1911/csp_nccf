@@ -77,7 +77,8 @@ export function AuthProvider({ children }) {
               mil_dis_sub_roles: vendor?.mil_dis_sub_roles,
               name: vendor?.name,
               phone_number: vendor?.phone_number,
-              branch: vendor?.branch
+              branch: vendor?.branch,
+              nccf_branch_status: vendor?.nccf_branch_status
             },
           },
         });
@@ -123,6 +124,7 @@ export function AuthProvider({ children }) {
                 mil_dis_sub_roles: res?.mil_dis_sub_roles,
                 name: res?.name,
                 phone_number: res?.phone_number,
+                nccf_branch_status: res?.nccf_branch_status,
               },
             },
           });

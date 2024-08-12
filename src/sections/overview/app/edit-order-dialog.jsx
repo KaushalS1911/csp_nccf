@@ -125,23 +125,23 @@ import FormProvider from 'src/components/hook-form/form-provider';
 import { enqueueSnackbar } from 'notistack';
 
 // ----------------------------------------------------------------------
-export default function EditOrderDialog({ editDialogOpen, setEditDialogOpen, editData, dataFiltered,fetchAllOrdersDemo }) {
-  const [commodities, setCommodities] = useState([]);
+export default function EditOrderDialog({ editDialogOpen, setEditDialogOpen, editData, dataFiltered,fetchAllOrdersDemo,commodities}) {
+  // const [commodities, setCommodities] = useState([]);
   const { vendor } = useAuthContext();
 const [edit,setEdit] = useState({})
 
-  useEffect(() => {
+  // useEffect(() => {
+  //
+  //   fetchCommodities();
+  // }, []);
 
-    fetchCommodities();
-  }, []);
-
-  function fetchCommodities() {
-    axios
-      .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity`)
-      .then((res) => {
-        setCommodities(res.data?.data);
-      });
-  }
+  // function fetchCommodities() {
+  //   axios
+  //     .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity`)
+  //     .then((res) => {
+  //       setCommodities(res.data?.data);
+  //     });
+  // }
 
   const methods = useForm({
     defaultValues: {
