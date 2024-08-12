@@ -56,7 +56,7 @@ const defaultFilters = {
   commodity: [],
   status: 'all',
   branch: [],
-  category:[],
+  category: [],
   name: '',
   startDate: null,
   endDate: null,
@@ -84,19 +84,20 @@ function HOList({ singleCode }) {
   const [tableData, setTableData] = useState([]);
 
   const [filters, setFilters] = useState(defaultFilters);
-  const commodityCount = {};  const [selectedRowIds, setSelectedRowIds] = useState([]);
+  const commodityCount = {};
+  const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [open, setOpen] = useState(false);
   const [currentData, setCurrentData] = useState({});
   const [approve, setApprove] = useState(false);
   const [columnVisibilityModel, setColumnVisibilityModel] = useState(HIDE_COLUMNS);
-  const [banch,setBanch] = useState([])
-  const [banchVal,setBanchVal] = useState("All")
+  const [banch, setBanch] = useState([]);
+  const [banchVal, setBanchVal] = useState('All');
   const [dataCSP, setDataCSP] = useState([]);
   const [branch, setBranch] = useState('All');
   const [b, setB] = useState([]);
   const dateError = isAfter(filters.startDate, filters.endDate);
   const dayError = isAfter(filters.startDay, filters.endDay);
-  const [count,setCount] = useState([])
+  const [count, setCount] = useState([]);
   const getAllOrders = () => {
     const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/order`;
 
@@ -115,6 +116,8 @@ function HOList({ singleCode }) {
 
 
   const getOrders = () => {
+    setBanchVal("All")
+    setBranch("All")
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/order`)
       .then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
   };
@@ -124,7 +127,7 @@ function HOList({ singleCode }) {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/branch`)
       .then((res) => {
         const fetchedData = res?.data?.data || [];
-        const updatedData = [{ branch_name :"All",csp_count:1 }, ...fetchedData];
+        const updatedData = [{ branch_name: 'All', csp_count: 1 }, ...fetchedData];
         setBanch(updatedData);
       }).catch((err) => console.log(err));
 
@@ -135,7 +138,7 @@ function HOList({ singleCode }) {
     //     setDataCSP(updatedData);
     //   }).catch((err) => console.log(err));
     // if (vendor) {
-      getOrders();
+    getOrders();
     // }
   }, []);
 
@@ -146,41 +149,43 @@ function HOList({ singleCode }) {
   });
 
   // useEffect(() => {
-    const fetchData = async () => {
-      if (banchVal !== "All") {
-        setDataCSP([]);
+  const fetchData = async () => {
+    if (banchVal !== 'All') {
+      setDataCSP([]);
 
-        try {
-          const res = await axios.get(
-            `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/csp`
-          );
+      try {
+        const res = await axios.get(
+          `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/csp`,
+        );
 
-          let mapCsp = res.data.data.map((data) => ({
-            name: data.name,
-            csp_code: data.csp_code,
-            order_count:data.order_count
-          }));
+        let mapCsp = res.data.data.map((data) => ({
+          name: data.name,
+          csp_code: data.csp_code,
+          order_count: data.order_count,
+        }));
 
-          const default1 = [{ name: 'All', csp_code: 'All',order_count:1 }, ...mapCsp];
-          setDataCSP(default1);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
+        const default1 = [{ name: 'All', csp_code: 'All', order_count: 1 }, ...mapCsp];
+        setDataCSP(default1);
+      } catch (error) {
+        console.error('Error fetching data:', error);
       }
-    };
+    }
+  };
 
 
   // }, [banchVal]);
 
+  const getCspOrder = (branch) => {
 
-useEffect(() =>{
-  if(branch === "All"){
-    getAllOrders();
-      }else {
-
-  axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/orders`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
-  }
-},[branch])
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/orders`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+  };
+  useEffect(() => {
+    if (branch === 'All') {
+      getAllOrders();
+    } else {
+      getCspOrder(branch);
+    }
+  }, [branch]);
 
 
   const handleFilterCSP = useCallback(
@@ -194,8 +199,8 @@ useEffect(() =>{
   );
   const handleFilterBranch = useCallback(
     (event) => {
-setBanchVal(event.target.value)
-      setBranch("All")
+      setBanchVal(event.target.value);
+      setBranch('All');
       // handleFilters('branch', event.target.value)
     },
     [branch],
@@ -224,9 +229,9 @@ setBanchVal(event.target.value)
     [enqueueSnackbar, tableData],
   );
   const countsArray = [
-    { label: "accepted", count: 0 },
-    { label: "declined", count: 0 },
-    { label: "placed", count: 0 }
+    { label: 'accepted', count: 0 },
+    { label: 'declined', count: 0 },
+    { label: 'placed', count: 0 },
   ];
 
   countsArray.forEach(commodity => {
@@ -378,7 +383,7 @@ setBanchVal(event.target.value)
     //   ],
     // },
   ];
-  const color = ["primary","error","warning","error"]
+  const color = ['primary', 'error', 'warning', 'error'];
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       handleFilters('status', newValue);
@@ -398,21 +403,21 @@ setBanchVal(event.target.value)
       >
         <Grid container spacing={3}>
 
-        {countsArray.map((data,ind) => (
+          {countsArray.map((data, ind) => (
 
-        <Grid item xs={12} md={4} mb={5}>
-          <AnalyticsWidgetSummary
-            title={handleOrderTypes(data?.label)}
-            // percent={0.2}
-            total={data?.count == 0 ? '0' : data.count}
-            color={color[ind]}
-            chart={{
-              // colors: color[ind-1],
-              // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-            }}
-          />
-        </Grid>
-        ))}
+            <Grid item xs={12} md={4} mb={5}>
+              <AnalyticsWidgetSummary
+                title={handleOrderTypes(data?.label)}
+                // percent={0.2}
+                total={data?.count == 0 ? '0' : data.count}
+                color={color[ind]}
+                chart={{
+                  // colors: color[ind-1],
+                  // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+                }}
+              />
+            </Grid>
+          ))}
         </Grid>
         <CustomBreadcrumbs
           heading="Order List"
@@ -432,8 +437,8 @@ setBanchVal(event.target.value)
             },
           }}
         />
-        <HeadQuickEditForm getAllDocument={getOrders} currentUser={currentData} open={open} setOpen={setOpen}
-                           approve={approve} cspCode={b}/>
+        <HeadQuickEditForm getAllDocument={getCspOrder} getOrder={getOrders} getAllBranch={getAllOrders} branch={banchVal} currentUser={currentData} open={open} setOpen={setOpen}
+                           approve={approve} cspCode={branch}/>
         <Card
           sx={{
             height: dataFiltered?.length > 0 ? 'unset' : 700,
@@ -520,7 +525,8 @@ setBanchVal(event.target.value)
 
                       >
                         {banch.map((option) => (
-                          <MenuItem key={option.branch_name} value={option.branch_name} disabled={option.csp_count == 0}>
+                          <MenuItem key={option.branch_name} value={option.branch_name}
+                                    disabled={option.csp_count == 0}>
 
                             {option.branch_name}
                           </MenuItem>
@@ -528,7 +534,7 @@ setBanchVal(event.target.value)
                       </Select>
                     </FormControl>
 
-                    { banchVal !== "All" && <FormControl
+                    {banchVal !== 'All' && <FormControl
                       sx={{
                         flexShrink: 0,
                         width: { xs: 1, md: 200 },
@@ -634,7 +640,7 @@ setBanchVal(event.target.value)
 }
 
 function applyFilter({ inputData, filters, dateError, dayError }) {
-  const { stock, publish, status, commodity, name, branch, startDate, endDate, startDay, endDay ,category} = filters;
+  const { stock, publish, status, commodity, name, branch, startDate, endDate, startDay, endDay, category } = filters;
 
   if (stock.length) {
     inputData = inputData.filter((product) => stock.includes(product.inventoryType));

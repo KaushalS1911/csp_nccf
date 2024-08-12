@@ -19,9 +19,20 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentQuickEditForm({ currentUser, open, onClose, setOpen, approve,cspCode ,getAllDocument,getDocuments}) {
+export default function DocumentQuickEditForm({
+                                                currentUser,
+                                                open,
+                                                onClose,
+                                                setOpen,
+                                                approve,
+                                                cspCode,
+                                                getAllDocument,
+                                                getDocuments,
+                                                getBtanchDocument,
+                                                branch,
+                                              }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [remark,setRemark] = useState("")
+  const [remark, setRemark] = useState('');
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
@@ -61,7 +72,6 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
   const onSubmit = handleSubmit(async (data) => {
     try {
       setOpen(false);
@@ -72,41 +82,62 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
   });
   const handelSubmit = () => {
     setOpen(false);
-    if (approve){
-    const payload = {
-      document_id: currentUser?.id,
-      status: '1',
-      branch_approval_status:"1"
-    };
+    if (approve) {
+      const payload = {
+        document_id: currentUser?.id,
+        status: '1',
+        branch_approval_status: '1',
+      };
       axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080//nccf/branch/csp/document/validate', payload).then((res) => {
         if (res) {
-          getAllDocument(cspCode)
-          getDocuments()
+          if (cspCode !== 'All') {
+
+            if (cspCode == 'All') {
+              getDocuments();
+
+            } else {
+              getAllDocument(cspCode);
+
+            }
+          } else {
+            getBtanchDocument(branch);
+          }
           enqueueSnackbar('Document approved successfully');
         } else {
 
           enqueueSnackbar('Something want wrong', { variant: 'error' });
         }
-      }).catch((err) => console.log(err))
-    }
-    else {
+      }).catch((err) => console.log(err));
+    } else {
       {
         const payload = {
           document_id: currentUser?.id,
-          status: '0',
-          branch_approval_status:"0"
+          status: '1',
+          branch_approval_status: '0',
           // remark:remark
         };
-        axios.post("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/document/remark",{csp_code:cspCode,remark:remark,mode:"test",document_id:currentUser?.id})
+        axios.post('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/document/remark', {
+          csp_code: cspCode,
+          remark: remark,
+          mode: 'test',
+          document_id: currentUser?.id,
+        });
         axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/document/validate', payload).then((res) => {
           if (res) {
-            setRemark("")
+            setRemark('');
+            if (cspCode == 'All') {
+              getDocuments();
+
+            } else {
+              getAllDocument(cspCode);
+
+            }
             enqueueSnackbar('Document rejected successfully');
           } else {
 
             enqueueSnackbar('Something want wrong', { variant: 'error' });
           }
-        }).catch((err) => console.log(err))
+        }).catch((err) => console.log(err));
       }
     }
   };
@@ -125,33 +156,35 @@ export default function DocumentQuickEditForm({ currentUser, open, onClose, setO
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Box sx={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <DialogTitle>{handleDoctypeLabel(currentUser.doc_type)}</DialogTitle>
           <DialogTitle>
-            <ClearIcon sx={{cursor:"pointer"}} onClick={() => setOpen(false)}/>
+            <ClearIcon sx={{ cursor: 'pointer' }} onClick={() => setOpen(false)}/>
           </DialogTitle>
         </Box>
 
         <DialogContent>
 
 
-          <Box py={1} sx={{ mr: 2, mb: 2, height: "100%", cursor: 'pointer' }}>
+          <Box py={1} sx={{ mr: 2, mb: 2, height: '100%', cursor: 'pointer' }}>
 
-            <img src={url} alt={url} style={{ width: '100%',height:"100%"}}/>
+            <img src={url} alt={url} style={{ width: '100%', height: '100%' }}/>
 
           </Box>
-          {!approve && <TextField name="Remark" label="Remark" value={remark} multiline={true} rows={4} fullWidth={true} onChange={(e) => setRemark(e.target.value)}/>}
+          {!approve && <TextField name="Remark" label="Remark" value={remark} multiline={true} rows={4} fullWidth={true}
+                                  onChange={(e) => setRemark(e.target.value)}/>}
         </DialogContent>
 
         <DialogActions>
           <Button variant="outlined" onClick={() => {
             setOpen(false);
-            setRemark("")
+            setRemark('');
           }}>
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting} onClick={handelSubmit} disabled={!approve && remark == ""}>
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting} onClick={handelSubmit}
+                         disabled={!approve && remark == ''}>
             {approve ? 'Approve' : 'Reject'}
           </LoadingButton>
         </DialogActions>

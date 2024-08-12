@@ -135,10 +135,14 @@ function CspList({ csp, document, miller, cspt, docu }) {
   });
   const dayError = isAfter(filters.startDay, filters.endDay);
   const cspCode = csp || vendor?.branch;
-  useEffect(() => {
-    if (branch === 'All') {
+  const getBranchDocument = () => {
       axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/document`)
         .then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+
+  }
+  useEffect(() => {
+    if (branch === 'All') {
+      getBranchDocument()
     } else {
       getAllDocument(branch);
 
@@ -154,7 +158,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
           setDataCSP(updatedData);
         }).catch((err) => console.log(err));
       csp ? axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${csp}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err)) :
-        axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+       getBranchDocument()
     }
 
   }, []);
@@ -556,7 +560,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
     // },
   ];
   const handelDownload = () => {
-    fetch('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/DS3423432_Uttar%20Pradesh/zip-file', {
+    fetch(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/zip-file`, {
       method: 'GET',
 
     })
@@ -634,7 +638,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
             </Grid>
           ))}
         </Grid>
-        <DocumentQuickEditForm getAllDocument={getAllDocument} currentUser={currentData} open={open} setOpen={setOpen}
+        <DocumentQuickEditForm getAllDocument={getAllDocument} getDocuments={getBranchDocument} currentUser={currentData} open={open} setOpen={setOpen}
                                approve={approve} cspCode={b}/>
         {!cspt && <CustomBreadcrumbs
           heading={'CSP Documents'}

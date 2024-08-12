@@ -142,13 +142,13 @@ export default function CspTableFiltersResult({
             ))}
           </Block>
         )}
-        {/*{!!filters.district.length && (*/}
-        {/*  <Block label="District:">*/}
-        {/*    {filters.district.map((item) => (*/}
-        {/*      <Chip key={item} label={item} size="small" onDelete={() => handleRemoveDistrict(item)} />*/}
-        {/*    ))}*/}
-        {/*  </Block>*/}
-        {/*)}*/}
+        {!!filters.district.length && (
+          <Block label="District:">
+            {filters.district.map((item) => (
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveDistrict(item)} />
+            ))}
+          </Block>
+        )}
 
         {!!filters.name && (
           <Block label="Keyword:">

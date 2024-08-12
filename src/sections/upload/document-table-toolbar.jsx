@@ -174,7 +174,7 @@ export default function DocumentTableToolbar({
             {/*</IconButton>*/}
           </Stack>
         }
-        {(vendor.category == "branch" || vendor.category == "head_office") && <FormControl
+        {(vendor?.category == "branch" || vendor?.category == "head_office") && <FormControl
           sx={{
             flexShrink: 0,
             width: { xs: 1, md: 200 },

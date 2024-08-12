@@ -19,7 +19,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 // ----------------------------------------------------------------------
 
-export default function HeadQuickEditForm({ currentUser, open, onClose, setOpen, approve,cspCode ,getAllDocument}) {
+export default function HeadQuickEditForm({ currentUser, open, onClose, setOpen, approve,cspCode ,getAllDocument,getOrder,branch,getAllBranch}) {
   const { enqueueSnackbar } = useSnackbar();
   const [remark,setRemark] = useState("")
   const NewUserSchema = Yup.object().shape({
@@ -82,10 +82,21 @@ export default function HeadQuickEditForm({ currentUser, open, onClose, setOpen,
       status: '1',
       branch_approval_status:"declined"
     };
-    console.log(payload);
       axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/order/validate', payload).then((res) => {
         if (res) {
-          getAllDocument(cspCode)
+          if(cspCode !== "All"){
+
+          if (cspCode == 'All') {
+            getOrder();
+
+          } else {
+            getAllDocument(cspCode);
+
+          }
+          }
+          else {
+            getAllBranch(branch)
+          }
            enqueueSnackbar(res?.data.message)
         } else {
 

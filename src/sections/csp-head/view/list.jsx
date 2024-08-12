@@ -153,21 +153,21 @@ function CspHeadListView(props) {
   function fetchStates() {
     dataFiltered?.map((data) => {
       setStateOptions((item) => {
-        if (!item.includes(data.state)) {
+        if (data.state !== "" && !item.includes(data.state)) {
           return [...item, data.state];
         } else {
           return item;
         }
       });
       setBranchOptions((item) => {
-        if (!item.includes(data.branch)) {
+        if (data.branch !== "" && !item.includes(data.branch)) {
           return [...item, data.branch];
         } else {
           return item;
         }
       });
       setDistrictOptions((item) => {
-        if (!item.includes(data.district)) {
+        if (data.district !== "" && !item.includes(data.district)) {
           return [...item, data.district];
         } else {
           return item;

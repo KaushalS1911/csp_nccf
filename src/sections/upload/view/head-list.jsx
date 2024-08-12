@@ -138,6 +138,10 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   });
   const dayError = isAfter(filters.startDay, filters.endDay);
   const cspCode = csp || vendor?.branch;
+const getCspDocument = (branch) => {
+        axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
+
+}
  useEffect(() => {
    if(!cspt){
 
@@ -155,7 +159,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
 
   }, [banchVal]);
   const getDocuments = () =>{
-    csp ? axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${csp}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err)) :
+    csp ? getCspDocument(csp) :
       axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
   }
   // useEffect(() => {
@@ -203,14 +207,12 @@ function HeadList({ csp, document, miller, cspt, docu }) {
       }).catch((err) => console.log(err));
 
   }, []);
-
   useEffect(() =>{
     if(!cspt) {
       if (branch === "All") {
         getAllDocument(banchVal);
       } else {
-
-        axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/documents`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err))
+getCspDocument(branch)
       }
     }
   },[branch])
@@ -250,7 +252,6 @@ function HeadList({ csp, document, miller, cspt, docu }) {
 
   function getAllDocument(code) {
     // setLoading(true)
-
     axios
       .get(
         `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${code}/document`,
@@ -628,7 +629,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/zip-file`).then((res) => console.log(res)).catch((err) => console.log(err));
   };
 
-  const action = typeof branch === 'object' ? '' : <Button
+  const action = branch === 'All' ? '' : <Button
     onClick={handelDownload}
     // component={RouterLink}
     // href={miller ? paths.dashboard.miller.document_upload : document ? paths.dashboard.distributor.document_upload : paths.dashboard.document.document_upload}
@@ -671,7 +672,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
             </Grid>
           ))}
         </Grid>
-        <DocumentQuickEditForm getAllDocument={getAllDocument} getDocuments={getDocuments} currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={b}/>
+        <DocumentQuickEditForm getAllDocument={getCspDocument} getDocuments={getDocuments} getBtanchDocument={getAllDocument} branch={banchVal} currentUser={currentData} open={open} setOpen={setOpen} approve={approve} cspCode={branch}/>
         {!cspt && <CustomBreadcrumbs
           heading={'Documents'}
           links={[
@@ -793,7 +794,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
                       {/*  </Button>*/}
                       {/*)}*/}
 
-                      <Box>
+                      <Box sx={{display:"flex",alignItems:"center"}}>
                         {!cspt &&  <FormControl
                           sx={{
                             flexShrink: 0,
