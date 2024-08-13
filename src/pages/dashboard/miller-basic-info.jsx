@@ -6,29 +6,14 @@ import Box from '@mui/material/Box';
 import { useAuthContext } from '../../auth/hooks';
 import axios from 'axios';
 
-function MillerBasicInfo(props) {
-  const { profile } = useGetProfile();
-  const [miller_disprofile,setMiller_disProfile] = useState({})
-  const {vendor} = useAuthContext()
-  useEffect(() => {
-    getSingleMiller_dis();
-  }, []);
-  function getSingleMiller_dis() {
-    // setLoading(true)
-    axios
-      .get(
-        `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/sub_mil_dist`
-      )
-      .then((res) => {
-        setMiller_disProfile(res?.data?.data[0]);
-        // setLoading(false)
-      })
-      .catch((err) => console.error(err));
-  }
+function MillerBasicInfo({profile,miller_disprofile,vendor}) {
+
+
+
   return (
     <>
       <Container maxWidth="xl">
-        {vendor.category === "miller_distributor" && <Typography variant="h4">Miller's Information</Typography>}
+        {vendor?.category === "miller_distributor" && <Typography variant="h4">Miller's Information</Typography>}
         <Grid container>
           <Grid item md={4} xs={12}>
             <Box sx={{ ml: { md: '60px', xs: '0' }, mt: '60px' }}>
