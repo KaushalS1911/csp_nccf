@@ -22,12 +22,14 @@ import { paths } from '../../routes/paths';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useGetDistributor } from '../../api/vendor';
+import { LoadingScreen } from '../../components/loading-screen';
 
 function DistributorInfo(props) {
   const settings = useSettingsContext();
 const [profile,setProfile] = useState({})
   const { vendor } = useAuthContext();
   const [disable, setDisable] = useState(false);
+  const [loading,setLoading] = useState(false)
   const vendor_category = vendor?.category;
   // subcategory
   const [stateOptions, setStateOptions] = useState([]);
@@ -39,14 +41,14 @@ const [profile,setProfile] = useState({})
     getMiller_dis();
   }, []);
   function getMiller_dis() {
-    // setLoading(true)
+    setLoading(true)
     axios
       .get(
         `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/sub_mil_dist`
       )
       .then((res) => {
         setProfile(res?.data?.data[0]);
-        // setLoading(false)
+        setLoading(false)
       })
       .catch((err) => console.error(err));
   }
@@ -218,6 +220,8 @@ const [profile,setProfile] = useState({})
       <Helmet>
         <title> Dashboard | Basic Info</title>
       </Helmet>
+      {
+        loading ? <LoadingScreen /> :
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
         <Typography variant="h4">Add Distrubutor Information</Typography>
         <Box
@@ -440,8 +444,10 @@ const [profile,setProfile] = useState({})
           </FormProvider>
         </Box>
       </Container>
+      }
+
     </>
   );
-}
+};
 
 export default DistributorInfo;

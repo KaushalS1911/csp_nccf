@@ -9,17 +9,24 @@ import { paths } from '../../routes/paths';
 import { useAuthContext } from '../../auth/hooks';
 import axios from 'axios';
 import { Text } from '@react-pdf/renderer';
+import { LoadingScreen } from '../../components/loading-screen';
 
 function FieldReport(props) {
   const {vendor} = useAuthContext()
+  const [loading,setLoading] = useState(false)
   const [remark,setRemark] = useState("")
   const [data,setData] = useState("")
   const remarkData = () => {
+    setLoading(true)
     axios.post("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/fr",{csp_code:vendor?.csp_code})
       .then((res) => {
         setRemark(res?.data?.data?.remark);
         setData(res?.data?.data?.remark)
-      }).catch((err) => console.log(err))
+        setLoading(false)
+      }).catch((err) => {
+      setLoading(false)
+      console.log(err);
+    })
   }
   useEffect(() => {
     setRemark("")
@@ -30,6 +37,7 @@ function FieldReport(props) {
       <Helmet>
         <title> Dashboard | Field Report</title>
       </Helmet>
+      {loading ? <LoadingScreen /> :
       <Container
         maxWidth={'xl'}
 
@@ -46,36 +54,7 @@ function FieldReport(props) {
             }}
           />
 
-        {/*<CustomBreadcrumbs*/}
-        {/*  heading={'Field Report'}*/}
-        {/*  links={[*/}
-        {/*    {*/}
-        {/*      name: 'Dashboard',*/}
-        {/*      href: paths.dashboard.root,*/}
-        {/*    },*/}
-        {/*    {*/}
-        {/*      name: 'CSP List',*/}
-        {/*      href: paths.dashboard.csp.csp_list ,*/}
-        {/*    },*/}
 
-        {/*    {*/}
-        {/*      name: 'Field Report',*/}
-        {/*    },*/}
-        {/*  ]}*/}
-        {/*  sx={{ mb: { xs: 3, md: 5 } }}*/}
-        {/*  // action={*/}
-        {/*  //   (vendor?.category !== 'branch' && !cspt) &&*/}
-        {/*  //   <Button*/}
-        {/*  //     component={RouterLink}*/}
-        {/*  //     href={miller ? paths.dashboard.miller.document_upload : docu ? paths.dashboard.distributor.document_upload : paths.dashboard.distributor.document_upload}*/}
-        {/*  //     variant="contained"*/}
-        {/*  //     startIcon={<Iconify icon="mingcute:add-line"/>}*/}
-        {/*  //*/}
-        {/*  //   >*/}
-        {/*  //     Upload Document*/}
-        {/*  //   </Button>*/}
-        {/*  // }*/}
-        {/*/>*/}
         <Card sx={{background:!remark && "#FFE2DA",color:!remark && "#93313A"}}>
           <Stack spacing={3} sx={{ p: 1.5 }}>
             <Stack>
@@ -110,8 +89,9 @@ function FieldReport(props) {
 
 
       </Container>
+      }
     </>
   );
-}
+};
 
 export default FieldReport;
