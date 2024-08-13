@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -12,16 +12,37 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import { handleDoctypeLabel } from 'src/_mock';
 import { useSnackbar } from 'src/components/snackbar';
-import FormProvider from 'src/components/hook-form';
+import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { TextField } from '@mui/material';
 import axios from 'axios';
 import ClearIcon from '@mui/icons-material/Clear';
 
 // ----------------------------------------------------------------------
 
-export default function HeadQuickEditForm({ currentUser, open, onClose, setOpen, approve,cspCode ,getAllDocument,getOrder,branch,getAllBranch}) {
+export default function HeadQuickEditForm({
+                                            currentUser,
+                                            open,
+                                            onClose,
+                                            setOpen,
+                                            approve,
+                                            cspCode,
+                                            getAllDocument,
+                                            getOrder,
+                                            branch,
+                                            getAllBranch,
+                                          }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [remark,setRemark] = useState("")
+  const [remark, setRemark] = useState('');
+  const [approvalQuantity, setApprovalQuantity] = useState('');
+  const [error, setError] = useState('');
+
+  const handleBlur = () => {
+    if (Number(approvalQuantity) >= Number(currentUser?.quantity)) {
+      setError('Approval quantity cannot be greater than requested quantity.');
+    } else {
+      setError('');
+    }
+  };
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
@@ -73,36 +94,36 @@ export default function HeadQuickEditForm({ currentUser, open, onClose, setOpen,
   const handelSubmit = () => {
     setOpen(false);
     // if (approve){
-    const payload = approve ?  {
+    const payload = approve ? {
       order_id: currentUser?.id,
       status: '1',
-      branch_approval_status:"accepted"
-    } :{
+      branch_approval_status: 'accepted',
+    } : {
       order_id: currentUser?.id,
       status: '1',
-      branch_approval_status:"declined"
+      branch_approval_status: 'declined',
     };
-      axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/order/validate', payload).then((res) => {
-        if (res) {
-          if(cspCode !== "All"){
+    axios.put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/csp/order/validate', payload).then((res) => {
+      if (res) {
+        if (cspCode !== 'All') {
+
+          getAllDocument(cspCode);
+
+        } else {
 
           if (cspCode == 'All') {
             getOrder();
 
           } else {
-            getAllDocument(cspCode);
-
+            getAllBranch(branch);
           }
-          }
-          else {
-            getAllBranch(branch)
-          }
-           enqueueSnackbar(res?.data.message)
-        } else {
-
-          enqueueSnackbar('Something want wrong', { variant: 'error' });
         }
-      }).catch((err) => console.log(err))
+        enqueueSnackbar(res?.data.message);
+      } else {
+
+        enqueueSnackbar('Something want wrong', { variant: 'error' });
+      }
+    }).catch((err) => console.log(err));
 
   };
   const object_url = currentUser?.object_url;
@@ -120,28 +141,59 @@ export default function HeadQuickEditForm({ currentUser, open, onClose, setOpen,
       }}
     >
       <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Box sx={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <DialogTitle>{handleDoctypeLabel(currentUser.doc_type)}</DialogTitle>
-          <DialogTitle>
-            <ClearIcon sx={{cursor:"pointer"}} onClick={() => setOpen(false)}/>
+          <DialogTitle sx={{ py: 0 }}>
+            <ClearIcon sx={{ cursor: 'pointer' }} onClick={() => setOpen(false)}/>
           </DialogTitle>
         </Box>
 
         <DialogContent>
 
-          {approve ? <Box sx={{fontSize:"20px",fontWeight:700}}>Are you sure you want to approve this order ?</Box> : <Box sx={{fontSize:"20px",fontWeight:700}}>Are you sure you want to reject this order ? </Box>}
+          {approve ?
+            <Box sx={{ fontSize: '20px', fontWeight: 700 }}>Are you sure you want to approve this order ?</Box> :
+            <Box sx={{ fontSize: '20px', fontWeight: 700 }}>Are you sure you want to reject this order ? </Box>}
+          {approve && <>
+            <form>
+            </form>
+            <Box
+              mt={3}
+              // rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+                md: 'repeat(3, 1fr)',
+              }}
+            >
+              <RHFTextField name="quantity" label="Requested Quantity" disabled={true} value={currentUser?.quantity}/>
+              {/*<RHFTextField name="approve_quantity" label="Approved Quantity"   />*/}
+              <TextField
+                label="Approval Quantity"
+                variant="outlined"
+                fullWidth
+                // margin="normal"
+                value={approvalQuantity}
+                onChange={(e) => setApprovalQuantity(e.target.value)}
+                onBlur={handleBlur}
+                error={error}
+                helperText={error}
+              />
+            </Box>
+          </>}
 
         </DialogContent>
 
-        <DialogActions>
+        <DialogActions sx={{ py: 2 }}>
           <Button variant="outlined" onClick={() => {
             setOpen(false);
-            setRemark("")
+            setRemark('');
           }}>
             Cancel
           </Button>
 
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting} onClick={handelSubmit} >
+          <LoadingButton type="submit" variant="contained" loading={isSubmitting} onClick={handelSubmit}>
             {approve ? 'Approve' : 'Reject'}
           </LoadingButton>
         </DialogActions>

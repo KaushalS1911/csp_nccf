@@ -74,6 +74,8 @@ const defaultFilters = {
   status: 'all',
   startDay: null,
   endDay: null,
+  document: [],
+  category: [],
 
 };
 
@@ -358,8 +360,8 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
   // ];
   const columns = [
     {
-      field: 'id',
-      headerName: '#',
+      field: 'seq_number',
+      headerName: 'Sr No.',
       width: 120,
       minWidth: 80,
     },
@@ -501,6 +503,7 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
 
         <Card
           sx={{
+            height: dataFiltered?.length > 0 ? 'unset' : 700,
             // height: dataId?.length > 0 ? 'unset' : 700,
             // flexGrow: { md: 1 },
             // display: { md: 'flex' },
@@ -668,10 +671,10 @@ function DocumentList({ csp, document, miller, cspt, docu }) {
 
 function applyFilter(
   {
-    inputData, filters,dayError
+    inputData, filters, dayError,
   },
 ) {
-  const { name, status, role, type, startDay, endDay } = filters;
+  const { name, status, role, type, startDay, endDay, document, category } = filters;
 
 
   if (name) {
@@ -685,15 +688,22 @@ function applyFilter(
   }
   if (!dayError) {
     if (startDay && endDay) {
-      inputData = inputData.filter((product) => isBetween(product.uploaded_on, startDay, endDay));
+      inputData = inputData.filter((product) => isBetween(product.created_at, startDay, endDay));
     }
   }
   if (role?.length) {
     inputData = inputData.filter((user) => role.includes(user.role));
   }
+  if (document?.length) {
+    inputData = inputData.filter((user) => document.includes(user.branch_approval_status));
+  }
   if (type.length) {
     inputData = inputData.filter((user) => type.includes(user.doc_type));
   }
+  if (category.length) {
+    inputData = inputData.filter((user) => category.includes(user.category));
+  }
+
 
   return inputData;
 }

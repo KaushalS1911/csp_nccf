@@ -55,6 +55,7 @@ import Tab from '@mui/material/Tab';
 import { isAfter, isBetween } from '../../../utils/format-time';
 import Grid from '@mui/material/Unstable_Grid2';
 import AnalyticsWidgetSummary from '../../overview/analytics/analytics-widget-summary';
+import { LoadingScreen } from '../../../components/loading-screen';
 // import BranchTableFiltersResult from '../branch-table-filters-result';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
@@ -110,7 +111,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
   const router = useRouter();
 
   const settings = useSettingsContext();
-
+const [loading,setLoading] = useState(false)
   const [tableData, setTableData] = useState([]);
 
   const [filters, setFilters] = useState(defaultFilters);
@@ -136,8 +137,15 @@ function CspList({ csp, document, miller, cspt, docu }) {
   const dayError = isAfter(filters.startDay, filters.endDay);
   const cspCode = csp || vendor?.branch;
   const getBranchDocument = () => {
+    setLoading(true)
       axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/document`)
-        .then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+        .then((res) => {
+          setLoading(false)
+          setTableData(res?.data?.data);
+        }).catch((err) => {
+          setLoading(false)
+        console.log(err);
+      });
 
   }
   useEffect(() => {
@@ -743,7 +751,7 @@ function CspList({ csp, document, miller, cspt, docu }) {
       .map((column) => column.field);
   return (
     <>
-      <Container
+      {loading ? <LoadingScreen /> : <> <Container
         maxWidth={'xl'}
 
       >
@@ -924,9 +932,9 @@ function CspList({ csp, document, miller, cspt, docu }) {
                           </Select>
                         </FormControl>
                         }
-                       <Box sx={{marginLeft:2}}>
-                         {action}
-                       </Box>
+                        <Box sx={{marginLeft:2}}>
+                          {action}
+                        </Box>
                       </Box>
 
 
@@ -977,35 +985,35 @@ function CspList({ csp, document, miller, cspt, docu }) {
 
         </Card>
       </Container>
-      <Lightbox
-        index={lightbox.selected}
-        slides={slides}
-        open={lightbox.open}
-        close={lightbox.onClose}
-        onGetCurrentIndex={(index) => lightbox.setSelected(index)}
-      />
-      <ConfirmDialog
-        open={confirmRows.value}
-        onClose={confirmRows.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selectedRowIds.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirmRows.onFalse();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
+        <Lightbox
+          index={lightbox.selected}
+          slides={slides}
+          open={lightbox.open}
+          close={lightbox.onClose}
+          onGetCurrentIndex={(index) => lightbox.setSelected(index)}
+        />
+        <ConfirmDialog
+          open={confirmRows.value}
+          onClose={confirmRows.onFalse}
+          title="Delete"
+          content={
+            <>
+              Are you sure want to delete <strong> {selectedRowIds.length} </strong> items?
+            </>
+          }
+          action={
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                handleDeleteRows();
+                confirmRows.onFalse();
+              }}
+            >
+              Delete
+            </Button>
+          }
+        /></>}
     </>
   );
 }

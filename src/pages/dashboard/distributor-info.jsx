@@ -23,9 +23,11 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useGetDistributor } from '../../api/vendor';
 import { LoadingScreen } from '../../components/loading-screen';
+import { useRouter } from '../../routes/hooks';
 
 function DistributorInfo(props) {
   const settings = useSettingsContext();
+  const router = useRouter()
 const [profile,setProfile] = useState({})
   const { vendor } = useAuthContext();
   const [disable, setDisable] = useState(false);
@@ -195,7 +197,7 @@ const [profile,setProfile] = useState({})
             enqueueSnackbar('Distributor added successfully');
             reset(defaultValues)
             // setLoading(false);
-            // router.push(paths.dashboard.distributor.distributor_list);
+            router.push(paths.dashboard.distributor_info);
           }else {
             enqueueSnackbar(res.data.message,{variant:'error'});
 

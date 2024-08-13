@@ -55,6 +55,7 @@ import Tab from '@mui/material/Tab';
 import { isAfter, isBetween } from '../../../utils/format-time';
 import Grid from '@mui/material/Unstable_Grid2';
 import AnalyticsWidgetSummary from '../../overview/analytics/analytics-widget-summary';
+import { LoadingScreen } from '../../../components/loading-screen';
 // import BranchTableFiltersResult from '../branch-table-filters-result';
 
 // import ProductTableFiltersResult from '../product-table-filters-result';
@@ -112,7 +113,7 @@ function HeadList({ csp, document, miller, cspt, docu }) {
   const settings = useSettingsContext();
 
   const [tableData, setTableData] = useState([]);
-
+  const [loading,setLoading] = useState(false)
   const [filters, setFilters] = useState(defaultFilters);
   const [dataId, setDataId] = useState([]);
   const [selectedRowIds, setSelectedRowIds] = useState([]);
@@ -158,8 +159,14 @@ function HeadList({ csp, document, miller, cspt, docu }) {
 
   }, [banchVal]);
   const getDocuments = () => {
-    csp ? getCspDocument(csp) :
-      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/document`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+    csp ? getCspDocument(csp) : setLoading(true),
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/document`).then((res) => {
+        setLoading(false)
+        setTableData(res?.data?.data);
+      }).catch((err) => {
+        setLoading(false)
+        console.log(err);
+      });
   };
   // useEffect(() => {
   const fetchData = async () => {
@@ -651,7 +658,9 @@ function HeadList({ csp, document, miller, cspt, docu }) {
       .map((column) => column.field);
   return (
     <>
-      <Container
+      {
+        loading ? <LoadingScreen /> :
+      <><Container
         maxWidth={'xl'}
 
       >
@@ -907,38 +916,41 @@ function HeadList({ csp, document, miller, cspt, docu }) {
 
         </Card>
       </Container>
-      <Lightbox
-        index={lightbox.selected}
-        slides={slides}
-        open={lightbox.open}
-        close={lightbox.onClose}
-        onGetCurrentIndex={(index) => lightbox.setSelected(index)}
-      />
-      <ConfirmDialog
-        open={confirmRows.value}
-        onClose={confirmRows.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selectedRowIds.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirmRows.onFalse();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
+        <Lightbox
+          index={lightbox.selected}
+          slides={slides}
+          open={lightbox.open}
+          close={lightbox.onClose}
+          onGetCurrentIndex={(index) => lightbox.setSelected(index)}
+        />
+        <ConfirmDialog
+          open={confirmRows.value}
+          onClose={confirmRows.onFalse}
+          title="Delete"
+          content={
+            <>
+              Are you sure want to delete <strong> {selectedRowIds.length} </strong> items?
+            </>
+          }
+          action={
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                handleDeleteRows();
+                confirmRows.onFalse();
+              }}
+            >
+              Delete
+            </Button>
+          }
+        />
+      </>
+      }
+
     </>
   );
-}
+};
 
 function applyFilter(
   {

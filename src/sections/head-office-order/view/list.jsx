@@ -44,6 +44,7 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Grid from '@mui/material/Unstable_Grid2';
 import AnalyticsWidgetSummary from '../../overview/analytics/analytics-widget-summary';
+import { LoadingScreen } from '../../../components/loading-screen';
 
 const PUBLISH_OPTIONS = [
   { value: 'published', label: 'Published' },
@@ -82,7 +83,7 @@ function HOList({ singleCode }) {
   const { vendor } = useAuthContext();
 
   const [tableData, setTableData] = useState([]);
-
+const [loading,setLoading] = useState(false)
   const [filters, setFilters] = useState(defaultFilters);
   const commodityCount = {};
   const [selectedRowIds, setSelectedRowIds] = useState([]);
@@ -116,10 +117,17 @@ function HOList({ singleCode }) {
 
 
   const getOrders = () => {
+    setLoading(true)
     setBanchVal("All")
     setBranch("All")
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/order`)
-      .then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+      .then((res) => {
+        setLoading(false)
+        setTableData(res?.data?.data);
+      }).catch((err) => {
+      setLoading(false)
+      console.log(err);
+    });
   };
 
   useEffect(() => {
@@ -397,7 +405,8 @@ function HOList({ singleCode }) {
 
   return (
     <>
-      <Container
+      {loading ? <LoadingScreen /> :
+      <><Container
         maxWidth={settings.themeStretch ? false : 'xl'}
 
       >
@@ -613,31 +622,33 @@ function HOList({ singleCode }) {
         </Card>
       </Container>
 
-      <ConfirmDialog
-        open={confirmRows.value}
-        onClose={confirmRows.onFalse}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selectedRowIds.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows();
-              confirmRows.onFalse();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
+        <ConfirmDialog
+          open={confirmRows.value}
+          onClose={confirmRows.onFalse}
+          title="Delete"
+          content={
+            <>
+              Are you sure want to delete <strong> {selectedRowIds.length} </strong> items?
+            </>
+          }
+          action={
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {
+                handleDeleteRows();
+                confirmRows.onFalse();
+              }}
+            >
+              Delete
+            </Button>
+          }
+        />
+      </>
+      }
     </>
   );
-}
+};
 
 function applyFilter({ inputData, filters, dateError, dayError }) {
   const { stock, publish, status, commodity, name, branch, startDate, endDate, startDay, endDay, category } = filters;

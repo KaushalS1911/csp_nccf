@@ -37,6 +37,7 @@ export default function UploadDocument({ container }) {
   const [tableData, setTableData] = useState([]);
   const [branch, setBranch] = useState([]);
   const [b, setB] = useState([]);
+  const [validate,setValidate] = useState([])
   const defaultValues = useMemo(
     () => ({
       doc_type: '',
@@ -55,9 +56,11 @@ export default function UploadDocument({ container }) {
     }
     getAllDocument();
   }, [vendor?.csp_code]);
-
+  useEffect(() => {
+      getAllDocument();
+      setValidate([...tableData,...selected])
+  }, [selected]);
   function getAllDocument() {
-
     if (vendor?.csp_code) {
       axios
         .get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/documents`)
@@ -184,8 +187,7 @@ export default function UploadDocument({ container }) {
 const code = vendor?.category === "branch" ? branch : vendor?.csp_code
   const handleAllSubmit = async (data) => {
 
-
-    const filteredData = tableData?.filter((item) => item.doc_type === docs);
+    const filteredData = validate?.filter((item) => item.doc_type === docs || item.type === docs);
     if (filteredData.length >= 2) {
       // enqueueSnackbar(`${handleDoctypeLabel(filteredData[0]?.doc_type)} upload limit exceed. (If you want to upload more document of ${handleDoctypeLabel(filteredData[0]?.doc_type)}, then remove existing ${handleDoctypeLabel(filteredData[0]?.doc_type)}.)`, { variant: 'error' });
       enqueueSnackbar(
@@ -243,13 +245,13 @@ const code = vendor?.category === "branch" ? branch : vendor?.csp_code
         setSelected([])
         setBranch([])
         reset(defaultValues)
-        // router.push(paths.dashboard.document.document_list);
+        router.push(paths.dashboard.document.document_upload);
       } else {
-        enqueueSnackbar('Failed to Upload');
+        enqueueSnackbar('Failed to Upload',{ variant:'error'});
       }
     } catch (error) {
       console.error('Error submitting form:', error);
-      enqueueSnackbar('Failed to Upload');
+      enqueueSnackbar('Failed to Upload',{variant:'error'});
     } finally {
       setLoading(false);
     }

@@ -40,6 +40,7 @@ export default function UploadDocument() {
   const [branch, setBranch] = useState([]);
   const [b, setB] = useState([]);
   const [dataCSP, setDataCSP] = useState([]);
+  const [validate,setValidate] = useState([])
   const defaultValues = useMemo(
     () => ({
       doc_type: '',
@@ -53,6 +54,10 @@ export default function UploadDocument() {
     }
     getAllDocument();
   }, [vendor?.csp_code]);
+  useEffect(() => {
+    getAllDocument();
+    setValidate([...tableData,...selected])
+  }, [selected]);
 
   function getAllDocument() {
 
@@ -131,7 +136,7 @@ export default function UploadDocument() {
     setFiles([]);
   };
   const handleAllSubmit = async (data) => {
-    const filteredData = tableData?.filter((item) => item.doc_type === docs);
+    const filteredData = validate?.filter((item) => item.doc_type === docs || item.type === docs);
 
     if (filteredData.length >= 5) {
       // enqueueSnackbar(`${handleDoctypeLabel(filteredData[0]?.doc_type)} upload limit exceed. (If you want to upload more document of ${handleDoctypeLabel(filteredData[0]?.doc_type)}, then remove existing ${handleDoctypeLabel(filteredData[0]?.doc_type)}.)`, { variant: 'error' });
