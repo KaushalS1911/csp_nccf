@@ -5,7 +5,7 @@ import { useAuthContext } from '../auth/hooks/index.js';
 
 
 export function useGetDistributor(id) {
-  const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080///nccf/csp/${id}/csp_info`;
+  const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${id}/csp_info`;
 
   const { data, isLoading, error, isValidating } = useSWR(URL, fetcher);
 

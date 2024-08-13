@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useAuthContext } from '../../auth/hooks';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -18,12 +18,16 @@ import { Helmet } from 'react-helmet-async';
 import { RHFTextField } from 'src/components/hook-form';
 import { enqueueSnackbar } from 'notistack';
 import { useGetProfile } from '../../api/basic-info';
+import { paths } from '../../routes/paths';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useGetDistributor } from '../../api/vendor';
 
 function DistributorInfo(props) {
   const settings = useSettingsContext();
-
+const [profile,setProfile] = useState({})
   const { vendor } = useAuthContext();
-  const [disable, setDisable] = useState(true);
+  const [disable, setDisable] = useState(false);
   const vendor_category = vendor?.category;
   // subcategory
   const [stateOptions, setStateOptions] = useState([]);
@@ -31,12 +35,44 @@ function DistributorInfo(props) {
   const [districtOptions, setDistrictOptions] = useState([]);
   const [selectedState, setSelectedState] = useState('');
 
+  useEffect(() => {
+    getMiller_dis();
+  }, []);
+  function getMiller_dis() {
+    // setLoading(true)
+    axios
+      .get(
+        `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/sub_mil_dist`
+      )
+      .then((res) => {
+        setProfile(res?.data?.data[0]);
+        // setLoading(false)
+      })
+      .catch((err) => console.error(err));
+  }
   const data1 = stateOptions.find((data) => data?.state_name === selectedState);
   const handleStateChange = (event, newValue) => {
     setSelectedState(newValue);
     methods.setValue('state', newValue);
   };
-  const { profile } = useGetProfile();
+  const NewProductSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    contact_person: Yup.string().required('Contact person is required'),
+    phone_number: Yup.string().required('Phone number is required'),
+    area_of_opration: Yup.string().required('Area of opration is required'),
+    mode_of_sale: Yup.string().required('Mode of sale is required'),
+    capacity: Yup.string().required('Capacity per day is required'),
+    email: Yup.string().required('Email is required').email('Email must be a valid email'),
+    pan_number: Yup.string().required('PAN number is required'),
+    gst_number: Yup.string().required('GST number is required'),
+    type_of_firm: Yup.string().required('Type of firm is required'),
+    address: Yup.string().required('Address is required'),
+    // procurement_area: Yup.string().required('Procurement area is required'),
+    state: Yup.string().required('State is required'),
+    branch: Yup.string().required('Branch is required'),
+    district: Yup.string().required('District is required'),
+    pincode: Yup.string().required('Pincode is required').matches(/^[0-9]{6}$/, 'Pincode must be 6 digits'),
+  });
   useEffect(() => {
     fetchStates();
   }, []);
@@ -77,9 +113,11 @@ function DistributorInfo(props) {
     contact_person: '',
     phone_number: '',
     email: '',
-
+    mode_of_sale:'',
     address: '',
     state: '',
+    capacity:'',
+    area_of_opration:'',
     district: '',
     procurement_area: '',
     branch: '',
@@ -88,11 +126,13 @@ function DistributorInfo(props) {
     gst_number: '',
   };
   const methods = useForm({
+    resolver: yupResolver(NewProductSchema),
     defaultValues,
   });
   const {
     reset,
     handleSubmit,
+    control,
     formState: { isSubmitting },
   } = methods;
   useEffect(() => {
@@ -115,24 +155,55 @@ function DistributorInfo(props) {
         pincode: profile.pincode || '',
         pan_number: profile.pan_number || '',
         gst_number: profile.gst_number || '',
+        capacity:profile.capacity || '',
+        area_of_opration:profile.area_of_opration || '',
+        mode_of_sale :profile.mode_of_sale || '',
+        // name:'',
+        // milling_type:'',
+        // mil_dis_sub_roles:'',
+        // type_of_firm:'',
+        // contact_person:'',
+        // phone_number:'',
+        // email:'',
+        // password:'',
+        // confirm_password:'',
+        // address:'',
+        // state:'',
+        // district:'',
+        // procurement_area:'',
+        // branch:'',
+        // pincode:'',
+        // pan_number:'',
+        // gst_number:'',
       });
     }
   }, [profile, reset, vendor]);
   const onSubmit = handleSubmit(async (data) => {
-    const payload = {
-      ...data,
-      csp_code: vendor.csp_code,
-      updated_on: new Date().toISOString(),
-      mode: 'test',
-    };
-    axios
-      .put('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/update_info', payload)
-      .then((res) => {
-        enqueueSnackbar('Update successfully');
-      })
-      .catch((err) => {
-        enqueueSnackbar('Something went wrong', { variant: 'error' });
-      });
+    console.log(data);
+    try {
+      axios
+        .post(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/partner_onboarding`, {
+          ...data,
+          onboarder_csp_code: vendor?.csp_code,
+          category: vendor?.category,
+          mode: 'test',
+        })
+        .then((res) => {
+          if (res?.data?.status == '201') {
+            enqueueSnackbar('Distributor added successfully');
+            reset(defaultValues)
+            // setLoading(false);
+            // router.push(paths.dashboard.distributor.distributor_list);
+          }else {
+            enqueueSnackbar(res.data.message,{variant:'error'});
+
+          }
+        });
+    } catch (err) {
+      console.log(err);
+      // setLoading(false);
+      enqueueSnackbar('Something went wrong', { variant: 'error' });
+    }
   });
   const radio = [
     { label: 'Co-operative (Rent Mill)', value: 'cooperative_rent_mill' },
@@ -148,7 +219,7 @@ function DistributorInfo(props) {
         <title> Dashboard | Basic Info</title>
       </Helmet>
       <Container maxWidth={settings.themeStretch ? false : 'xl'}>
-        <Typography variant="h4"> Distrubutor Information</Typography>
+        <Typography variant="h4">Add Distrubutor Information</Typography>
         <Box
           sx={{
             mt: 5,
@@ -232,12 +303,12 @@ function DistributorInfo(props) {
                     {(vendor_category === 'distributor' ||
                       vendor_category === 'miller_distributor') && (
                       <>
-                        <RHFTextField name="area_of_Opration" label="Area of Opration" />
+                        <RHFTextField name="area_of_opration" label="Area of Opration" />
 
                         <RHFTextField name="capacity" label="Capacity /day (MT)" />
 
                         <RHFAutocomplete
-                          name="mode"
+                          name="mode_of_sale"
                           label="Mode of Sale"
                           placeholder="Choose mode of sale"
                           fullWidth
@@ -298,15 +369,23 @@ function DistributorInfo(props) {
                       <RHFTextField name="address" label="Address" fullWidth disabled={disable} />
                     </Box>
                     <Box gridColumn={{ xs: 'span 1', sm: 'span 1', md: 'span 2' }}>
-                      <RHFAutocomplete
+                      <Controller
                         name="state"
-                        label="State"
-                        disabled={disable}
-                        placeholder="Choose Your State"
-                        fullWidth
-                        options={stateOptions?.map((option) => option?.state_name)}
-                        getOptionLabel={(option) => option}
-                        onChange={handleStateChange}
+                        control={control}
+                        render={({ field }) => (
+                          <RHFAutocomplete
+                            {...field}
+                            label="State"
+                            placeholder="Choose Your State"
+                            fullWidth
+                            options={stateOptions.map((option) => option?.state_name)}
+                            getOptionLabel={(option) => option}
+                            onChange={(event, newValue) => {
+                              field.onChange(newValue);
+                              handleStateChange(event, newValue);
+                            }}
+                          />
+                        )}
                       />
                     </Box>
                     <Box gridColumn={{ xs: 'span 1', sm: 'span 1', md: 'span 2' }}>
@@ -340,21 +419,21 @@ function DistributorInfo(props) {
             </Grid>
             <Stack display={'flex'} alignItems={'flex-end'} sx={{ mt: 3 }}>
               <Box>
-                <Button
-                  color="inherit"
-                  variant="outlined"
-                  sx={{ mr: '20px' }}
-                  onClick={() => setDisable((prevDisable) => !prevDisable)}
-                >
-                  {disable ? 'Edit' : 'Cancel'}
-                </Button>
+                {/*<Button*/}
+                {/*  color="inherit"*/}
+                {/*  variant="outlined"*/}
+                {/*  sx={{ mr: '20px' }}*/}
+                {/*  onClick={() => setDisable((prevDisable) => !prevDisable)}*/}
+                {/*>*/}
+                {/*  {disable ? 'Edit' : 'Cancel'}*/}
+                {/*</Button>*/}
                 <LoadingButton
                   type="submit"
                   loading={isSubmitting}
                   variant="contained"
-                  disabled={disable}
+                  disabled={profile}
                 >
-                  Save
+                  Submit
                 </LoadingButton>
               </Box>
             </Stack>

@@ -29,8 +29,12 @@ const RegistrationForm = ({ vendor_category }) => {
   const [selectedState, setSelectedState] = useState('');
   const [loading, setLoading] = useState(false);
   const handleStateChange = (event, newValue) => {
+    // setStateOptions([])
+    // setDistrictOptions([])
     setSelectedState(newValue);
     methods.setValue('state', newValue);
+    methods.setValue('district', '');
+    methods.setValue('branch', '');
   };
   const firmOptions = ['Partnership', 'Proprietary ', 'LLP', 'Public Limited', 'Other'];
   const modes = ['Retail outlet', 'Mobile van'];

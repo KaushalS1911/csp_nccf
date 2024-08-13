@@ -238,18 +238,18 @@ export function useNavData() {
       path: paths.dashboard.basic_info,
       icon: ICONS.user,
     },
-
-    {
-      title: t('Distributor Info'),
-      path: paths.dashboard.distributor_info,
-      icon: ICONS.user,
-    },
-
     {
       title: t('Field Report'),
       path: paths.dashboard.field_report,
       icon: <Iconify icon="tdesign:verify"  />,
     },
+    {
+      title: t('Add Distributor Info'),
+      path: paths.dashboard.distributor_info,
+      icon: ICONS.user,
+    },
+
+
     {
       title: t('Document'),
       path: paths.dashboard.document.root,

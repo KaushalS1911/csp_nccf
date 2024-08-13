@@ -151,9 +151,10 @@ useEffect(() => {
   return (
     <>
       <Container maxWidth={settings.themeStretch ? false : 'xxl'}>
-        {vendor?.nccf_branch_status !== "1" && <Card sx={{ mb: 2, p: 1.5, color: '#b71d18', backgroundColor: '#FFE4DE' }}>Account approval is pending from the
-          Branch,
-          You can place the orders after account approval
+        {vendor?.nccf_branch_status !== "1"  &&   <Card sx={{ mb: 2, p: 1.5, color: '#b71d18', backgroundColor: '#FFE4DE' }}>
+          { vendor?.nccf_branch_status == "" ? 'Account approval is pending from the Branch,You can place the orders after account approval' : 'Account is declined from the Branch..\n' +
+            'You can\'t place the orders after account declined'
+          }
         </Card>}
         <CustomBreadcrumbs
           heading="Orders"
