@@ -78,18 +78,65 @@ export default function BranchDashboardView({ vendorCode }) {
   }, [branch]);
 
   function getStats() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor.branch}/order/stats`).then((res) => {
-      setOrderCount(res?.data?.data[0]);
-    });
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor?.branch}/order/stats`)
+      .then((res) => {
+        const data = res?.data?.data[0];
+        if (data) {
+          const orderedData = {
+            placed_orders: data.placed_orders,
+            accepted_orders: data.accepted_orders,
+            declined_orders: data.declined_orders,
+            completed_orders: data.completed_orders
+          };
+
+          // Set the ordered data to state
+          setOrderCount(orderedData);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching order stats:", error);
+      });
   }
+
+  // function getStats() {
+  //   axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor.branch}/order/stats`)
+  //     .then((res) => {
+  //       const data = res.data.data;
+  //       const desiredSequence = ['placed_orders', 'accepted_orders', 'declined_orders','completed_orders'];
+  //
+  //       // Map through the desired sequence and find the matching object in data
+  //       const sortedData = desiredSequence.map(status => {
+  //         return data.find(item => item.nccf_order_status === status);
+  //       }).filter(Boolean); // filter out any undefined entries if a status isn't found
+  //
+  //       // Set the sorted data to state
+  //       setOrderCount(sortedData);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching order stats:", error);
+  //     });
+  // }
   const result = Object.entries(orderCount).map(([key, value]) => {
     return { label: orderLabel(key), value: value };
   });
 const d = result.filter((val) => val.label !== "Total Orders")
   function getBranch() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor.branch}/csp/stats`).then((res) => {
-      setBranch(res?.data?.data);
-    });
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor.branch}/csp/stats`)
+      .then((res) => {
+        const data = res.data.data;
+        const desiredSequence = ['miller', 'distributor', 'miller_distributor', 'society_cooperative'];
+
+        // Map through the desired sequence and find the matching object in data
+        const sortedData = desiredSequence.map(category => {
+          return data.find(item => item.category === category);
+        }).filter(Boolean); // filter out any undefined entries if a category isn't found
+
+        // Set the sorted data to state
+        setBranch(sortedData);
+      })
+      .catch((error) => {
+        console.error("Error fetching stats:", error);
+      });
   }
 
 

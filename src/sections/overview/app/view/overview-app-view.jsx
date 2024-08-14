@@ -11,6 +11,7 @@ import AppWidgetSummary from '../app-widget-summary';
 import axios from 'axios';
 import { useAuthContext } from '../../../../auth/hooks';
 import UserListView from '../../../../pages/user/view/user-list-view';
+import AnalyticsWidgetSummary from '../../analytics/analytics-widget-summary';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +25,7 @@ export default function OverviewAppView({ vendorCode }) {
 
 
   useEffect(() => {
-    if (vendor.csp_code) {
+    if (vendor?.csp_code) {
       fetchAllOrders();
       getStats();
     }
@@ -35,14 +36,14 @@ export default function OverviewAppView({ vendorCode }) {
   }
 
   // console.log(count);
-  function getStats() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor.csp_code}/orders_stats`).then((res) => {
-      setStats(res.data?.data[0]);
-    });
-  }
+    function getStats() {
+      axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/orders_stats`).then((res) => {
+        setStats(res.data?.data[0]);
+      });
+    }
 
   function fetchAllOrders() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor.csp_code}/orders`).then((res) => {
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${vendor?.csp_code}/orders`).then((res) => {
       setOrderList(res.data?.data);
     });
   }
@@ -50,35 +51,39 @@ export default function OverviewAppView({ vendorCode }) {
     return (
     <Container maxWidth={settings.themeStretch ? false : 'xl'}>
       <Grid container spacing={3}>
-        <Grid xs={12} md={3}>
-          <AppWidgetSummary
-            title="Total Orders"
-            total={stats?.total_orders || "0"}
 
-          />
-        </Grid>
 
         <Grid xs={12} md={3}>
-          <AppWidgetSummary
+          <AnalyticsWidgetSummary
             title="Orders Pending"
             total={stats?.placed_orders || "0"}
+            color={"info"}
 
           />
         </Grid>
 
         <Grid xs={12} md={3}>
-          <AppWidgetSummary
+          <AnalyticsWidgetSummary
             title="Orders Accepted"
+            color={"warning"}
             total={stats?.accepted_orders || "0"}
 
           />
         </Grid>
 
         <Grid xs={12} md={3}>
-          <AppWidgetSummary
+          <AnalyticsWidgetSummary
+            color={"error"}
             title="Orders Declined"
             total={stats?.declined_orders || "0"}
 
+          />
+        </Grid>
+        <Grid xs={12} md={3}>
+          <AnalyticsWidgetSummary
+            title="Total Orders"
+            total={stats?.total_orders || "0"}
+            color={"primary"}
           />
         </Grid>
         <Grid xs={12} lg={12}>

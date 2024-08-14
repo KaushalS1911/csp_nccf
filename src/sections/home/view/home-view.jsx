@@ -9,12 +9,14 @@ import ScrollProgress from 'src/components/scroll-progress';
 
 import { PATH_AFTER_LOGIN } from '../../../config-global';
 import { RouterLink } from '../../../routes/components';
+import HomeQuickEditForm from '../home-quick-edit-form';
+import { useState } from 'react';
 
 // ----------------------------------------------------------------------
 
 export default function HomeView() {
   const { scrollYProgress } = useScroll();
-
+const [open,setOpen] = useState(false)
   return (
     <>
       <ScrollProgress scrollYProgress={scrollYProgress} />
@@ -55,7 +57,7 @@ export default function HomeView() {
                           border: 'solid 1px #1ABC9C',
                         },
                       }}
-                      onClick={() => navigate('/instructions')}
+                      onClick={() => setOpen(true)}
                     >
                       VIEW INSTRUCTIONS
                     </Button>
@@ -77,7 +79,7 @@ export default function HomeView() {
                           border: 'solid 1px #1ABC9C',
                         },
                       }}
-                      onClick={() => navigate('/instructions')}
+                      onClick={() => setOpen(true)}
                     >
                       VIEW INSTRUCTIONS
                     </Button>
@@ -99,7 +101,7 @@ export default function HomeView() {
                           border: 'solid 1px #1ABC9C',
                         },
                       }}
-                      onClick={() => navigate('/instructions')}
+                      onClick={() => setOpen(true)}
                     >
                       VIEW INSTRUCTIONS
                     </Button>
@@ -160,6 +162,7 @@ export default function HomeView() {
             </Paper>
           </Box>
         </Container>
+        <HomeQuickEditForm open={open} setOpen={setOpen} />
       </Box>
     </>
   );

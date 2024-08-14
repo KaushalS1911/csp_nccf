@@ -17,7 +17,7 @@ export default function OverviewAppPage() {
         <title> NCCF CSP Portal </title>
       </Helmet>
 
-      {login_type === 'other-login' ? <OverviewAppView/> : vendor?.category === "branch"? <BranchDashboardView /> : <HeadviewAppView/>}
+      {vendor?.category === "branch"? <BranchDashboardView />: vendor?.category === "head_office"? <HeadviewAppView/> : <OverviewAppView/> }
     </>
   );
 }

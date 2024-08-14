@@ -157,7 +157,7 @@ useEffect(() => {
           }
         </Card>}
         <CustomBreadcrumbs
-          heading="Orders"
+          heading="Intent"
           links={[{ name: '' }]}
           action={
             <Button

@@ -215,6 +215,7 @@ import CspHeadListView from '../../sections/csp-head/view/list';
 import CspHeadDocumentView from '../../sections/csp-head/view/csp-head-document-view';
 import SingleCspHead from '../../sections/csp-head/view/single-head-csp';
 import FieldReport from '../../pages/dashboard/field-report';
+import InventoryList from '../../pages/dashboard/inventory/inventory-list';
 
 // ----------------------------------------------------------------------
 
@@ -306,6 +307,7 @@ export const dashboardRoutes = [
       // { path: 'document', element: <UploadListView /> },
       // { path: 'orders', element: <BranchOrderListView /> },
       { path: 'orders', element: <OrderListPage /> },
+      { path: 'inventory', element: <InventoryList /> },
       { path: 'add-miller', element: <MillerCreatePage /> },
       { path: 'ecommerce', element: <OverviewEcommercePage /> },
       { path: 'analytics', element: <OverviewAnalyticsPage /> },

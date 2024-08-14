@@ -37,14 +37,16 @@ import axios from 'axios';
 import { useAuthContext } from '../../../auth/hooks';
 import moment from 'moment';
 import { isAfter, isBetween } from '../../../utils/format-time';
-import HeadQuickEditForm from '../head-order-quick-edit-form';
-import HeadTableFiltersResult from '../head-table-filters-result';
-import HeadTableToolbar from '../head-table-toolbar';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Grid from '@mui/material/Unstable_Grid2';
 import AnalyticsWidgetSummary from '../../overview/analytics/analytics-widget-summary';
 import { LoadingScreen } from '../../../components/loading-screen';
+import InventoryTableToolbar from '../inventory-table-toolbar';
+import InventoryTableFiltersResult from '../inventory-table-filters-result';
+import InventoryQuickEditForm from '../inventory-quick-edit-form';
+import { RouterLink } from '../../../routes/components';
+import BranchInventoryQuickEditForm from '../branch-inventory-quick-edit-form';
 
 const PUBLISH_OPTIONS = [
   { value: 'published', label: 'Published' },
@@ -72,7 +74,8 @@ const HIDE_COLUMNS = {
 
 const HIDE_COLUMNS_TOGGLABLE = ['category', 'actions'];
 
-function HOList({ singleCode }) {
+
+function InventoryAddList(props) {
   const { enqueueSnackbar } = useSnackbar();
 
   const confirmRows = useBoolean();
@@ -83,7 +86,7 @@ function HOList({ singleCode }) {
   const { vendor } = useAuthContext();
 
   const [tableData, setTableData] = useState([]);
-const [loading,setLoading] = useState(false)
+  const [loading,setLoading] = useState(false)
   const [filters, setFilters] = useState(defaultFilters);
   const commodityCount = {};
   const [selectedRowIds, setSelectedRowIds] = useState([]);
@@ -327,42 +330,42 @@ const [loading,setLoading] = useState(false)
         </TableCell>
       ),
     },
-    {
-      field: 'vendor1',
-      headerName: 'Action',
-      flex: 0.5,
-      minWidth: 250,
-      renderCell: (params) => <>
-        <TableCell sx={{ px: 0, marginRight: 2 }}>
-          <Button
-            disabled={params.row.nccf_order_status === 'accepted' || params.row.nccf_order_status === 'declined'}
-            variant="contained"
-            onClick={() => {
-              setCurrentData(params.row);
-              setApprove(true);
-              setOpen(true);
-            }}
-            sx={{ backgroundColor: 'green', width: 90 }}
-          >
-            <VerifiedIcon/> Approve
-          </Button>
-        </TableCell>
-        <TableCell sx={{ px: 0 }}>
-          <Button
-            disabled={params.row.nccf_order_status === 'accepted' || params.row.nccf_order_status === 'declined'}
-            onClick={() => {
-              setCurrentData(params.row);
-              setApprove(false);
-              setOpen(true);
-            }}
-            variant="contained"
-            sx={{ backgroundColor: 'red', width: 80 }}
-          >
-            <CancelIcon/> Reject
-          </Button>
-        </TableCell>
-      </>,
-    },
+    // {
+    //   field: 'vendor1',
+    //   headerName: 'Action',
+    //   flex: 0.5,
+    //   minWidth: 250,
+    //   renderCell: (params) => <>
+    //     <TableCell sx={{ px: 0, marginRight: 2 }}>
+    //       <Button
+    //         disabled={params.row.nccf_order_status === 'accepted' || params.row.nccf_order_status === 'declined'}
+    //         variant="contained"
+    //         onClick={() => {
+    //           setCurrentData(params.row);
+    //           setApprove(true);
+    //           setOpen(true);
+    //         }}
+    //         sx={{ backgroundColor: 'green', width: 90 }}
+    //       >
+    //         <VerifiedIcon/> Approve
+    //       </Button>
+    //     </TableCell>
+    //     <TableCell sx={{ px: 0 }}>
+    //       <Button
+    //         disabled={params.row.nccf_order_status === 'accepted' || params.row.nccf_order_status === 'declined'}
+    //         onClick={() => {
+    //           setCurrentData(params.row);
+    //           setApprove(false);
+    //           setOpen(true);
+    //         }}
+    //         variant="contained"
+    //         sx={{ backgroundColor: 'red', width: 80 }}
+    //       >
+    //         <CancelIcon/> Reject
+    //       </Button>
+    //     </TableCell>
+    //   </>,
+    // },
 
     // {
     //   type: 'actions',
@@ -402,254 +405,247 @@ const [loading,setLoading] = useState(false)
     columns
       .filter((column) => !HIDE_COLUMNS_TOGGLABLE.includes(column.field))
       .map((column) => column.field);
-
   return (
     <>
       {loading ? <LoadingScreen /> :
-      <><Container
-        maxWidth={settings.themeStretch ? false : 'xl'}
+        <><Container
+          maxWidth={settings.themeStretch ? false : 'xl'}
 
-      >
-        <Grid container spacing={3}>
-
-          {countsArray.map((data, ind) => (
-
-            <Grid item xs={12} md={4} mb={5}>
-              <AnalyticsWidgetSummary
-                title={handleOrderTypes(data?.label)}
-                // percent={0.2}
-                total={data?.count == 0 ? '0' : data.count}
-                color={color[ind]}
-                chart={{
-                  // colors: color[ind-1],
-                  // series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-                }}
-              />
-            </Grid>
-          ))}
-        </Grid>
-        <CustomBreadcrumbs
-          heading="Intent List"
-          links={[
-            { name: 'Dashboard', href: paths.dashboard.root },
-            {
-              name: 'Intent',
-              href: paths.dashboard.orders,
-            },
-            { name: 'List' },
-          ]}
-
-          sx={{
-            mb: {
-              xs: 3,
-              md: 5,
-            },
-          }}
-        />
-        <HeadQuickEditForm getAllDocument={getCspOrder} getOrder={getOrders} getAllBranch={getAllOrders} branch={banchVal} currentUser={currentData} open={open} setOpen={setOpen}
-                           approve={approve} cspCode={branch}/>
-        <Card
-          sx={{
-            height: dataFiltered?.length > 0 ? 'unset' : 700,
-            flexGrow: { md: 1 },
-            display: { md: 'flex' },
-            flexDirection: { md: 'column' },
-          }}
         >
-          <Tabs
-            value={filters.status}
-            onChange={handleFilterStatus}
-            sx={{
-              px: 2.5,
-              boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,
-            }}
-          >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab
-                key={tab.value}
-                iconPosition="end"
-                value={tab.value}
-                label={tab.label}
-                icon={
-                  <Label
-                    variant={
-                      ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'
-                    }
-                    color={
-                      (tab.value === 'Bharat Aata' && 'success') ||
-                      (tab.value === 'Bharat Daal' && 'warning') ||
-                      (tab.value === 'Bharat Rice' && 'error') ||
-                      'default'
-                    }
-                  >
-                    {['Bharat Aata', 'Bharat Rice', 'Bharat Daal'].includes(tab.value)
-                      ? tableData.filter((user) => user.commodity === tab.value).length
-                      : tableData.length}
-                  </Label>
-                }
-              />
-            ))}
-          </Tabs>
 
-
-          <DataGrid
-            // checkboxSelection
-            disableRowSelectionOnClick
-            rows={dataFiltered}
-            columns={columns}
-            // loading={orderLoading}
-            getRowHeight={() => 'auto'}
-            pageSizeOptions={[5, 10, 25]}
-            initialState={{
-              pagination: {
-                paginationModel: { pageSize: 5 },
+          <CustomBreadcrumbs
+            heading="Inventory List"
+            links={[
+              { name: 'Dashboard', href: paths.dashboard.root },
+              {
+                name: 'Inventory',
+                href: paths.dashboard.inventory,
               },
-            }}
-            // onRowSelectionModelChange={(newSelectionModel) => {
-            //   setSelectedRowIds(newSelectionModel);
-            // }}
-            columnVisibilityModel={columnVisibilityModel}
-            onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
-            slots={{
-              toolbar: () => (
-                <>
-                  <GridToolbarContainer>
-                    <FormControl
-                      sx={{
-                        flexShrink: 0,
-                        width: { xs: 1, md: 200 },
-                      }}
-                    >
-                      <InputLabel>Branch</InputLabel>
+              { name: 'List' },
+            ]}
+            action={
+              <Button
+                component={RouterLink}
+                // href={paths.dashboard.orders}
+                variant="contained"
+                startIcon={<Iconify icon="mingcute:add-line" />}
+                onClick={() => {
+                  setOpen(true)
+                }}
+              >
+                Add Inventory
+              </Button>
+            }
 
-                      <Select
-                        value={banchVal}
-                        onChange={handleFilterBranch}
-                        input={<OutlinedInput label="Branch"/>}
-                        MenuProps={{
-                          PaperProps: {
-                            sx: { maxHeight: 240 },
-                          },
-                        }}
-
-                      >
-                        {banch.map((option) => (
-                          <MenuItem key={option.branch_name} value={option.branch_name}
-                                    disabled={option.csp_count == 0}>
-
-                            {option.branch_name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-
-                    {banchVal !== 'All' && <FormControl
-                      sx={{
-                        flexShrink: 0,
-                        width: { xs: 1, md: 200 },
-                      }}
-                    >
-                      <InputLabel>CSP</InputLabel>
-
-                      <Select
-                        value={branch}
-                        onChange={handleFilterCSP}
-                        input={<OutlinedInput label="CSP"/>}
-                        MenuProps={{
-                          PaperProps: {
-                            sx: { maxHeight: 240 },
-                          },
-                        }}
-
-                      >
-                        {dataCSP.map((option) => (
-                          <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.order_count == 0}>
-
-                            {option.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>}
-
-                    {canReset && (
-                      <HeadTableFiltersResult
-                        filters={filters}
-                        onFilters={handleFilters}
-                        onResetFilters={handleResetFilters}
-                        results={dataFiltered.length}
-                        sx={{ p: 2.5, pt: 0 }}
-                      />
-                    )}
-
-                    <Stack
-                      spacing={1}
-                      flexGrow={1}
-                      direction="row"
-                      alignItems="center"
-                      justifyContent="flex-end"
-                    >
-                      {!!selectedRowIds.length && (
-                        <Button
-                          size="small"
-                          color="error"
-                          startIcon={<Iconify icon="solar:trash-bin-trash-bold"/>}
-                          onClick={confirmRows.onTrue}
-                        >
-                          Delete ({selectedRowIds.length})
-                        </Button>
-                      )}
-
-                      <GridToolbarColumnsButton/>
-                      {/*<GridToolbarFilterButton/>*/}
-                      <GridToolbarExport/>
-                    </Stack>
-                    <HeadTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
-                                      branchOptions={['hello']} dateError={dateError} dayError={dayError}/>
-                  </GridToolbarContainer>
-
-
-                </>
-              ),
-              noRowsOverlay: () => <EmptyContent title="No Data"/>,
-              noResultsOverlay: () => <EmptyContent title="No results found"/>,
-            }}
-            slotProps={{
-              columnsPanel: {
-                getTogglableColumns,
+            sx={{
+              mb: {
+                xs: 3,
+                md: 5,
               },
             }}
           />
-        </Card>
-      </Container>
+          <InventoryQuickEditForm  open={open} setOpen={setOpen} />
+          <Card
+            sx={{
+              height: dataFiltered?.length > 0 ? 'unset' : 700,
+              flexGrow: { md: 1 },
+              display: { md: 'flex' },
+              flexDirection: { md: 'column' },
+            }}
+          >
+            {/*<Tabs*/}
+            {/*  value={filters.status}*/}
+            {/*  onChange={handleFilterStatus}*/}
+            {/*  sx={{*/}
+            {/*    px: 2.5,*/}
+            {/*    boxShadow: (theme) => `inset 0 -2px 0 0 ${alpha(theme.palette.grey[500], 0.08)}`,*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  {STATUS_OPTIONS.map((tab) => (*/}
+            {/*    <Tab*/}
+            {/*      key={tab.value}*/}
+            {/*      iconPosition="end"*/}
+            {/*      value={tab.value}*/}
+            {/*      label={tab.label}*/}
+            {/*      icon={*/}
+            {/*        <Label*/}
+            {/*          variant={*/}
+            {/*            ((tab.value === 'all' || tab.value === filters.status) && 'filled') || 'soft'*/}
+            {/*          }*/}
+            {/*          color={*/}
+            {/*            (tab.value === 'Bharat Aata' && 'success') ||*/}
+            {/*            (tab.value === 'Bharat Daal' && 'warning') ||*/}
+            {/*            (tab.value === 'Bharat Rice' && 'error') ||*/}
+            {/*            'default'*/}
+            {/*          }*/}
+            {/*        >*/}
+            {/*          {['Bharat Aata', 'Bharat Rice', 'Bharat Daal'].includes(tab.value)*/}
+            {/*            ? tableData.filter((user) => user.commodity === tab.value).length*/}
+            {/*            : tableData.length}*/}
+            {/*        </Label>*/}
+            {/*      }*/}
+            {/*    />*/}
+            {/*  ))}*/}
+            {/*</Tabs>*/}
 
-        <ConfirmDialog
-          open={confirmRows.value}
-          onClose={confirmRows.onFalse}
-          title="Delete"
-          content={
-            <>
-              Are you sure want to delete <strong> {selectedRowIds.length} </strong> items?
-            </>
-          }
-          action={
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => {
-                handleDeleteRows();
-                confirmRows.onFalse();
+
+            <DataGrid
+              // checkboxSelection
+              disableRowSelectionOnClick
+              rows={[]}
+              columns={columns}
+              // loading={orderLoading}
+              getRowHeight={() => 'auto'}
+              pageSizeOptions={[5, 10, 25]}
+              initialState={{
+                pagination: {
+                  paginationModel: { pageSize: 5 },
+                },
               }}
-            >
-              Delete
-            </Button>
-          }
-        />
-      </>
+              // onRowSelectionModelChange={(newSelectionModel) => {
+              //   setSelectedRowIds(newSelectionModel);
+              // }}
+              columnVisibilityModel={columnVisibilityModel}
+              onColumnVisibilityModelChange={(newModel) => setColumnVisibilityModel(newModel)}
+              slots={{
+                toolbar: () => (
+                  <>
+                    <GridToolbarContainer>
+                      {/*<FormControl*/}
+                      {/*  sx={{*/}
+                      {/*    flexShrink: 0,*/}
+                      {/*    width: { xs: 1, md: 200 },*/}
+                      {/*  }}*/}
+                      {/*>*/}
+                      {/*  <InputLabel>Branch</InputLabel>*/}
+
+                      {/*  <Select*/}
+                      {/*    value={banchVal}*/}
+                      {/*    onChange={handleFilterBranch}*/}
+                      {/*    input={<OutlinedInput label="Branch"/>}*/}
+                      {/*    MenuProps={{*/}
+                      {/*      PaperProps: {*/}
+                      {/*        sx: { maxHeight: 240 },*/}
+                      {/*      },*/}
+                      {/*    }}*/}
+
+                      {/*  >*/}
+                      {/*    {banch.map((option) => (*/}
+                      {/*      <MenuItem key={option.branch_name} value={option.branch_name}*/}
+                      {/*                disabled={option.csp_count == 0}>*/}
+
+                      {/*        {option.branch_name}*/}
+                      {/*      </MenuItem>*/}
+                      {/*    ))}*/}
+                      {/*  </Select>*/}
+                      {/*</FormControl>*/}
+
+                      {/*{banchVal !== 'All' && <FormControl*/}
+                      {/*  sx={{*/}
+                      {/*    flexShrink: 0,*/}
+                      {/*    width: { xs: 1, md: 200 },*/}
+                      {/*  }}*/}
+                      {/*>*/}
+                      {/*  <InputLabel>CSP</InputLabel>*/}
+
+                      {/*  <Select*/}
+                      {/*    value={branch}*/}
+                      {/*    onChange={handleFilterCSP}*/}
+                      {/*    input={<OutlinedInput label="CSP"/>}*/}
+                      {/*    MenuProps={{*/}
+                      {/*      PaperProps: {*/}
+                      {/*        sx: { maxHeight: 240 },*/}
+                      {/*      },*/}
+                      {/*    }}*/}
+
+                      {/*  >*/}
+                      {/*    {dataCSP.map((option) => (*/}
+                      {/*      <MenuItem key={option.csp_code} value={option.csp_code} disabled={option.order_count == 0}>*/}
+
+                      {/*        {option.name}*/}
+                      {/*      </MenuItem>*/}
+                      {/*    ))}*/}
+                      {/*  </Select>*/}
+                      {/*</FormControl>}*/}
+
+                      {canReset && (
+                        <InventoryTableFiltersResult
+                          filters={filters}
+                          onFilters={handleFilters}
+                          onResetFilters={handleResetFilters}
+                          results={dataFiltered.length}
+                          sx={{ p: 2.5, pt: 0 }}
+                        />
+                      )}
+
+                      <Stack
+                        spacing={1}
+                        flexGrow={1}
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="flex-end"
+                      >
+                        {!!selectedRowIds.length && (
+                          <Button
+                            size="small"
+                            color="error"
+                            startIcon={<Iconify icon="solar:trash-bin-trash-bold"/>}
+                            onClick={confirmRows.onTrue}
+                          >
+                            Delete ({selectedRowIds.length})
+                          </Button>
+                        )}
+
+                        <GridToolbarColumnsButton/>
+                        {/*<GridToolbarFilterButton/>*/}
+                        <GridToolbarExport/>
+                      </Stack>
+                      <InventoryTableToolbar filters={filters} onFilters={handleFilters} roleOptions={_roles}
+                                        branchOptions={['hello']} dateError={dateError} dayError={dayError}/>
+                    </GridToolbarContainer>
+
+
+                  </>
+                ),
+                noRowsOverlay: () => <EmptyContent title="No Data"/>,
+                noResultsOverlay: () => <EmptyContent title="No results found"/>,
+              }}
+              slotProps={{
+                columnsPanel: {
+                  getTogglableColumns,
+                },
+              }}
+            />
+          </Card>
+        </Container>
+
+          <ConfirmDialog
+            open={confirmRows.value}
+            onClose={confirmRows.onFalse}
+            title="Delete"
+            content={
+              <>
+                Are you sure want to delete <strong> {selectedRowIds.length} </strong> items?
+              </>
+            }
+            action={
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  handleDeleteRows();
+                  confirmRows.onFalse();
+                }}
+              >
+                Delete
+              </Button>
+            }
+          />
+        </>
       }
     </>
   );
-};
-
+}
 function applyFilter({ inputData, filters, dateError, dayError }) {
   const { stock, publish, status, commodity, name, branch, startDate, endDate, startDay, endDay, category } = filters;
 
@@ -691,4 +687,4 @@ function applyFilter({ inputData, filters, dateError, dayError }) {
   return inputData;
 }
 
-export default HOList;
+export default InventoryAddList;

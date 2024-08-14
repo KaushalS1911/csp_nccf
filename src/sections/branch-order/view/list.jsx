@@ -372,11 +372,11 @@ function List({ singleCode }) {
           ))}
         </Grid>
         <CustomBreadcrumbs
-          heading="Order List"
+          heading="Intent List"
           links={[
             { name: 'Dashboard', href: paths.dashboard.root },
             {
-              name: 'Order',
+              name: 'Intent',
               href: paths.dashboard.orders,
             },
             { name: 'List' },

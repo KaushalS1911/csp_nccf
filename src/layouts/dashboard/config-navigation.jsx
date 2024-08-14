@@ -153,7 +153,7 @@ export function useNavData() {
     },
 
     // {
-    //   title: t('Orders'),
+    //   title: t('Intents'),
     //   path: paths.dashboard.orders,
     //   icon: ICONS.product,
     // },
@@ -218,7 +218,7 @@ export function useNavData() {
     },
 
     // {
-    //   title: t('Orders'),
+    //   title: t('Intents'),
     //   path: paths.dashboard.orders,
     //   icon: ICONS.product,
     // },
@@ -265,7 +265,7 @@ export function useNavData() {
       ],
     },
     {
-      title: t('Orders'),
+      title: t('Intents'),
       path: paths.dashboard.orders,
       icon: ICONS.order,
     },
@@ -345,7 +345,7 @@ export function useNavData() {
       icon: ICONS.chat,
     },
     {
-      title: t('Orders'),
+      title: t('Intents'),
       path: paths.dashboard.orders,
       icon: ICONS.order,
     },
@@ -394,7 +394,7 @@ export function useNavData() {
           ],
     },
     // {
-    //   title: t('Orders'),
+    //   title: t('Intents'),
     //   path: paths.dashboard.orders,
     //   icon: ICONS.product,
     // },
@@ -424,7 +424,7 @@ export function useNavData() {
       ],
     },
     {
-      title: t('Orders'),
+      title: t('Intents'),
       path: paths.dashboard.orders,
       icon: ICONS.order,
     },
@@ -474,7 +474,7 @@ export function useNavData() {
           ],
     },
     // {
-    //   title: t('Orders'),
+    //   title: t('Intents'),
     //   path: paths.dashboard.orders,
     //   icon: ICONS.product,
     // },
@@ -504,7 +504,7 @@ export function useNavData() {
       ],
     },
     {
-      title: t('Orders'),
+      title: t('Intents'),
       path: paths.dashboard.orders,
       icon: ICONS.order,
     },
@@ -565,7 +565,7 @@ export function useNavData() {
       icon: ICONS.chat
     },
     {
-      title: t('Orders'),
+      title: t('Intents'),
       path: paths.dashboard.orders,
       icon: ICONS.order,
     },
@@ -589,6 +589,11 @@ export function useNavData() {
         { title: t('create'), path: paths.dashboard.invoice.new },
         // { title: t('edit'), path: paths.dashboard.invoice.demo.edit },
       ],
+    },
+    {
+      title: t('Inventory'),
+      path: paths.dashboard.inventory,
+      icon: <Iconify icon="material-symbols:inventory-2-outline-rounded" />,
     },
   ];
   const data = useMemo(

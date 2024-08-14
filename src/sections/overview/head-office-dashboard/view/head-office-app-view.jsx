@@ -59,15 +59,41 @@ export default function HeadviewAppView({ vendorCode }) {
 
 
   function getStats() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/category-stats`).then((res) => {
-      setStats(res.data.data);
-    });
+    axios.get('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/category-stats')
+      .then((res) => {
+        const data = res.data.data;
+        const desiredSequence = ['miller', 'distributor', 'miller_distributor', 'society_cooperative'];
+
+        // Map through the desired sequence and find the matching object in data
+        const sortedData = desiredSequence.map(category => {
+          return data.find(item => item.category === category);
+        }).filter(Boolean); // filter out any undefined entries if a category isn't found
+
+        // Set the sorted data to state
+        setStats(sortedData);
+      })
+      .catch((error) => {
+        console.error("Error fetching stats:", error);
+      });
   }
 
   function getOrder() {
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/orders/stats`).then((res) => {
-      setOrderCount(res.data.data);
-    });
+    axios.get('http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/orders/stats')
+      .then((res) => {
+        const data = res.data.data;
+        const desiredSequence = ['placed', 'accepted', 'declined'];
+
+        // Map through the desired sequence and find the matching object in data
+        const sortedData = desiredSequence.map(status => {
+          return data.find(item => item.nccf_order_status === status);
+        }).filter(Boolean); // filter out any undefined entries if a status isn't found
+
+        // Set the sorted data to state
+        setOrderCount(sortedData);
+      })
+      .catch((error) => {
+        console.error("Error fetching order stats:", error);
+      });
   }
 
   // function fetchAllOrders() {
@@ -76,7 +102,7 @@ export default function HeadviewAppView({ vendorCode }) {
   //   });
   // }
   const statusesToKeep = ['placed', 'accepted', 'declined'];
-const color = ["primary","info","warning","error"]
+  const color = ["primary","info","warning","error"]
 const color2 = ["secondary","brown1","brown","brown"]
   const filteredData = orderCount.filter(item => statusesToKeep.includes(item.nccf_order_status));
 const chartOrder = []
