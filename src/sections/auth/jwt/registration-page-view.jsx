@@ -180,7 +180,7 @@ const RegistrationForm = ({ vendor_category }) => {
     mode_of_sale:'',
     capacity:''
   };
-  const NewBlogSchema = vendor_category === "distributor" ? DistributorBlogSchema : vendor_category === "society_cooperative" ? SocietyBlogSchema : MillerBlogSchema
+  const NewBlogSchema = vendor_category === "distributor" || vendor_category === "modern_trade" ? DistributorBlogSchema : vendor_category === "society_cooperative" ? SocietyBlogSchema : MillerBlogSchema
   const methods = useForm({
     resolver: yupResolver(NewBlogSchema),
     defaultValues,
@@ -256,9 +256,9 @@ const RegistrationForm = ({ vendor_category }) => {
              <RHFTextField
                name="name"
                label={
-                 vendor_category === 'distributor'
+                 (vendor_category === 'distributor' || vendor_category === "modern_trade")
                    ? 'Distributor Name'
-                   : vendor_category === 'miller' || vendor_category === 'miller_distributor'
+                   :( vendor_category === 'miller' || vendor_category === 'miller_distributor')
                    ? 'Milling Unit Name'
                    : 'Society Name'
                }
@@ -298,7 +298,7 @@ const RegistrationForm = ({ vendor_category }) => {
            <Grid item xs={12} sm={6} md={3}>
              <RHFTextField name="email" label="Email" />
            </Grid>
-           {vendor_category === 'distributor'  && (
+           {(vendor_category === 'distributor' || vendor_category === "modern_trade" ) && (
              <>
                <Grid item xs={12} sm={6} md={3}>
                  <RHFTextField name="area_of_opration" label="Area of Opration" />
@@ -359,7 +359,7 @@ const RegistrationForm = ({ vendor_category }) => {
          </Grid>
          <Typography variant="h5" gutterBottom className="heading" mt={2}>
            {` ${
-             vendor_category === 'distributor' || vendor_category === 'miller_distributor'
+             (vendor_category === 'distributor' || vendor_category === "modern_trade" || vendor_category === 'miller_distributor')
                ? 'Address of Proposed Milling Unit Premises'
                : vendor_category === 'miller'
                ? 'Address of Proposed Milling Unit Premises'
