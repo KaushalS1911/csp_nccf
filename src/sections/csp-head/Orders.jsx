@@ -326,6 +326,11 @@ function Orders({singleCode}) {
       headerName: 'Quantity',
       minWidth: 100,
       flex: 1, // This makes the column flexible
+    },{
+      field: 'quantity_approved',
+      headerName: 'Approved Quantity',
+      minWidth: 100,
+      flex: 1, // This makes the column flexible
     },
     {
       field: 'created_at',
@@ -336,7 +341,7 @@ function Orders({singleCode}) {
     },
     {
       field: 'nccf_order_status',
-      headerName: 'Order Status',
+      headerName: 'Intents Status',
       minWidth: 100,
       flex: 1, // This makes the column flexible
       renderCell: (params) => (

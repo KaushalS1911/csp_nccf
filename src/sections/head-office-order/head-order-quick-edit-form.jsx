@@ -16,6 +16,8 @@ import FormProvider, { RHFTextField } from 'src/components/hook-form';
 import { TextField } from '@mui/material';
 import axios from 'axios';
 import ClearIcon from '@mui/icons-material/Clear';
+import { useRouter } from '../../routes/hooks';
+import { paths } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +37,7 @@ export default function HeadQuickEditForm({
   const [remark, setRemark] = useState('');
   const [approvalQuantity, setApprovalQuantity] = useState('');
   const [error, setError] = useState('');
-
+  const router = useRouter();
   const handleBlur = () => {
     if (Number(approvalQuantity) >= Number(currentUser?.quantity)) {
       setError('Approval quantity cannot be greater than requested quantity.');
@@ -98,6 +100,7 @@ export default function HeadQuickEditForm({
       order_id: currentUser?.id,
       status: '1',
       branch_approval_status: 'accepted',
+      quantity_approved: approvalQuantity,
     } : {
       order_id: currentUser?.id,
       status: '1',
@@ -189,6 +192,8 @@ export default function HeadQuickEditForm({
           <Button variant="outlined" onClick={() => {
             setOpen(false);
             setRemark('');
+            setApprovalQuantity('');
+            setError("")
           }}>
             Cancel
           </Button>

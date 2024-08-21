@@ -428,7 +428,7 @@ function CspHeadListView(props) {
     // },
     {
       field: 'order_count',
-      headerName: 'Orders',
+      headerName: 'Intents',
       // width: 40,
       // flex: 1,
       minWidth: 100,

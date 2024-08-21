@@ -16,6 +16,8 @@ import FormProvider, { RHFAutocomplete, RHFTextField } from 'src/components/hook
 import { TextField } from '@mui/material';
 import axios from 'axios';
 import ClearIcon from '@mui/icons-material/Clear';
+import { useRouter } from '../../routes/hooks';
+import { paths } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -27,14 +29,15 @@ export default function InventoryQuickEditForm({
 
                                           }) {
   const { enqueueSnackbar } = useSnackbar();
-  const [remark, setRemark] = useState('');
+  const router = useRouter()
   const [approvalQuantity, setApprovalQuantity] = useState('');
   const [error, setError] = useState('');
   const [selectedState, setSelectedState] = useState('');
+  const [commodity,setCommodity] = useState([])
   const [stateOptions, setStateOptions] = useState([]);
   const [branchOptions, setBranchOptions] = useState([]);
   const NewUserSchema = Yup.object().shape({
-    commodity: Yup.string().required('Commodity is required'),
+    commodity: Yup.object().required('Commodity is required'),
     state: Yup.string().required('State is required'),
     quantity: Yup.string().required('Quantity is required'),
   });
@@ -59,10 +62,13 @@ export default function InventoryQuickEditForm({
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state`).then((res) => {
       setStateOptions(res?.data?.data);
     });
+    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity`).then((res) => {
+      setCommodity(res?.data?.data);
+    });
   }
   const defaultValues = useMemo(
     () => ({
-      commodity:  '',
+      commodity:  null,
       quantity:  '',
       state: '',
 
@@ -81,9 +87,38 @@ export default function InventoryQuickEditForm({
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
+  const onSubmit = handleSubmit(async (item) => {
+const ids = [];
+const quantity = [];
+    branchOptions.map((data) => {
+      ids.push(data.id)
+      quantity.push(parseInt(item[data.branch_name]))
+    })
+const total = quantity.reduce((next,prev) => {
+  return next + prev
+},0)
+   if(total > item.quantity){
+     setError("Total branch quantity cannot exceed the approved quantity")
+   }else {
+     setError('')
+    const payload={
+      commodity_id:item.commodity.id,
+      state_id:data1.state_id,
+      branch_ids:ids,
+      quantity:quantity
+    }
+    axios.post("http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity/add-inventory",payload).then((res)=> {
+      if(res.data.status == "200"){
+        setOpen(false)
+        enqueueSnackbar(`${res.data.data}`)
+        reset(defaultValues)
+        setBranchOptions([])
+      }else {
+        enqueueSnackbar(`${res.data.message}`,{variant:"error"})
+      }
+    }).catch((err) => console.log(err))
+   }
 
-  const onSubmit = handleSubmit(async (data) => {
-    console.log(data);
     // try {
     //   setOpen(false);
     //
@@ -111,117 +146,138 @@ export default function InventoryQuickEditForm({
         sx: { maxWidth: { md: 500, xs: '100%' } },
       }}
     >
-      <FormProvider methods={methods} onSubmit={onSubmit}>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <DialogTitle sx={{ pb: 0 }}>
-            <ClearIcon sx={{ cursor: 'pointer' }} onClick={() => setOpen(false)}/>
-          </DialogTitle>
-        </Box>
+      {/*<form>*/}
+        <FormProvider methods={methods} onSubmit={onSubmit}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+            <DialogTitle sx={{ pb: 0 }}>
+              <ClearIcon sx={{ cursor: 'pointer' }} onClick={() => {
+                setOpen(false);
+                reset(defaultValues)
+                setBranchOptions([])
+              }}/>
+            </DialogTitle>
+          </Box>
 
-        <DialogContent sx={{px:5}}>
+          <DialogContent sx={{px:5}}>
 
 
 
-          <FormProvider onSubmit={onSubmit} methods={methods}>
-            <Box
-              mt={3}
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-                md: 'repeat(1, 1fr)',
-              }}
-            >
-              <Controller
-                name="commodity"
-                control={control}
-                render={({ field }) => (
-                  <RHFAutocomplete
-                    {...field}
-                    label="Commodity"
-                    placeholder="Choose Your Commodity"
-                    fullWidth
-                    options={["Bharat Daal", "Bharat Aata", "Bharat Rice"]}
-                    getOptionLabel={(option) => option}
-                    onChange={(event, newValue) => {
-                      field.onChange(newValue);
-                    }}
-                    value={field.value || ''} // Ensure a fallback value
-                  />
-                )}
-              />
-            </Box>
-            <Box
-              mt={3}
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-                md: 'repeat(2, 1fr)',
-              }}
-            >
-              <Controller
-                name="state"
-                control={control}
-                render={({ field }) => (
-                  <RHFAutocomplete
-                    {...field}
-                    label="State"
-                    placeholder="Choose Your State"
-                    fullWidth
-                    options={stateOptions.map((option) => option?.state_name)}
-                    getOptionLabel={(option) => option}
-                    onChange={(event, newValue) => {
-                      field.onChange(newValue);
-                      handleStateChange(event, newValue);
-                    }}
-                  />
-                )}
-              />
-              {/*<RHFTextField name="approve_quantity" label="Approved Quantity"   />*/}
+            <FormProvider onSubmit={onSubmit} methods={methods}>
+              <Box
+                mt={3}
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                  md: 'repeat(1, 1fr)',
+                }}
+              >
+                <Controller
+                  name="commodity"
+                  control={control}
+                  render={({ field }) => (
+                    <RHFAutocomplete
+                      {...field}
+                      label="Commodity"
+                      placeholder="Choose Your Commodity"
+                      fullWidth
+                      options={commodity}
+                      getOptionLabel={(option) => option.commodity_name}
+                      onChange={(event, newValue) => {
+                        field.onChange(newValue);
+                      }}
+                      value={field.value || null} // Ensure a fallback value
+                    />
+                  )}
+                />
+              </Box>
+              <Box
+                mt={3}
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                  md: 'repeat(2, 1fr)',
+                }}
+              >
+                <Controller
+                  name="state"
+                  control={control}
+                  render={({ field }) => (
+                    <RHFAutocomplete
+                      {...field}
+                      label="State"
+                      placeholder="Choose Your State"
+                      fullWidth
+                      options={stateOptions.map((option) => option?.state_name)}
+                      getOptionLabel={(option) => option}
+                      onChange={(event, newValue) => {
+                        field.onChange(newValue);
+                        handleStateChange(event, newValue);
+                      }}
+                    />
+                  )}
+                />
+                {/*<RHFTextField name="approve_quantity" label="Approved Quantity"   />*/}
 
-              <RHFTextField name="quantity" label="Quantity"  value={approvalQuantity}
-                            onChange={(e) => setApprovalQuantity(e.target.value)}/>
-              <Box sx={{fontWeight:700,marginLeft:1}}>Branches :</Box> <br />
-              {branchOptions.map((data) => (
-                <>
-              <RHFTextField   sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& input': {
-                    fontSize: '16px',
-                    fontWeight: 500,
-                  },
-                  '& fieldset': {
-                    border: 'none', // Removes the border
-                  },
-                },
-              }} name={data?.branch_name} value={`${data?.branch_name} :`} />
-              <RHFTextField name="quantity" label="Quantity" />
-                </>
-              ))}
-            </Box>
+                <Controller
+                  name="quantity"
+                  control={control}
+                  render={({ field }) => (
+                    <RHFTextField
+                      {...field}
+                      label="Quantity"
+                      fullWidth
+                      onChange={(e) => {
+                        field.onChange(e);
+                        setApprovalQuantity(e.target.value)
+                      }}
+                    />
+                  )}
+                />
+
+                <Box sx={{fontWeight:700,marginLeft:1}}>Branches :</Box> <br />
+                {branchOptions.map((data) => (
+                  <>
+                    <RHFTextField   sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& input': {
+                          fontSize: '16px',
+                          fontWeight: 500,
+                        },
+                        '& fieldset': {
+                          border: 'none', // Removes the border
+                        },
+                      },
+                    }} name={data?.branch_name} value={`${data?.branch_name} :`} />
+                    <RHFTextField name={data?.branch_name} label="Branch Quantity" />
+                  </>
+
+                ))}
+              </Box>
             </FormProvider>
 
 
-        </DialogContent>
+            {error && <Box sx={{color:"#FF5630",fontSize:"13px",textAlign:"center",mt:2}}>{error}</Box>}
+          </DialogContent>
 
-        <DialogActions >
-          {/*<Button variant="outlined" onClick={() => {*/}
-          {/*  setOpen(false);*/}
-          {/*  setRemark('');*/}
-          {/*}}>*/}
-          {/*  Cancel*/}
-          {/*</Button>*/}
-
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting} >
-            Submit
-          </LoadingButton>
-        </DialogActions>
-      </FormProvider>
+          <DialogActions >
+            {/*<Button variant="outlined" onClick={() => {*/}
+            {/*  setOpen(false);*/}
+            {/*  setRemark('');*/}
+            {/*}}>*/}
+            {/*  Cancel*/}
+            {/*</Button>*/}
+            <LoadingButton type="submit" variant="contained" loading={isSubmitting} >
+              Submit
+            </LoadingButton>
+          </DialogActions>
+        </FormProvider>
+      {/*</form>*/}
     </Dialog>
   );
 }

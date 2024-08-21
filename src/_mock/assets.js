@@ -652,11 +652,11 @@ export function handleCategoryTypes(type) {
 }export function handleOrderTypes(type) {
   switch (type) {
     case 'placed':
-      return 'Orders Placed';
+      return 'Intents Placed';
     case 'accepted':
-      return 'Orders Accepted';
+      return 'Intents Accepted';
     case 'declined':
-      return 'Orders Declined';
+      return 'Intents Declined';
     default:
       return type;
   }

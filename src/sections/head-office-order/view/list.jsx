@@ -290,6 +290,11 @@ const [loading,setLoading] = useState(false)
     {
       field: 'quantity',
       headerName: 'Quantity',
+      minWidth: 50,
+      // flex: 1, // This makes the column flexible
+    },   {
+      field: 'quantity_approved',
+      headerName: 'Approved Quantity',
       minWidth: 100,
       flex: 1, // This makes the column flexible
     },
@@ -308,7 +313,7 @@ const [loading,setLoading] = useState(false)
     },
     {
       field: 'nccf_order_status',
-      headerName: 'Order Status',
+      headerName: 'Intents Status',
       minWidth: 100,
       flex: 1, // This makes the column flexible
       renderCell: (params) => (

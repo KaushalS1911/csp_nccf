@@ -26,7 +26,7 @@ import axios from 'axios';
     },
     {
       value: 'orders',
-      label: 'Orders',
+      label: 'Intents',
       icon: <Iconify icon="solar:bell-bing-bold" width={24} />,
     },
     {

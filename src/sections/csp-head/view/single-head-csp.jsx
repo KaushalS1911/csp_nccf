@@ -26,7 +26,7 @@ import { useGetHeadCSP } from '../../../api/head-csp';
     },
     {
       value: 'orders',
-      label: 'Orders',
+      label: 'Intents',
       icon: <Iconify icon="solar:bell-bing-bold" width={24} />,
     },
     {

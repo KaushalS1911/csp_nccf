@@ -23,7 +23,7 @@ import UserQuickEditForm from './user-quick-edit-form';
 // ----------------------------------------------------------------------
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const {commodity, created_at, quantity, index,nccf_order_status} = row;
+  const {commodity, created_at, quantity, index,nccf_order_status,quantity_approved} = row;
 
   const confirm = useBoolean();
 
@@ -55,6 +55,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{index + 1}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{commodity}</TableCell>
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{quantity}</TableCell>
+        <TableCell sx={{ whiteSpace: 'nowrap' }}>{quantity_approved}</TableCell>
 
         <TableCell sx={{ whiteSpace: 'nowrap' }}>{moment(created_at).format("DD/MM/YYYY")}</TableCell>
 

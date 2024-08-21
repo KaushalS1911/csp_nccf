@@ -52,16 +52,16 @@ export default function BranchDashboardView({ vendorCode }) {
   const orderLabel = (d) => {
     switch (d){
       case "accepted_orders" :
-        return "Accepted Order"
+        return "Accepted Intents"
       // break;
       case "completed_orders" :
-        return "Completed Orders"
+        return "Completed Intents"
       case "declined_orders" :
-        return "Declined Orders"
+        return "Declined Intents"
       case "placed_orders" :
-        return "Placed Orders"
+        return "Placed Intents"
       case "total_orders" :
-        return "Total Orders"
+        return "Total Intents"
       default:
         return d
     }
@@ -119,7 +119,7 @@ export default function BranchDashboardView({ vendorCode }) {
   const result = Object.entries(orderCount).map(([key, value]) => {
     return { label: orderLabel(key), value: value };
   });
-const d = result.filter((val) => val.label !== "Total Orders")
+const d = result.filter((val) => val.label !== "Total Intents")
   function getBranch() {
     axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${vendor.branch}/csp/stats`)
       .then((res) => {
@@ -239,7 +239,7 @@ const d = result.filter((val) => val.label !== "Total Orders")
         </Grid>
         <Grid xs={12} md={6} lg={4}>
           {labelCount !== [] && <HeadCurrentDownload
-            title="Total Orders"
+            title="Total Intents"
             chart={{
               colors: [
                 '#6F4E37',

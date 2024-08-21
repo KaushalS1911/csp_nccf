@@ -55,7 +55,7 @@ export default function OverviewAppView({ vendorCode }) {
 
         <Grid xs={12} md={3}>
           <AnalyticsWidgetSummary
-            title="Orders Pending"
+            title="Intents Pending"
             total={stats?.placed_orders || "0"}
             color={"info"}
 
@@ -64,7 +64,7 @@ export default function OverviewAppView({ vendorCode }) {
 
         <Grid xs={12} md={3}>
           <AnalyticsWidgetSummary
-            title="Orders Accepted"
+            title="Intents Accepted"
             color={"warning"}
             total={stats?.accepted_orders || "0"}
 
@@ -74,14 +74,14 @@ export default function OverviewAppView({ vendorCode }) {
         <Grid xs={12} md={3}>
           <AnalyticsWidgetSummary
             color={"error"}
-            title="Orders Declined"
+            title="Intents Declined"
             total={stats?.declined_orders || "0"}
 
           />
         </Grid>
         <Grid xs={12} md={3}>
           <AnalyticsWidgetSummary
-            title="Total Orders"
+            title="Total Intents"
             total={stats?.total_orders || "0"}
             color={"primary"}
           />

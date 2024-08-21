@@ -44,6 +44,7 @@ const TABLE_HEAD = [
   { id: 'srNo', label: 'Sr No', width: 100 },
   { id: 'commodity', label: 'Commodity', width: 200 },
   { id: 'quantity', label: 'Quantity', width: 200 },
+  { id: 'quantity_approved', label: 'Approved Quantity', width: 200 },
   { id: 'created_at', label: 'Date', width: 180 },
   { id: 'status', label: 'Status', width: 100 },
   { id: '', width: 88 },
@@ -170,7 +171,7 @@ useEffect(() => {
                 setDialogOpen(true)
               }}
             >
-              Add Order
+              Add Intent
             </Button>
           }
           sx={{ mb: { xs: 3, md: 5 } }}

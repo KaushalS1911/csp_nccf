@@ -320,6 +320,12 @@ function Orders({singleCode}) {
       flex: 1, // This makes the column flexible
     },
     {
+      field: 'quantity_approved',
+      headerName: 'Approved Quantity',
+      minWidth: 100,
+      flex: 1, // This makes the column flexible
+    },
+    {
       field: 'created_at',
       headerName: 'Date',
       minWidth: 150,

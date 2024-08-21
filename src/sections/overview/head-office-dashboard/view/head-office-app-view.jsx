@@ -195,7 +195,7 @@ const chartOrder = []
         </Grid>
         <Grid xs={12} md={6} lg={4}>
           {labelCount !== [] && <HeadCurrentDownload
-            title="Total Orders"
+            title="Total Intents"
             chart={{
               colors: [
                 '#6F4E37',
