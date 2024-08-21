@@ -100,20 +100,20 @@ export default function InventoryTableFiltersResult({
             <Chip size="small" label={shortDayLabel} onDelete={handleRemoveDay} />
           </Block>
         )}
-        {!!filters.category.length && (
-          <Block label="Category:">
-            {filters.category.map((item) => (
-              <Chip key={item} label={handleCategoryTypes(item)} size="small" onDelete={() => handleRemoveCategory(item)} />
-            ))}
-          </Block>
-        )}
         {!!filters.commodity.length && (
-          <Block label="Status:">
+          <Block label="Commodity:">
             {filters.commodity.map((item) => (
-              <Chip key={item} label={item === 'accepted' ? 'Accepted' : item === 'declined' ? 'Declined' : 'Placed'} size="small" onDelete={() => handleRemoveCommodity(item)} />
+              <Chip key={item} label={item} size="small" onDelete={() => handleRemoveCommodity(item)} />
             ))}
           </Block>
         )}
+        {/*{!!filters.commodity.length && (*/}
+        {/*  <Block label="Status:">*/}
+        {/*    {filters.commodity.map((item) => (*/}
+        {/*      <Chip key={item} label={item === 'accepted' ? 'Accepted' : item === 'declined' ? 'Declined' : 'Placed'} size="small" onDelete={() => handleRemoveCommodity(item)} />*/}
+        {/*    ))}*/}
+        {/*  </Block>*/}
+        {/*)}*/}
         {/*{!!filters.status.length && (*/}
         {/*  <Block label="status:">*/}
         {/*    {filters.status.map((item) => (*/}

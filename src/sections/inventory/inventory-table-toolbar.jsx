@@ -41,8 +41,13 @@ export default function InventoryTableToolbar({
   const days = ['Today', 'Last 7 Day', 'Last Week', 'Last 15 Day', 'Last Month', 'Last Year'];
   const [startDateOpen, setStartDateOpen] = useState(false);
   const [endDateOpen, setEndDateOpen] = useState(false);
+  const [allCommodity,setAllCommodity] = useState([])
   const [day, setDay] = useState('');
-
+useEffect(() => {
+  axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/commodity`).then((res) => {
+    setAllCommodity(res?.data?.data);
+  });
+},[])
   const handleFilterStartDate = useCallback(
     (newValue) => {
       // Check if newValue is null or undefined
@@ -359,34 +364,34 @@ useEffect(() => {
           {/*  <Iconify icon="eva:more-vertical-fill" />*/}
           {/*</IconButton>*/}
         </Stack>
-        {/*<FormControl*/}
-        {/*  sx={{*/}
-        {/*    flexShrink: 0,*/}
-        {/*    width: { xs: 1, md: 200 },*/}
-        {/*  }}*/}
-        {/*>*/}
-        {/*  <InputLabel>Category</InputLabel>*/}
+        <FormControl
+          sx={{
+            flexShrink: 0,
+            width: { xs: 1, md: 200 },
+          }}
+        >
+          <InputLabel>Commodity</InputLabel>
 
-        {/*  <Select*/}
-        {/*    multiple*/}
-        {/*    value={filters.category}*/}
-        {/*    onChange={handleFilterCategory}*/}
-        {/*    input={<OutlinedInput label="Category"/>}*/}
-        {/*    renderValue={(selected) => selected.map((value) =>handleCategoryTypes(value) ).join(', ')}*/}
-        {/*    MenuProps={{*/}
-        {/*      PaperProps: {*/}
-        {/*        sx: { maxHeight: 240 },*/}
-        {/*      },*/}
-        {/*    }}*/}
-        {/*  >*/}
-        {/*    {['distributor', 'miller', 'miller_distributor',"society_cooperative"].map((option) => (*/}
-        {/*      <MenuItem key={option} value={option}>*/}
-        {/*        <Checkbox disableRipple size="small" checked={filters.category.includes(option)}/>*/}
-        {/*        {handleCategoryTypes(option)}*/}
-        {/*      </MenuItem>*/}
-        {/*    ))}*/}
-        {/*  </Select>*/}
-        {/*</FormControl>*/}
+          <Select
+            multiple
+            value={filters.commodity}
+            onChange={handleFilterCommodity}
+            input={<OutlinedInput label="Commodity"/>}
+            renderValue={(selected) => selected.map((value) =>value).join(', ')}
+            MenuProps={{
+              PaperProps: {
+                sx: { maxHeight: 240 },
+              },
+            }}
+          >
+            {allCommodity.map((option) => (
+              <MenuItem key={option?.commodity_name} value={option?.commodity_name}>
+                <Checkbox disableRipple size="small" checked={filters.commodity.includes(option?.commodity_name)}/>
+                {option?.commodity_name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         {/*<FormControl*/}
         {/*  sx={{*/}
         {/*    flexShrink: 0,*/}

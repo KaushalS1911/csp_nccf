@@ -398,12 +398,12 @@ getInventory()
     // },
   ];
   const color = ['primary', 'error', 'warning', 'error'];
-  const handleFilterStatus = useCallback(
-    (event, newValue) => {
-      handleFilters('status', newValue);
-    },
-    [handleFilters],
-  );
+  // const handleFilterStatus = useCallback(
+  //   (event, newValue) => {
+  //     handleFilters('status', newValue);
+  //   },
+  //   [handleFilters],
+  // );
   const getTogglableColumns = () =>
     columns
       .filter((column) => !HIDE_COLUMNS_TOGGLABLE.includes(column.field))
@@ -495,7 +495,7 @@ getInventory()
             <DataGrid
               // checkboxSelection
               disableRowSelectionOnClick
-              rows={tableData}
+              rows={dataFiltered}
               columns={columns}
               // loading={orderLoading}
               getRowHeight={() => 'auto'}
@@ -649,6 +649,7 @@ getInventory()
     </>
   );
 }
+
 function applyFilter({ inputData, filters, dateError, dayError }) {
   const { stock, publish, status, commodity, name, branch, startDate, endDate, startDay, endDay, category } = filters;
 
@@ -677,12 +678,12 @@ function applyFilter({ inputData, filters, dateError, dayError }) {
   if (category.length) {
     inputData = inputData.filter((user) => category.includes(user.category));
   }
-  if (status !== 'all') {
-    inputData = inputData.filter((user) => user.commodity === status);
-  }
+  // if (status !== 'all') {
+  //   inputData = inputData.filter((user) => user.commodity === status);
+  // }
 
   if (commodity.length) {
-    inputData = inputData.filter((user) => commodity.includes(user.nccf_order_status));
+    inputData = inputData.filter((user) => commodity.includes(user.commodity_name));
   }
   if (branch.length) {
     inputData = inputData.filter((user) => branch.includes(user.branch));
