@@ -26,7 +26,7 @@ export default function InventoryQuickEditForm({
                                             open,
                                             onClose,
                                             setOpen,
-
+allData
                                           }) {
   const { enqueueSnackbar } = useSnackbar();
   const router = useRouter()
@@ -113,6 +113,7 @@ const total = quantity.reduce((next,prev) => {
         enqueueSnackbar(`${res.data.data}`)
         reset(defaultValues)
         setBranchOptions([])
+        allData()
       }else {
         enqueueSnackbar(`${res.data.message}`,{variant:"error"})
       }

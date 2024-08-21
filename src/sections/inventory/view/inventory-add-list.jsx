@@ -102,46 +102,49 @@ function InventoryAddList(props) {
   const dateError = isAfter(filters.startDate, filters.endDate);
   const dayError = isAfter(filters.startDay, filters.endDay);
   const [count, setCount] = useState([]);
-  const getAllOrders = () => {
-    const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/order`;
+  // const getAllOrders = () => {
+  //   const URL = `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/order`;
+  //
+  //   axios.get(URL).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+  // };
+  // useEffect(() => {
+  //   if (banchVal === 'All') {
+  //     getOrders();
+  //   } else {
+  //     fetchData();
+  //     getAllOrders();
+  //
+  //   }
+  //
+  // }, [banchVal]);
 
-    axios.get(URL).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
-  };
+
+  // const getOrders = () => {
+  //   setLoading(true)
+  //   setBanchVal("All")
+  //   setBranch("All")
+  //   axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/order`)
+  //     .then((res) => {
+  //       setLoading(false)
+  //       setTableData(res?.data?.data);
+  //     }).catch((err) => {
+  //     setLoading(false)
+  //     console.log(err);
+  //   });
+  // };
+const getInventory = () =>{
+  axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/inventory`)
+    .then((res) => {
+      res.data.data.forEach((item, index) => {
+        item.id = index + 1;
+      });
+      setTableData(res.data.data)
+    }).catch((err) => console.log(err));
+}
   useEffect(() => {
-    if (banchVal === 'All') {
-      getOrders();
-    } else {
-      fetchData();
-      getAllOrders();
-
-    }
-
-  }, [banchVal]);
 
 
-  const getOrders = () => {
-    setLoading(true)
-    setBanchVal("All")
-    setBranch("All")
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/order`)
-      .then((res) => {
-        setLoading(false)
-        setTableData(res?.data?.data);
-      }).catch((err) => {
-      setLoading(false)
-      console.log(err);
-    });
-  };
-
-  useEffect(() => {
-
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/state/branch`)
-      .then((res) => {
-        const fetchedData = res?.data?.data || [];
-        const updatedData = [{ branch_name: 'All', csp_count: 1 }, ...fetchedData];
-        setBanch(updatedData);
-      }).catch((err) => console.log(err));
-
+getInventory()
     // axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/ho/csp/list`)
     //   .then((res) => {
     //     const fetchedData = res?.data?.data || [];
@@ -149,7 +152,7 @@ function InventoryAddList(props) {
     //     setDataCSP(updatedData);
     //   }).catch((err) => console.log(err));
     // if (vendor) {
-    getOrders();
+    // getOrders();
     // }
   }, []);
 
@@ -160,43 +163,43 @@ function InventoryAddList(props) {
   });
 
   // useEffect(() => {
-  const fetchData = async () => {
-    if (banchVal !== 'All') {
-      setDataCSP([]);
-
-      try {
-        const res = await axios.get(
-          `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/csp`,
-        );
-
-        let mapCsp = res.data.data.map((data) => ({
-          name: data.name,
-          csp_code: data.csp_code,
-          order_count: data.order_count,
-        }));
-
-        const default1 = [{ name: 'All', csp_code: 'All', order_count: 1 }, ...mapCsp];
-        setDataCSP(default1);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    }
-  };
+  // const fetchData = async () => {
+  //   if (banchVal !== 'All') {
+  //     setDataCSP([]);
+  //
+  //     try {
+  //       const res = await axios.get(
+  //         `http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/branch/${banchVal}/csp`,
+  //       );
+  //
+  //       let mapCsp = res.data.data.map((data) => ({
+  //         name: data.name,
+  //         csp_code: data.csp_code,
+  //         order_count: data.order_count,
+  //       }));
+  //
+  //       const default1 = [{ name: 'All', csp_code: 'All', order_count: 1 }, ...mapCsp];
+  //       setDataCSP(default1);
+  //     } catch (error) {
+  //       console.error('Error fetching data:', error);
+  //     }
+  //   }
+  // };
 
 
   // }, [banchVal]);
 
-  const getCspOrder = (branch) => {
-
-    axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/orders`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
-  };
-  useEffect(() => {
-    if (branch === 'All') {
-      getAllOrders();
-    } else {
-      getCspOrder(branch);
-    }
-  }, [branch]);
+  // const getCspOrder = (branch) => {
+  //
+  //   axios.get(`http://ec2-54-173-125-80.compute-1.amazonaws.com:8080/nccf/csp/${branch}/orders`).then((res) => setTableData(res?.data?.data)).catch((err) => console.log(err));
+  // };
+  // useEffect(() => {
+  //   if (branch === 'All') {
+  //     getAllOrders();
+  //   } else {
+  //     getCspOrder(branch);
+  //   }
+  // }, [branch]);
 
 
   const handleFilterCSP = useCallback(
@@ -274,62 +277,62 @@ function InventoryAddList(props) {
 
   const columns = [
     {
-      field: 'seq_number',
+      field: 'id',
       headerName: 'Sr No.',
       minWidth: 100,
       // renderCell: (params) => <Box>{params.row.id}</Box>, // You can use params.row.id directly
     },
     {
-      field: 'name',
-      headerName: 'Name',
+      field: 'branch_name',
+      headerName: 'Branch Name',
       width: 250,
     },
     {
-      field: 'commodity',
+      field: 'commodity_name',
       headerName: 'Commodity',
       minWidth: 150,
       flex: 1, // This makes the column flexible
     },
     {
-      field: 'quantity',
-      headerName: 'Quantity',
+      field: 'state_name',
+      headerName: 'State Name',
       minWidth: 100,
       flex: 1, // This makes the column flexible
     },
-    {
-      field: 'branch',
-      headerName: 'Branch',
-      minWidth: 100,
-      flex: 1, // This makes the column flexible
-    },
+    // {
+    //   field: 'branch',
+    //   headerName: 'Branch',
+    //   minWidth: 100,
+    //   flex: 1, // This makes the column flexible
+    // },
     {
       field: 'created_at',
       headerName: 'Date',
       minWidth: 150,
       flex: 1, // This makes the column flexible
-      renderCell: (params) => moment(params.row.created_at).format('DD/MM/YYYY'),
+      renderCell: (params) => <Box sx={{py:1}}>{moment(params.row.created_at).format('DD/MM/YYYY')}</Box>,
     },
-    {
-      field: 'nccf_order_status',
-      headerName: 'Order Status',
-      minWidth: 100,
-      flex: 1, // This makes the column flexible
-      renderCell: (params) => (
-        <TableCell>
-          <Label
-            variant="soft"
-            color={
-              (params.row.nccf_order_status === 'accepted' && 'success') ||
-              (params.row.nccf_order_status === 'placed' && 'warning') ||
-              (params.row.nccf_order_status === 'declined' && 'error') ||
-              'default'
-            }
-          >
-            {params.row.nccf_order_status === 'accepted' ? 'Accepted' : params.row.nccf_order_status === 'declined' ? 'Declined' : 'Placed'}
-          </Label>
-        </TableCell>
-      ),
-    },
+    // {
+    //   field: 'nccf_order_status',
+    //   headerName: 'Order Status',
+    //   minWidth: 100,
+    //   flex: 1, // This makes the column flexible
+    //   renderCell: (params) => (
+    //     <TableCell>
+    //       {/*<Label*/}
+    //       {/*  variant="soft"*/}
+    //       {/*  color={*/}
+    //       {/*    (params.row.nccf_order_status === 'accepted' && 'success') ||*/}
+    //       {/*    (params.row.nccf_order_status === 'placed' && 'warning') ||*/}
+    //       {/*    (params.row.nccf_order_status === 'declined' && 'error') ||*/}
+    //       {/*    'default'*/}
+    //       {/*  }*/}
+    //       {/*>*/}
+    //       {/*  {params.row.nccf_order_status === 'accepted' ? 'Accepted' : params.row.nccf_order_status === 'declined' ? 'Declined' : 'Placed'}*/}
+    //       {/*</Label>*/}
+    //     </TableCell>
+    //   ),
+    // },
     // {
     //   field: 'vendor1',
     //   headerName: 'Action',
@@ -444,7 +447,7 @@ function InventoryAddList(props) {
               },
             }}
           />
-          <InventoryQuickEditForm  open={open} setOpen={setOpen} />
+          <InventoryQuickEditForm allData={getInventory} open={open} setOpen={setOpen} />
           <Card
             sx={{
               height: dataFiltered?.length > 0 ? 'unset' : 700,
@@ -492,7 +495,7 @@ function InventoryAddList(props) {
             <DataGrid
               // checkboxSelection
               disableRowSelectionOnClick
-              rows={[]}
+              rows={tableData}
               columns={columns}
               // loading={orderLoading}
               getRowHeight={() => 'auto'}
@@ -685,6 +688,6 @@ function applyFilter({ inputData, filters, dateError, dayError }) {
     inputData = inputData.filter((user) => branch.includes(user.branch));
   }
   return inputData;
-}
+};
 
 export default InventoryAddList;

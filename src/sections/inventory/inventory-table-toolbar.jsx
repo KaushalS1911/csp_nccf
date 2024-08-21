@@ -359,62 +359,62 @@ useEffect(() => {
           {/*  <Iconify icon="eva:more-vertical-fill" />*/}
           {/*</IconButton>*/}
         </Stack>
-        <FormControl
-          sx={{
-            flexShrink: 0,
-            width: { xs: 1, md: 200 },
-          }}
-        >
-          <InputLabel>Category</InputLabel>
+        {/*<FormControl*/}
+        {/*  sx={{*/}
+        {/*    flexShrink: 0,*/}
+        {/*    width: { xs: 1, md: 200 },*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <InputLabel>Category</InputLabel>*/}
 
-          <Select
-            multiple
-            value={filters.category}
-            onChange={handleFilterCategory}
-            input={<OutlinedInput label="Category"/>}
-            renderValue={(selected) => selected.map((value) =>handleCategoryTypes(value) ).join(', ')}
-            MenuProps={{
-              PaperProps: {
-                sx: { maxHeight: 240 },
-              },
-            }}
-          >
-            {['distributor', 'miller', 'miller_distributor',"society_cooperative"].map((option) => (
-              <MenuItem key={option} value={option}>
-                <Checkbox disableRipple size="small" checked={filters.category.includes(option)}/>
-                {handleCategoryTypes(option)}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl
-          sx={{
-            flexShrink: 0,
-            width: { xs: 1, md: 200 },
-          }}
-        >
-          <InputLabel>Status</InputLabel>
+        {/*  <Select*/}
+        {/*    multiple*/}
+        {/*    value={filters.category}*/}
+        {/*    onChange={handleFilterCategory}*/}
+        {/*    input={<OutlinedInput label="Category"/>}*/}
+        {/*    renderValue={(selected) => selected.map((value) =>handleCategoryTypes(value) ).join(', ')}*/}
+        {/*    MenuProps={{*/}
+        {/*      PaperProps: {*/}
+        {/*        sx: { maxHeight: 240 },*/}
+        {/*      },*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    {['distributor', 'miller', 'miller_distributor',"society_cooperative"].map((option) => (*/}
+        {/*      <MenuItem key={option} value={option}>*/}
+        {/*        <Checkbox disableRipple size="small" checked={filters.category.includes(option)}/>*/}
+        {/*        {handleCategoryTypes(option)}*/}
+        {/*      </MenuItem>*/}
+        {/*    ))}*/}
+        {/*  </Select>*/}
+        {/*</FormControl>*/}
+        {/*<FormControl*/}
+        {/*  sx={{*/}
+        {/*    flexShrink: 0,*/}
+        {/*    width: { xs: 1, md: 200 },*/}
+        {/*  }}*/}
+        {/*>*/}
+        {/*  <InputLabel>Status</InputLabel>*/}
 
-          <Select
-            multiple
-            value={filters.commodity}
-            onChange={handleFilterCommodity}
-            input={<OutlinedInput label="Status"/>}
-            renderValue={(selected) => selected.map((value) => value).join(', ')}
-            MenuProps={{
-              PaperProps: {
-                sx: { maxHeight: 240 },
-              },
-            }}
-          >
-            {['accepted', 'declined', 'placed'].map((option) => (
-              <MenuItem key={option} value={option}>
-                <Checkbox disableRipple size="small" checked={filters.commodity.includes(option)}/>
-                {option === 'accepted' ? 'Accepted' : option === 'declined' ? 'Declined' : 'Placed'}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {/*  <Select*/}
+        {/*    multiple*/}
+        {/*    value={filters.commodity}*/}
+        {/*    onChange={handleFilterCommodity}*/}
+        {/*    input={<OutlinedInput label="Status"/>}*/}
+        {/*    renderValue={(selected) => selected.map((value) => value).join(', ')}*/}
+        {/*    MenuProps={{*/}
+        {/*      PaperProps: {*/}
+        {/*        sx: { maxHeight: 240 },*/}
+        {/*      },*/}
+        {/*    }}*/}
+        {/*  >*/}
+        {/*    {['accepted', 'declined', 'placed'].map((option) => (*/}
+        {/*      <MenuItem key={option} value={option}>*/}
+        {/*        <Checkbox disableRipple size="small" checked={filters.commodity.includes(option)}/>*/}
+        {/*        {option === 'accepted' ? 'Accepted' : option === 'declined' ? 'Declined' : 'Placed'}*/}
+        {/*      </MenuItem>*/}
+        {/*    ))}*/}
+        {/*  </Select>*/}
+        {/*</FormControl>*/}
 
         <FormControl
           sx={{
