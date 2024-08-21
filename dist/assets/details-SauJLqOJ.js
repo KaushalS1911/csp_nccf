@@ -1,0 +1,1 @@
+import{j as s,H as e,dI as r}from"./index-XqdYogKs.js";import{u as o}from"./use-params-ZC3Tds3T.js";function c(){const a=o();console.log(a,"params");const t="e99f09a7-dd88-49d5-b1c8-1daf80c2d7b1";return s.jsxs(s.Fragment,{children:[s.jsx(e,{children:s.jsx("title",{children:" Dashboard: Product Details"})}),s.jsx(r,{id:t})]})}export{c as default};
